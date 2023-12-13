@@ -1,0 +1,23 @@
+@media (max-width: 600px) {
+    .dynamicText {
+        font-size: 14px;
+    }
+}
+
+@media (min-width: 601px) and (max-width: 960px) {
+    .dynamicText {
+        font-size: 16px;
+    }
+}
+
+@media (min-width: 961px) {
+    .dynamicText {
+        font-size: 18px;
+    }
+}
+
+@media (max-width: 600px) {
+    .mrDynamic {
+        margin-right: 18px;
+    }
+}

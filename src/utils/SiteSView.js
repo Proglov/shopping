@@ -1,0 +1,1 @@
+export const statisticsView = 1521;

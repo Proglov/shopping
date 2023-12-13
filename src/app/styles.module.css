@@ -1,0 +1,11 @@
+@media (min-width: 800px) {
+    .smallScreenNav {
+        display: none;
+    }
+}
+
+@media (max-width: 800px) {
+    .mdScreenNav {
+        display: none;
+    }
+}
