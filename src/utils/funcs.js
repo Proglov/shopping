@@ -40,8 +40,57 @@ export const jalaliMonth = (x) => {
             throw new Error("month should be between 1 and 12")
     }
 }
+export const farsiNumCharacter = (x) => {
+    switch (x) {
+        case '0':
+            return "۰";
+
+        case '1':
+            return "١";
+
+        case '2':
+            return '۲';
+
+        case '3':
+            return '۳';
+
+        case '4':
+            return '۴';
+        case '5':
+            return '۵';
+
+        case '6':
+            return '۶';
+
+        case '7':
+            return '۷';
+
+        case '8':
+            return '۸';
+        case '9':
+            return '۹';
+
+        default:
+            return x
+    }
+}
+
+export const convertToFarsiNumbers = str => {
+    let newStr = ''
+    for (let i = 0; i < str.length; i++) {
+        newStr += farsiNumCharacter(str[i]);
+    }
+    return newStr
+}
+
 export const giveMeDateInFa = (str) => {
     const result = str.split('/');
     result[1] = jalaliMonth(result[1])
     return result;
 };
+
+export function formatPrice(price) {
+    const formattedPrice = price.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+
+    return formattedPrice;
+}

@@ -1,7 +1,0 @@
-.imageOpacity {
-    transition: opacity .2s ease-in-out;
-}
-
-.imageOpacityHidden {
-    opacity: .3;
-}

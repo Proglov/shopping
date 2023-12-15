@@ -3,8 +3,8 @@ import CustomTheme from '../utils/CustomTheme'
 import { EdgeStoreProvider } from '../lib/edgestore';
 
 export const metadata = {
-  title: 'نخبگان',
-  description: 'سایت نخبگان',
+  title: 'فروشگاه آنلاین',
+  description: 'فروشگاه آنلاین',
 }
 
 export default function RootLayout({ children }) {
