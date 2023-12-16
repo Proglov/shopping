@@ -3,7 +3,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import React from 'react'
 
-export default function CategoryComponent({ src, caption, href }) {
+export default function CategoryComponent({ src, caption, href, charachtersLengthLevel }) {
     return (
         <div className='mx-auto'>
             <Link href={href} className='bg-blue-300'>
@@ -11,8 +11,8 @@ export default function CategoryComponent({ src, caption, href }) {
             </Link>
             <Typography className='text-center' sx={{
                 fontSize: {
-                    xs: '12px',
-                    sm: '14px',
+                    xs: `${charachtersLengthLevel === 2 ? '12px' : charachtersLengthLevel === 1 ? '14px' : '15px'}`,
+                    sm: '15px',
                     md: '16px',
                     lg: '18px'
                 }

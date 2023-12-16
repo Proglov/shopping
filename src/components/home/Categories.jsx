@@ -36,28 +36,28 @@ export default function Categories() {
 
             <Grid container gap={2} justifyContent={"center"}>
                 <Grid item xs={3} lg={2}>
-                    <CategoryComponent href='/#' caption='لبنیات' src='/img/home/category-labaniat.jpg' />
+                    <CategoryComponent href='/#' caption='لبنیات' src='/img/home/category-labaniat.jpg' charachtersLengthLevel={0} />
                 </Grid>
                 <Grid item xs={3} lg={2}>
-                    <CategoryComponent href='/#' caption='تنقلات' src='/img/home/tanagholat.jpg' />
+                    <CategoryComponent href='/#' caption='تنقلات' src='/img/home/tanagholat.jpg' charachtersLengthLevel={0} />
                 </Grid>
                 <Grid item xs={3} lg={2}>
-                    <CategoryComponent href='/#' caption='نوشیدنی' src='/img/home/category-labaniat.jpg' />
+                    <CategoryComponent href='/#' caption='نوشیدنی' src='/img/home/category-labaniat.jpg' charachtersLengthLevel={0} />
                 </Grid>
                 <Grid item xs={3} lg={2}>
-                    <CategoryComponent href='/#' caption='صبحانه' src='/img/home/tanagholat.jpg' />
+                    <CategoryComponent href='/#' caption='صبحانه' src='/img/home/tanagholat.jpg' charachtersLengthLevel={0} />
                 </Grid>
                 <Grid item xs={3} lg={2}>
-                    <CategoryComponent href='/#' caption='چاشنی و افزودنی' src='/img/home/category-labaniat.jpg' />
+                    <CategoryComponent href='/#' caption='چاشنی و افزودنی' src='/img/home/category-labaniat.jpg' charachtersLengthLevel={1} />
                 </Grid>
                 <Grid item xs={3} lg={2}>
-                    <CategoryComponent href='/#' caption='خواربار' src='/img/home/tanagholat.jpg' />
+                    <CategoryComponent href='/#' caption='خواربار' src='/img/home/tanagholat.jpg' charachtersLengthLevel={0} />
                 </Grid>
                 <Grid item xs={3} lg={2}>
-                    <CategoryComponent href='/#' caption='آرایشی بهداشتی' src='/img/home/category-labaniat.jpg' />
+                    <CategoryComponent href='/#' caption='آرایشی بهداشتی' src='/img/home/category-labaniat.jpg' charachtersLengthLevel={1} />
                 </Grid>
                 <Grid item xs={3} lg={2}>
-                    <CategoryComponent href='/#' caption='شوینده و دستمال' src='/img/home/tanagholat.jpg' />
+                    <CategoryComponent href='/#' caption='شوینده و دستمال' src='/img/home/tanagholat.jpg' charachtersLengthLevel={2} />
                 </Grid>
             </Grid>
 

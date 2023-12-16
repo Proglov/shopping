@@ -10,7 +10,7 @@ export default function FooterMenu({ active }) {
         <div className='m-5 flex justify-center'>
 
             <Link href='/'>
-                <Button className={`mx-10 flex flex-col ${active === 0 ? 'text-blue-700' : 'text-black'}`}>
+                <Button className={`sm:mx-10 mx-5 flex flex-col ${active === 0 ? 'text-blue-700' : 'text-black'}`}>
                     <div className='mx-auto'>
                         <AiOutlineHome className='text-2xl' />
                     </div>
@@ -21,7 +21,7 @@ export default function FooterMenu({ active }) {
             </Link>
 
             <Link href='/category'>
-                <Button className={`mx-10 flex flex-col ${active === 1 ? 'text-blue-700' : 'text-black'}`}>
+                <Button className={`sm:mx-10 mx-5 flex flex-col ${active === 1 ? 'text-blue-700' : 'text-black'}`}>
                     <div className='mx-auto'>
                         <TbCategory className='text-2xl' />
                     </div>
@@ -32,7 +32,7 @@ export default function FooterMenu({ active }) {
             </Link>
 
             <Link href='/shopping-card'>
-                <Button className={`mx-10 flex flex-col ${active === 2 ? 'text-blue-700' : 'text-black'}`}>
+                <Button className={`sm:mx-10 mx-5 flex flex-col ${active === 2 ? 'text-blue-700' : 'text-black'}`}>
                     <div className='mx-auto'>
                         <GiShoppingCart className='text-2xl' />
                     </div>
