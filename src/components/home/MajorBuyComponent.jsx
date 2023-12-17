@@ -39,7 +39,7 @@ export default function MajorBuyComponent({ src, name, realPrice, off, number, i
                 <div className='m-2 sm:text-base text-sm'>{name}</div>
 
                 <div className='flex justify-start px-2 sm:text-base text-sm'>
-                    <span className='bg-red-500 rounded-md mt-2 text-center h-7 sm:pt-2 pt-1.5 sm:min-w-[50px] p-1 text-white'>
+                    <span className='bg-red-500 rounded-md mt-2 text-center h-7 sm:pt-1 pt-1.5 sm:min-w-[50px] p-1 text-white'>
                         {convertToFarsiNumbers(off.toString())}%
                     </span>
                     <div className='flex justify-end m-3 ml-8 line-through text-gray-400'>

@@ -75,8 +75,8 @@ export default function FestivalCrops() {
 
 
     return (
-        <div className="m-4 bg-green-800 rounded-xl">
-            <div className="text-center p-2 text-slate-50">پیشنهادهای شگفت انگیز</div>
+        <div className="m-4 rounded-xl" style={{ background: 'linear-gradient(to left top, #ff0000 10%, #541a1a 90%)', boxShadow: '0 7px 6px rgba(0, 0, 0, 0.12), 0 1px 4px rgba(0, 0, 0, 0.24)' }}>
+            <div className="text-center p-2 text-slate-50" style={{ textShadow: '0px 0px 10px white' }}>پیشنهادهای شگفت انگیز</div>
 
             {/* xs */}
             <div className='overflow-x-scroll relative w-full sm:hidden flex'>
