@@ -10,7 +10,7 @@ export default function FooterMenu({ active }) {
         <>
             <div className="h-[90px]"></div>
 
-            <Typography variant='div' className="fixed bottom-0 bg-white lg:w-1/2 sm:w-[90%] w-full h-20 pt-[-2px] z-[100] rounded-ss-full rounded-se-full border-t-2 border-purple-700"
+            <Typography variant='div' className="fixed bottom-0 bg-white lg:w-1/2 sm:w-[90%] w-full h-20 pt-[-2px] z-[100] rounded-ss-full rounded-se-full border-t-2 border-purple-700 opacity-95"
                 sx={{
                     transform: {
                         sm: 'translateX(-5%)',

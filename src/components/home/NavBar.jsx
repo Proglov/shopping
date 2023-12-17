@@ -76,7 +76,7 @@ export default function NavBar() {
     return (
         <Box sx={{ flexGrow: 1 }}>
             <div style={{ width: '100%', height: '56px' }}></div>
-            <AppBar sx={{ zIndex: '200', direction: 'ltr' }}>
+            <AppBar sx={{ zIndex: '200', direction: 'ltr', backgroundColor: '#3e5172' }}>
                 <Toolbar>
 
                     {/* سبد خرید */}
@@ -102,7 +102,7 @@ export default function NavBar() {
                     >
                         {
                             !isLoggedIn ?
-                                <span className='text-green-500 flex'>
+                                <span className='text-white flex'>
                                     <LiaSignInAltSolid />
                                     <span style={{ lineHeight: '24px' }}>
                                         ورود

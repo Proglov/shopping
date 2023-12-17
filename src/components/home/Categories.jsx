@@ -6,7 +6,7 @@ export default function Categories() {
     return (
         <div className="m-4">
 
-            <div className='border border-gray-300 top-3 relative' style={{ transform: 'translateY(15px)' }}></div>
+            <div className='border border-gray-300 top-3 relative' style={{ transform: 'translateY(15px)', borderTopWidth: '2px', borderTopRightRadius: '50%', borderTopLeftRadius: '50%' }}></div>
 
             <div>
                 <Typography

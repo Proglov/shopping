@@ -64,9 +64,8 @@ const arr = [
 
 export default function MajorBuy() {
     return (
-        <div className="m-4 bg-red-500 rounded-xl">
-
-            <div className="text-center p-2 text-slate-50">خرید عمده</div>
+        <div className="m-4 rounded-xl" style={{ background: 'linear-gradient(to left top, #f9b49b 20%, #9fb6c3)', boxShadow: '0 7px 6px rgba(0, 0, 0, 0.12), 0 1px 4px rgba(0, 0, 0, 0.24)' }}>
+            <div className="text-center p-2 text-slate-50" style={{ textShadow: '0px 0px 10px #000000' }}>خرید عمده</div>
 
             {/* xs */}
             <div className='overflow-x-scroll relative w-full sm:hidden flex'>
