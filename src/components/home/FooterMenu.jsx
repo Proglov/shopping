@@ -3,14 +3,20 @@ import React from 'react'
 import { GiShoppingCart } from 'react-icons/gi';
 import { AiOutlineHome } from "react-icons/ai";
 import { TbCategory } from "react-icons/tb";
-import { Badge, Button } from '@mui/material';
+import { Badge, Button, Typography } from '@mui/material';
 
 export default function FooterMenu({ active }) {
     return (
         <>
             <div className="h-[90px]"></div>
 
-            <div className="fixed bottom-0 bg-white w-full h-20 pt-[-2px] z-[100] rounded-ss-full rounded-se-full border-t-2 border-purple-700" >
+            <Typography variant='div' className="fixed bottom-0 bg-white lg:w-1/2 sm:w-[90%] w-full h-20 pt-[-2px] z-[100] rounded-ss-full rounded-se-full border-t-2 border-purple-700"
+                sx={{
+                    transform: {
+                        sm: 'translateX(-5%)',
+                        lg: 'translateX(-50%)'
+                    }
+                }}>
                 <div className='m-5 flex justify-center'>
 
                     <Link href='/'>
@@ -49,7 +55,7 @@ export default function FooterMenu({ active }) {
                     </Link>
 
                 </div>
-            </div>
+            </Typography>
         </>
     )
 }
