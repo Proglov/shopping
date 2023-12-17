@@ -17,7 +17,7 @@ export default function Home() {
 
       <div className="h-[90px]"></div>
 
-      <div className="fixed bottom-0 bg-white w-full h-20 pt-[-2px] z-[100]" >
+      <div className="fixed bottom-0 bg-white w-full h-20 pt-[-2px] z-[100] rounded-ss-full rounded-se-full border-t-2 border-purple-700" >
         <FooterMenu active={0} />
       </div>
     </>
