@@ -119,7 +119,7 @@ const MajorSlider = ({ slides }) => {
                 onTouchMove={(e) => onTouchMoveHandler(e)}
                 onTouchEnd={mouseUp}
                 ref={divRef}
-                style={sliderStyle(2, 0)}
+                style={sliderStyle(2, 50)}
                 className='sm:flex md:hidden hidden'>
                 {slides.map((slide, i) => (
                     <div key={i}>
@@ -138,7 +138,7 @@ const MajorSlider = ({ slides }) => {
                 onTouchMove={(e) => onTouchMoveHandler(e)}
                 onTouchEnd={mouseUp}
                 ref={divRef}
-                style={sliderStyle(3, 90)}
+                style={sliderStyle(3, 175)}
                 className='md:flex lg:hidden hidden'>
                 {slides.map((slide, i) => (
                     <div key={i}>
@@ -157,7 +157,7 @@ const MajorSlider = ({ slides }) => {
                 onTouchMove={(e) => onTouchMoveHandler(e)}
                 onTouchEnd={mouseUp}
                 ref={divRef}
-                style={sliderStyle(4, 100)}
+                style={sliderStyle(4, 185)}
                 className='lg:flex xl:hidden hidden'>
                 {slides.map((slide, i) => (
                     <div key={i}>
@@ -176,7 +176,7 @@ const MajorSlider = ({ slides }) => {
                 onTouchMove={(e) => onTouchMoveHandler(e)}
                 onTouchEnd={mouseUp}
                 ref={divRef}
-                style={sliderStyle(5, 100)}
+                style={sliderStyle(5, 190)}
                 className='xl:flex hidden'>
                 {slides.map((slide, i) => (
                     <div key={i}>

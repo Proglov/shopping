@@ -128,7 +128,7 @@ const FestivalSlider = ({ slides }) => {
                 onTouchMove={(e) => onTouchMoveHandler(e)}
                 onTouchEnd={mouseUp}
                 ref={divRef}
-                style={sliderStyle(2, 0)}
+                style={sliderStyle(2, 40)}
                 className='sm:flex md:hidden hidden'>
                 {slides.map((slide, i) => (
                     <div key={i}>
@@ -147,7 +147,7 @@ const FestivalSlider = ({ slides }) => {
                 onTouchMove={(e) => onTouchMoveHandler(e)}
                 onTouchEnd={mouseUp}
                 ref={divRef}
-                style={sliderStyle(3, 90)}
+                style={sliderStyle(3, 180)}
                 className='md:flex lg:hidden hidden'>
                 {slides.map((slide, i) => (
                     <div key={i}>
@@ -166,7 +166,7 @@ const FestivalSlider = ({ slides }) => {
                 onTouchMove={(e) => onTouchMoveHandler(e)}
                 onTouchEnd={mouseUp}
                 ref={divRef}
-                style={sliderStyle(4, 100)}
+                style={sliderStyle(4, 180)}
                 className='lg:flex xl:hidden hidden'>
                 {slides.map((slide, i) => (
                     <div key={i}>
@@ -185,7 +185,7 @@ const FestivalSlider = ({ slides }) => {
                 onTouchMove={(e) => onTouchMoveHandler(e)}
                 onTouchEnd={mouseUp}
                 ref={divRef}
-                style={sliderStyle(5, 100)}
+                style={sliderStyle(5, 200)}
                 className='xl:flex hidden'>
                 {slides.map((slide, i) => (
                     <div key={i}>
