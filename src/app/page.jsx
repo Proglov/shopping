@@ -14,7 +14,12 @@ export default function Home() {
       <Categories />
       <PopularCrops />
       <MajorBuy />
-      <FooterMenu active={0} />
+
+      <div className="h-[90px]"></div>
+
+      <div className="fixed bottom-0 bg-white w-full h-20 pt-[-2px] z-[100]" >
+        <FooterMenu active={0} />
+      </div>
     </>
   )
 }
