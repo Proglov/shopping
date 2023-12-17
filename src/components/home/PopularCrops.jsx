@@ -1,6 +1,6 @@
 'use client'
-import { Grid, Typography } from '@mui/material'
-import React from 'react'
+import { Button, Grid, Typography } from '@mui/material'
+import React, { useState } from 'react'
 import PopularCropsComponent from './PopularCropsComponent'
 import { ImFire } from "react-icons/im";
 
@@ -68,11 +68,14 @@ const arr = [
 ]
 
 export default function PopularCrops() {
+    const [showMore, setShowMore] = useState(false);
+
     return (
         <div className='m-4 mt-12'>
 
             <div className='border border-gray-300 top-3 relative' style={{ transform: 'translateY(15px)' }}></div>
 
+            {/* پرفروش ترین کالاها */}
             <div>
                 <Typography
                     sx={{
@@ -97,7 +100,8 @@ export default function PopularCrops() {
                 </Typography>
             </div>
 
-            <Grid container>
+            {/* greater than md */}
+            <Grid container className='md:flex hidden'>
                 {
                     arr.map((v, i) => {
                         return (
@@ -107,6 +111,34 @@ export default function PopularCrops() {
                         )
                     })
                 }
+            </Grid>
+
+            {/* xs , sm  */}
+            <Grid container className='md:hidden flex'>
+                {
+                    arr.map((v, i) => {
+                        if (showMore)
+                            return (
+                                <Grid key={i} item xs={12} sm={6} md={4}>
+                                    <PopularCropsComponent href={v.href} name={v.name} src={v.src} number={i + 1} />
+                                </Grid>
+                            )
+                        if (i < 6)
+                            return (
+                                <Grid key={i} item xs={12} sm={6} md={4}>
+                                    <PopularCropsComponent href={v.href} name={v.name} src={v.src} number={i + 1} />
+                                </Grid>
+                            )
+                    })
+                }
+
+                {
+                    !showMore &&
+                    <Button onClick={() => setShowMore(true)}>
+                        نمایش موارد بیشتر ...
+                    </Button>
+                }
+
             </Grid>
         </div>
     )

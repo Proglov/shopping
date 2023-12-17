@@ -1,4 +1,6 @@
-import CustomSlider from "./FestivalSlider"
+import Link from "next/link"
+import FestivalCropsComponent from "./FestivalCropsComponent"
+import FestivalSlider from "./FestivalSlider"
 
 const arr = [
     {
@@ -68,14 +70,39 @@ const arr = [
 
 ]
 
-export default function AdvertisementCrops() {
+export default function FestivalCrops() {
 
 
 
     return (
         <div className="m-4 bg-green-800 rounded-xl">
             <div className="text-center p-2 text-slate-50">پیشنهادهای شگفت انگیز</div>
-            <CustomSlider slides={arr} />
+
+            {/* xs */}
+            <div className='overflow-x-scroll relative w-full sm:hidden flex'>
+
+                <div className='flex'>
+                    {arr.map((slide, i) => (
+                        <div key={i}>
+                            <FestivalCropsComponent {...slide} isSelected={false} />
+                        </div>
+                    ))}
+                </div>
+
+
+                <div className='min-w-fit h-5  text-indigo-300 mx-2' style={{ transform: 'translateY(170px)' }}>
+                    <Link href='/suggestion'>
+                        نمایش بیشتر
+                    </Link>
+                </div>
+
+            </div>
+
+            {/* not xs */}
+            <div className="sm:block hidden">
+                <FestivalSlider slides={arr} />
+            </div>
+
         </div>
     )
 }
