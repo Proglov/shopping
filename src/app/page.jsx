@@ -1,4 +1,4 @@
-import AdvertisementCrops from "@/components/home/FestivalCrops";
+import FestivalCrops from "@/components/home/FestivalCrops";
 import Categories from "@/components/home/Categories";
 import PopularCrops from "@/components/home/PopularCrops";
 import MajorBuy from "@/components/home/MajorBuy";
@@ -10,7 +10,7 @@ export default function Home() {
   return (
     <>
       <NavBar />
-      <AdvertisementCrops />
+      <FestivalCrops />
       <Categories />
       <PopularCrops />
       <MajorBuy />

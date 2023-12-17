@@ -1,3 +1,4 @@
+import MajorBuyComponent from './MajorBuyComponent'
 import MajorSlider from './MajorSlider'
 
 const arr = [
@@ -64,7 +65,24 @@ export default function MajorBuy() {
     return (
         <div className="m-4 bg-red-500 rounded-xl">
             <div className="text-center p-2 text-slate-50">خرید عمده</div>
-            <MajorSlider slides={arr} />
+
+            {/* xs */}
+            <div
+                className='overflow-x-scroll relative w-full sm:hidden block'>
+                <div
+                    className='flex'>
+                    {arr.map((slide, i) => (
+                        <div key={i}>
+                            <MajorBuyComponent {...slide} isSelected={false} />
+                        </div>
+                    ))}
+                </div>
+            </div>
+
+            {/* not xs */}
+            <div className="sm:block hidden">
+                <MajorSlider slides={arr} />
+            </div>
         </div>
     )
 }

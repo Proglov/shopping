@@ -90,54 +90,17 @@ const MajorSlider = ({ slides }) => {
 
 
 
-    const styleXS = {
-        transform: `translateX(${position + currentIndex * eachSlideWidth}px)`,
-        transition: `${isDragging ? 'none' : 'all ease 0.5s'}`
-    }
+    const sliderStyle = x => ({
+        transform: `translateX(${position + (currentIndex < slidesLength - x ? currentIndex : slidesLength - x) * eachSlideWidth}px)`,
+        transition: `${isDragging ? null : 'all ease 0.5s'}`
+    })
 
-    const styleSM = {
-        transform: `translateX(${position + (currentIndex < slidesLength - 2 ? currentIndex : slidesLength - 2) * eachSlideWidth}px)`,
-        transition: `${isDragging ? 'none' : 'all ease 0.5s'}`
-    }
-
-    const styleMD = {
-        transform: `translateX(${position + (currentIndex < slidesLength - 2 ? currentIndex : slidesLength - 2) * eachSlideWidth}px)`,
-        transition: `${isDragging ? 'none' : 'all ease 0.5s'}`
-    }
-
-    const styleLG = {
-        transform: `translateX(${position + (currentIndex < slidesLength - 4 ? currentIndex : slidesLength - 4) * eachSlideWidth}px)`,
-        transition: `${isDragging ? 'none' : 'all ease 0.5s'}`
-    }
-
-    const styleXL = {
-        transform: `translateX(${position + (currentIndex < slidesLength - 4 ? currentIndex : slidesLength - 4) * eachSlideWidth}px)`,
-        transition: `${isDragging ? 'none' : 'all ease 0.5s'}`
-    }
 
     return (
         <div
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
             className='overflow-x-hidden relative w-full'>
-
-            {/* xs */}
-            <div
-                onMouseDown={() => { setIsDragging(true); clearTimeout(timeRef.current); }}
-                onMouseMove={(e) => mouseMove(e)}
-                onMouseUp={mouseUp}
-                onTouchStart={(e) => touchStartHandler(e)}
-                onTouchMove={(e) => onTouchMoveHandler(e)}
-                onTouchEnd={mouseUp}
-                ref={divRef}
-                style={styleXS}
-                className='sm:hidden flex'>
-                {slides.map((slide, i) => (
-                    <div key={i}>
-                        <MajorBuyComponent {...slide} isSelected={i === currentIndex} />
-                    </div>
-                ))}
-            </div>
 
             {/* sm */}
             <div
@@ -148,7 +111,7 @@ const MajorSlider = ({ slides }) => {
                 onTouchMove={(e) => onTouchMoveHandler(e)}
                 onTouchEnd={mouseUp}
                 ref={divRef}
-                style={styleSM}
+                style={sliderStyle(2)}
                 className='sm:flex md:hidden hidden'>
                 {slides.map((slide, i) => (
                     <div key={i}>
@@ -166,7 +129,7 @@ const MajorSlider = ({ slides }) => {
                 onTouchMove={(e) => onTouchMoveHandler(e)}
                 onTouchEnd={mouseUp}
                 ref={divRef}
-                style={styleMD}
+                style={sliderStyle(2)}
                 className='md:flex lg:hidden hidden'>
                 {slides.map((slide, i) => (
                     <div key={i}>
@@ -184,7 +147,7 @@ const MajorSlider = ({ slides }) => {
                 onTouchMove={(e) => onTouchMoveHandler(e)}
                 onTouchEnd={mouseUp}
                 ref={divRef}
-                style={styleLG}
+                style={sliderStyle(4)}
                 className='lg:flex xl:hidden hidden'>
                 {slides.map((slide, i) => (
                     <div key={i}>
@@ -202,7 +165,7 @@ const MajorSlider = ({ slides }) => {
                 onTouchMove={(e) => onTouchMoveHandler(e)}
                 onTouchEnd={mouseUp}
                 ref={divRef}
-                style={styleXL}
+                style={sliderStyle(4)}
                 className='xl:flex hidden'>
                 {slides.map((slide, i) => (
                     <div key={i}>
