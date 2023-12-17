@@ -2,6 +2,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import MajorBuyComponent from './MajorBuyComponent';
 import { GrFormNext, GrFormPrevious } from "react-icons/gr";
+import Link from 'next/link';
 
 const MajorSlider = ({ slides }) => {
     const [position, setPosition] = useState(0);
@@ -70,9 +71,9 @@ const MajorSlider = ({ slides }) => {
         setIsDragging(false);
         const n = position / eachSlideWidth;
         if (n > 0) {
-            nTimesNext(Math.floor(n));
+            nTimesNext(Math.ceil(n));
         } else {
-            nTimesPrev(Math.floor(Math.abs(n)));
+            nTimesPrev(Math.ceil(Math.abs(n)));
         }
         setPosition(0);
     }
@@ -90,11 +91,18 @@ const MajorSlider = ({ slides }) => {
 
 
 
-    const sliderStyle = x => ({
-        transform: `translateX(${position + (currentIndex < slidesLength - x ? currentIndex : slidesLength - x) * eachSlideWidth}px)`,
+    const sliderStyle = (x, y) => ({
+        transform: `translateX(${currentIndex < slidesLength - x ? position + currentIndex * eachSlideWidth : y + position + (slidesLength - x) * eachSlideWidth}px)`,
         transition: `${isDragging ? null : 'all ease 0.5s'}`
     })
 
+    const seeMore = (
+        <div className='min-w-fit h-5 text-white mr-2' style={{ transform: 'translateY(170px)' }}>
+            <Link href='/suggestion'>
+                نمایش بیشتر
+            </Link>
+        </div>
+    )
 
     return (
         <div
@@ -111,13 +119,14 @@ const MajorSlider = ({ slides }) => {
                 onTouchMove={(e) => onTouchMoveHandler(e)}
                 onTouchEnd={mouseUp}
                 ref={divRef}
-                style={sliderStyle(2)}
+                style={sliderStyle(2, 0)}
                 className='sm:flex md:hidden hidden'>
                 {slides.map((slide, i) => (
                     <div key={i}>
                         <MajorBuyComponent {...slide} isSelected={i === currentIndex} />
                     </div>
                 ))}
+                {seeMore}
             </div>
 
             {/* md */}
@@ -129,13 +138,14 @@ const MajorSlider = ({ slides }) => {
                 onTouchMove={(e) => onTouchMoveHandler(e)}
                 onTouchEnd={mouseUp}
                 ref={divRef}
-                style={sliderStyle(2)}
+                style={sliderStyle(3, 90)}
                 className='md:flex lg:hidden hidden'>
                 {slides.map((slide, i) => (
                     <div key={i}>
                         <MajorBuyComponent {...slide} isSelected={i === currentIndex} />
                     </div>
                 ))}
+                {seeMore}
             </div>
 
             {/* lg */}
@@ -147,13 +157,14 @@ const MajorSlider = ({ slides }) => {
                 onTouchMove={(e) => onTouchMoveHandler(e)}
                 onTouchEnd={mouseUp}
                 ref={divRef}
-                style={sliderStyle(4)}
+                style={sliderStyle(4, 100)}
                 className='lg:flex xl:hidden hidden'>
                 {slides.map((slide, i) => (
                     <div key={i}>
                         <MajorBuyComponent {...slide} isSelected={i === currentIndex} />
                     </div>
                 ))}
+                {seeMore}
             </div>
 
             {/* xl */}
@@ -165,13 +176,14 @@ const MajorSlider = ({ slides }) => {
                 onTouchMove={(e) => onTouchMoveHandler(e)}
                 onTouchEnd={mouseUp}
                 ref={divRef}
-                style={sliderStyle(4)}
+                style={sliderStyle(5, 100)}
                 className='xl:flex hidden'>
                 {slides.map((slide, i) => (
                     <div key={i}>
                         <MajorBuyComponent {...slide} isSelected={i === currentIndex} />
                     </div>
                 ))}
+                {seeMore}
             </div>
 
             <div className='flex justify-between mx-2 absolute w-full' style={{ top: '40%' }}>

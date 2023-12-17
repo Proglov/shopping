@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import MajorBuyComponent from './MajorBuyComponent'
 import MajorSlider from './MajorSlider'
 
@@ -64,18 +65,24 @@ const arr = [
 export default function MajorBuy() {
     return (
         <div className="m-4 bg-red-500 rounded-xl">
+
             <div className="text-center p-2 text-slate-50">خرید عمده</div>
 
             {/* xs */}
-            <div
-                className='overflow-x-scroll relative w-full sm:hidden block'>
-                <div
-                    className='flex'>
+            <div className='overflow-x-scroll relative w-full sm:hidden flex'>
+
+                <div className='flex'>
                     {arr.map((slide, i) => (
                         <div key={i}>
                             <MajorBuyComponent {...slide} isSelected={false} />
                         </div>
                     ))}
+                </div>
+
+                <div className='min-w-fit h-5 text-white mx-2' style={{ transform: 'translateY(120px)' }}>
+                    <Link href='/'>
+                        نمایش بیشتر
+                    </Link>
                 </div>
             </div>
 
@@ -83,6 +90,9 @@ export default function MajorBuy() {
             <div className="sm:block hidden">
                 <MajorSlider slides={arr} />
             </div>
+
+
+
         </div>
     )
 }

@@ -2,6 +2,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import FestivalCropsComponent from './FestivalCropsComponent';
 import { GrFormNext, GrFormPrevious } from "react-icons/gr";
+import Link from 'next/link';
 
 const FestivalSlider = ({ slides }) => {
     const [position, setPosition] = useState(0);
@@ -38,17 +39,17 @@ const FestivalSlider = ({ slides }) => {
     }
 
     //autoplay
-    useEffect(() => {
-        if (timeRef.current) clearTimeout(timeRef.current)
+    // useEffect(() => {
+    //     if (timeRef.current) clearTimeout(timeRef.current)
 
-        timeRef.current = setTimeout(() => {
-            if (autoplayIsLeft)
-                handleNext()
-            else handlePrevious()
-        }, 5000);
+    //     timeRef.current = setTimeout(() => {
+    //         if (autoplayIsLeft)
+    //             handleNext()
+    //         else handlePrevious()
+    //     }, 5000);
 
-        return () => clearTimeout(timeRef.current)
-    }, [handleNext, handlePrevious])
+    //     return () => clearTimeout(timeRef.current)
+    // }, [handleNext, handlePrevious])
 
     //stop autoplay
     useEffect(() => {
@@ -75,9 +76,15 @@ const FestivalSlider = ({ slides }) => {
         setIsDragging(false);
         const n = position / eachSlideWidth;
         if (n > 0) {
-            nTimesNext(Math.floor(n));
+            const newN = Math.ceil(n)
+            if (currentIndex + newN < slidesLength)
+                nTimesNext(newN);
+            else setcurrentIndex(slidesLength - 1)
         } else {
-            nTimesPrev(Math.floor(Math.abs(n)));
+            const newN = Math.ceil(Math.abs(n))
+            if (currentIndex - newN >= 0)
+                nTimesPrev(newN);
+            else setcurrentIndex(0)
         }
         setPosition(0);
     }
@@ -93,11 +100,18 @@ const FestivalSlider = ({ slides }) => {
         setPosition(delta);
     }
 
-    const sliderStyle = x => ({
-        transform: `translateX(${position + (currentIndex < slidesLength - x ? currentIndex : slidesLength - x) * eachSlideWidth}px)`,
+    const sliderStyle = (x, y) => ({
+        transform: `translateX(${currentIndex < slidesLength - x ? position + currentIndex * eachSlideWidth : y + position + (slidesLength - x) * eachSlideWidth}px)`,
         transition: `${isDragging ? null : 'all ease 0.5s'}`
     })
 
+    const seeMore = (
+        <div className='min-w-fit h-5 text-indigo-300 mr-2' style={{ transform: 'translateY(230px)' }}>
+            <Link href='/suggestion'>
+                نمایش بیشتر
+            </Link>
+        </div>
+    )
 
     return (
         <div
@@ -114,13 +128,14 @@ const FestivalSlider = ({ slides }) => {
                 onTouchMove={(e) => onTouchMoveHandler(e)}
                 onTouchEnd={mouseUp}
                 ref={divRef}
-                style={sliderStyle(2)}
+                style={sliderStyle(2, 0)}
                 className='sm:flex md:hidden hidden'>
                 {slides.map((slide, i) => (
                     <div key={i}>
                         <FestivalCropsComponent {...slide} isSelected={i === currentIndex} />
                     </div>
                 ))}
+                {seeMore}
             </div>
 
             {/* md */}
@@ -132,13 +147,14 @@ const FestivalSlider = ({ slides }) => {
                 onTouchMove={(e) => onTouchMoveHandler(e)}
                 onTouchEnd={mouseUp}
                 ref={divRef}
-                style={sliderStyle(2)}
+                style={sliderStyle(3, 90)}
                 className='md:flex lg:hidden hidden'>
                 {slides.map((slide, i) => (
                     <div key={i}>
                         <FestivalCropsComponent {...slide} isSelected={i === currentIndex} />
                     </div>
                 ))}
+                {seeMore}
             </div>
 
             {/* lg */}
@@ -150,13 +166,14 @@ const FestivalSlider = ({ slides }) => {
                 onTouchMove={(e) => onTouchMoveHandler(e)}
                 onTouchEnd={mouseUp}
                 ref={divRef}
-                style={sliderStyle(4)}
+                style={sliderStyle(4, 100)}
                 className='lg:flex xl:hidden hidden'>
                 {slides.map((slide, i) => (
                     <div key={i}>
                         <FestivalCropsComponent {...slide} isSelected={i === currentIndex} />
                     </div>
                 ))}
+                {seeMore}
             </div>
 
             {/* xl */}
@@ -168,14 +185,16 @@ const FestivalSlider = ({ slides }) => {
                 onTouchMove={(e) => onTouchMoveHandler(e)}
                 onTouchEnd={mouseUp}
                 ref={divRef}
-                style={sliderStyle(4)}
+                style={sliderStyle(5, 100)}
                 className='xl:flex hidden'>
                 {slides.map((slide, i) => (
                     <div key={i}>
                         <FestivalCropsComponent {...slide} isSelected={i === currentIndex} />
                     </div>
                 ))}
+                {seeMore}
             </div>
+
 
             <div className='flex justify-between mx-2 absolute w-full' style={{ top: '40%' }}>
                 <button onClick={handlePrevious}>
