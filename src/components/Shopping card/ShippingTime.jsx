@@ -16,6 +16,7 @@ import RadioButtonUncheckedIcon from "@mui/icons-material/RadioButtonUnchecked";
 import { blue } from "@mui/material/colors";
 import { convertToFarsiNumbers, formatPrice } from "@/utils/funcs";
 import ExpandMoreOutlinedIcon from "@mui/icons-material/ExpandMoreOutlined";
+import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 
 export default function ShippingTime() {
   const [active, setActive] = useState("today");
@@ -50,20 +51,20 @@ export default function ShippingTime() {
   return (
     <>
       <Box className="p-5 mb-1" component="div">
-        <Card className="border-gray-300">
+        <Card className="border-2 border-gray-200 rounded-xl">
           <CardContent>
             <Grid container className="mb-4">
               <Grid
                 item
                 xs={1.5}
-                xl={0.4}
+                xl={0.5}
                 container
                 direction="row"
                 alignItems="center"
               >
-                <CalendarTodayOutlinedIcon />
+                <CalendarTodayOutlinedIcon fontSize="large"/>
               </Grid>
-              <Grid item xs={10.5} xl={11.6} container direction="column">
+              <Grid item xs={10.5} xl={11.4} container direction="column">
                 <Grid>
                   <Typography
                     variant="h5"
@@ -105,7 +106,7 @@ export default function ShippingTime() {
             <Box className="grid justify-items-center" component="div">
               <Button
                 variant="contained"
-                className={`mb-3 text-bold text-xl hover:text-white hover:bg-blue-400 ${
+                className={`mb-3 text-bold text-xl hover:text-white hover:bg-blue-400 rounded-lg ${
                   active === "today"
                     ? "bg-blue-700 text-white"
                     : "bg-blue-100 text-blue-600"
@@ -128,7 +129,7 @@ export default function ShippingTime() {
               </Button>
               <Button
                 variant="contained"
-                className={`mb-3 text-bold text-xl hover:text-white hover:bg-blue-400 ${
+                className={`mb-3 text-bold text-xl hover:text-white hover:bg-blue-400 rounded-lg ${
                   active === "tomorrow"
                     ? "bg-blue-700 text-white"
                     : "bg-blue-100 text-blue-600"
@@ -298,6 +299,19 @@ export default function ShippingTime() {
                   >
                     زمان های تحویل بیشتر
                     <ExpandMoreOutlinedIcon sx={{ fontSize: 40 }} />
+                  </Button>
+                </Box>
+              )}
+              {showMore && (
+                <Box component="div" className="grid justify-items-center">
+                  <Button
+                    size="medium"
+                    variant="text"
+                    className="text-xl text-red-700 text-bold"
+                    onClick={() => setShowMore(false)}
+                  >
+                    زمان های تحویل کمتر
+                    <ExpandLessIcon sx={{ fontSize: 40 }} />
                   </Button>
                 </Box>
               )}

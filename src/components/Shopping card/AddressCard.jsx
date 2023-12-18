@@ -26,7 +26,7 @@ export default function AddressCard() {
   return (
     <>
       <Box className="p-5 mb-1" component="div">
-        <Card className="border-gray-300">
+        <Card className="border-2 border-gray-200 rounded-xl">
           <CardContent>
             <Typography
               variant="h5"
@@ -45,7 +45,7 @@ export default function AddressCard() {
               آدرس تحویل سفارش
               <Button
                 variant="outlined"
-                className="bg-gray-100 border-gray-100 hover:border-gray-300 text-gray-900 font-medium float-left"
+                className="bg-gray-200 border-gray-300 hover:border-gray-400 hover:bg-gray-300 text-gray-950 font-medium float-left rounded-lg"
                 sx={{
                   fontSize: {
                     xs: "10px",
