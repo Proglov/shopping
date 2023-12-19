@@ -47,6 +47,10 @@ export default function ShoppingCard() {
     },
   ]);
 
+  let counter = product.reduce((accumulator, currentObject) => {
+    return accumulator + currentObject.number;
+  }, 0).toString();
+
   const handleIncrement = (Id) => {
     setProduct(
       product.map((item) => {
@@ -135,6 +139,22 @@ export default function ShoppingCard() {
                 </Button>
               </Link>
             </Typography>
+            <Typography
+              variant="h5"
+              component="div"
+              className="mb-2 mr-1.5 text-gray-600"
+              sx={{
+                fontSize: {
+                  xs: "18px",
+                  sm: "16px",
+                  md: "20px",
+                  lg: "20px",
+                  xl: "24px",
+                },
+              }}
+            >
+              {convertToFarsiNumbers(counter)} کالا
+            </Typography>
             <div className="grid justify-items-center">
               {product.length === 0
                 ? "سبد خرید شما خالی است!"
@@ -150,7 +170,9 @@ export default function ShoppingCard() {
                             <img src={item.src} alt="Product" />
                           </div>
                           <div className="p-2 text-gray-900 sm:col-span-3 grid grid-rows-3 grid-cols-1 justify-items-center items-center sm:grid-rows-2 sm:grid-cols-2 sm:justify-items-start">
-                            <div className="sm:col-span-2 mb-2 sm:mb-0">{item.name}</div>
+                            <div className="sm:col-span-2 mb-2 sm:mb-0">
+                              {item.name}
+                            </div>
                             <div className="mb-2 sm:mb-0">
                               <div className="border border-gray-400 rounded-lg w-auto inline-block">
                                 <Button
