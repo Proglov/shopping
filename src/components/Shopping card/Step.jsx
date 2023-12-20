@@ -11,7 +11,7 @@ export default function Step({ active }) {
 
   return (
     <>
-      <Box className="mt-10">
+      <Box className="mt-10 mb-10">
         <Grid>
           <Grid
             item
@@ -35,11 +35,11 @@ export default function Step({ active }) {
                   width: "50px",
                   height: "50px",
                   lineHeight: "50px",
-                  top: "-20px",
+                  top: "-22px",
                   right: "27%",
                 }}
               >
-                {farsiNumCharacter('1')}
+                {farsiNumCharacter("1")}
               </div>
             </div>
             <div
@@ -55,11 +55,11 @@ export default function Step({ active }) {
                   width: "50px",
                   height: "50px",
                   lineHeight: "50px",
-                  top: "-20px",
+                  top: "-22px",
                   right: "27%",
                 }}
               >
-                {farsiNumCharacter('2')}
+                {farsiNumCharacter("2")}
               </div>
             </div>
             <div
@@ -75,11 +75,11 @@ export default function Step({ active }) {
                   width: "50px",
                   height: "50px",
                   lineHeight: "50px",
-                  top: "-20px",
+                  top: "-22px",
                   right: "27%",
                 }}
               >
-                {farsiNumCharacter('3')}
+                {farsiNumCharacter("3")}
               </div>
             </div>
           </Grid>
@@ -91,10 +91,10 @@ export default function Step({ active }) {
             justifyContent="space-around"
             alignItems="center"
           >
-            <div className={active == 0 ? `${textEnable}` : `${textDisable}`} >
+            <div className={active == 0 ? `${textEnable}` : `${textDisable}`}>
               اطلاعات ارسال
             </div>
-            <div className={active == 1 ? `${textEnable}` : `${textDisable}`}>
+            <div className={active == 1 ? `${textEnable}` : `${textDisable} ml-7 mr-7`}>
               پرداخت
             </div>
             <div className={active == 2 ? `${textEnable}` : `${textDisable}`}>
