@@ -7,7 +7,7 @@ import { convertToFarsiNumbers, formatPrice } from "@/utils/funcs";
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import { useState } from "react";
 
-export default function Offers() {
+export default function Offers({ setProduct }) {
   const off = [
     {
       name: "خامه صباح - 200 میلی لیتر",
@@ -107,6 +107,22 @@ export default function Offers() {
     setIndex((current) => (current - 1 + title.length) % title.length);
   };
 
+  const Add = (item) => {
+    setProduct((prevState) => {
+      return [
+        ...prevState,
+        {
+          name: item.name,
+          number: 1,
+          src: item.src,
+          price: item.realPrice,
+          off: item.off,
+          code: Math.floor(Math.random() * 99999),
+        },
+      ];
+    });
+  };
+
   return (
     <>
       <Box className="p-5 mb-1" component="div">
@@ -149,7 +165,8 @@ export default function Offers() {
                           <div className="flex justify-end m-3 ml-8 line-through text-gray-400">
                             {convertToFarsiNumbers(
                               formatPrice(item.realPrice.toString())
-                            )}
+                            )}{" "}
+                            تومان
                           </div>
                         </div>
                         <div className="sm:text-lg">
@@ -160,7 +177,8 @@ export default function Offers() {
                                 100
                               ).toString()
                             )
-                          )}
+                          )}{" "}
+                          تومان
                         </div>
                       </div>
                       <div className="sm:self-end justify-self-center">
@@ -175,6 +193,10 @@ export default function Offers() {
                               lg: "14px",
                               xl: "14px",
                             },
+                          }}
+                          onClick={() => {
+                            Add(item);
+                            console.log(item);
                           }}
                         >
                           افزودن به سبد
@@ -215,7 +237,8 @@ export default function Offers() {
                           <div className="flex justify-end m-3 ml-8 line-through text-gray-400">
                             {convertToFarsiNumbers(
                               formatPrice(item.realPrice.toString())
-                            )}
+                            )}{" "}
+                            تومان
                           </div>
                         </div>
                         <div className="sm:text-lg">
@@ -226,7 +249,8 @@ export default function Offers() {
                                 100
                               ).toString()
                             )
-                          )}
+                          )}{" "}
+                          تومان
                         </div>
                       </div>
                       <div className="sm:self-end justify-self-center">
@@ -241,6 +265,10 @@ export default function Offers() {
                               lg: "14px",
                               xl: "14px",
                             },
+                          }}
+                          onClick={() => {
+                            Add(item);
+                            console.log(item);
                           }}
                         >
                           افزودن به سبد
@@ -281,7 +309,8 @@ export default function Offers() {
                           <div className="flex justify-end m-3 ml-8 line-through text-gray-400">
                             {convertToFarsiNumbers(
                               formatPrice(item.realPrice.toString())
-                            )}
+                            )}{" "}
+                            تومان
                           </div>
                         </div>
                         <div className="sm:text-lg">
@@ -292,7 +321,8 @@ export default function Offers() {
                                 100
                               ).toString()
                             )
-                          )}
+                          )}{" "}
+                          تومان
                         </div>
                       </div>
                       <div className="sm:self-end justify-self-center">
@@ -307,6 +337,10 @@ export default function Offers() {
                               lg: "14px",
                               xl: "14px",
                             },
+                          }}
+                          onClick={() => {
+                            Add(item);
+                            console.log(item);
                           }}
                         >
                           افزودن به سبد

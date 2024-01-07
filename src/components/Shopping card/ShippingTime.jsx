@@ -16,11 +16,11 @@ import RadioButtonUncheckedIcon from "@mui/icons-material/RadioButtonUnchecked";
 import { blue } from "@mui/material/colors";
 import { convertToFarsiNumbers, formatPrice } from "@/utils/funcs";
 import ExpandMoreOutlinedIcon from "@mui/icons-material/ExpandMoreOutlined";
-import ExpandLessIcon from '@mui/icons-material/ExpandLess';
+import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 
-export default function ShippingTime() {
+export default function ShippingTime({ setTime }) {
   const [active, setActive] = useState("today");
-  const [selectAddress, setSelectAddress] = useState(0);
+  const [selectTime, setSelectTime] = useState(-1);
   const [showMore, setShowMore] = useState(false);
 
   const todayTime = [
@@ -48,6 +48,13 @@ export default function ShippingTime() {
     { start: "19:00", end: "20:00", price: "40000" },
   ];
 
+  const selected = (date) => {
+    const day = active === "today" ? 0 : 1;
+    const time = [parseInt(date.start), parseInt(date.end)];
+    const price = date.price;
+    setTime({ day: day, time: time, price: price });
+  };
+
   return (
     <>
       <Box className="p-5 mb-1" component="div">
@@ -62,7 +69,7 @@ export default function ShippingTime() {
                 direction="row"
                 alignItems="center"
               >
-                <CalendarTodayOutlinedIcon fontSize="large"/>
+                <CalendarTodayOutlinedIcon fontSize="large" />
               </Grid>
               <Grid item xs={10.5} xl={11.4} container direction="column">
                 <Grid>
@@ -123,6 +130,7 @@ export default function ShippingTime() {
                 onClick={() => {
                   setActive("today");
                   setShowMore(false);
+                  setSelectTime(-1);
                 }}
               >
                 امروز
@@ -146,6 +154,7 @@ export default function ShippingTime() {
                 onClick={() => {
                   setActive("tomorrow");
                   setShowMore(false);
+                  setSelectTime(-1);
                 }}
               >
                 فردا
@@ -175,9 +184,12 @@ export default function ShippingTime() {
                             checkedIcon={
                               <CheckCircleIcon sx={{ color: blue[700] }} />
                             }
-                            onClick={() => setSelectAddress(index)}
+                            onClick={() => {
+                              setSelectTime(index);
+                              selected(item);
+                            }}
                             className="ml-2"
-                            checked={selectAddress === index}
+                            checked={selectTime === index}
                           />
                           {convertToFarsiNumbers(item.start)} تا{" "}
                           {convertToFarsiNumbers(item.end)}
@@ -208,9 +220,12 @@ export default function ShippingTime() {
                             checkedIcon={
                               <CheckCircleIcon sx={{ color: blue[700] }} />
                             }
-                            onClick={() => setSelectAddress(index)}
+                            onClick={() => {
+                              setSelectTime(index);
+                              selected(item);
+                            }}
                             className="ml-2"
-                            checked={selectAddress === index}
+                            checked={selectTime === index}
                           />
                           {convertToFarsiNumbers(item.start)} تا{" "}
                           {convertToFarsiNumbers(item.end)}
@@ -243,9 +258,12 @@ export default function ShippingTime() {
                             checkedIcon={
                               <CheckCircleIcon sx={{ color: blue[700] }} />
                             }
-                            onClick={() => setSelectAddress(index)}
+                            onClick={() => {
+                              setSelectTime(index);
+                              selected(item);
+                            }}
                             className="ml-2"
-                            checked={selectAddress === index}
+                            checked={selectTime === index}
                           />
                           {convertToFarsiNumbers(item.start)} تا{" "}
                           {convertToFarsiNumbers(item.end)}
@@ -276,9 +294,12 @@ export default function ShippingTime() {
                             checkedIcon={
                               <CheckCircleIcon sx={{ color: blue[700] }} />
                             }
-                            onClick={() => setSelectAddress(index)}
+                            onClick={() => {
+                              setSelectTime(index);
+                              selected(item);
+                            }}
                             className="ml-2"
-                            checked={selectAddress === index}
+                            checked={selectTime === index}
                           />
                           {convertToFarsiNumbers(item.start)} تا{" "}
                           {convertToFarsiNumbers(item.end)}

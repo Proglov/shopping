@@ -14,8 +14,10 @@ import RemoveOutlinedIcon from "@mui/icons-material/RemoveOutlined";
 import AddIcon from "@mui/icons-material/Add";
 import { useState } from "react";
 import { red } from "@mui/material/colors";
+import Offers from "./Offers";
+import Bill from "./Bill";
 
-export default function ShoppingCard() {
+export default function ShoppingCard({ Time }) {
   const [product, setProduct] = useState([
     {
       code: "546",
@@ -23,6 +25,7 @@ export default function ShoppingCard() {
       name: "شامپو پرژک مدل سیر حجم 450 میلی لیتر",
       src: "/img/home/category-labaniat.jpg",
       price: "1000",
+      off: "60",
     },
     {
       code: "525",
@@ -30,6 +33,7 @@ export default function ShoppingCard() {
       name: "شامپو پرژک مدل سیر حجم 450 میلی لیتر",
       src: "/img/home/tanagholat.jpg",
       price: "1700",
+      off: "60",
     },
     {
       code: "446",
@@ -37,6 +41,7 @@ export default function ShoppingCard() {
       name: "شامپو پرژک مدل سیر حجم 450 میلی لیتر",
       src: "/img/home/category-labaniat.jpg",
       price: "1080.45",
+      off: "60",
     },
     {
       code: "687",
@@ -44,12 +49,15 @@ export default function ShoppingCard() {
       name: "شامپو پرژک مدل سیر حجم 450 میلی لیتر",
       src: "/img/home/tanagholat.jpg",
       price: "1500",
+      off: "60",
     },
   ]);
 
-  let counter = product.reduce((accumulator, currentObject) => {
-    return accumulator + currentObject.number;
-  }, 0).toString();
+  let counter = product
+    .reduce((accumulator, currentObject) => {
+      return accumulator + currentObject.number;
+    }, 0)
+    .toString();
 
   const handleIncrement = (Id) => {
     setProduct(
@@ -198,16 +206,29 @@ export default function ShoppingCard() {
                                 </Button>
                               </div>
                             </div>
-                            <div>
-                              قیمت :
-                              {convertToFarsiNumbers(
-                                formatPrice(
-                                  Math.ceil(
-                                    item.number * parseFloat(item.price)
-                                  ).toString()
-                                )
-                              )}{" "}
-                              تومان
+                            <div className="grid grid-rows-2">
+                              <div className="flex justify-start px-2 sm:text-base text-sm">
+                                <span className="bg-red-500 rounded-md mt-2 text-center h-7 sm:pt-1 pt-1.5 sm:min-w-[50px] p-1 text-white">
+                                  {convertToFarsiNumbers(item.off.toString())}%
+                                </span>
+                                <div className="flex justify-end m-3 ml-8 line-through text-gray-400">
+                                  {convertToFarsiNumbers(
+                                    formatPrice(item.price.toString())
+                                  )}{" "}
+                                  تومان
+                                </div>
+                              </div>
+                              <div>
+                                قیمت :
+                                {convertToFarsiNumbers(
+                                  formatPrice(
+                                    Math.ceil(
+                                      (item.number * parseInt(item.price) * (100 - item.off)) / 100
+                                    ).toString()
+                                  )
+                                )}{" "}
+                                تومان
+                              </div>
                             </div>
                           </div>
                         </div>
@@ -218,6 +239,8 @@ export default function ShoppingCard() {
           </CardContent>
         </Card>
       </Box>
+      <Offers setProduct={setProduct} />
+      <Bill product={product} Time={Time} />
     </>
   );
 }
