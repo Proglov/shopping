@@ -213,7 +213,11 @@ export default function ShoppingCard({ Time }) {
                                 </span>
                                 <div className="flex justify-end m-3 ml-8 line-through text-gray-400">
                                   {convertToFarsiNumbers(
-                                    formatPrice(item.price.toString())
+                                    formatPrice(
+                                      (
+                                        item.number * parseInt(item.price)
+                                      ).toString()
+                                    )
                                   )}{" "}
                                   تومان
                                 </div>
@@ -223,7 +227,10 @@ export default function ShoppingCard({ Time }) {
                                 {convertToFarsiNumbers(
                                   formatPrice(
                                     Math.ceil(
-                                      (item.number * parseInt(item.price) * (100 - item.off)) / 100
+                                      (item.number *
+                                        parseInt(item.price) *
+                                        (100 - item.off)) /
+                                        100
                                     ).toString()
                                   )
                                 )}{" "}

@@ -90,7 +90,7 @@ export const giveMeDateInFa = (str) => {
 };
 
 export function formatPrice(price) {
-    const formattedPrice = price.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-
-    return formattedPrice;
+    const formatter = new Intl.NumberFormat('fa-IR');
+    
+    return formatter.format(price);
 }

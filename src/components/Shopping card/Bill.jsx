@@ -33,7 +33,7 @@ export default function Bill({ product, Time }) {
         <Card className="border-2 p-3 border-gray-200 rounded-xl col-span-2">
           <Box className="grid grid-cols-5 grid-rows-5" component="div">
             <Box
-              className="col-span-3 lg:text-2xl"
+              className="col-span-3 lg:text-2xl mb-1"
               sx={{
                 fontSize: {
                   xs: "18px",
@@ -45,7 +45,7 @@ export default function Bill({ product, Time }) {
               تعداد اقلام
             </Box>
             <Box
-              className="lg:text-2xl col-span-2"
+              className="lg:text-2xl col-span-2 mb-1"
               sx={{
                 fontSize: {
                   xs: "18px",
@@ -58,7 +58,7 @@ export default function Bill({ product, Time }) {
               <span className="text-lg text-gray-600">کالا</span>{" "}
             </Box>
             <Box
-              className="col-span-3 lg:text-2xl"
+              className="col-span-3 lg:text-2xl mb-1"
               sx={{
                 fontSize: {
                   xs: "18px",
@@ -67,10 +67,10 @@ export default function Bill({ product, Time }) {
                 },
               }}
             >
-              مبلغ کل سفارش
+              مبلغ کل اقلام
             </Box>
             <Box
-              className="lg:text-2xl col-span-2"
+              className="lg:text-2xl col-span-2 mb-1"
               sx={{
                 fontSize: {
                   xs: "18px",
@@ -83,7 +83,7 @@ export default function Bill({ product, Time }) {
               <span className="text-lg text-gray-600">تومان</span>
             </Box>
             <Box
-              className="col-span-3 lg:text-2xl"
+              className="col-span-3 lg:text-2xl mb-1"
               sx={{
                 fontSize: {
                   xs: "18px",
@@ -95,7 +95,7 @@ export default function Bill({ product, Time }) {
               هزینه بسته بندی
             </Box>
             <Box
-              className="lg:text-2xl col-span-2"
+              className="lg:text-2xl col-span-2 mb-1"
               sx={{
                 fontSize: {
                   xs: "18px",
@@ -108,7 +108,7 @@ export default function Bill({ product, Time }) {
               <span className="text-lg text-gray-600">تومان</span>
             </Box>
             <Box
-              className="col-span-3 lg:text-2xl"
+              className="col-span-3 lg:text-2xl mb-1"
               sx={{
                 fontSize: {
                   xs: "18px",
@@ -120,7 +120,7 @@ export default function Bill({ product, Time }) {
               هزینه ارسال
             </Box>
             <Box
-              className="lg:text-2xl col-span-2"
+              className="lg:text-2xl col-span-2 mb-1"
               sx={{
                 fontSize: {
                   xs: "18px",
@@ -139,7 +139,7 @@ export default function Bill({ product, Time }) {
               )}{" "}
             </Box>
             <Box
-              className="col-span-3 lg:text-2xl text-green-500"
+              className="col-span-3 lg:text-2xl text-green-500 mb-1"
               sx={{
                 fontSize: {
                   xs: "18px",
@@ -151,7 +151,7 @@ export default function Bill({ product, Time }) {
               سود شما از این خرید
             </Box>
             <Box
-              className="text-green-500 lg:text-xl col-span-2"
+              className="text-green-500 lg:text-xl col-span-2 mb-1"
               sx={{
                 fontSize: {
                   xs: "18px",
@@ -162,6 +162,39 @@ export default function Bill({ product, Time }) {
             >
               {convertToFarsiNumbers(formatPrice(profit(product)))}{" "}
               <span className="text-lg text-green-400">تومان</span>
+            </Box>
+            <Box
+              className="col-span-3 lg:text-2xl mb-1"
+              sx={{
+                fontSize: {
+                  xs: "18px",
+                  sm: "16px",
+                  md: "20px",
+                },
+              }}
+            >
+              مبلغ قابل پرداخت
+            </Box>
+            <Box
+              className="lg:text-2xl col-span-2 mb-1"
+              sx={{
+                fontSize: {
+                  xs: "18px",
+                  sm: "16px",
+                  md: "20px",
+                },
+              }}
+            >
+              {convertToFarsiNumbers(
+                formatPrice(
+                  (
+                    parseInt(totalPrice(product)) +
+                    serviceFee +
+                    parseInt(Time.price)
+                  ).toString()
+                )
+              )}{" "}
+              <span className="text-lg text-gray-600">تومان</span>
             </Box>
           </Box>
         </Card>

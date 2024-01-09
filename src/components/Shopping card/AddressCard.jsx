@@ -12,16 +12,25 @@ import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import RadioButtonUncheckedIcon from "@mui/icons-material/RadioButtonUnchecked";
 import { blue } from "@mui/material/colors";
 import { useState } from "react";
+import EditAddress from "./EditAddress";
 
 export default function AddressCard() {
   const [selectAddress, setSelectAddress] = useState(0);
-  const address = [
+  const [open, setOpen] = useState(false);
+  const [address, setAddress] = useState([
     "تهران،هروی-حسین آباد،میدان،ساختمان،پلاک",
     "تهران،هروی-حسین آباد،میدان،ساختمان،پلاک",
     "تهران،هروی-حسین آباد،میدان،ساختمان،پلاک",
     "تهران،هروی-حسین آباد،میدان،ساختمان،پلاک",
     "تهران،هروی-حسین آباد،میدان،ساختمان،پلاک",
-  ];
+  ]);
+
+  const handleOpen = () => {
+    setOpen(true);
+  };
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   return (
     <>
@@ -55,6 +64,7 @@ export default function AddressCard() {
                     xl: "18px",
                   },
                 }}
+                onClick={handleOpen}
               >
                 ویرایش آدرس تحویل
               </Button>
@@ -89,6 +99,7 @@ export default function AddressCard() {
           </CardContent>
         </Card>
       </Box>
+      <EditAddress open={open} close={handleClose} address={address} setAddress={setAddress}/>
     </>
   );
 }
