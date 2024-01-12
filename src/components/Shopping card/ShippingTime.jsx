@@ -18,7 +18,7 @@ import { convertToFarsiNumbers, formatPrice } from "@/utils/funcs";
 import ExpandMoreOutlinedIcon from "@mui/icons-material/ExpandMoreOutlined";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 
-export default function ShippingTime({ setTime }) {
+export default function ShippingTime({ setTime, Time }) {
   const [active, setActive] = useState("today");
   const [selectTime, setSelectTime] = useState(-1);
   const [showMore, setShowMore] = useState(false);
@@ -52,7 +52,8 @@ export default function ShippingTime({ setTime }) {
     const day = active === "today" ? 0 : 1;
     const time = [parseInt(date.start), parseInt(date.end)];
     const price = date.price;
-    setTime({ day: day, time: time, price: price });
+    const select = true;
+    setTime({ day: day, time: time, price: price, select: select });
   };
 
   return (
@@ -131,6 +132,7 @@ export default function ShippingTime({ setTime }) {
                   setActive("today");
                   setShowMore(false);
                   setSelectTime(-1);
+                  setTime({ ...Time, select: false });
                 }}
               >
                 امروز
@@ -155,6 +157,7 @@ export default function ShippingTime({ setTime }) {
                   setActive("tomorrow");
                   setShowMore(false);
                   setSelectTime(-1);
+                  setTime({ ...Time, select: false });
                 }}
               >
                 فردا

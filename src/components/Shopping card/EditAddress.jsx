@@ -163,7 +163,11 @@ export default function EditAddress({ open, close, address, setAddress }) {
         <Button
           variant="contained"
           className="bg-red-500 text-white hover:bg-red-600 mr-2"
-          onClick={close}
+          onClick={() => {
+            close();
+            onSet(3);
+            setEdit({ ...edit, [0]: false });
+          }}
         >
           بستن
         </Button>

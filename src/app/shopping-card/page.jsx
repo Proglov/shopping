@@ -13,6 +13,7 @@ export default function Card() {
     day: 0, // today = 0 , tomorrow = 1
     time: [0, 0], // [start,end]
     price: "0",
+    select: false,
   });
 
   return (
@@ -20,7 +21,7 @@ export default function Card() {
       <NavBar />
       <Step active={0} />
       <AddressCard />
-      <ShippingTime setTime={setTime} />
+      <ShippingTime setTime={setTime} Time={Time} />
       <ShoppingCard Time={Time} />
       <FooterMenu active={2} />
     </>
