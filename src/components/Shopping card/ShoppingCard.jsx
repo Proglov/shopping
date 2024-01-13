@@ -17,7 +17,7 @@ import { red } from "@mui/material/colors";
 import Offers from "./Offers";
 import Bill from "./Bill";
 
-export default function ShoppingCard({ Time }) {
+export default function ShoppingCard({ Time, step }) {
   const [product, setProduct] = useState([
     {
       code: "546",
@@ -119,33 +119,37 @@ export default function ShoppingCard({ Time }) {
                 }}
               />{" "}
               سبد خرید شما
-              <Link href="/">
-                <Button
-                  variant="outlined"
-                  className="bg-green-500 border-green-600 hover:border-green-700 hover:bg-green-600 text-white font-medium float-left rounded-lg"
-                  sx={{
-                    fontSize: {
-                      xs: "10px",
-                      sm: "10px",
-                      md: "14px",
-                      lg: "18px",
-                      xl: "18px",
-                    },
-                  }}
-                >
-                  اضافه کردن به سبد
-                  <AddShoppingCartIcon
+              {step !== 0 ? (
+                <Link href="/">
+                  <Button
+                    variant="outlined"
+                    className="bg-green-500 border-green-600 hover:border-green-700 hover:bg-green-600 text-white font-medium float-left rounded-lg"
                     sx={{
-                      marginRight: "3px",
                       fontSize: {
-                        xs: "14px",
-                        sm: "16px",
-                        md: "18px",
+                        xs: "10px",
+                        sm: "10px",
+                        md: "14px",
+                        lg: "18px",
+                        xl: "18px",
                       },
                     }}
-                  />
-                </Button>
-              </Link>
+                  >
+                    اضافه کردن به سبد
+                    <AddShoppingCartIcon
+                      sx={{
+                        marginRight: "3px",
+                        fontSize: {
+                          xs: "14px",
+                          sm: "16px",
+                          md: "18px",
+                        },
+                      }}
+                    />
+                  </Button>
+                </Link>
+              ) : (
+                ""
+              )}
             </Typography>
             <Typography
               variant="h5"
@@ -246,8 +250,14 @@ export default function ShoppingCard({ Time }) {
           </CardContent>
         </Card>
       </Box>
-      <Offers setProduct={setProduct} />
-      <Bill product={product} Time={Time} />
+      {step !== 0 ? (
+        <>
+          <Offers setProduct={setProduct} />
+          <Bill product={product} Time={Time} />
+        </>
+      ) : (
+        <Bill product={product} />
+      )}
     </>
   );
 }
