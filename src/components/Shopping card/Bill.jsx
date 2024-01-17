@@ -3,8 +3,15 @@
 import { convertToFarsiNumbers, formatPrice } from "@/utils/funcs";
 import { Box, Button, Card, TextField } from "@mui/material";
 import ConfirmationNumberOutlinedIcon from "@mui/icons-material/ConfirmationNumberOutlined";
+import { useCartProducts } from "@/context/CartProductsContext";
+import { useTime } from "@/context/TimeContext";
+import { useAddress } from "@/context/AddressContext";
 
-export default function Bill({ product, Time = null }) {
+export default function Bill({ step = 1 }) {
+  const product = useCartProducts();
+  const Time = useTime();
+  const address = useAddress();
+
   let serviceFee = 1479;
 
   function Number(arr) {
@@ -83,7 +90,7 @@ export default function Bill({ product, Time = null }) {
               {convertToFarsiNumbers(formatPrice(totalPrice(product)))}{" "}
               <span className="text-lg text-gray-600">تومان</span>
             </Box>
-            {Time !== null ? (
+            {step !== 0 ? (
               <>
                 <Box
                   className="col-span-3 lg:text-2xl mb-2"
@@ -172,7 +179,7 @@ export default function Bill({ product, Time = null }) {
               {convertToFarsiNumbers(formatPrice(profit(product)))}{" "}
               <span className="text-lg text-green-400">تومان</span>
             </Box>
-            {Time !== null ? (
+            {step !== 0 ? (
               <>
                 <Box
                   className="col-span-3 lg:text-2xl mb-2"
@@ -259,17 +266,17 @@ export default function Bill({ product, Time = null }) {
           </Box>
         </Card>
       </Box>
-      {Time !== null ? (
+      {step !== 0 ? (
         <>
           <Box className="p-5 mb-1 grid justify-center" component="div">
-            {!Time.select ? (
+            {!Time.select | (address === "") ? (
               <div className="text-red-600 mb-2 text-center text-xl">
-                لطفا زمان ارسال را انتخاب کنید!
+                لطفا آدرس یا زمان ارسال را انتخاب کنید!
               </div>
             ) : (
               ""
             )}
-            {Time.select ? (
+            {Time.select && (address !== "") ? (
               <Button
                 variant="contained"
                 className="bg-blue-500 text-bold text-xl hover:bg-blue-600 rounded-lg"

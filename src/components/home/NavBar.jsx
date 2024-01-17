@@ -16,6 +16,8 @@ import { LiaSignInAltSolid, LiaSignOutAltSolid } from "react-icons/lia";
 import { GiShoppingCart } from "react-icons/gi";
 import Link from "next/link";
 import Cart from "../Shopping card/Cart";
+import { useCartProducts } from "@/context/CartProductsContext";
+import { convertToFarsiNumbers } from "@/utils/funcs";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -60,6 +62,13 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 export default function NavBar() {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [open, setOpen] = React.useState(false);
+  const cartProducts = useCartProducts();
+
+  let counter = cartProducts
+    .reduce((accumulator, currentObject) => {
+      return accumulator + currentObject.number;
+    }, 0)
+    .toString();
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -102,14 +111,18 @@ export default function NavBar() {
             }}
           >
             <IconButton onClick={handleClickOpen}>
-              <Badge badgeContent={2} color="error" sx={{ zIndex: "300" }}>
+              <Badge
+                badgeContent={convertToFarsiNumbers(counter)}
+                color="error"
+                sx={{ zIndex: "300" }}
+              >
                 <GiShoppingCart
                   className="text-2xl"
                   style={{ zIndex: "300" }}
                 />
               </Badge>
             </IconButton>
-            <Cart Close={handleClose} Open={open}/>
+            <Cart Close={handleClose} Open={open} />
           </Typography>
 
           {/* ورود و خروج */}

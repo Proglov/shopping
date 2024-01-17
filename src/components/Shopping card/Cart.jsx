@@ -6,6 +6,7 @@ import { forwardRef, useState } from "react";
 import { convertToFarsiNumbers, formatPrice } from "@/utils/funcs";
 import ShoppingCard from "./ShoppingCard";
 import Link from "next/link";
+import { useCartProducts } from "@/context/CartProductsContext";
 
 const Transition = forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -14,6 +15,14 @@ const Transition = forwardRef(function Transition(props, ref) {
 export default function Cart({ Close, Open }) {
   const [login, setLogin] = useState(false);
   const minPrice = 150000;
+
+  const cartProducts = useCartProducts();
+
+  let counter = cartProducts
+    .reduce((accumulator, currentObject) => {
+      return accumulator + currentObject.number;
+    }, 0)
+    .toString();
 
   return (
     <>
@@ -55,7 +64,7 @@ export default function Cart({ Close, Open }) {
                 },
               }}
             >
-              {convertToFarsiNumbers("5")} کالا
+              {convertToFarsiNumbers(counter)} کالا
             </Box>
           </Box>
           <Box component="div" className="grid justify-end">

@@ -17,11 +17,14 @@ import { blue } from "@mui/material/colors";
 import { convertToFarsiNumbers, formatPrice } from "@/utils/funcs";
 import ExpandMoreOutlinedIcon from "@mui/icons-material/ExpandMoreOutlined";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
+import { useTimeDispatch } from "@/context/TimeContext";
+import { Action_ChangeTime, Action_SetTime } from "@/Reducers/ActionType";
 
-export default function ShippingTime({ setTime, Time }) {
+export default function ShippingTime() {
   const [active, setActive] = useState("today");
   const [selectTime, setSelectTime] = useState(-1);
   const [showMore, setShowMore] = useState(false);
+  const TimeDispatch = useTimeDispatch();
 
   const todayTime = [
     { start: "10:00", end: "12:00", price: "15000" },
@@ -53,7 +56,10 @@ export default function ShippingTime({ setTime, Time }) {
     const time = [parseInt(date.start), parseInt(date.end)];
     const price = date.price;
     const select = true;
-    setTime({ day: day, time: time, price: price, select: select });
+    TimeDispatch({
+      type: Action_SetTime,
+      payload: { day: day, time: time, price: price, select: select },
+    });
   };
 
   return (
@@ -132,7 +138,7 @@ export default function ShippingTime({ setTime, Time }) {
                   setActive("today");
                   setShowMore(false);
                   setSelectTime(-1);
-                  setTime({ ...Time, select: false });
+                  TimeDispatch({ type: Action_ChangeTime });
                 }}
               >
                 امروز
@@ -157,7 +163,7 @@ export default function ShippingTime({ setTime, Time }) {
                   setActive("tomorrow");
                   setShowMore(false);
                   setSelectTime(-1);
-                  setTime({ ...Time, select: false });
+                  TimeDispatch({ type: Action_ChangeTime });
                 }}
               >
                 فردا

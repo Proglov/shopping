@@ -10,7 +10,6 @@ import {
   TextField,
 } from "@mui/material";
 import { useState } from "react";
-import { boolean } from "zod";
 
 let newAddress = { address: "", index: 0 };
 
@@ -51,7 +50,6 @@ export default function EditAddress({ open, close, address, setAddress }) {
   return (
     <Dialog
       open={open}
-      onClose={close}
       sx={{
         "& .MuiDialog-paper": {
           lg: { width: "80%", maxWidth: "none" },

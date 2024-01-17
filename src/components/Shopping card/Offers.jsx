@@ -6,8 +6,11 @@ import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import { convertToFarsiNumbers, formatPrice } from "@/utils/funcs";
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import { useState } from "react";
+import { useCartProductsDispatch } from "@/context/CartProductsContext";
+import { Action_AddCart } from "@/Reducers/ActionType";
 
-export default function Offers({ setProduct }) {
+export default function Offers() {
+  const cartProductsDispatch = useCartProductsDispatch();
   const off = [
     {
       name: "خامه صباح - 200 میلی لیتر",
@@ -107,22 +110,6 @@ export default function Offers({ setProduct }) {
     setIndex((current) => (current - 1 + title.length) % title.length);
   };
 
-  const Add = (item) => {
-    setProduct((prevState) => {
-      return [
-        ...prevState,
-        {
-          name: item.name,
-          number: 1,
-          src: item.src,
-          price: item.realPrice,
-          off: item.off,
-          code: Math.floor(Math.random() * 99999),
-        },
-      ];
-    });
-  };
-
   return (
     <>
       <Box className="p-5 mb-1" component="div">
@@ -195,8 +182,17 @@ export default function Offers({ setProduct }) {
                             },
                           }}
                           onClick={() => {
-                            Add(item);
-                            console.log(item);
+                            cartProductsDispatch({
+                              type: Action_AddCart,
+                              payload: {
+                                name: item.name,
+                                number: 1,
+                                src: item.src,
+                                price: item.realPrice,
+                                off: item.off,
+                                code: Math.floor(Math.random() * 99999),
+                              },
+                            });
                           }}
                         >
                           افزودن به سبد
@@ -267,8 +263,17 @@ export default function Offers({ setProduct }) {
                             },
                           }}
                           onClick={() => {
-                            Add(item);
-                            console.log(item);
+                            cartProductsDispatch({
+                              type: Action_AddCart,
+                              payload: {
+                                name: item.name,
+                                number: 1,
+                                src: item.src,
+                                price: item.realPrice,
+                                off: item.off,
+                                code: Math.floor(Math.random() * 99999),
+                              },
+                            });
                           }}
                         >
                           افزودن به سبد
@@ -339,8 +344,17 @@ export default function Offers({ setProduct }) {
                             },
                           }}
                           onClick={() => {
-                            Add(item);
-                            console.log(item);
+                            cartProductsDispatch({
+                              type: Action_AddCart,
+                              payload: {
+                                name: item.name,
+                                number: 1,
+                                src: item.src,
+                                price: item.realPrice,
+                                off: item.off,
+                                code: Math.floor(Math.random() * 99999),
+                              },
+                            });
                           }}
                         >
                           افزودن به سبد

@@ -7,9 +7,18 @@ import { AiOutlineHome } from "react-icons/ai";
 import { TbCategory } from "react-icons/tb";
 import { Badge, Button, Typography } from "@mui/material";
 import Cart from "../Shopping card/Cart";
+import { useCartProducts } from "@/context/CartProductsContext";
+import { convertToFarsiNumbers } from "@/utils/funcs";
 
 export default function FooterMenu({ active }) {
   const [open, setOpen] = React.useState(false);
+  const cartProducts = useCartProducts();
+
+  let counter = cartProducts
+    .reduce((accumulator, currentObject) => {
+      return accumulator + currentObject.number;
+    }, 0)
+    .toString();
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -69,7 +78,11 @@ export default function FooterMenu({ active }) {
             onClick={handleClickOpen}
           >
             <div className="mx-auto">
-              <Badge badgeContent={2} color="error" sx={{ zIndex: "300" }}>
+              <Badge
+                badgeContent={convertToFarsiNumbers(counter)}
+                color="error"
+                sx={{ zIndex: "300" }}
+              >
                 <GiShoppingCart
                   className="text-2xl"
                   style={{ zIndex: "300" }}

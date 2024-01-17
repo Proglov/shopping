@@ -12,80 +12,27 @@ import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import RemoveOutlinedIcon from "@mui/icons-material/RemoveOutlined";
 import AddIcon from "@mui/icons-material/Add";
-import { useState } from "react";
 import { red } from "@mui/material/colors";
 import Offers from "./Offers";
 import Bill from "./Bill";
+import {
+  useCartProducts,
+  useCartProductsDispatch,
+} from "@/context/CartProductsContext";
+import {
+  Action_DecrementCart,
+  Action_IncrementCart,
+} from "@/Reducers/ActionType";
 
-export default function ShoppingCard({ Time, step }) {
-  const [product, setProduct] = useState([
-    {
-      code: "546",
-      number: 5,
-      name: "شامپو پرژک مدل سیر حجم 450 میلی لیتر",
-      src: "/img/home/category-labaniat.jpg",
-      price: "1000",
-      off: "60",
-    },
-    {
-      code: "525",
-      number: 7,
-      name: "شامپو پرژک مدل سیر حجم 450 میلی لیتر",
-      src: "/img/home/tanagholat.jpg",
-      price: "1700",
-      off: "60",
-    },
-    {
-      code: "446",
-      number: 1,
-      name: "شامپو پرژک مدل سیر حجم 450 میلی لیتر",
-      src: "/img/home/category-labaniat.jpg",
-      price: "1080.45",
-      off: "60",
-    },
-    {
-      code: "687",
-      number: 2,
-      name: "شامپو پرژک مدل سیر حجم 450 میلی لیتر",
-      src: "/img/home/tanagholat.jpg",
-      price: "1500",
-      off: "60",
-    },
-  ]);
+export default function ShoppingCard({ step }) {
+  const cartProducts = useCartProducts();
+  const cartProductsDispatch = useCartProductsDispatch();
 
-  let counter = product
+  let counter = cartProducts
     .reduce((accumulator, currentObject) => {
       return accumulator + currentObject.number;
     }, 0)
     .toString();
-
-  const handleIncrement = (Id) => {
-    setProduct(
-      product.map((item) => {
-        if (item.code === Id) {
-          return { ...item, number: item.number + 1 };
-        }
-        return item;
-      })
-    );
-  };
-
-  const handleDecrement = (Id) => {
-    setProduct(
-      product
-        .map((item) => {
-          if (item.code === Id) {
-            if (item.number === 1) {
-              return null;
-            } else {
-              return { ...item, number: item.number - 1 };
-            }
-          }
-          return item;
-        })
-        .filter((item) => item !== null)
-    );
-  };
 
   return (
     <>
@@ -168,15 +115,14 @@ export default function ShoppingCard({ Time, step }) {
               {convertToFarsiNumbers(counter)} کالا
             </Typography>
             <div className="grid justify-items-center">
-              {product.length === 0
+              {cartProducts.length === 0
                 ? "سبد خرید شما خالی است!"
-                : product.map((item, index) => {
+                : cartProducts.map((item, index) => {
                     return (
                       <>
-                        <div className="w-full border border-gray-200" />
+                        <div className="w-full border border-gray-200" key={index}/>
                         <div
                           className="m-4 h-auto w-full grid grid-cols-1 gap-4 lg:w-3/4 sm:grid-cols-4"
-                          key={index}
                         >
                           <div className="p-1">
                             <img src={item.src} alt="Product" />
@@ -190,7 +136,12 @@ export default function ShoppingCard({ Time, step }) {
                                 <Button
                                   className="hover:bg-white active:bg-white rounded-lg w-auto"
                                   sx={{ color: red[400] }}
-                                  onClick={() => handleIncrement(item.code)}
+                                  onClick={() =>
+                                    cartProductsDispatch({
+                                      type: Action_IncrementCart,
+                                      payload: item.code,
+                                    })
+                                  }
                                 >
                                   <AddIcon />
                                 </Button>
@@ -200,7 +151,12 @@ export default function ShoppingCard({ Time, step }) {
                                 <Button
                                   className="hover:bg-white active:bg-white rounded-lg w-auto"
                                   sx={{ color: red[400] }}
-                                  onClick={() => handleDecrement(item.code)}
+                                  onClick={() =>
+                                    cartProductsDispatch({
+                                      type: Action_DecrementCart,
+                                      payload: item.code,
+                                    })
+                                  }
                                 >
                                   {item.number === 1 ? (
                                     <DeleteOutlineOutlinedIcon />
@@ -211,21 +167,26 @@ export default function ShoppingCard({ Time, step }) {
                               </div>
                             </div>
                             <div className="grid grid-rows-2">
-                              <div className="flex justify-start px-2 sm:text-base text-sm">
-                                <span className="bg-red-500 rounded-md mt-2 text-center h-7 sm:pt-1 pt-1.5 sm:min-w-[50px] p-1 text-white">
-                                  {convertToFarsiNumbers(item.off.toString())}%
-                                </span>
-                                <div className="flex justify-end m-3 ml-8 line-through text-gray-400">
-                                  {convertToFarsiNumbers(
-                                    formatPrice(
-                                      (
-                                        item.number * parseInt(item.price)
-                                      ).toString()
-                                    )
-                                  )}{" "}
-                                  تومان
+                              {item.off === "0" ? (
+                                ""
+                              ) : (
+                                <div className="flex justify-start px-2 sm:text-base text-sm">
+                                  <span className="bg-red-500 rounded-md mt-2 text-center h-7 sm:pt-1 pt-1.5 sm:min-w-[50px] p-1 text-white">
+                                    {convertToFarsiNumbers(item.off.toString())}
+                                    %
+                                  </span>
+                                  <div className="flex justify-end m-3 ml-8 line-through text-gray-400">
+                                    {convertToFarsiNumbers(
+                                      formatPrice(
+                                        (
+                                          item.number * parseInt(item.price)
+                                        ).toString()
+                                      )
+                                    )}{" "}
+                                    تومان
+                                  </div>
                                 </div>
-                              </div>
+                              )}
                               <div>
                                 قیمت :
                                 {convertToFarsiNumbers(
@@ -252,11 +213,11 @@ export default function ShoppingCard({ Time, step }) {
       </Box>
       {step !== 0 ? (
         <>
-          <Offers setProduct={setProduct} />
-          <Bill product={product} Time={Time} />
+          <Offers />
+          <Bill step={step}/>
         </>
       ) : (
-        <Bill product={product} />
+        <Bill step={step}/>
       )}
     </>
   );

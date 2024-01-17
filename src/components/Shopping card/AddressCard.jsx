@@ -13,9 +13,10 @@ import RadioButtonUncheckedIcon from "@mui/icons-material/RadioButtonUnchecked";
 import { blue } from "@mui/material/colors";
 import { useState } from "react";
 import EditAddress from "./EditAddress";
+import { useSetAddress } from "@/context/AddressContext";
 
 export default function AddressCard() {
-  const [selectAddress, setSelectAddress] = useState(0);
+  const [selectAddress, setSelectAddress] = useState(-1);
   const [open, setOpen] = useState(false);
   const [address, setAddress] = useState([
     "تهران،هروی-حسین آباد،میدان،ساختمان،پلاک",
@@ -24,6 +25,8 @@ export default function AddressCard() {
     "تهران،هروی-حسین آباد،میدان،ساختمان،پلاک",
     "تهران،هروی-حسین آباد،میدان،ساختمان،پلاک",
   ]);
+
+  const SetAddress = useSetAddress();
 
   const handleOpen = () => {
     setOpen(true);
@@ -88,7 +91,10 @@ export default function AddressCard() {
                   <Checkbox
                     icon={<RadioButtonUncheckedIcon />}
                     checkedIcon={<CheckCircleIcon sx={{ color: blue[700] }} />}
-                    onClick={() => setSelectAddress(index)}
+                    onClick={() => {
+                      setSelectAddress(index);
+                      SetAddress(address[selectAddress]);
+                    }}
                     className="ml-2"
                     checked={selectAddress === index}
                   />
@@ -99,7 +105,12 @@ export default function AddressCard() {
           </CardContent>
         </Card>
       </Box>
-      <EditAddress open={open} close={handleClose} address={address} setAddress={setAddress}/>
+      <EditAddress
+        open={open}
+        close={handleClose}
+        address={address}
+        setAddress={setAddress}
+      />
     </>
   );
 }
