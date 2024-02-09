@@ -18,6 +18,15 @@ import Link from "next/link";
 import Cart from "../Shopping card/Cart";
 import { useCartProducts } from "@/context/CartProductsContext";
 import { convertToFarsiNumbers } from "@/utils/funcs";
+import { useLogin, useSetLogin } from "@/context/LoginContext";
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+} from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -63,6 +72,14 @@ export default function NavBar() {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [open, setOpen] = React.useState(false);
   const cartProducts = useCartProducts();
+  const [openDialog, setOpenDialog] = React.useState(false);
+
+  const handleOpen = () => {
+    setOpenDialog(true);
+  };
+  const Close = () => {
+    setOpenDialog(false);
+  };
 
   let counter = cartProducts
     .reduce((accumulator, currentObject) => {
@@ -78,7 +95,8 @@ export default function NavBar() {
     setOpen(false);
   };
 
-  const isLoggedIn = false;
+  const isLoggedIn = useLogin();
+  const setLogin = useSetLogin();
 
   const isMenuOpen = Boolean(anchorEl);
 
@@ -88,6 +106,11 @@ export default function NavBar() {
 
   const handleMenuClose = () => {
     setAnchorEl(null);
+  };
+
+  const logOut = () => {
+    setOpenDialog(false);
+    setLogin(false);
   };
 
   return (
@@ -126,6 +149,7 @@ export default function NavBar() {
           </Typography>
 
           {/* ورود و خروج */}
+
           <IconButton
             size="large"
             edge="start"
@@ -133,12 +157,14 @@ export default function NavBar() {
             aria-label="open drawer"
           >
             {!isLoggedIn ? (
-              <span className="text-white flex">
-                <LiaSignInAltSolid />
-                <span style={{ lineHeight: "24px" }}>ورود</span>
-              </span>
+              <Link href="/users/login">
+                <span className="text-white flex">
+                  <LiaSignInAltSolid />
+                  <span style={{ lineHeight: "24px" }}>ورود</span>
+                </span>
+              </Link>
             ) : (
-              <span className="text-red-500 flex">
+              <span className="text-red-500 flex" onClick={handleOpen}>
                 <LiaSignOutAltSolid />
                 <span style={{ lineHeight: "20px" }}>خروج</span>
               </span>
@@ -163,19 +189,23 @@ export default function NavBar() {
           </Search>
 
           {/* پروفایل */}
-          <Box>
-            <IconButton
-              size="large"
-              edge="end"
-              aria-label="account of current user"
-              aria-controls="primary-search-account-menu"
-              aria-haspopup="true"
-              onClick={handleProfileMenuOpen}
-              color="inherit"
-            >
-              <AccountCircle />
-            </IconButton>
-          </Box>
+          {isLoggedIn ? (
+            <Box>
+              <IconButton
+                size="large"
+                edge="end"
+                aria-label="account of current user"
+                aria-controls="primary-search-account-menu"
+                aria-haspopup="true"
+                onClick={handleProfileMenuOpen}
+                color="inherit"
+              >
+                <AccountCircle />
+              </IconButton>
+            </Box>
+          ) : (
+            ""
+          )}
         </Toolbar>
       </AppBar>
 
@@ -200,6 +230,41 @@ export default function NavBar() {
           پروفایل من
         </MenuItem>
       </Menu>
+
+      <Dialog
+        onClose={Close}
+        open={openDialog}
+        sx={{
+          "& .MuiDialog-paper": {
+            lg: { width: "50%", maxWidth: "none" },
+            md: { width: "70%", maxWidth: "none" },
+            sm: { width: "100%", maxWidth: "none" },
+            xs: { width: "100%", maxWidth: "none" },
+          },
+        }}
+      >
+        <DialogContent dividers>
+          <Box component="div" className="text-xl mt-3">
+            آیا واقعا می خواهید خارج شوید؟
+          </Box>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            variant="contained"
+            className="bg-red-500 hover:bg-red-600 text-xl rounded-lg w-1/6"
+            onClick={logOut}
+          >
+            خروج
+          </Button>
+          <Button
+            variant="contained"
+            className="bg-green-500 hover:bg-green-600 text-xl rounded-lg w-1/6 mr-4"
+            onClick={Close}
+          >
+            انصراف
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 }

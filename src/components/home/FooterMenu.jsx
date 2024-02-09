@@ -56,7 +56,7 @@ export default function FooterMenu({ active }) {
             </Button>
           </Link>
 
-          <Link href="/category">
+          <Link href="/categories">
             <Button
               className={`sm:mx-10 mx-5 flex flex-col ${
                 active === 1 ? "text-blue-700" : "text-black"

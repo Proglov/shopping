@@ -7,13 +7,14 @@ import { convertToFarsiNumbers, formatPrice } from "@/utils/funcs";
 import ShoppingCard from "./ShoppingCard";
 import Link from "next/link";
 import { useCartProducts } from "@/context/CartProductsContext";
+import { useLogin } from "@/context/LoginContext";
 
 const Transition = forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
 export default function Cart({ Close, Open }) {
-  const [login, setLogin] = useState(false);
+  const login = useLogin();
   const minPrice = 150000;
 
   const cartProducts = useCartProducts();
@@ -91,7 +92,7 @@ export default function Cart({ Close, Open }) {
           تومان
         </Box>
         <Box className="p-3 grid justify-items-center" component="div">
-          {!login ? (
+          {login ? (
             <Link href="/shopping-card">
               <Button
                 variant="contained"
@@ -110,21 +111,23 @@ export default function Cart({ Close, Open }) {
               </Button>
             </Link>
           ) : (
-            <Button
-              variant="contained"
-              className="bg-green-500 hover:bg-green-600 text-xl rounded-lg"
-              sx={{
-                width: {
-                  xs: "280px",
-                  sm: "500px",
-                  md: "650px",
-                  lg: "800px",
-                  xl: "1200px",
-                },
-              }}
-            >
-              ورود / عضویت
-            </Button>
+            <Link href="/users/login">
+              <Button
+                variant="contained"
+                className="bg-green-500 hover:bg-green-600 text-xl rounded-lg"
+                sx={{
+                  width: {
+                    xs: "280px",
+                    sm: "500px",
+                    md: "650px",
+                    lg: "800px",
+                    xl: "1200px",
+                  },
+                }}
+              >
+                ورود / عضویت
+              </Button>
+            </Link>
           )}
         </Box>
       </Dialog>

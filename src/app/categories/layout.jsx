@@ -1,20 +1,17 @@
-import FooterMenu from "@/components/home/FooterMenu"
-import NavBar from "@/components/home/NavBar"
+import FooterMenu from "@/components/home/FooterMenu";
+import NavBar from "@/components/home/NavBar";
 
 export const metadata = {
-    title: 'فروشگاه آنلاین',
-    description: 'دسته بندیها',
-}
+  title: "فروشگاه آنلاین",
+  description: "دسته بندیها",
+};
 
-export default function RootLayout({ children }) {
-
-    return (
-        <html lang="fa-IR" dir='rtl'>
-            <body>
-                <NavBar />
-                {children}
-                <FooterMenu active={1} />
-            </body>
-        </html>
-    )
+export default function CategoriesLayout({ children }) {
+  return (
+    <>
+      <NavBar />
+      <div className="m-5">{children}</div>
+      <FooterMenu active={1} />
+    </>
+  );
 }
