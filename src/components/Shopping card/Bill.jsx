@@ -1,11 +1,12 @@
 "use client";
 
 import { convertToFarsiNumbers, formatPrice } from "@/utils/funcs";
-import { Box, Button, Card, TextField } from "@mui/material";
-import ConfirmationNumberOutlinedIcon from "@mui/icons-material/ConfirmationNumberOutlined";
+import { Box, Button, Card } from "@mui/material";
 import { useCartProducts } from "@/context/CartProductsContext";
 import { useTime } from "@/context/TimeContext";
 import { useAddress } from "@/context/AddressContext";
+import { GrFormPrevious } from "react-icons/gr";
+import Link from "next/link";
 
 export default function Bill({ step = 1 }) {
   const product = useCartProducts();
@@ -222,43 +223,6 @@ export default function Bill({ step = 1 }) {
                       )}{" "}
                   <span className="text-lg text-gray-600">تومان</span>
                 </Box>
-                <Box
-                  className="lg:text-2xl col-span-3 mt-2"
-                  sx={{
-                    fontSize: {
-                      xs: "18px",
-                      sm: "16px",
-                      md: "20px",
-                    },
-                  }}
-                >
-                  <ConfirmationNumberOutlinedIcon />{" "}
-                  <span>افزودن کد تخفیف</span>
-                </Box>
-                <Box
-                  className="lg:text-2xl col-span-2 mt-2"
-                  sx={{
-                    fontSize: {
-                      xs: "18px",
-                      sm: "16px",
-                      md: "20px",
-                    },
-                  }}
-                >
-                  <TextField
-                    label="کد تخفیف"
-                    variant="outlined"
-                    color="success"
-                    sx={{
-                      " & .MuiInputLabel-root": {
-                        left: "inherit !important",
-                        right: "1.75rem !important",
-                        transformOrigin: "right !important",
-                      },
-                      "& legend": { textAlign: "right" },
-                    }}
-                  />
-                </Box>{" "}
               </>
             ) : (
               ""
@@ -268,47 +232,46 @@ export default function Bill({ step = 1 }) {
       </Box>
       {step !== 0 ? (
         <>
-          <Box className="p-5 mb-1 grid justify-center" component="div">
+          <Box
+            className="p-5 mb-1 grid grid-cols-2 justify-between mx-5"
+            component="div"
+          >
             {!Time.select | (address === "") ? (
-              <div className="text-red-600 mb-2 text-center text-xl">
+              <div className="text-red-600 mb-2 text-right text-xl">
                 لطفا آدرس یا زمان ارسال را انتخاب کنید!
               </div>
             ) : (
-              ""
+              <div></div>
             )}
-            {Time.select && (address !== "") ? (
-              <Button
-                variant="contained"
-                className="bg-blue-500 text-bold text-xl hover:bg-blue-600 rounded-lg"
-                sx={{
-                  width: {
-                    xs: "280px",
-                    sm: "500px",
-                    md: "650px",
-                    lg: "800px",
-                    xl: "1200px",
-                  },
-                }}
-              >
-                پرداخت آنلاین
-              </Button>
+            {Time.select && address !== "" ? (
+              <div className="text-left">
+                <Link href="/shopping-card/payment">
+                  <Button
+                    variant="contained"
+                    className="bg-blue-500 text-bold text-xl hover:bg-blue-600 rounded-lg w-fit"
+                  >
+                    مرحله بعد
+                    <GrFormPrevious
+                      className="text-white"
+                      style={{ fontSize: "35px" }}
+                    />
+                  </Button>
+                </Link>
+              </div>
             ) : (
-              <Button
-                variant="contained"
-                className="text-bold text-xl rounded-lg disabled:bg-blue-300 disabled:text-white"
-                sx={{
-                  width: {
-                    xs: "280px",
-                    sm: "500px",
-                    md: "650px",
-                    lg: "800px",
-                    xl: "1200px",
-                  },
-                }}
-                disabled
-              >
-                پرداخت آنلاین
-              </Button>
+              <div className="text-left">
+                <Button
+                  variant="contained"
+                  className="text-bold text-xl rounded-lg disabled:bg-blue-300 disabled:text-white w-fit"
+                  disabled
+                >
+                  مرحله بعد
+                  <GrFormPrevious
+                    className="text-white"
+                    style={{ fontSize: "35px" }}
+                  />
+                </Button>
+              </div>
             )}
           </Box>
         </>
