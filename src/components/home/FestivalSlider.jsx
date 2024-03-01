@@ -39,17 +39,17 @@ const FestivalSlider = ({ slides }) => {
     }
 
     //autoplay
-    // useEffect(() => {
-    //     if (timeRef.current) clearTimeout(timeRef.current)
+    useEffect(() => {
+        if (timeRef.current) clearTimeout(timeRef.current)
 
-    //     timeRef.current = setTimeout(() => {
-    //         if (autoplayIsLeft)
-    //             handleNext()
-    //         else handlePrevious()
-    //     }, 5000);
+        timeRef.current = setTimeout(() => {
+            if (autoplayIsLeft)
+                handleNext()
+            else handlePrevious()
+        }, 5000);
 
-    //     return () => clearTimeout(timeRef.current)
-    // }, [handleNext, handlePrevious])
+        return () => clearTimeout(timeRef.current)
+    }, [handleNext, handlePrevious])
 
     //stop autoplay
     useEffect(() => {

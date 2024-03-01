@@ -57,7 +57,12 @@ const categories = [
 
 export default function Categories() {
   return (
-    <>
+    <React.Fragment>
+
+      <div className="my-5 text-center w-full">
+        دسته بندی خود را انتخاب کنید
+      </div>
+
       <Grid container gap={3} justifyContent="center">
         {categories.map((item) => (
           <Grid item xs={3} lg={2}>
@@ -70,6 +75,6 @@ export default function Categories() {
           </Grid>
         ))}
       </Grid>
-    </>
+    </React.Fragment>
   );
 }
