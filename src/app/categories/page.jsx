@@ -1,80 +1,13 @@
-import CategoryComponent from "@/components/home/CategoryComponent";
-import { Grid } from "@mui/material";
-import React from "react";
+"use client";
 
-const categories = [
-  {
-    name: "لبنیات",
-    src: "/img/home/category-labaniat.jpg",
-    href: "labaniat",
-  },
-  {
-    name: "تنقلات",
-    src: "/img/home/category-labaniat.jpg",
-    href: "tanagholat",
-  },
-  {
-    name: "حبوبات",
-    src: "/img/home/category-labaniat.jpg",
-    href: "hobobat",
-  },
-  {
-    name: "نوشیدنی",
-    src: "/img/home/category-labaniat.jpg",
-    href: "noshidani",
-  },
-  {
-    name: "کیک و بیسکوویت",
-    src: "/img/home/category-labaniat.jpg",
-    href: "cake",
-  },
-  {
-    name: "کیک و بیسکوویت",
-    src: "/img/home/category-labaniat.jpg",
-    href: "cake",
-  },
-  {
-    name: "کیک و بیسکوویت",
-    src: "/img/home/category-labaniat.jpg",
-    href: "cake",
-  },
-  {
-    name: "کیک و بیسکوویت",
-    src: "/img/home/category-labaniat.jpg",
-    href: "cake",
-  },
-  {
-    name: "کیک و بیسکوویت",
-    src: "/img/home/category-labaniat.jpg",
-    href: "cake",
-  },
-  {
-    name: "کیک و بیسکوویت",
-    src: "/img/home/category-labaniat.jpg",
-    href: "cake",
-  },
-];
+import React from "react";
+import CategoryCard from "@/components/categorization/CategoryCard";
 
 export default function Categories() {
+
   return (
-    <React.Fragment>
-
-      <div className="my-5 text-center w-full">
-        دسته بندی خود را انتخاب کنید
-      </div>
-
-      <Grid container gap={3} justifyContent="center">
-        {categories.map((item) => (
-          <Grid item xs={3} lg={2}>
-            <CategoryComponent
-              href={item.href}
-              caption={item.name}
-              src={item.src}
-              charachtersLengthLevel={0}
-            />
-          </Grid>
-        ))}
-      </Grid>
-    </React.Fragment>
+    <>
+      <CategoryCard />
+    </>
   );
 }
