@@ -27,7 +27,7 @@ export default function CategoryComponent({
         />
 
         <Typography
-          className="text-center"
+          className="text-center text-blue-700"
           sx={{
             fontSize: {
               xs: `${charachtersLengthLevel === 2

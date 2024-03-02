@@ -48,8 +48,8 @@ export default function Categories() {
       </div>
 
       <Grid container gap={2} justifyContent="center">
-        {grouping.map((item) => (
-          <Grid item xs={3} lg={2}>
+        {grouping.map((item, index) => (
+          <Grid item xs={3} lg={2} key={index}>
             <CategoryComponent
               href={item.href}
               caption={item.name}
