@@ -1,15 +1,14 @@
 import { notFound } from 'next/navigation'
 import { isAdmin } from "@/services/adminActivities/users"
+import Main from '@/components/admin/MainAdmin'
 
 export default async function Home() {
-  const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NTkzYjJlZDhiNmQ2ODMzOTcxNDU0YjIiLCJpYXQiOjE3MDkzMDcxNDEsImV4cCI6MTcwOTM5MzU0MX0.2q-dzGW5Z8p55Z-OziWDb13zytT2Kna0-ZYlOVhsXDU"
-  const isAd = await isAdmin(token)
+  // const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NTkzYjJlZDhiNmQ2ODMzOTcxNDU0YjIiLCJpYXQiOjE3MDk0MDQ4MjMsImV4cCI6MTcwOTQ5MTIyM30.c5BO4NfLFDvulsQeMo4QHKhrrmbisvoyeOTn9DjceKU"
+  // const isAd = await isAdmin(token)
 
-  if (!isAd) notFound()
+  // if (!isAd) notFound()
 
   return (
-    <>
-      hi
-    </>
+    <Main />
   )
 }

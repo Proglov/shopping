@@ -19,46 +19,21 @@ export const isAdmin = async (token) => {
     return result
 }
 
-export const getAllUsers = async (token) => {
+export const getAllUsers = async (token, filters) => {
     const graphQLClient = new GraphQLClient(api, {
         headers: {
             authorization: `${token}`,
         },
     })
     const query = gql`
-        query{
-        UsersGet{
+        query($page:Int, $perPage:Int){
+        UsersGet(page:$page, perPage:$perPage){
             id
             name
-            comments {
-                user {
-                    name
-                    email
-                }
-                body
-                likes {
-                    number
-                }
-                disLikes {
-                    number
-                }
-                childrenComment {
-                    user {
-                        name
-                    }
-                    body
-                    likes {
-                        number
-                    }
-                    disLikes {
-                        number
-                    }
-                }  
-            }
         }
     }
     `
-    const result = await graphQLClient.request(query)
+    const result = await graphQLClient.request(query, filters)
     return result
 }
 

@@ -32,10 +32,10 @@ export const createComment = async (obj, token) => {
     return await graphQLClient.request(mutation, variables);
 };
 
-export const getAllComments = async () => {
+export const getAllComments = async (filters) => {
     const query = gql`
-        query{
-            Comments {
+        query($page:Int, $perPage:Int){
+            Comments(page:$page, perPage:$perPage){
                 id
                 body
                 childrenComment {
@@ -56,7 +56,7 @@ export const getAllComments = async () => {
             }
         }
     `
-    const result = await request(api, query)
+    const result = await request(api, query, filters)
     return result.Comments
 }
 

@@ -5,10 +5,10 @@ const api = process.env.BackEnd_API;
 
 
 // you can also change the response
-export const getAllProducts = async () => {
+export const getAllProducts = async (filters) => {
     const query = gql`
-        query{
-        Products{
+        query($page:Int, $perPage:Int){
+        Products(page:$page, perPage:$perPage){
             id
             name
             comments {
@@ -39,7 +39,7 @@ export const getAllProducts = async () => {
         }
     }
     `
-    const result = await request(api, query)
+    const result = await request(api, query, filters)
     return result
 }
 

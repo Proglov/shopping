@@ -3,15 +3,15 @@ import { gql, GraphQLClient } from 'graphql-request'
 
 const api = process.env.BackEnd_API;
 
-export const getAllTxs = async () => {
+export const getAllTxs = async (token, filters) => {
     const graphQLClient = new GraphQLClient(api, {
         headers: {
             authorization: `${token}`,
         },
     });
     const query = gql`
-        query {
-            TransActions{
+        query ($page:Int, $perPage:Int){
+            TransActions(page:$page, perPage:$perPage){
                 id,
                 user{
                     id,
@@ -37,7 +37,7 @@ export const getAllTxs = async () => {
             }
         }
     `;
-    const result = await graphQLClient.request(query)
+    const result = await graphQLClient.request(query, filters)
     return result
 }
 
