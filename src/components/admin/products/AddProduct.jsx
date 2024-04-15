@@ -301,7 +301,7 @@ export default function AddProduct() {
                             <label htmlFor="underline_select">دسته بندی</label>
                         </div>
                         <select id="underline_select" className="block py-2.5 px-3 w-full text-sm text-gray-500 bg-transparent my-2 rounded-md border-2 border-gray-200 appearance-none focus:outline-none focus:ring-0 focus:border-gray-200" onChange={handleChange} name='category'>
-                            <option selected disabled>دسته بندی را انتخاب کنید &#11167;</option>
+                            <option defaultValue={0} disabled>دسته بندی را انتخاب کنید &#11167;</option>
                             {
                                 categories.map((category, index) => <option key={index} value={category} className='text-black'>{category}</option>)
                             }

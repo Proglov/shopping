@@ -23,6 +23,7 @@ import {
   Action_DecrementCart,
   Action_IncrementCart,
 } from "@/Reducers/ActionType";
+import Image from "next/image";
 
 export default function ShoppingCard({ step }) {
   const cartProducts = useCartProducts();
@@ -118,95 +119,95 @@ export default function ShoppingCard({ step }) {
               {cartProducts.length === 0
                 ? "سبد خرید شما خالی است!"
                 : cartProducts.map((item, index) => {
-                    return (
-                      <>
-                        <div className="w-full border border-gray-200" key={index}/>
-                        <div
-                          className="m-4 h-auto w-full grid grid-cols-1 gap-4 lg:w-3/4 sm:grid-cols-4"
-                        >
-                          <div className="p-1">
-                            <img src={item.src} alt="Product" />
+                  return (
+                    <>
+                      <div className="w-full border border-gray-200" key={index} />
+                      <div
+                        className="m-4 h-auto w-full grid grid-cols-1 gap-4 lg:w-3/4 sm:grid-cols-4"
+                      >
+                        <div className="p-1">
+                          <Image height={200} width={200} src={item.src} alt="Product" />
+                        </div>
+                        <div className="p-2 text-gray-900 sm:col-span-3 grid grid-rows-3 grid-cols-1 justify-items-center items-center sm:grid-rows-2 sm:grid-cols-2 sm:justify-items-start">
+                          <div className="sm:col-span-2 mb-2 sm:mb-0">
+                            {item.name}
                           </div>
-                          <div className="p-2 text-gray-900 sm:col-span-3 grid grid-rows-3 grid-cols-1 justify-items-center items-center sm:grid-rows-2 sm:grid-cols-2 sm:justify-items-start">
-                            <div className="sm:col-span-2 mb-2 sm:mb-0">
-                              {item.name}
+                          <div className="mb-2 sm:mb-0">
+                            <div className="border border-gray-400 rounded-lg w-auto inline-block">
+                              <Button
+                                className="hover:bg-white active:bg-white rounded-lg w-auto"
+                                sx={{ color: red[400] }}
+                                onClick={() =>
+                                  cartProductsDispatch({
+                                    type: Action_IncrementCart,
+                                    payload: item.code,
+                                  })
+                                }
+                              >
+                                <AddIcon />
+                              </Button>
+                              <span className="text-red-500">
+                                {farsiNumCharacter(item.number)}
+                              </span>
+                              <Button
+                                className="hover:bg-white active:bg-white rounded-lg w-auto"
+                                sx={{ color: red[400] }}
+                                onClick={() =>
+                                  cartProductsDispatch({
+                                    type: Action_DecrementCart,
+                                    payload: item.code,
+                                  })
+                                }
+                              >
+                                {item.number === 1 ? (
+                                  <DeleteOutlineOutlinedIcon />
+                                ) : (
+                                  <RemoveOutlinedIcon />
+                                )}
+                              </Button>
                             </div>
-                            <div className="mb-2 sm:mb-0">
-                              <div className="border border-gray-400 rounded-lg w-auto inline-block">
-                                <Button
-                                  className="hover:bg-white active:bg-white rounded-lg w-auto"
-                                  sx={{ color: red[400] }}
-                                  onClick={() =>
-                                    cartProductsDispatch({
-                                      type: Action_IncrementCart,
-                                      payload: item.code,
-                                    })
-                                  }
-                                >
-                                  <AddIcon />
-                                </Button>
-                                <span className="text-red-500">
-                                  {farsiNumCharacter(item.number)}
+                          </div>
+                          <div className="grid grid-rows-2">
+                            {item.off === "0" ? (
+                              ""
+                            ) : (
+                              <div className="flex justify-start px-2 sm:text-base text-sm">
+                                <span className="bg-red-500 rounded-md mt-2 text-center h-7 sm:pt-1 pt-1.5 sm:min-w-[50px] p-1 text-white">
+                                  {convertToFarsiNumbers(item.off.toString())}
+                                  %
                                 </span>
-                                <Button
-                                  className="hover:bg-white active:bg-white rounded-lg w-auto"
-                                  sx={{ color: red[400] }}
-                                  onClick={() =>
-                                    cartProductsDispatch({
-                                      type: Action_DecrementCart,
-                                      payload: item.code,
-                                    })
-                                  }
-                                >
-                                  {item.number === 1 ? (
-                                    <DeleteOutlineOutlinedIcon />
-                                  ) : (
-                                    <RemoveOutlinedIcon />
-                                  )}
-                                </Button>
-                              </div>
-                            </div>
-                            <div className="grid grid-rows-2">
-                              {item.off === "0" ? (
-                                ""
-                              ) : (
-                                <div className="flex justify-start px-2 sm:text-base text-sm">
-                                  <span className="bg-red-500 rounded-md mt-2 text-center h-7 sm:pt-1 pt-1.5 sm:min-w-[50px] p-1 text-white">
-                                    {convertToFarsiNumbers(item.off.toString())}
-                                    %
-                                  </span>
-                                  <div className="flex justify-end m-3 ml-8 line-through text-gray-400">
-                                    {convertToFarsiNumbers(
-                                      formatPrice(
-                                        (
-                                          item.number * parseInt(item.price)
-                                        ).toString()
-                                      )
-                                    )}{" "}
-                                    تومان
-                                  </div>
+                                <div className="flex justify-end m-3 ml-8 line-through text-gray-400">
+                                  {convertToFarsiNumbers(
+                                    formatPrice(
+                                      (
+                                        item.number * parseInt(item.price)
+                                      ).toString()
+                                    )
+                                  )}{" "}
+                                  تومان
                                 </div>
-                              )}
-                              <div>
-                                قیمت :
-                                {convertToFarsiNumbers(
-                                  formatPrice(
-                                    Math.ceil(
-                                      (item.number *
-                                        parseInt(item.price) *
-                                        (100 - item.off)) /
-                                        100
-                                    ).toString()
-                                  )
-                                )}{" "}
-                                تومان
                               </div>
+                            )}
+                            <div>
+                              قیمت :
+                              {convertToFarsiNumbers(
+                                formatPrice(
+                                  Math.ceil(
+                                    (item.number *
+                                      parseInt(item.price) *
+                                      (100 - item.off)) /
+                                    100
+                                  ).toString()
+                                )
+                              )}{" "}
+                              تومان
                             </div>
                           </div>
                         </div>
-                      </>
-                    );
-                  })}
+                      </div>
+                    </>
+                  );
+                })}
             </div>
           </CardContent>
         </Card>
@@ -214,10 +215,10 @@ export default function ShoppingCard({ step }) {
       {step !== 0 ? (
         <>
           <Offers />
-          <Bill step={step}/>
+          <Bill step={step} />
         </>
       ) : (
-        <Bill step={step}/>
+        <Bill step={step} />
       )}
     </>
   );

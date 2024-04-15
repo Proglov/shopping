@@ -11,7 +11,7 @@ import {
 import CardItem from "./CardItem";
 import CategoryComponent from "@/components/home/CategoryComponent";
 import { GroupingContext, useGrouping } from "@/context/GroupingContext";
-import { useContext, useState } from "react";
+import React, { useContext, useState } from "react";
 import Link from "next/link";
 import { GrFormNext, GrFormPrevious } from "react-icons/gr";
 
@@ -119,11 +119,10 @@ export default function CategoryCard() {
       {grouping.map((group, groupIndex) => {
         const flag = next[groupIndex];
         return (
-          <>
+          <React.Fragment key={groupIndex}>
             <Card
-              className={`xl:block hidden mb-4 border-2 border-stone-300 relative overflow-hidden ${
-                color[groupIndex % color.length]
-              }`}
+              className={`xl:block hidden mb-4 border-2 border-stone-300 relative overflow-hidden ${color[groupIndex % color.length]
+                }`}
             >
               <Link href={`/categories/${group.href}`}>
                 <CardHeader
@@ -132,9 +131,8 @@ export default function CategoryCard() {
                 />
               </Link>
               <CardContent
-                className={`flex ${
-                  flag ? "translate-x-85/100 duration-1000" : "duration-1000"
-                }`}
+                className={`flex ${flag ? "translate-x-85/100 duration-1000" : "duration-1000"
+                  }`}
               >
                 {products.map((item, itemIndex) => {
                   if (itemIndex > 8) {
@@ -175,7 +173,7 @@ export default function CategoryCard() {
                 </Button>
               </Box>
             </Card>
-          </>
+          </React.Fragment>
         );
       })}
 
@@ -183,11 +181,10 @@ export default function CategoryCard() {
       {grouping.map((group, groupIndex) => {
         const flag = next[groupIndex];
         return (
-          <>
+          <React.Fragment key={groupIndex}>
             <Card
-              className={`xl:hidden lg:block hidden mb-4 border-2 border-stone-300 relative overflow-hidden ${
-                color[groupIndex % color.length]
-              }`}
+              className={`xl:hidden lg:block hidden mb-4 border-2 border-stone-300 relative overflow-hidden ${color[groupIndex % color.length]
+                }`}
             >
               <Link href={`/categories/${group.href}`}>
                 <CardHeader
@@ -196,9 +193,8 @@ export default function CategoryCard() {
                 />
               </Link>
               <CardContent
-                className={`flex ${
-                  flag ? "translate-x-85/100 duration-1000" : "duration-1000"
-                }`}
+                className={`flex ${flag ? "translate-x-85/100 duration-1000" : "duration-1000"
+                  }`}
               >
                 {products.map((item, itemIndex) => {
                   if (itemIndex > 6) {
@@ -239,7 +235,7 @@ export default function CategoryCard() {
                 </Button>
               </Box>
             </Card>
-          </>
+          </React.Fragment>
         );
       })}
 
@@ -247,11 +243,10 @@ export default function CategoryCard() {
       {grouping.map((group, groupIndex) => {
         const flag = next[groupIndex];
         return (
-          <>
+          <React.Fragment key={groupIndex}>
             <Card
-              className={`xl:hidden lg:hidden md:block hidden mb-4 border-2 border-stone-300 relative overflow-hidden ${
-                color[groupIndex % color.length]
-              }`}
+              className={`xl:hidden lg:hidden md:block hidden mb-4 border-2 border-stone-300 relative overflow-hidden ${color[groupIndex % color.length]
+                }`}
             >
               <Link href={`/categories/${group.href}`}>
                 <CardHeader
@@ -260,9 +255,8 @@ export default function CategoryCard() {
                 />
               </Link>
               <CardContent
-                className={`flex ${
-                  flag ? "translate-x-85/100 duration-1000" : "duration-1000"
-                }`}
+                className={`flex ${flag ? "translate-x-85/100 duration-1000" : "duration-1000"
+                  }`}
               >
                 {products.map((item, itemIndex) => {
                   if (itemIndex > 4) {
@@ -303,14 +297,14 @@ export default function CategoryCard() {
                 </Button>
               </Box>
             </Card>
-          </>
+          </React.Fragment>
         );
       })}
 
       {/* sm */}
       <Grid container gap={3} justifyContent="center" className="md:hidden ">
-        {grouping.map((item) => (
-          <Grid item xs={3} lg={2}>
+        {grouping.map((item, index) => (
+          <Grid item xs={3} lg={2} key={index}>
             <CategoryComponent
               href={item.href}
               caption={item.name}

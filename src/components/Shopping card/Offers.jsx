@@ -8,6 +8,7 @@ import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import { useState } from "react";
 import { useCartProductsDispatch } from "@/context/CartProductsContext";
 import { Action_AddCart } from "@/Reducers/ActionType";
+import Image from "next/image";
 
 export default function Offers() {
   const cartProductsDispatch = useCartProductsDispatch();
@@ -141,7 +142,7 @@ export default function Offers() {
                       key={index}
                     >
                       <div className="p-1">
-                        <img src={item.src} alt="Product" />
+                        <Image height={200} width={200} src={item.src} alt="Product" />
                       </div>
                       <div className="p-2 text-gray-900 sm:col-span-2 grid grid-rows-3 grid-cols-1 justify-items-center items-center sm:justify-items-start">
                         <div className="mb-2 sm:mb-0">{item.name}</div>
@@ -222,7 +223,7 @@ export default function Offers() {
                       key={index}
                     >
                       <div className="p-1">
-                        <img src={item.src} alt="Product" />
+                        <Image height={200} width={200} src={item.src} alt="Product" />
                       </div>
                       <div className="p-2 text-gray-900 sm:col-span-2 grid grid-rows-3 grid-cols-1 justify-items-center items-center sm:justify-items-start">
                         <div className="mb-2 sm:mb-0">{item.name}</div>
@@ -303,7 +304,7 @@ export default function Offers() {
                       key={index}
                     >
                       <div className="p-1">
-                        <img src={item.src} alt="Product" />
+                        <Image height={200} width={200} src={item.src} alt="Product" />
                       </div>
                       <div className="p-2 text-gray-900 sm:col-span-2 grid grid-rows-3 grid-cols-1 justify-items-center items-center sm:justify-items-start">
                         <div className="mb-2 sm:mb-0">{item.name}</div>

@@ -28,6 +28,7 @@ export default function Step({ active }) {
             {stepper.map((item, index) => {
               return (
                 <div
+                  key={index}
                   className={
                     active == index
                       ? "relative bg-green-500 h-1 w-28"
@@ -61,6 +62,7 @@ export default function Step({ active }) {
             {detail.map((item, index) => {
               return (
                 <div
+                  key={index}
                   className={
                     active == index ? `${textEnable}` : `${textDisable}`
                   }
