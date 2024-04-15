@@ -11,10 +11,11 @@ export const createProduct = async (obj, token) => {
     });
 
     const mutation = gql`
-        mutation($name: String!, $price: Int!, $category: String!, $subcategory: String!) {
+        mutation($name: String!, $desc:String!, $price: Int!, $category: String!, $subcategory: String!) {
             ProductCreate(
                 input: { 
                     name: $name, 
+                    desc:$desc,
                     price: $price, 
                     category: $category, 
                     subcategory: $subcategory 
@@ -54,6 +55,17 @@ export const updateProduct = async (obj, token) => {
             }
         }
     `
+    // improve this:
+    // id,
+    // name,
+    // desc,
+    // price,
+    // category,
+    // subcategory,
+    // offPercentage,
+    // imagesUrl,
+    // commentsIds
+
     const variables = {
         id: obj.id,
         name: obj.name,

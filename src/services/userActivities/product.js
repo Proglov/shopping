@@ -11,35 +11,24 @@ export const getAllProducts = async (filters) => {
         Products(page:$page, perPage:$perPage){
             id
             name
-            comments {
-                user {
-                    name
-                    email
-                }
-                body
-                likes {
-                    number
-                }
-                disLikes {
-                    number
-                }
-                childrenComment {
-                    user {
-                        name
-                    }
-                    body
-                    likes {
-                        number
-                    }
-                    disLikes {
-                        number
-                    }
-                }  
-            }
+            price
+            category
+            subcategory
+            offPercentage
         }
     }
     `
     const result = await request(api, query, filters)
+    return result
+}
+
+export const getProductsCount = async () => {
+    const query = gql`
+        query{
+        ProductsCount
+    }
+    `
+    const result = await request(api, query)
     return result
 }
 
