@@ -12,6 +12,7 @@ export default function Bill({ step = 1 }) {
   const product = useCartProducts();
   const Time = useTime();
   const address = useAddress();
+  const minPrice = 150000;
 
   let serviceFee = 1479;
 
@@ -236,19 +237,45 @@ export default function Bill({ step = 1 }) {
             className="p-5 mb-1 grid grid-cols-2 justify-between mx-5"
             component="div"
           >
-            {!Time.select | (address === "") ? (
-              <div className="text-red-600 mb-2 text-right text-xl">
-                لطفا آدرس یا زمان ارسال را انتخاب کنید!
-              </div>
+            {minPrice < totalPrice(product) ? (
+              !Time.select | (address === "") ? (
+                <div className="text-red-600 mb-2 text-right text-xl">
+                  لطفا آدرس یا زمان ارسال را انتخاب کنید!
+                </div>
+              ) : (
+                <div></div>
+              )
             ) : (
-              <div></div>
+              <Box
+                className="text-red-600  mb-2 text-right text-xl"
+                component="div"
+              >
+                حداقل سفارش{" "}
+                {convertToFarsiNumbers(formatPrice(minPrice.toString()))} تومان
+              </Box>
             )}
-            {Time.select && address !== "" ? (
-              <div className="text-left">
-                <Link href="/shopping-card/payment">
+            {minPrice < totalPrice(product) ? (
+              Time.select && address !== "" ? (
+                <div className="text-left">
+                  <Link href="/shopping-card/payment">
+                    <Button
+                      variant="contained"
+                      className="bg-blue-500 text-bold text-xl hover:bg-blue-600 rounded-lg w-fit"
+                    >
+                      مرحله بعد
+                      <GrFormPrevious
+                        className="text-white"
+                        style={{ fontSize: "35px" }}
+                      />
+                    </Button>
+                  </Link>
+                </div>
+              ) : (
+                <div className="text-left">
                   <Button
                     variant="contained"
-                    className="bg-blue-500 text-bold text-xl hover:bg-blue-600 rounded-lg w-fit"
+                    className="text-bold text-xl rounded-lg disabled:bg-blue-300 disabled:text-white w-fit"
+                    disabled
                   >
                     مرحله بعد
                     <GrFormPrevious
@@ -256,8 +283,8 @@ export default function Bill({ step = 1 }) {
                       style={{ fontSize: "35px" }}
                     />
                   </Button>
-                </Link>
-              </div>
+                </div>
+              )
             ) : (
               <div className="text-left">
                 <Button

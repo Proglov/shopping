@@ -25,6 +25,13 @@ export default function Cart({ Close, Open }) {
     }, 0)
     .toString();
 
+  function totalPrice(arr) {
+    let price = arr.reduce((sum, obj) => {
+      return sum + (obj.number * parseInt(obj.price) * (100 - obj.off)) / 100;
+    }, 0);
+    return price.toString();
+  }
+
   return (
     <>
       <Dialog
@@ -93,9 +100,28 @@ export default function Cart({ Close, Open }) {
         </Box>
         <Box className="p-3 grid justify-items-center" component="div">
           {login ? (
-            <Link href="/shopping-card">
+            minPrice < totalPrice(cartProducts) ? (
+              <Link href="/shopping-card">
+                <Button
+                  variant="contained"
+                  className="bg-green-500 hover:bg-green-600 text-xl rounded-lg"
+                  sx={{
+                    width: {
+                      xs: "280px",
+                      sm: "500px",
+                      md: "650px",
+                      lg: "800px",
+                      xl: "1200px",
+                    },
+                  }}
+                >
+                  نهایی کردن خرید
+                </Button>
+              </Link>
+            ) : (
               <Button
                 variant="contained"
+                disabled
                 className="bg-green-500 hover:bg-green-600 text-xl rounded-lg"
                 sx={{
                   width: {
@@ -109,7 +135,7 @@ export default function Cart({ Close, Open }) {
               >
                 نهایی کردن خرید
               </Button>
-            </Link>
+            )
           ) : (
             <Link href="/users/login">
               <Button
