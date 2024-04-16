@@ -5,6 +5,7 @@ import { Box, Button, TextField } from "@mui/material";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { signUp } from "@/services/userActivities/user";
 
 export default function LoginComponent() {
   const [phoneNumber, setPhoneNumber] = useState("");

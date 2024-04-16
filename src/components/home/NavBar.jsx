@@ -24,9 +24,7 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
-  DialogTitle,
 } from "@mui/material";
-import CloseIcon from "@mui/icons-material/Close";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -73,6 +71,7 @@ export default function NavBar() {
   const [open, setOpen] = React.useState(false);
   const cartProducts = useCartProducts();
   const [openDialog, setOpenDialog] = React.useState(false);
+  const [bga, setBga] = React.useState(false)
 
   const handleOpen = () => {
     setOpenDialog(true);
@@ -117,7 +116,7 @@ export default function NavBar() {
     <Box sx={{ flexGrow: 1 }}>
       <div style={{ width: "100%", height: "56px" }}></div>
       <AppBar
-        sx={{ zIndex: "200", direction: "ltr", backgroundColor: "#3e5172" }}
+        sx={{ zIndex: "200", direction: "ltr", backgroundColor: `rgba(62, 81, 114, ${bga ? '.9' : '.8'})` }}
       >
         <Toolbar>
           {/* سبد خرید */}
@@ -178,6 +177,7 @@ export default function NavBar() {
           <Search
             dir="rtl"
             sx={{ flexGrow: 0, flexBasis: "auto", maxWidth: "200px" }}
+            onClick={() => setBga(true)}
           >
             <SearchIconWrapper>
               <SearchIcon />

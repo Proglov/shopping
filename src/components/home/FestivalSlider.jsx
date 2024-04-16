@@ -21,14 +21,14 @@ const FestivalSlider = ({ slides }) => {
         if (currentIndex < slidesLength - 1)
             setcurrentIndex(prev => prev + 1)
         else setcurrentIndex(0)
-    }, [currentIndex]);
+    }, [currentIndex, slidesLength]);
 
     const handlePrevious = useCallback(() => {
         setAutoplayIsLeft(false)
         if (currentIndex > 0)
             setcurrentIndex(prev => prev - 1)
         else setcurrentIndex(slidesLength - 1)
-    }, [currentIndex]);
+    }, [currentIndex, slidesLength]);
 
     const nTimesNext = n => {
         for (let i = 0; i < n; i++) handleNext()
@@ -39,17 +39,17 @@ const FestivalSlider = ({ slides }) => {
     }
 
     //autoplay
-    // useEffect(() => {
-    //     if (timeRef.current) clearTimeout(timeRef.current)
+    useEffect(() => {
+        if (timeRef.current) clearTimeout(timeRef.current)
 
-    //     timeRef.current = setTimeout(() => {
-    //         if (autoplayIsLeft)
-    //             handleNext()
-    //         else handlePrevious()
-    //     }, 5000);
+        timeRef.current = setTimeout(() => {
+            if (autoplayIsLeft)
+                handleNext()
+            else handlePrevious()
+        }, 5000);
 
-    //     return () => clearTimeout(timeRef.current)
-    // }, [handleNext, handlePrevious])
+        return () => clearTimeout(timeRef.current)
+    }, [handleNext, handlePrevious, autoplayIsLeft])
 
     //stop autoplay
     useEffect(() => {
