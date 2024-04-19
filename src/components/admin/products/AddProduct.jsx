@@ -9,6 +9,9 @@ import { categories } from '@/lib/categories';
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { price2Farsi } from '@/utils/funcs';
+import { createProduct } from '@/services/adminActivities/product';
+import ImageUpload from '@/components/ImageUpload';
+import { giveMeToken } from '@/utils/Auth';
 
 
 export default function AddProduct() {
@@ -20,9 +23,12 @@ export default function AddProduct() {
             price: '',
             offPercentage: '',
             category: '',
-            desc: ''
+            desc: '',
+            subcategory: 'سوپرمارکت'
         }
     })
+
+    const Token = giveMeToken()
 
 
     const handleChange = (event) => {
@@ -83,6 +89,28 @@ export default function AddProduct() {
                 isSubmitting: false
             }))
         } else {
+            try {
+                const obj = AddNewData.formData;
+                obj.desc = DOMPurify.sanitize(AddNewData.formData.desc)
+                console.log(obj)
+                console.log(obj.desc)
+                await createProduct(obj, Token)
+                setAddNewData(prevProps => ({
+                    ...prevProps,
+                    formData: {
+                        name: '',
+                        price: '',
+                        offPercentage: '',
+                        category: '',
+                        desc: '',
+                        subcategory: 'سوپرمارکت'
+                    },
+                    isSubmitting: false
+                }));
+                toast.success('با موفقیت ارسال شد!')
+            } catch {
+
+            }
             // const imagesURL = [];
             // for (const obj of uploadRes) {
             //     const url = obj.url
@@ -223,18 +251,7 @@ export default function AddProduct() {
             //             isSubmitting: false
             //         }));
             //     });
-            setAddNewData(prevProps => ({
-                ...prevProps,
-                formData: {
-                    name: '',
-                    price: '',
-                    offPercentage: '',
-                    category: '',
-                    desc: ''
-                },
-                isSubmitting: false
-            }));
-            toast.success('با موفقیت ارسال شد!')
+
         }
 
     };
@@ -301,12 +318,16 @@ export default function AddProduct() {
                             <label htmlFor="underline_select">دسته بندی</label>
                         </div>
                         <select id="underline_select" className="block py-2.5 px-3 w-full text-sm text-gray-500 bg-transparent my-2 rounded-md border-2 border-gray-200 appearance-none focus:outline-none focus:ring-0 focus:border-gray-200" onChange={handleChange} name='category'>
-                            <option defaultValue={0} disabled>دسته بندی را انتخاب کنید &#11167;</option>
+                            <option defaultValue={''}>دسته بندی را انتخاب کنید &#11167;</option>
                             {
                                 categories.map((category, index) => <option key={index} value={category} className='text-black'>{category}</option>)
                             }
                         </select>
                     </Grid>
+
+                    <div className='mt-4 w-full'>
+                        <ImageUpload />
+                    </div>
 
                     <Grid item xs={12} className='mt-2'>
                         <div className='text-start text-sm'>
@@ -318,8 +339,8 @@ export default function AddProduct() {
                         />
                     </Grid>
 
-                    {/* <Grid item xs={12}>
-                        <label
+                    <Grid item xs={12}>
+                        {/* <label
                             className="block mt-2 mb-1 text-slate-50" htmlFor="inline-image-upload">
                             آپلود تصویر
                         </label>
@@ -362,8 +383,8 @@ export default function AddProduct() {
                                     }),
                                 );
                             }}
-                        />
-                    </Grid> */}
+                        /> */}
+                    </Grid>
 
 
                     <Grid item xs={12}>

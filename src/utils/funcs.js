@@ -96,6 +96,7 @@ export function formatPrice(price) {
 }
 
 export function price2Farsi(number) {
+    if (number == 0) return 'صفر'
     const one2nine = ['یک', 'دو', 'سه', 'چهار', 'پنج', 'شش', 'هفت', 'هشت', 'نه'];
     const eleven2nineteen = ['یازده', 'دوازده', 'سیزده', 'چهارده', 'پانزده', 'شانزده', 'هفده', 'هیجده', 'نوزده'];
     const ten2ninety = ['ده', 'بیست', 'سی', 'چهل', 'پنجاه', 'شصت', 'هفتاد', 'هشتاد', 'نود'];

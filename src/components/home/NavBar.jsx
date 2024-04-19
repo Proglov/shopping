@@ -25,6 +25,7 @@ import {
   DialogActions,
   DialogContent,
 } from "@mui/material";
+import { GrUserAdmin } from "react-icons/gr";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -97,6 +98,9 @@ export default function NavBar() {
   const isLoggedIn = useLogin();
   const setLogin = useSetLogin();
 
+  // this is temporary and should be changed
+  const isAdmin = true;
+
   const isMenuOpen = Boolean(anchorEl);
 
   const handleProfileMenuOpen = (event) => {
@@ -121,6 +125,7 @@ export default function NavBar() {
         <Toolbar>
           {/* سبد خرید */}
           <Typography
+            className="mr-1 z-50"
             variant="h6"
             noWrap
             component="div"
@@ -154,6 +159,7 @@ export default function NavBar() {
             edge="start"
             color="inherit"
             aria-label="open drawer"
+            className="mr-2"
           >
             {!isLoggedIn ? (
               <Link href="/users/login">
@@ -170,14 +176,34 @@ export default function NavBar() {
             )}
           </IconButton>
 
+          {/* ادمین */}
+
+          <IconButton
+            size="large"
+            edge="start"
+            color="inherit"
+            aria-label="open drawer"
+          >
+            {isAdmin ? (
+              <Link href="/ADMIN">
+                <span className="text-red-500 flex" style={{ lineHeight: "24px" }}>
+                  <GrUserAdmin />
+                </span>
+              </Link>
+            ) : (
+              <></>
+            )}
+          </IconButton>
+
           {/* فاصله */}
           <Box sx={{ flexGrow: 1 }} />
 
           {/* جست و جو */}
           <Search
             dir="rtl"
-            sx={{ flexGrow: 0, flexBasis: "auto", maxWidth: "200px" }}
+            sx={{ flexGrow: 1, flexBasis: "auto", maxWidth: { xs: '200px', sm: '100px', md: '500px' } }}
             onClick={() => setBga(true)}
+            className="sm:max-w-md"
           >
             <SearchIconWrapper>
               <SearchIcon />

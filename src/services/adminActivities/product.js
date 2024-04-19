@@ -11,14 +11,15 @@ export const createProduct = async (obj, token) => {
     });
 
     const mutation = gql`
-        mutation($name: String!, $desc:String!, $price: Int!, $category: String!, $subcategory: String!) {
+        mutation($name: String!, $desc:String!, $price: Int!, $category: String!, $subcategory: String!, $imagesUrl:[String!]) {
             ProductCreate(
                 input: { 
                     name: $name, 
                     desc:$desc,
                     price: $price, 
                     category: $category, 
-                    subcategory: $subcategory 
+                    subcategory: $subcategory,
+                    imagesUrl:$imagesUrl
             }) {
                 message
             }
@@ -27,9 +28,11 @@ export const createProduct = async (obj, token) => {
 
     const variables = {
         name: obj.name,
+        desc: obj.desc,
         price: obj.price,
         category: obj.category,
         subcategory: obj.subcategory,
+        imagesUrl: obj?.imagesUrl || ['']
     };
 
     const { ProductCreate } = await graphQLClient.request(mutation, variables);
@@ -44,7 +47,7 @@ export const updateProduct = async (obj, token) => {
         },
     })
     const query = gql`
-        mutation($id:String! , $name: String!){
+        mutation($id:ID! , $name: String!){
             ProductUpdate (
                 input: {
                     id:$id
@@ -81,12 +84,13 @@ export const deleteProduct = async (id, token) => {
         },
     })
     const query = gql`
-        mutation($id:String!){
+        mutation($id:ID!){
             ProductDelete(id:$id){
-                MessageAndStatus
+                message,
+                status
             }
         }
     `
-    const result = (await graphQLClient.request(query, { id })).message
-    return result
+    const result = (await graphQLClient.request(query, { id }))
+    return { status: result.status, message: result.message }
 }
