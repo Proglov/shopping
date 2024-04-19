@@ -11,7 +11,7 @@ export default function CategoriesLayout({ children }) {
     <>
       <NavBar />
       <div className="m-8">{children}</div>
-      <FooterMenu active={1} />
+      <FooterMenu active={-1} />
     </>
   );
 }

@@ -3,15 +3,15 @@ import { Box, Button, Card, CardContent, CardMedia } from "@mui/material";
 
 export default function CardItem({ product }) {
   return (
-    <Card sx={{ minWidth: 200, height: 330 }} className="ml-4">
+    <Card sx={{ minWidth: 200, height: 330 }} className="mt-5 ml-6">
       <CardMedia sx={{ height: 150 }} component="img" image={product.src} />
       <CardContent>
         <Box component="div" className="text-lg">
           {product.name}
         </Box>
         <Box>
-          {product.off === "0" ? (
-            ""
+          {product.off == "0" ? (
+            <div className="h-12"></div>
           ) : (
             <div className="flex justify-start sm:text-base text-sm">
               <span className="bg-red-500 rounded-md mt-2 text-center h-7 sm:min-w-[50px] p-1 text-white">
