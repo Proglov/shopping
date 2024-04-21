@@ -10,7 +10,7 @@ export default function Categories() {
   //const grouping = useGrouping(); ?
   const grouping = useContext(GroupingContext);
   return (
-    <div className="m-4">
+    <div className="m-4" id="categorization">
       <div
         className="border border-gray-300 top-3 relative"
         style={{

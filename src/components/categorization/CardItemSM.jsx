@@ -1,10 +1,15 @@
 import { convertToFarsiNumbers, formatPrice } from "@/utils/funcs";
 import { Box, Button, Card, CardContent, CardMedia } from "@mui/material";
 
-export default function CardItem({ product }) {
+export default function CardItemSM({ product }) {
   return (
-    <Card sx={{ minWidth: 200, height: 330 }} className="mt-5 ml-6">
-      <CardMedia sx={{ height: 150 }} component="img" image={product.src} />
+    <Card className="w-full h-auto p-5 mb-5 flex">
+      <CardMedia
+        sx={{ width: 100 }}
+        className="my-auto ml-3"
+        component="img"
+        image={product.src}
+      />
       <CardContent>
         <Box component="div" className="text-lg">
           {product.name}
