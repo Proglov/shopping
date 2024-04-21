@@ -60,11 +60,9 @@ export const toggleValidateComment = async (id, token) => {
 
     const mutation = gql`
         mutation($id:!ID) {
-            CommentToggleValidate(
-                input: { 
-                    id: $id
-            }) {
+            CommentToggleValidate(id: $id) {
                 message
+                status
             }
         }
     `;

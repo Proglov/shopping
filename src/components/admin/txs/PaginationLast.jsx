@@ -1,9 +1,9 @@
 'use client'
 import { useContext } from 'react'
-import { PaginationContext } from './ProductsTable'
+import { PaginationContext } from './TXTableLast'
 import { BiSolidChevronsLeft, BiSolidChevronsRight, BiSolidChevronLeft, BiSolidChevronRight } from 'react-icons/bi'
 
-export default function Pagination() {
+export default function PaginationLast() {
     const { currentPage, setCurrentPage, lastPage } = useContext(PaginationContext)
 
     const handleFirstPage = () => {

@@ -27,13 +27,31 @@ export const getAllUsers = async (token, filters) => {
     })
     const query = gql`
         query($page:Int, $perPage:Int){
-        UsersGet(page:$page, perPage:$perPage){
-            id
-            name
+            UsersGet(page:$page, perPage:$perPage){
+                id,
+                name,
+                email,
+                username,
+                phone,
+            }
         }
-    }
     `
     const result = await graphQLClient.request(query, filters)
+    return result
+}
+
+export const getUsersCount = async (token) => {
+    const graphQLClient = new GraphQLClient(api, {
+        headers: {
+            authorization: `${token}`,
+        },
+    });
+    const query = gql`
+        query{
+            UsersCount
+    }
+    `
+    const result = await graphQLClient.request(query)
     return result
 }
 
@@ -45,12 +63,10 @@ export const deleteUser = async (id, token) => {
     });
 
     const mutation = gql`
-        mutation($id:!ID) {
-            UserDelete(
-                input: { 
-                    id: $id
-            }) {
+        mutation($id:ID!) {
+            UserDelete(id: $id) {
                 message
+                status
             }
         }
     `;

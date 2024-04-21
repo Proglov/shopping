@@ -34,30 +34,30 @@ export const createComment = async (obj, token) => {
 
 export const getAllComments = async (filters) => {
     const query = gql`
-        query($page:Int, $perPage:Int){
-            Comments(page:$page, perPage:$perPage){
+        query($page:Int, $perPage:Int, $validated:Boolean){
+            Comments(page:$page, perPage:$perPage, validated:$validated){
                 id
                 body
-                childrenComment {
-                    body
-                }
                 user {
                     id
-                    name
-                    password
+                    phone
                 }
                 validated
-                likes {
-                    number
-                }
-                disLikes {
-                number
-                }
             }
         }
     `
     const result = await request(api, query, filters)
-    return result.Comments
+    return result
+}
+
+export const getCommentsCount = async (validated) => {
+    const query = gql`
+        query($validated:Boolean){
+            CommentsCount(validated:$validated)
+    }
+    `
+    const result = await request(api, query, { validated })
+    return result
 }
 
 export const getAComment = async (id) => {

@@ -10,51 +10,41 @@ export const getAllTxs = async (token, filters) => {
         },
     });
     const query = gql`
-        query ($page:Int, $perPage:Int){
-            TransActions(page:$page, perPage:$perPage){
+        query ($page:Int, $perPage:Int,$isFutureOrder:Boolean){
+            TransActions(page:$page, perPage:$perPage, isFutureOrder:$isFutureOrder){
                 id,
                 user{
                     id,
-                    name,
-                    email,
-                    username,
-                    address,
                     phone,
-                    role
-                },
-                boughtProducts{
-                    id,
-                    name,
-                    price,
-                    category,
-                    subcategory,
-                    offPercentage,
-                    imagesUrl
+                    name
                 },
                 address,
                 shouldBeSentAt,
-                boughtAt,  
+                boughtAt,
+                totalPrice
             }
         }
     `;
-    const result = await graphQLClient.request(query, filters)
+    const obj = {
+        page: filters.page,
+        perPage: filters.perPage,
+        isFutureOrder: filters?.isFutureOrder
+    }
+    const result = await graphQLClient.request(query, obj)
     return result
 }
 
-
-export const deleteTx = async (id, token) => {
+export const getTXCount = async (token, isFutureOrder) => {
     const graphQLClient = new GraphQLClient(api, {
         headers: {
             authorization: `${token}`,
         },
-    })
+    });
     const query = gql`
-        mutation($id:String!){
-            TransActionDelete(id:$id){
-                MessageAndStatus
-            }
+        query($isFutureOrder:Boolean){
+            TransActionsCount(isFutureOrder:$isFutureOrder)
         }
     `
-    const result = (await graphQLClient.request(query, { id })).message
+    const result = await graphQLClient.request(query, { isFutureOrder })
     return result
 }
