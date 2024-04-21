@@ -24,12 +24,12 @@ export default function BreadCrumbs({ location }) {
         }
         aria-label="breadcrumb"
       >
-        <Link href="/" className="text-lg hover:underline text-gray-400">
+        <Link href="/" className="text-base hover:underline text-gray-400">
           خانه
         </Link>
         <Link
           href="/#categorization"
-          className="text-lg hover:underline text-gray-400"
+          className="text-base hover:underline text-gray-400"
         >
           دسته بندی
         </Link>

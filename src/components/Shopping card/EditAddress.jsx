@@ -81,7 +81,7 @@ export default function EditAddress({ open, close, address, setAddress }) {
               <Box
                 key={index}
                 component="div"
-                className="text-xl m-2 grid md:grid-cols-2"
+                className="text-lg m-2 grid md:grid-cols-2"
               >
                 {!isEditing ? (
                   <>

@@ -46,11 +46,11 @@ export default function ShoppingCard({ step }) {
               className="font-bold mb-4"
               sx={{
                 fontSize: {
-                  xs: "20px",
+                  xs: "18px",
                   sm: "16px",
-                  md: "20px",
+                  md: "24px",
                   lg: "24px",
-                  xl: "28px",
+                  xl: "24px",
                 },
               }}
             >
@@ -105,11 +105,11 @@ export default function ShoppingCard({ step }) {
               className="mb-2 mr-1.5 text-gray-600"
               sx={{
                 fontSize: {
-                  xs: "18px",
+                  xs: "16px",
                   sm: "16px",
                   md: "20px",
                   lg: "20px",
-                  xl: "24px",
+                  xl: "20px",
                 },
               }}
             >
@@ -125,7 +125,7 @@ export default function ShoppingCard({ step }) {
                       <div
                         className="m-4 h-auto w-full grid grid-cols-1 gap-4 lg:w-3/4 sm:grid-cols-4"
                       >
-                        <div className="p-1">
+                        <div className="p-1 mx-auto">
                           <Image height={200} width={200} src={item.src} alt="Product" />
                         </div>
                         <div className="p-2 text-gray-900 sm:col-span-3 grid grid-rows-3 grid-cols-1 justify-items-center items-center sm:grid-rows-2 sm:grid-cols-2 sm:justify-items-start">

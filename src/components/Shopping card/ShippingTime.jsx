@@ -120,7 +120,7 @@ export default function ShippingTime() {
             <Box className="grid justify-items-center" component="div">
               <Button
                 variant="contained"
-                className={`mb-3 text-bold text-xl hover:text-white hover:bg-blue-400 rounded-lg ${
+                className={`mb-3 text-bold text-lg hover:text-white hover:bg-blue-400 rounded-lg ${
                   active === "today"
                     ? "bg-blue-700 text-white"
                     : "bg-blue-100 text-blue-600"
@@ -145,7 +145,7 @@ export default function ShippingTime() {
               </Button>
               <Button
                 variant="contained"
-                className={`mb-3 text-bold text-xl hover:text-white hover:bg-blue-400 rounded-lg ${
+                className={`mb-3 text-bold text-lg hover:text-white hover:bg-blue-400 rounded-lg ${
                   active === "tomorrow"
                     ? "bg-blue-700 text-white"
                     : "bg-blue-100 text-blue-600"
@@ -324,7 +324,7 @@ export default function ShippingTime() {
                   <Button
                     size="medium"
                     variant="text"
-                    className="text-xl text-blue-700 text-bold"
+                    className="text-lg text-blue-700 text-bold"
                     onClick={() => setShowMore(true)}
                   >
                     زمان های تحویل بیشتر

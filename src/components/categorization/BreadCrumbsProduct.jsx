@@ -20,18 +20,18 @@ export default function BreadCrumbsProduct({ location }) {
       separator={<ArrowLeftIcon fontSize="medium" className="text-gray-400" />}
       aria-label="breadcrumb"
     >
-      <Link href="/" className="text-lg hover:underline text-gray-400">
+      <Link href="/" className="text-base hover:underline text-gray-400">
         خانه
       </Link>
       <Link
         href="/#categorization"
-        className="text-lg hover:underline text-gray-400"
+        className="text-base hover:underline text-gray-400"
       >
         دسته بندی
       </Link>
       <Link
         href={`/categories/${place[0].href}`}
-        className="text-lg hover:underline text-gray-400"
+        className="text-base hover:underline text-gray-400"
       >
         {place[0].name}
       </Link>

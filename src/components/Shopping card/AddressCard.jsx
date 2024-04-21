@@ -46,11 +46,11 @@ export default function AddressCard() {
               className="font-bold mb-4"
               sx={{
                 fontSize: {
-                  xs: "20px",
-                  sm: "16px",
-                  md: "20px",
-                  lg: "24px",
-                  xl: "28px",
+                  xs: "18px",
+                  sm: "20px",
+                  md: "23px",
+                  lg: "23px",
+                  xl: "23px",
                 },
               }}
             >

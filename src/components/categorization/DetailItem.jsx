@@ -55,6 +55,9 @@ export default function DetailItem({ detail }) {
             اضافه کردن به سبد خرید
           </Button>
         </Box>
+        <Box className="sm:text-lg text-sm">
+          دسته بندی:
+        </Box>
       </Box>
     </>
   );

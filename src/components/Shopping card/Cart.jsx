@@ -50,11 +50,11 @@ export default function Cart({ Close, Open }) {
               className="ml-2 md:ml-3"
               sx={{
                 fontSize: {
-                  xs: "20px",
-                  sm: "25px",
-                  md: "32px",
-                  lg: "32px",
-                  xl: "32px",
+                  xs: "18px",
+                  sm: "20px",
+                  md: "25px",
+                  lg: "25px",
+                  xl: "25px",
                 },
               }}
             >
@@ -65,10 +65,10 @@ export default function Cart({ Close, Open }) {
               sx={{
                 fontSize: {
                   xs: "16px",
-                  sm: "20px",
-                  md: "26px",
-                  lg: "26px",
-                  xl: "26px",
+                  sm: "18px",
+                  md: "23px",
+                  lg: "23px",
+                  xl: "23px",
                 },
               }}
             >
@@ -92,7 +92,7 @@ export default function Cart({ Close, Open }) {
         </Box>
         <ShoppingCard step={0} />
         <Box
-          className="grid justify-center text-blue-700 text-xl"
+          className="grid justify-center text-blue-700 text-base"
           component="div"
         >
           حداقل سفارش {convertToFarsiNumbers(formatPrice(minPrice.toString()))}{" "}
@@ -104,7 +104,7 @@ export default function Cart({ Close, Open }) {
               <Link href="/shopping-card">
                 <Button
                   variant="contained"
-                  className="bg-green-500 hover:bg-green-600 text-xl rounded-lg"
+                  className="bg-green-500 hover:bg-green-600 text-base rounded-lg"
                   sx={{
                     width: {
                       xs: "280px",
@@ -122,7 +122,7 @@ export default function Cart({ Close, Open }) {
               <Button
                 variant="contained"
                 disabled
-                className="bg-green-500 hover:bg-green-600 text-xl rounded-lg"
+                className="bg-green-500 hover:bg-green-600 text-base rounded-lg"
                 sx={{
                   width: {
                     xs: "280px",
@@ -140,7 +140,7 @@ export default function Cart({ Close, Open }) {
             <Link href="/users/login">
               <Button
                 variant="contained"
-                className="bg-green-500 hover:bg-green-600 text-xl rounded-lg"
+                className="bg-green-500 hover:bg-green-600 text-base rounded-lg"
                 sx={{
                   width: {
                     xs: "280px",

@@ -155,7 +155,7 @@ export default function PaymentBill() {
           </CardContent>
           <Box component="div" className="text-center">
             <Button
-              className="text-white text-lg bg-green-400 hover:bg-green-500 rounded-lg mb-4 w-3/4"
+              className="text-white text-base bg-green-400 hover:bg-green-500 rounded-lg mb-4 w-3/4"
               variant="contained"
             >
               پرداخت آنلاین
@@ -171,7 +171,7 @@ export default function PaymentBill() {
           <Link href="/shopping-card">
             <Button
               variant="contained"
-              className="bg-blue-500 text-bold text-xl hover:bg-blue-600 rounded-lg w-fit"
+              className="bg-blue-500 text-bold text-base hover:bg-blue-600 rounded-lg w-fit"
             >
               <GrFormNext className="text-white" style={{ fontSize: "35px" }} />
               مرحله قبل
@@ -183,7 +183,7 @@ export default function PaymentBill() {
             <Link href="/shopping-card/payment/bill">
               <Button
                 variant="contained"
-                className="bg-blue-500 text-bold text-xl hover:bg-blue-600 rounded-lg w-fit"
+                className="bg-blue-500 text-bold text-base hover:bg-blue-600 rounded-lg w-fit"
               >
                 مرحله بعد
                 <GrFormPrevious
@@ -195,7 +195,7 @@ export default function PaymentBill() {
           ) : (
             <Button
               variant="contained"
-              className="text-bold text-xl rounded-lg disabled:bg-blue-300 disabled:text-white w-fit"
+              className="text-bold text-base rounded-lg disabled:bg-blue-300 disabled:text-white w-fit"
               disabled
             >
               مرحله بعد

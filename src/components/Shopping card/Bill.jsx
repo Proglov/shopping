@@ -247,7 +247,7 @@ export default function Bill({ step = 1 }) {
               )
             ) : (
               <Box
-                className="text-red-600  mb-2 text-right text-xl"
+                className="text-red-600  mb-2 text-right text-lg"
                 component="div"
               >
                 حداقل سفارش{" "}
@@ -260,7 +260,7 @@ export default function Bill({ step = 1 }) {
                   <Link href="/shopping-card/payment">
                     <Button
                       variant="contained"
-                      className="bg-blue-500 text-bold text-xl hover:bg-blue-600 rounded-lg w-fit"
+                      className="bg-blue-500 text-bold text-base hover:bg-blue-600 rounded-lg w-fit"
                     >
                       مرحله بعد
                       <GrFormPrevious
@@ -274,7 +274,7 @@ export default function Bill({ step = 1 }) {
                 <div className="text-left">
                   <Button
                     variant="contained"
-                    className="text-bold text-xl rounded-lg disabled:bg-blue-300 disabled:text-white w-fit"
+                    className="text-bold text-base rounded-lg disabled:bg-blue-300 disabled:text-white w-fit"
                     disabled
                   >
                     مرحله بعد
@@ -289,7 +289,7 @@ export default function Bill({ step = 1 }) {
               <div className="text-left">
                 <Button
                   variant="contained"
-                  className="text-bold text-xl rounded-lg disabled:bg-blue-300 disabled:text-white w-fit"
+                  className="text-bold text-base rounded-lg disabled:bg-blue-300 disabled:text-white w-fit"
                   disabled
                 >
                   مرحله بعد

@@ -122,7 +122,7 @@ export default function Offers() {
             >
               <ArrowForwardIosIcon />
             </Button>
-            <span className="self-center flex-1 text-center text-gray-950 text-bold text-2xl">
+            <span className="self-center flex-1 text-center text-gray-950 text-bold text-xl">
               {title[index]}
             </span>
             <Button
@@ -141,8 +141,8 @@ export default function Offers() {
                       className="m-4 h-auto w-full grid grid-cols-1 gap-4 lg:w-3/4 sm:grid-cols-4"
                       key={index}
                     >
-                      <div className="p-1">
-                        <Image height={200} width={200} src={item.src} alt="Product" />
+                      <div className="p-1 mx-auto">
+                        <Image height={200} width={200} src={item.src} alt="Product"/>
                       </div>
                       <div className="p-2 text-gray-900 sm:col-span-2 grid grid-rows-3 grid-cols-1 justify-items-center items-center sm:justify-items-start">
                         <div className="mb-2 sm:mb-0">{item.name}</div>
@@ -222,7 +222,7 @@ export default function Offers() {
                       className="m-4 h-auto w-full grid grid-cols-1 gap-4 lg:w-3/4 sm:grid-cols-4"
                       key={index}
                     >
-                      <div className="p-1">
+                      <div className="p-1 mx-auto">
                         <Image height={200} width={200} src={item.src} alt="Product" />
                       </div>
                       <div className="p-2 text-gray-900 sm:col-span-2 grid grid-rows-3 grid-cols-1 justify-items-center items-center sm:justify-items-start">
@@ -303,7 +303,7 @@ export default function Offers() {
                       className="m-4 h-auto w-full grid grid-cols-1 gap-4 lg:w-3/4 sm:grid-cols-4"
                       key={index}
                     >
-                      <div className="p-1">
+                      <div className="p-1 mx-auto">
                         <Image height={200} width={200} src={item.src} alt="Product" />
                       </div>
                       <div className="p-2 text-gray-900 sm:col-span-2 grid grid-rows-3 grid-cols-1 justify-items-center items-center sm:justify-items-start">
