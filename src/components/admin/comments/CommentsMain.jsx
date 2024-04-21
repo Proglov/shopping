@@ -1,7 +1,12 @@
 import React from 'react'
+import CommentsTableNow from './CommentsTableNow'
+import CommentsTableLast from './CommentsTableLast'
 
 export default function CommentsMain() {
     return (
-        <div>CommentsMain</div>
+        <div>
+            <CommentsTableNow />
+            <CommentsTableLast />
+        </div>
     )
 }

@@ -1,7 +1,12 @@
 import React from 'react'
+import TXTableNow from './TXTableNow'
+import TXTableLast from './TXTableLast'
 
 export default function TXMain() {
     return (
-        <div>TXMain</div>
+        <div>
+            <TXTableNow />
+            <TXTableLast />
+        </div>
     )
 }

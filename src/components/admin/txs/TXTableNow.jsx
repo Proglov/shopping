@@ -1,0 +1,218 @@
+"use client"
+import { Button, Stack } from '@mui/material';
+import { useEffect, useState, createContext } from 'react';
+import { styled } from '@mui/material/styles';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell, { tableCellClasses } from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import Paper from '@mui/material/Paper';
+import { giveMeToken } from '@/utils/Auth';
+import { getAllTxs, getTXCount } from '@/services/adminActivities/tx';
+import { convertToFarsiNumbers, formatPrice, price2Farsi } from '@/utils/funcs';
+import PaginationNow from './PaginationNow';
+
+
+const StyledTableCell = styled(TableCell)(({ theme }) => ({
+    [`&.${tableCellClasses.head}`]: {
+        backgroundColor: theme.palette.common.black,
+        color: theme.palette.common.white,
+    },
+    [`&.${tableCellClasses.body}`]: {
+        fontSize: 14,
+    },
+}));
+const StyledTableRow = styled(TableRow)(({ theme }) => ({
+    '&:nth-of-type(odd)': {
+        backgroundColor: theme.palette.action.hover,
+    },
+    '&:last-child td, &:last-child th': {
+        border: 0,
+    },
+}));
+
+export const PaginationContext = createContext();
+
+
+export default function TXTableNow() {
+
+    const itemsPerPage = 20
+
+    const [currentPage, setCurrentPage] = useState(1)
+    const [loading, setLoading] = useState(false);
+    const [isError, setIsError] = useState(false);
+    const [error, setError] = useState('');
+    const [operatingID, setOperatingID] = useState('');
+    const [operatingError, setOperatingError] = useState('');
+    const [items, setItems] = useState([])
+    const [itemsCount, setItemsCount] = useState(0)
+    const [selectedItem, setSelectedItem] = useState({
+        id: '',
+        user: {},
+        boughtProducts: {},
+        address: '',
+        shouldBeSentAt: '',
+        boughtAt: '',
+        totalPrice: 0
+    });
+
+    useEffect(() => {
+        const Token = giveMeToken();
+        const fetchData = async () => {
+            try {
+                const TX = await getAllTxs(Token, { page: currentPage, perPage: itemsPerPage, isFutureOrder: true });
+                setItems(TX.TransActions)
+            } catch (error) {
+                console.error('Error fetching users:', error);
+                setIsError(true);
+            } finally {
+                setLoading(false);
+            }
+        };
+        const fetchCount = async () => {
+            try {
+                setLoading(true);
+                const count = await getTXCount(Token, true);
+                console.log(count);
+                setItemsCount(count.TransActionsCount)
+            } catch (error) {
+                console.error('Error fetching users count:', error);
+                setIsError(true);
+            } finally {
+                fetchData();
+
+            }
+        };
+
+        fetchCount();
+    }, [currentPage]);
+    return (
+        <Stack spacing={2} className='mt-10'>
+            <span className='w-full text-start'>
+                جدول تراکنش های سفارشات آتی
+            </span>
+            {isError ? (
+                <div>
+                    مشکلی رخ داد! لطفا دوباره تلاش کنید ...
+                    <br />
+                    {error.toString()}
+                </div>
+            ) : loading ? (
+                <div>درحال دریافت اطلاعات ...</div>
+            ) : (
+                items?.length !== 0 ?
+                    <div>
+                        <TableContainer component={Paper}>
+                            <Table sx={{ minWidth: 1000 }} aria-label="customized table">
+                                <TableHead>
+                                    <TableRow>
+                                        <StyledTableCell align='center'>ردیف</StyledTableCell>
+                                        <StyledTableCell align='center'>نام خریدار</StyledTableCell>
+                                        <StyledTableCell align='center'>شماره خریدار</StyledTableCell>
+                                        <StyledTableCell align='center'>زمان ارسال</StyledTableCell>
+                                        <StyledTableCell align='center'>قیمت نهایی</StyledTableCell>
+                                        <StyledTableCell align='center'>عملیات</StyledTableCell>
+                                    </TableRow>
+                                </TableHead>
+                                <TableBody>
+                                    {items.map((item, index) => (
+                                        <StyledTableRow key={item.id}
+                                            className='align-middle'>
+                                            <StyledTableCell align='center'>{convertToFarsiNumbers(index + 1 + itemsPerPage * (currentPage - 1))}</StyledTableCell>
+                                            <StyledTableCell align='center'>
+                                                {item.user?.name}
+                                                {!item.user?.name && <>فاقد نام</>}
+                                            </StyledTableCell>
+                                            <StyledTableCell align='center'>{convertToFarsiNumbers(item.user.phone)}</StyledTableCell>
+                                            <StyledTableCell align='center'>
+                                                {new Intl.DateTimeFormat('fa-IR').format(parseInt(item.shouldBeSentAt))}
+                                                <br />
+                                                {convertToFarsiNumbers((new Date(parseInt(item.shouldBeSentAt)).getHours()))}
+                                                :{convertToFarsiNumbers(("0" + (new Date((parseInt(item.shouldBeSentAt))).getMinutes())).slice(-2))}
+                                            </StyledTableCell>
+                                            <StyledTableCell align='center'>
+                                                {formatPrice(item.totalPrice)}
+                                                <br />
+                                                {price2Farsi(item.totalPrice)}
+                                                <br />
+                                                تومان
+                                            </StyledTableCell>
+                                            <StyledTableCell className='flex flex-col justify-center border-b-0 align-middle'>
+                                                {operatingID === item.id ? (
+                                                    <div className='text-center mt-2 text-xs'>درحال انجام عملیات</div>
+                                                ) : (
+                                                    <>
+                                                        <Button
+                                                            variant='outlined'
+                                                            className='p-0 m-1'
+                                                            sx={{ color: 'green', borderColor: 'green' }}
+                                                            onClick={() => {
+                                                                setIsModalEditOpen(true);
+                                                                setSelectedItem(prev => ({
+                                                                    ...item,
+                                                                    imagesURL: prev.imagesURL
+                                                                }))
+                                                            }}
+                                                        >
+                                                            مشاهده بیشتر
+                                                        </Button>
+                                                        <Button
+                                                            variant='outlined'
+                                                            sx={{ color: 'red', borderColor: 'red' }}
+                                                            className='p-0 m-1'
+                                                            onClick={() => {
+                                                                setIsModalDeleteOpen(true);
+                                                                setSelectedItem({
+                                                                    ...item
+                                                                })
+                                                            }}
+                                                        >
+                                                            حذف
+                                                        </Button>
+                                                    </>
+                                                )}
+                                                {operatingID === item.id && operatingError !== '' ? (
+                                                    <div>مشکلی پیش امده است. لطفا اتصال اینترنت را بررسی کنید</div>
+                                                ) : ''}
+                                            </StyledTableCell>
+                                        </StyledTableRow>
+                                    ))}
+                                </TableBody>
+                            </Table>
+                        </TableContainer>
+                        {
+                            itemsCount > itemsPerPage &&
+                            <div className='flex justify-center' style={{ marginTop: '25px' }}>
+                                <PaginationContext.Provider value={{ lastPage: Math.ceil(itemsCount / itemsPerPage), currentPage, setCurrentPage }}>
+                                    <PaginationNow />
+                                </PaginationContext.Provider>
+                            </div>
+                        }
+
+                    </div>
+                    : <div>
+                        اطلاعاتی جهت نمایش وجود ندارد
+                    </div>
+            )}
+
+            <>
+                {/* 
+                <ModalDeleteContext.Provider value={{ isModalDeleteOpen, setIsModalDeleteOpen }}>
+                    <ModalDelete id={selectedItem.id} />
+                </ModalDeleteContext.Provider>
+
+                <ModalEditContext.Provider value={{
+                    isModalEditOpen,
+                    setIsModalEditOpen,
+                    setSelectedItem,
+                    selectedItem
+                }}>
+                    <ModalEdit />
+                </ModalEditContext.Provider> */}
+            </>
+
+        </Stack>
+    );
+}

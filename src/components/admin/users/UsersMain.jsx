@@ -1,9 +1,9 @@
-import React, { Component } from 'react'
+import UsersTable from "./UsersTable"
 
-export default class UsersMain extends Component {
-    render() {
-        return (
-            <div>UsersMain</div>
-        )
-    }
+export default function UsersMain() {
+    return (
+        <div>
+            <UsersTable />
+        </div>
+    )
 }

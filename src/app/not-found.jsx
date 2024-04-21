@@ -8,7 +8,7 @@ export default function NotFound() {
                 <h2 className='m-3'>متاسفم :(</h2>
                 <p className='m-3'>صفحه ی مورد نظر شما یافت نشد</p>
                 <div>
-                    <Link href="/" className='text-red-400 flex justify-center'>
+                    <Link href="/" className='text-indigo-500 flex justify-center'>
                         برگرد به خونه اول
                         <span className='p-1'>
                             <AiOutlineHome />
