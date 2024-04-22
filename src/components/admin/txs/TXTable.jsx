@@ -1,6 +1,6 @@
 "use client"
 import { Button, Stack } from '@mui/material';
-import { useEffect, useState, createContext } from 'react';
+import { useEffect, useState, createContext, useContext } from 'react';
 import { styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -9,11 +9,11 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import { convertToFarsiNumbers } from '@/utils/funcs';
-import PaginationLast from './PaginationLast';
-import { getAllComments, getCommentsCount } from '@/services/userActivities/comment';
-import ModalDeleteLast from './ModalDeleteLast';
-import ModalConfirmLast from './ModalConfirmLast';
+import { giveMeToken } from '@/utils/Auth';
+import { getAllTxs, getTXCount } from '@/services/adminActivities/tx';
+import { convertToFarsiNumbers, formatPrice, price2Farsi } from '@/utils/funcs';
+import PaginationNow from './Pagination';
+import { ItemsContext } from './TXMain';
 
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -35,31 +35,48 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 export const PaginationContext = createContext();
-export const ModalDeleteContext = createContext();
-export const ModalConfirmContext = createContext();
 
 
-export default function CommentsTableLast() {
-    const [isModalDeleteOpen, setIsModalDeleteOpen] = useState(false);
-    const [isModalConfirmOpen, setIsModalConfirmOpen] = useState(false);
+export default function TXTable() {
 
-    const itemsPerPage = 20
+    const {
+        currentPage,
+        setCurrentPage,
+        loading,
+        setLoading,
+        isError,
+        setIsError,
+        error,
+        setError,
+        operatingID,
+        setOperatingID,
+        operatingError,
+        setOperatingError,
+        items,
+        setItems,
+        itemsCount,
+        setItemsCount,
+        itemsPerPage,
+        isFutureOrder
+    } = useContext(ItemsContext)
 
-    const [currentPage, setCurrentPage] = useState(1)
-    const [loading, setLoading] = useState(false);
-    const [isError, setIsError] = useState(false);
-    const [error, setError] = useState('');
-    const [operatingID, setOperatingID] = useState('');
-    const [operatingError, setOperatingError] = useState('');
-    const [items, setItems] = useState([])
-    const [itemsCount, setItemsCount] = useState(0)
-    const [selectedId, setSelectedId] = useState('');
+
+    // const [selectedItem, setSelectedItem] = useState({
+    //     id: '',
+    //     user: {},
+    //     boughtProducts: {},
+    //     address: '',
+    //     shouldBeSentAt: '',
+    //     boughtAt: '',
+    //     totalPrice: 0
+    // });
 
     useEffect(() => {
+        const Token = giveMeToken();
         const fetchData = async () => {
             try {
-                const comments = await getAllComments({ page: currentPage, perPage: itemsPerPage, validated: true });
-                setItems(comments.Comments)
+                const TX = await getAllTxs(Token, { page: currentPage, perPage: itemsPerPage, isFutureOrder });
+                setItems(TX.TransActions)
             } catch (error) {
                 console.error('Error fetching users:', error);
                 setIsError(true);
@@ -70,8 +87,9 @@ export default function CommentsTableLast() {
         const fetchCount = async () => {
             try {
                 setLoading(true);
-                const count = await getCommentsCount(true);
-                setItemsCount(count.CommentsCount)
+                const count = await getTXCount(Token, isFutureOrder);
+                console.log(count);
+                setItemsCount(count.TransActionsCount)
             } catch (error) {
                 console.error('Error fetching users count:', error);
                 setIsError(true);
@@ -86,7 +104,8 @@ export default function CommentsTableLast() {
     return (
         <Stack spacing={2} className='mt-10'>
             <span className='w-full text-start'>
-                جدول کامنت های تایید شده
+                جدول تراکنش های سفارشات &nbsp;
+                {!!isFutureOrder ? <>آتی</> : <>اخیر</>}
             </span>
             {isError ? (
                 <div>
@@ -104,8 +123,10 @@ export default function CommentsTableLast() {
                                 <TableHead>
                                     <TableRow>
                                         <StyledTableCell align='center'>ردیف</StyledTableCell>
-                                        <StyledTableCell align='center'>شماره کاربر</StyledTableCell>
-                                        <StyledTableCell align='center'>متن ارسال شده</StyledTableCell>
+                                        <StyledTableCell align='center'>نام خریدار</StyledTableCell>
+                                        <StyledTableCell align='center'>شماره خریدار</StyledTableCell>
+                                        <StyledTableCell align='center'>زمان ارسال</StyledTableCell>
+                                        <StyledTableCell align='center'>قیمت نهایی</StyledTableCell>
                                         <StyledTableCell align='center'>عملیات</StyledTableCell>
                                     </TableRow>
                                 </TableHead>
@@ -114,8 +135,24 @@ export default function CommentsTableLast() {
                                         <StyledTableRow key={item.id}
                                             className='align-middle'>
                                             <StyledTableCell align='center'>{convertToFarsiNumbers(index + 1 + itemsPerPage * (currentPage - 1))}</StyledTableCell>
-                                            <StyledTableCell align='center'>{item.user?.phone}</StyledTableCell>
-                                            <StyledTableCell align='center'>{item.body}</StyledTableCell>
+                                            <StyledTableCell align='center'>
+                                                {item.user?.name}
+                                                {!item.user?.name && <>فاقد نام</>}
+                                            </StyledTableCell>
+                                            <StyledTableCell align='center'>{convertToFarsiNumbers(item.user.phone)}</StyledTableCell>
+                                            <StyledTableCell align='center'>
+                                                {new Intl.DateTimeFormat('fa-IR').format(parseInt(item.shouldBeSentAt))}
+                                                <br />
+                                                {convertToFarsiNumbers((new Date(parseInt(item.shouldBeSentAt)).getHours()))}
+                                                :{convertToFarsiNumbers(("0" + (new Date((parseInt(item.shouldBeSentAt))).getMinutes())).slice(-2))}
+                                            </StyledTableCell>
+                                            <StyledTableCell align='center'>
+                                                {formatPrice(item.totalPrice)}
+                                                <br />
+                                                {price2Farsi(item.totalPrice)}
+                                                <br />
+                                                تومان
+                                            </StyledTableCell>
                                             <StyledTableCell className='flex flex-col justify-center border-b-0 align-middle'>
                                                 {operatingID === item.id ? (
                                                     <div className='text-center mt-2 text-xs'>درحال انجام عملیات</div>
@@ -126,11 +163,14 @@ export default function CommentsTableLast() {
                                                             className='p-0 m-1'
                                                             sx={{ color: 'green', borderColor: 'green' }}
                                                             onClick={() => {
-                                                                setIsModalConfirmOpen(true);
-                                                                setSelectedId(item.id)
+                                                                setIsModalEditOpen(true);
+                                                                setSelectedItem(prev => ({
+                                                                    ...item,
+                                                                    imagesURL: prev.imagesURL
+                                                                }))
                                                             }}
                                                         >
-                                                            تایید
+                                                            مشاهده بیشتر
                                                         </Button>
                                                         <Button
                                                             variant='outlined'
@@ -138,7 +178,9 @@ export default function CommentsTableLast() {
                                                             className='p-0 m-1'
                                                             onClick={() => {
                                                                 setIsModalDeleteOpen(true);
-                                                                setSelectedId(item.id)
+                                                                setSelectedItem({
+                                                                    ...item
+                                                                })
                                                             }}
                                                         >
                                                             حذف
@@ -158,7 +200,7 @@ export default function CommentsTableLast() {
                             itemsCount > itemsPerPage &&
                             <div className='flex justify-center' style={{ marginTop: '25px' }}>
                                 <PaginationContext.Provider value={{ lastPage: Math.ceil(itemsCount / itemsPerPage), currentPage, setCurrentPage }}>
-                                    <PaginationLast />
+                                    <PaginationNow />
                                 </PaginationContext.Provider>
                             </div>
                         }
@@ -170,17 +212,19 @@ export default function CommentsTableLast() {
             )}
 
             <>
-                {/* <ModalDeleteContext.Provider value={{ isModalDeleteOpen, setIsModalDeleteOpen, id: selectedId }}>
-                    <ModalDeleteLast />
+                {/* 
+                <ModalDeleteContext.Provider value={{ isModalDeleteOpen, setIsModalDeleteOpen }}>
+                    <ModalDelete id={selectedItem.id} />
                 </ModalDeleteContext.Provider>
 
-                <ModalConfirmContext.Provider value={{
-                    isModalConfirmOpen,
-                    setIsModalConfirmOpen,
-                    id: selectedId
+                <ModalEditContext.Provider value={{
+                    isModalEditOpen,
+                    setIsModalEditOpen,
+                    setSelectedItem,
+                    selectedItem
                 }}>
-                    <ModalConfirmLast />
-                </ModalConfirmContext.Provider> */}
+                    <ModalEdit />
+                </ModalEditContext.Provider> */}
             </>
 
         </Stack>

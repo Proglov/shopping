@@ -6,9 +6,9 @@ import Fade from '@mui/material/Fade';
 import Typography from '@mui/material/Typography';
 import { useContext } from 'react';
 import { Button } from '@mui/material';
-import { ModalDeleteContext } from './CommentsTableNow';
+import { ModalConfirmContext } from './CommentsTable';
 import { giveMeToken } from '@/utils/Auth';
-import { deleteUser } from '@/services/adminActivities/users';
+import { toggleValidateComment } from '@/services/adminActivities/comment';
 
 const ModalStyle = {
     position: 'absolute',
@@ -22,14 +22,14 @@ const ModalStyle = {
     p: 4,
 };
 
-export default function ModalDeleteNow({ id }) {
-    const { isModalDeleteOpen, setIsModalDeleteOpen } = useContext(ModalDeleteContext)
-    const handleClose = () => setIsModalDeleteOpen(false);
+export default function ModalConfirm({ id }) {
+    const { isModalConfirmOpen, setIsModalConfirmOpen } = useContext(ModalConfirmContext)
+    const handleClose = () => setIsModalConfirmOpen(false);
 
     const Token = giveMeToken();
 
-    const deleteItem = async () => {
-        const res = await deleteUser(id, Token)
+    const ConfirmItem = async () => {
+        const res = await toggleValidateComment(id, Token)
         console.log(res)
     }
 
@@ -38,7 +38,7 @@ export default function ModalDeleteNow({ id }) {
             <Modal
                 aria-labelledby="transition-modal-title"
                 aria-describedby="transition-modal-description"
-                open={isModalDeleteOpen}
+                open={isModalConfirmOpen}
                 onClose={handleClose}
                 closeAfterTransition
                 slots={{ backdrop: Backdrop }}
@@ -48,14 +48,14 @@ export default function ModalDeleteNow({ id }) {
                     },
                 }}
             >
-                <Fade in={isModalDeleteOpen}>
+                <Fade in={isModalConfirmOpen}>
                     <Box sx={ModalStyle} className='rounded-3xl'>
                         <Typography id="transition-modal-title" variant="h6" component="h2">
                             آیا از حذف این کاربر مطمئن هستید؟
                         </Typography>
 
                         <div className='mt-2 flex justify-between'>
-                            <Button onClick={() => { deleteItem(id); handleClose() }} variant='outlined'
+                            <Button onClick={() => { ConfirmItem(id); handleClose() }} variant='outlined'
                                 className='p-0 m-1'
                                 sx={{ color: 'green', borderColor: 'green' }}>
                                 تایید
