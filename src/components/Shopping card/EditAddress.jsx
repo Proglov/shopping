@@ -77,83 +77,81 @@ export default function EditAddress({ open, close, address, setAddress }) {
         {address.map((item, index) => {
           const isEditing = edit[index];
           return (
-            <>
-              <Box
-                key={index}
-                component="div"
-                className="text-lg m-2 grid md:grid-cols-2"
-              >
-                {!isEditing ? (
-                  <>
-                    <span>{item}</span>
-                    <Box
-                      component="div"
-                      className="mt-2 md:mt-0 md:flex md:justify-end"
+            <Box
+              key={index}
+              component="div"
+              className="text-lg m-2 grid md:grid-cols-2"
+            >
+              {!isEditing ? (
+                <>
+                  <span>{item}</span>
+                  <Box
+                    component="div"
+                    className="mt-2 md:mt-0 md:flex md:justify-end"
+                  >
+                    <Button
+                      variant="outlined"
+                      className="border-0 hover:border-0 text-blue-800"
+                      onClick={() => setEdit({ ...edit, [index]: true })}
                     >
-                      <Button
-                        variant="outlined"
-                        className="border-0 hover:border-0 text-blue-800"
-                        onClick={() => setEdit({ ...edit, [index]: true })}
-                      >
-                        ویرایش
-                      </Button>
-                      <Button
-                        variant="outlined"
-                        className="border-0 hover:border-0 text-red-800"
-                        onClick={() => handleDelete(index)}
-                      >
-                        حذف
-                      </Button>
-                    </Box>
-                  </>
-                ) : (
-                  <>
-                    <TextField
-                      fullWidth
-                      label="آدرس"
-                      focused="true"
-                      defaultValue={item}
-                      onChange={(event) => {
-                        Changed(event.target.value, index);
-                      }}
-                      sx={{
-                        " & .MuiInputLabel-root": {
-                          left: "inherit !important",
-                          right: "1.75rem !important",
-                          transformOrigin: "right !important",
-                        },
-                        "& legend": { textAlign: "right" },
-                      }}
-                    />
-                    <Box
-                      component="div"
-                      className="mt-2 md:mt-0 md:flex md:justify-end"
+                      ویرایش
+                    </Button>
+                    <Button
+                      variant="outlined"
+                      className="border-0 hover:border-0 text-red-800"
+                      onClick={() => handleDelete(index)}
                     >
-                      <Button
-                        variant="outlined"
-                        className="border-0 hover:border-0 text-green-800"
-                        onClick={() => {
-                          setEdit({ ...edit, [index]: false });
-                          onSet(2);
-                        }}
-                      >
-                        ذخیره
-                      </Button>
-                      <Button
-                        variant="outlined"
-                        className="border-0 hover:border-0 text-red-800"
-                        onClick={() => {
-                          setEdit({ ...edit, [index]: false });
-                          onSet(3);
-                        }}
-                      >
-                        انصراف
-                      </Button>
-                    </Box>
-                  </>
-                )}
-              </Box>
-            </>
+                      حذف
+                    </Button>
+                  </Box>
+                </>
+              ) : (
+                <>
+                  <TextField
+                    fullWidth
+                    label="آدرس"
+                    focused="true"
+                    defaultValue={item}
+                    onChange={(event) => {
+                      Changed(event.target.value, index);
+                    }}
+                    sx={{
+                      " & .MuiInputLabel-root": {
+                        left: "inherit !important",
+                        right: "1.75rem !important",
+                        transformOrigin: "right !important",
+                      },
+                      "& legend": { textAlign: "right" },
+                    }}
+                  />
+                  <Box
+                    component="div"
+                    className="mt-2 md:mt-0 md:flex md:justify-end"
+                  >
+                    <Button
+                      variant="outlined"
+                      className="border-0 hover:border-0 text-green-800"
+                      onClick={() => {
+                        setEdit({ ...edit, [index]: false });
+                        onSet(2);
+                      }}
+                    >
+                      ذخیره
+                    </Button>
+                    <Button
+                      variant="outlined"
+                      className="border-0 hover:border-0 text-red-800"
+                      onClick={() => {
+                        setEdit({ ...edit, [index]: false });
+                        onSet(3);
+                      }}
+                    >
+                      انصراف
+                    </Button>
+                  </Box>
+                </>
+              )}
+            </Box>
           );
         })}
       </DialogContent>

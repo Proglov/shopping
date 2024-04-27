@@ -1,19 +1,31 @@
 "use client";
 
 import { convertToFarsiNumbers, formatPrice } from "@/utils/funcs";
-import { Box, Button } from "@mui/material";
+import { Box, Button, Card } from "@mui/material";
+import { usePathname } from "next/navigation";
+import { GroupingContext, useGrouping } from "@/context/GroupingContext";
+import { useContext } from "react";
 
 export default function DetailItem({ detail }) {
+  const router = usePathname();
+  // const grouping = useGrouping(); ?
+  const grouping = useContext(GroupingContext);
+
+  const place = grouping.filter((item) => {
+    return item.href === router.split("/")[2];
+  });
+
   return (
     <>
-      <Box className="mt-11 mb-10 p-5 sm:grid sm:grid-cols-7 bg-slate-100 h-fit">
-        <Box className="grid grid-rows-2 col-span-3">
+      <Card className="mt-11 mb-10 p-5 sm:grid sm:grid-cols-7 h-fit">
+        <Box className="grid grid-rows-3 col-span-3">
           <Box className="sm:text-lg mb-5 text-sm">
             نام محصول: {detail.name}
           </Box>
           <Box className="sm:text-lg text-sm mb-3 sm:mb-0">
-            یک توضیح مناسب محصول در این قسمت قرار میگیرد.
+            دسته بندی: {place[0].name}
           </Box>
+          <Box className="sm:text-lg text-sm mb-3 sm:mb-0">برند:</Box>
         </Box>
         <Box className="grid grid-rows-2 col-span-3">
           <Box className="grid grid-cols-4 sm:w-1/2">
@@ -55,10 +67,10 @@ export default function DetailItem({ detail }) {
             اضافه کردن به سبد خرید
           </Button>
         </Box>
-        <Box className="sm:text-lg text-sm">
-          دسته بندی:
+        <Box className="sm:text-lg text-sm col-span-7 mt-3 sm:mt-0">
+          یک توضیح مناسب محصول در این قسمت قرار میگیرد.
         </Box>
-      </Box>
+      </Card>
     </>
   );
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { Box, Button } from "@mui/material";
+import { Box, IconButton } from "@mui/material";
 import Image from "next/image";
 import { useState } from "react";
 import ArrowForwardIosOutlinedIcon from "@mui/icons-material/ArrowForwardIosOutlined";
@@ -26,20 +26,20 @@ export default function GalleryItem({ images }) {
           width={500}
           height={300}
         />
-        <Button
-          className="absolute bottom-1/2 -left-3"
+        <IconButton
+          className="absolute bottom-1/2 -left-3 rounded-lg"
           onClick={prevImage}
           color="error"
         >
           <ArrowBackIosOutlinedIcon />
-        </Button>
-        <Button
-          className="absolute bottom-1/2 -right-3"
+        </IconButton>
+        <IconButton
+          className="absolute bottom-1/2 -right-3 rounded-lg"
           onClick={nextImage}
           color="error"
         >
           <ArrowForwardIosOutlinedIcon />
-        </Button>
+        </IconButton>
       </Box>
     </Box>
   );

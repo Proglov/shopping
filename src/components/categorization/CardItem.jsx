@@ -1,7 +1,21 @@
+"use client";
+
 import { convertToFarsiNumbers, formatPrice } from "@/utils/funcs";
 import { Box, Button, Card, CardContent, CardMedia } from "@mui/material";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { GroupingContext, useGrouping } from "@/context/GroupingContext";
+import { useContext } from "react";
 
 export default function CardItem({ product }) {
+  const router = usePathname();
+  // const grouping = useGrouping(); ?
+  const grouping = useContext(GroupingContext);
+
+  const place = grouping.filter((item) => {
+    return item.href === router.split("/")[2];
+  });
+
   return (
     <Card sx={{ minWidth: 200, height: 330 }} className="mt-5 ml-6">
       <CardMedia sx={{ height: 150 }} component="img" image={product.src} />
@@ -38,9 +52,11 @@ export default function CardItem({ product }) {
           </div>
         </Box>
         <Box className="mt-3">
-          <Button variant="outlined" color="info" className="w-full">
-            مشاهده محصول
-          </Button>
+          <Link href={`/categories/${place[0].href}/${product.code}`}>
+            <Button variant="outlined" color="info" className="w-full">
+              مشاهده محصول
+            </Button>
+          </Link>
         </Box>
       </CardContent>
     </Card>
