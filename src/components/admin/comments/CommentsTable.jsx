@@ -1,6 +1,6 @@
 "use client"
 import { Button, Stack } from '@mui/material';
-import { useEffect, useState, createContext } from 'react';
+import { useEffect, createContext, useContext } from 'react';
 import { styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -9,10 +9,12 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import { giveMeToken } from '@/utils/Auth';
-import { getAllTxs, getTXCount } from '@/services/adminActivities/tx';
-import { convertToFarsiNumbers, formatPrice, price2Farsi } from '@/utils/funcs';
-import PaginationLast from './PaginationLast';
+import { convertToFarsiNumbers } from '@/utils/funcs';
+import Pagination from './Pagination';
+import { getAllComments, getCommentsCount } from '@/services/userActivities/comment';
+import ModalDelete from './ModalDelete';
+import ModalConfirm from './ModalConfirm';
+import { ItemsContext } from './CommentsMain';
 
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -34,36 +36,45 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 export const PaginationContext = createContext();
+export const ModalDeleteContext = createContext();
+export const ModalConfirmContext = createContext();
 
 
-export default function TXTableLast() {
+export default function CommentsTable() {
 
-    const itemsPerPage = 20
+    const {
+        items,
+        setItems,
+        currentPage,
+        setCurrentPage,
+        loading,
+        setLoading,
+        isError,
+        setIsError,
+        error,
+        setError,
+        operatingID,
+        setOperatingID,
+        operatingError,
+        setOperatingError,
+        itemsCount,
+        setItemsCount,
+        selectedId,
+        setSelectedId,
+        isModalConfirmOpen,
+        setIsModalConfirmOpen,
+        isModalDeleteOpen,
+        setIsModalDeleteOpen,
+        itemsPerPage,
+        validated,
+    } = useContext(ItemsContext)
 
-    const [currentPage, setCurrentPage] = useState(1)
-    const [loading, setLoading] = useState(false);
-    const [isError, setIsError] = useState(false);
-    const [error, setError] = useState('');
-    const [operatingID, setOperatingID] = useState('');
-    const [operatingError, setOperatingError] = useState('');
-    const [items, setItems] = useState([])
-    const [itemsCount, setItemsCount] = useState(0)
-    const [selectedItem, setSelectedItem] = useState({
-        id: '',
-        user: {},
-        boughtProducts: {},
-        address: '',
-        shouldBeSentAt: '',
-        boughtAt: '',
-        totalPrice: 0
-    });
 
     useEffect(() => {
-        const Token = giveMeToken();
         const fetchData = async () => {
             try {
-                const TX = await getAllTxs(Token, { page: currentPage, perPage: itemsPerPage, isFutureOrder: false });
-                setItems(TX.TransActions)
+                const comments = await getAllComments({ page: currentPage, perPage: itemsPerPage, validated });
+                setItems(comments.Comments)
             } catch (error) {
                 console.error('Error fetching users:', error);
                 setIsError(true);
@@ -74,8 +85,8 @@ export default function TXTableLast() {
         const fetchCount = async () => {
             try {
                 setLoading(true);
-                const count = await getTXCount(Token, false);
-                setItemsCount(count.TransActionsCount)
+                const count = await getCommentsCount(validated);
+                setItemsCount(count.CommentsCount)
             } catch (error) {
                 console.error('Error fetching users count:', error);
                 setIsError(true);
@@ -90,7 +101,7 @@ export default function TXTableLast() {
     return (
         <Stack spacing={2} className='mt-10'>
             <span className='w-full text-start'>
-                جدول تراکنش های سفارشات اخیر
+                جدول کامنت های تایید {!!validated ? <></> : <>ن</>}شده
             </span>
             {isError ? (
                 <div>
@@ -108,10 +119,8 @@ export default function TXTableLast() {
                                 <TableHead>
                                     <TableRow>
                                         <StyledTableCell align='center'>ردیف</StyledTableCell>
-                                        <StyledTableCell align='center'>نام خریدار</StyledTableCell>
-                                        <StyledTableCell align='center'>شماره خریدار</StyledTableCell>
-                                        <StyledTableCell align='center'>زمان ارسال</StyledTableCell>
-                                        <StyledTableCell align='center'>قیمت نهایی</StyledTableCell>
+                                        <StyledTableCell align='center'>شماره کاربر</StyledTableCell>
+                                        <StyledTableCell align='center'>متن ارسال شده</StyledTableCell>
                                         <StyledTableCell align='center'>عملیات</StyledTableCell>
                                     </TableRow>
                                 </TableHead>
@@ -120,24 +129,8 @@ export default function TXTableLast() {
                                         <StyledTableRow key={item.id}
                                             className='align-middle'>
                                             <StyledTableCell align='center'>{convertToFarsiNumbers(index + 1 + itemsPerPage * (currentPage - 1))}</StyledTableCell>
-                                            <StyledTableCell align='center'>
-                                                {item.user?.name}
-                                                {!item.user?.name && <>فاقد نام</>}
-                                            </StyledTableCell>
-                                            <StyledTableCell align='center'>{convertToFarsiNumbers(item.user.phone)}</StyledTableCell>
-                                            <StyledTableCell align='center'>
-                                                {new Intl.DateTimeFormat('fa-IR').format(parseInt(item.shouldBeSentAt))}
-                                                <br />
-                                                {convertToFarsiNumbers((new Date(parseInt(item.shouldBeSentAt)).getHours()))}
-                                                :{convertToFarsiNumbers(("0" + (new Date((parseInt(item.shouldBeSentAt))).getMinutes())).slice(-2))}
-                                            </StyledTableCell>
-                                            <StyledTableCell align='center'>
-                                                {formatPrice(item.totalPrice)}
-                                                <br />
-                                                {price2Farsi(item.totalPrice)}
-                                                <br />
-                                                تومان
-                                            </StyledTableCell>
+                                            <StyledTableCell align='center'>{item.user?.phone}</StyledTableCell>
+                                            <StyledTableCell align='center'>{item.body}</StyledTableCell>
                                             <StyledTableCell className='flex flex-col justify-center border-b-0 align-middle'>
                                                 {operatingID === item.id ? (
                                                     <div className='text-center mt-2 text-xs'>درحال انجام عملیات</div>
@@ -148,14 +141,11 @@ export default function TXTableLast() {
                                                             className='p-0 m-1'
                                                             sx={{ color: 'green', borderColor: 'green' }}
                                                             onClick={() => {
-                                                                setIsModalEditOpen(true);
-                                                                setSelectedItem(prev => ({
-                                                                    ...item,
-                                                                    imagesURL: prev.imagesURL
-                                                                }))
+                                                                setIsModalConfirmOpen(true);
+                                                                setSelectedId(item.id)
                                                             }}
                                                         >
-                                                            مشاهده بیشتر
+                                                            تایید
                                                         </Button>
                                                         <Button
                                                             variant='outlined'
@@ -163,9 +153,7 @@ export default function TXTableLast() {
                                                             className='p-0 m-1'
                                                             onClick={() => {
                                                                 setIsModalDeleteOpen(true);
-                                                                setSelectedItem({
-                                                                    ...item
-                                                                })
+                                                                setSelectedId(item.id)
                                                             }}
                                                         >
                                                             حذف
@@ -185,7 +173,7 @@ export default function TXTableLast() {
                             itemsCount > itemsPerPage &&
                             <div className='flex justify-center' style={{ marginTop: '25px' }}>
                                 <PaginationContext.Provider value={{ lastPage: Math.ceil(itemsCount / itemsPerPage), currentPage, setCurrentPage }}>
-                                    <PaginationLast />
+                                    <Pagination />
                                 </PaginationContext.Provider>
                             </div>
                         }
@@ -197,19 +185,18 @@ export default function TXTableLast() {
             )}
 
             <>
-                {/* 
-                <ModalDeleteContext.Provider value={{ isModalDeleteOpen, setIsModalDeleteOpen }}>
-                    <ModalDelete id={selectedItem.id} />
+
+                {/* <ModalDeleteContext.Provider value={{ isModalDeleteOpen, setIsModalDeleteOpen, id: selectedId }}>
+                    <ModalDelete />
                 </ModalDeleteContext.Provider>
 
-                <ModalEditContext.Provider value={{
-                    isModalEditOpen,
-                    setIsModalEditOpen,
-                    setSelectedItem,
-                    selectedItem
+                <ModalConfirmContext.Provider value={{
+                    isModalConfirmOpen,
+                    setIsModalConfirmOpen,
+                    id: selectedId
                 }}>
-                    <ModalEdit />
-                </ModalEditContext.Provider> */}
+                    <ModalConfirm />
+                </ModalConfirmContext.Provider> */}
             </>
 
         </Stack>
