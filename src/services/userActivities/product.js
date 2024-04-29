@@ -15,6 +15,7 @@ export const getAllProducts = async (filters) => {
             category
             subcategory
             offPercentage
+            imagesUrl
         }
     }
     `

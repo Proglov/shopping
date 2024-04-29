@@ -14,7 +14,11 @@ export default function RootLayout({ children }) {
       <body>
         <EdgeStoreProvider>
           <CustomTheme>
-            <Context>{children}</Context>
+            <Context>
+              <EdgeStoreProvider>
+                {children}
+              </EdgeStoreProvider>
+            </Context>
           </CustomTheme>
         </EdgeStoreProvider>
       </body>

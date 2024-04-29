@@ -11,7 +11,7 @@ export const createProduct = async (obj, token) => {
     });
 
     const mutation = gql`
-        mutation($name: String!, $desc:String!, $price: Int!, $category: String!, $subcategory: String!, $imagesUrl:[String!]) {
+        mutation($name: String!, $desc:String!, $price: Int!,$offPercentage: Int!, $category: String!, $subcategory: String!, $imagesUrl:[String!]) {
             ProductCreate(
                 input: { 
                     name: $name, 
@@ -20,6 +20,7 @@ export const createProduct = async (obj, token) => {
                     category: $category, 
                     subcategory: $subcategory,
                     imagesUrl:$imagesUrl
+                    offPercentage:$offPercentage
             }) {
                 message
             }
@@ -30,9 +31,10 @@ export const createProduct = async (obj, token) => {
         name: obj.name,
         desc: obj.desc,
         price: obj.price,
+        offPercentage: obj.offPercentage,
         category: obj.category,
         subcategory: obj.subcategory,
-        imagesUrl: obj?.imagesUrl || ['']
+        imagesUrl: obj?.imagesUrl || []
     };
 
     const { ProductCreate } = await graphQLClient.request(mutation, variables);
@@ -47,31 +49,33 @@ export const updateProduct = async (obj, token) => {
         },
     })
     const query = gql`
-        mutation($id:ID! , $name: String!){
+        mutation($id:ID! , $name: String!,, $desc:String!, $price: Int!,$offPercentage: Int!, $category: String!, $subcategory: String!, $imagesUrl:[String]){
             ProductUpdate (
                 input: {
                     id:$id
                     name:$name
+                    desc:$desc,
+                    price: $price, 
+                    category: $category, 
+                    subcategory: $subcategory,
+                    imagesUrl:$imagesUrl
+                    offPercentage:$offPercentage
                 }
             ){
                 message
             }
         }
     `
-    // improve this:
-    // id,
-    // name,
-    // desc,
-    // price,
-    // category,
-    // subcategory,
-    // offPercentage,
-    // imagesUrl,
-    // commentsIds
 
     const variables = {
         id: obj.id,
         name: obj.name,
+        desc: obj.desc,
+        price: obj.price,
+        offPercentage: obj.offPercentage,
+        category: obj.category,
+        subcategory: obj.subcategory,
+        imagesUrl: obj?.imagesUrl || []
     };
     const result = (await graphQLClient.request(query, variables)).message
     return result
@@ -92,5 +96,5 @@ export const deleteProduct = async (id, token) => {
         }
     `
     const result = (await graphQLClient.request(query, { id }))
-    return { status: result.status, message: result.message }
+    return { status: result.ProductDelete.status, message: result.ProductDelete.message }
 }

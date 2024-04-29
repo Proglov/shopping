@@ -10,12 +10,16 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { price2Farsi } from '@/utils/funcs';
 import { createProduct } from '@/services/adminActivities/product';
-import ImageUpload from '@/components/ImageUpload';
 import { giveMeToken } from '@/utils/Auth';
+import { useEdgeStore } from '../../../lib/edgestore';
+import { MultiFileDropzone } from '../../multi-image-dropzone';
 
 
 export default function AddProduct() {
 
+    const [fileStates, setFileStates] = useState([]);
+    const [uploadRes, setUploadRes] = useState([]);
+    const { edgestore } = useEdgeStore();
     const [AddNewData, setAddNewData] = useState({
         isSubmitting: false,
         formData: {
@@ -24,12 +28,25 @@ export default function AddProduct() {
             offPercentage: '',
             category: '',
             desc: '',
-            subcategory: 'سوپرمارکت'
+            subcategory: 'سوپرمارکت',
+            imagesUrl: []
         }
     })
 
     const Token = giveMeToken()
 
+    function updateFileProgress(key, progress) {
+        setFileStates((fileStates) => {
+            const newFileStates = structuredClone(fileStates);
+            const fileState = newFileStates.find(
+                (fileState) => fileState.key === key,
+            );
+            if (fileState) {
+                fileState.progress = progress;
+            }
+            return newFileStates;
+        });
+    }
 
     const handleChange = (event) => {
         const { name, value } = event.target;
@@ -42,12 +59,10 @@ export default function AddProduct() {
                         formData: {
                             ...prevProps.formData,
                             [name]: newValue,
-                        },
-                        error: ''
+                        }
                     }
                 return {
-                    ...prevProps,
-                    error: ''
+                    ...prevProps
                 }
             })
         } else {
@@ -57,8 +72,7 @@ export default function AddProduct() {
                     formData: {
                         ...prevProps.formData,
                         [name]: value,
-                    },
-                    error: ''
+                    }
                 }
             })
         }
@@ -92,9 +106,16 @@ export default function AddProduct() {
             try {
                 const obj = AddNewData.formData;
                 obj.desc = DOMPurify.sanitize(AddNewData.formData.desc)
-                console.log(obj)
-                console.log(obj.desc)
-                await createProduct(obj, Token)
+                const imagesUrl = [];
+                for (const obj of uploadRes) {
+                    const url = obj.url
+                    imagesUrl.push(url)
+                    await edgestore.myPublicImages.confirmUpload({
+                        url
+                    })
+                }
+                obj.imagesUrl = imagesUrl
+                const res = await createProduct(obj, Token)
                 setAddNewData(prevProps => ({
                     ...prevProps,
                     formData: {
@@ -103,155 +124,23 @@ export default function AddProduct() {
                         offPercentage: '',
                         category: '',
                         desc: '',
-                        subcategory: 'سوپرمارکت'
+                        subcategory: 'سوپرمارکت',
+                        imagesUrl: []
                     },
                     isSubmitting: false
                 }));
+                if (res === 'You are not authorized!')
+                    throw ("توکن شما منقضی شده. لطفا خارج، و دوباره وارد شوید")
                 toast.success('با موفقیت ارسال شد!')
-            } catch {
-
+                setFileStates([]);
+                setUploadRes([]);
+            } catch (err) {
+                setAddNewData(prevProps => ({
+                    ...prevProps,
+                    isSubmitting: false
+                }));
+                toast.error(err)
             }
-            // const imagesURL = [];
-            // for (const obj of uploadRes) {
-            //     const url = obj.url
-            //     imagesURL.push(url)
-            //     await edgestore.myPublicImages.confirmUpload({
-            //         url
-            //     })
-            // }
-            // let newBody = {};
-            // if (type === "events") {
-            //     const day = eventAt[0] < 10 ? '0' + eventAt[0] : eventAt[0];
-            //     const month = eventAt[1] < 10 ? '0' + eventAt[1] : eventAt[1];
-            //     newBody.eventAt = eventAt[2] + '-' + month + '-' + day
-            // }
-            // newBody = {
-            //     ...newBody,
-            //     "title": AddNewData.formData.title,
-            //     "description": DOMPurify.sanitize(AddNewData.formData.quillValue),
-            //     "imagesURL": imagesURL,
-            //     "tags": AddNewData.formData.tags,
-            //     "createdBy": "ADMIN",
-            //     "telegram": AddNewData.formData.telegram
-            // }
-            // fetch(`/api/${type}`, {
-            //     headers: { 'Content-Type': 'application/json' },
-            //     method: 'POST',
-            //     body: JSON.stringify(newBody)
-            // })
-            //     .then((response) => {
-            //         if (!response.ok) {
-            //             throw new Error('لطفا اتصال اینترنت خود را بررسی کنید');
-            //         }
-            //         return response.json();
-            //     })
-            //     .then((data) => {
-            //         if (data?.error?.name === "PrismaClientKnownRequestError") {
-            //             setAddNewData(prevProps => ({
-            //                 ...prevProps,
-            //                 isSubmitting: false,
-            //                 error: data?.message + ' ; ' + data?.error?.meta?.message
-            //             }));
-            //         } else {
-            //             setAddNewData(prevProps => ({
-            //                 ...prevProps,
-            //                 success: `${itemType} با موفقیت اضافه شد!`,
-            //                 formData: {
-            //                     tags: [],
-            //                     title: '',
-            //                     telegram: false,
-            //                     quillValue: '',
-            //                 },
-            //                 isSubmitting: false
-            //             }));
-            //             setFileStates([]);
-            //             setUploadRes([]);
-
-            //             //show success for five seconds
-            //             setTimeout(() => setAddNewData(prevProps => ({
-            //                 ...prevProps,
-            //                 success: ''
-            //             })), 5000);
-
-            //             // Add new negative status in statics
-            //             if (type === 'news') {
-            //                 setStaticProps(prevProps => ({
-            //                     ...prevProps, newsCount: prevProps.newsCount + 1,
-            //                     negativeStatusNewsCount: prevProps.negativeStatusNewsCount + 1
-            //                 }));
-
-            //                 if (currentInfoPage === 1 && controlPanelsPage === 0) {
-            //                     setInfoItems(prevItems => {
-            //                         return [{
-            //                             id: data?.id,
-            //                             title: AddNewData.formData.title,
-            //                             description: DOMPurify.sanitize(AddNewData.formData.quillValue),
-            //                             imagesURL,
-            //                             tags: AddNewData.formData.tags,
-            //                             createdBy: "ADMIN",
-            //                             views: 0,
-            //                             telegram: AddNewData.formData.telegram,
-            //                             createdAt: new Date()
-            //                         },
-            //                         ...prevItems]
-            //                     })
-            //                 }
-
-            //             } else if (type === 'events') {
-            //                 setStaticProps(prevProps => ({
-            //                     ...prevProps, eventsCount: prevProps.eventsCount + 1,
-            //                     negativeStatusEventsCount: prevProps.negativeStatusEventsCount + 1
-            //                 }));
-
-            //                 if (currentInfoPage === 1 && controlPanelsPage === 2) {
-            //                     setInfoItems(prevItems => {
-            //                         return [{
-            //                             id: data?.id,
-            //                             title: AddNewData.formData.title,
-            //                             description: DOMPurify.sanitize(AddNewData.formData.quillValue),
-            //                             imagesURL,
-            //                             tags: AddNewData.formData.tags,
-            //                             createdBy: "ADMIN",
-            //                             views: 0,
-            //                             telegram: AddNewData.formData.telegram,
-            //                             createdAt: new Date()
-            //                         },
-            //                         ...prevItems]
-            //                     })
-            //                 }
-            //             } else {
-            //                 setStaticProps(prevProps => ({
-            //                     ...prevProps, announcementsCount: prevProps.announcementsCount + 1,
-            //                     negativeStatusAnnouncementsCount: prevProps.negativeStatusAnnouncementsCount + 1,
-            //                 }));
-
-            //                 if (currentInfoPage === 1 && controlPanelsPage === 1) {
-            //                     setInfoItems(prevItems => {
-            //                         return [{
-            //                             id: data?.id,
-            //                             title: AddNewData.formData.title,
-            //                             description: DOMPurify.sanitize(AddNewData.formData.quillValue),
-            //                             imagesURL,
-            //                             tags: AddNewData.formData.tags,
-            //                             createdBy: "ADMIN",
-            //                             views: 0,
-            //                             telegram: AddNewData.formData.telegram,
-            //                             createdAt: new Date()
-            //                         },
-            //                         ...prevItems]
-            //                     })
-            //                 }
-            //             }
-            //         }
-            //     })
-            //     .catch((err) => {
-            //         setAddNewData(prevProps => ({
-            //             ...prevProps,
-            //             error: err,
-            //             isSubmitting: false
-            //         }));
-            //     });
-
         }
 
     };
@@ -325,22 +214,8 @@ export default function AddProduct() {
                         </select>
                     </Grid>
 
-                    <div className='mt-4 w-full'>
-                        <ImageUpload />
-                    </div>
-
-                    <Grid item xs={12} className='mt-2'>
-                        <div className='text-start text-sm'>
-                            توضیحات محصول
-                        </div>
-                        <CustomQuill
-                            onChange={(value) => handleChange({ target: { name: 'desc', value } })}
-                            value={AddNewData.formData.desc}
-                        />
-                    </Grid>
-
                     <Grid item xs={12}>
-                        {/* <label
+                        <label
                             className="block mt-2 mb-1 text-slate-50" htmlFor="inline-image-upload">
                             آپلود تصویر
                         </label>
@@ -383,9 +258,18 @@ export default function AddProduct() {
                                     }),
                                 );
                             }}
-                        /> */}
+                        />
                     </Grid>
 
+                    <Grid item xs={12} className='mt-2'>
+                        <div className='text-start text-sm'>
+                            توضیحات محصول
+                        </div>
+                        <CustomQuill
+                            onChange={(value) => handleChange({ target: { name: 'desc', value } })}
+                            value={AddNewData.formData.desc}
+                        />
+                    </Grid>
 
                     <Grid item xs={12}>
                         <Button

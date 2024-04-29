@@ -3,15 +3,10 @@ import Backdrop from '@mui/material/Backdrop';
 import Modal from '@mui/material/Modal';
 import Fade from '@mui/material/Fade';
 import Typography from '@mui/material/Typography';
-import { useContext, useRef } from 'react';
+import { useContext, useState } from 'react';
 import { Button } from '@mui/material';
-import { useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
-import OutlinedInput from '@mui/material/OutlinedInput';
-import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
-import Select from '@mui/material/Select';
-import Chip from '@mui/material/Chip';
 import { Grid } from '@mui/material';
 import Image from 'next/image';
 import 'react-quill/dist/quill.snow.css';
@@ -19,24 +14,12 @@ import CustomQuill from '../../CustomQuil';
 import { ModalEditContext } from './ProductsTable';
 import { price2Farsi } from '@/utils/funcs';
 import { categories } from '@/lib/categories';
+import { giveMeToken } from '@/utils/Auth';
+import { useEdgeStore } from '../../../lib/edgestore';
+import { MultiFileDropzone } from '../../multi-image-dropzone';
+import { updateProduct } from '@/services/adminActivities/product';
 
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
-const MenuProps = {
-    PaperProps: {
-        style: {
-            maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-            width: 250,
-        },
-    },
-};
-function getStyles(tagOptions, tags, theme) {
-    return {
-        fontWeight: tags.indexOf(tagOptions) === -1
-            ? theme.typography.fontWeightRegular
-            : theme.typography.fontWeightMedium,
-    };
-}
+
 const ModalStyle = {
     position: 'absolute',
     top: '50%',
@@ -52,11 +35,12 @@ const ModalStyle = {
 };
 
 export default function ModalEdit() {
-    const { isModalEditOpen, setIsModalEditOpen, type, selectedItem, setSelectedItem } = useContext(ModalEditContext)
+    const { isModalEditOpen, setIsModalEditOpen, selectedItem, setSelectedItem, setOperatingID, setItems, setOperatingError } = useContext(ModalEditContext)
 
-
-    const theme = useTheme();
-    const checkBoxRef = useRef();
+    const [fileStates, setFileStates] = useState([]);
+    const [uploadRes, setUploadRes] = useState([]);
+    const [imagesToDelete, setImagesToDelete] = useState([]);
+    const { edgestore } = useEdgeStore();
 
     const handleChange = (event) => {
         const { name, value } = event.target;
@@ -81,8 +65,84 @@ export default function ModalEdit() {
 
     const handleClose = () => {
         setIsModalEditOpen(false);
+        setSelectedItem({
+            id: '',
+            name: '',
+            price: '',
+            category: '',
+            offPercentage: '',
+            imagesUrl: []
+        })
     };
 
+    function updateFileProgress(key, progress) {
+        setFileStates((fileStates) => {
+            const newFileStates = structuredClone(fileStates);
+            const fileState = newFileStates.find(
+                (fileState) => fileState.key === key,
+            );
+            if (fileState) {
+                fileState.progress = progress;
+            }
+            return newFileStates;
+        });
+    }
+
+    const Token = giveMeToken()
+
+    const editItem = async (obj) => {
+        setOperatingID(obj.id);
+        setIsModalEditOpen(false);
+
+        //confirm the new pics in edgestore
+        const imagesURL = [];
+        for (const obj of uploadRes) {
+            const url = obj.url
+            imagesURL.push(url)
+            await edgestore.myPublicImages.confirmUpload({
+                url
+            })
+        }
+
+        //add new pics to mongodb
+        const augmentedObj = {
+            ...obj,
+            imagesUrl: [...obj.imagesUrl, ...imagesURL]
+        }
+
+
+        //delete the imagesToDelete
+        for (const url of imagesToDelete) {
+            await edgestore.myPublicImages.delete({ url });
+        }
+
+        try {
+            const res = await updateProduct(augmentedObj, Token)
+            setAddNewData(prevProps => ({
+                ...prevProps,
+                formData: {
+                    name: '',
+                    price: '',
+                    offPercentage: '',
+                    category: '',
+                    desc: '',
+                    subcategory: 'سوپرمارکت',
+                    imagesUrl: []
+                },
+                isSubmitting: false
+            }));
+            setOperatingID('');
+            if (res === 'You are not authorized!')
+                throw ("توکن شما منقضی شده. لطفا خارج، و دوباره وارد شوید")
+            setFileStates([]);
+            setUploadRes([]);
+        } catch (err) {
+            setOperatingError(err);
+            setFileStates([]);
+            setImagesToDelete([]);
+            setUploadRes([]);
+        }
+    };
 
     return (
         <Modal
@@ -177,43 +237,52 @@ export default function ModalEdit() {
                                 </Grid>
 
                                 <Grid item xs={12}>
-                                    <div className='mt-2'>
-                                        تصاویر ارسال شده:
-                                        <div>
-                                            {
-                                                selectedItem.imagesURL.map((url, i) => {
-                                                    return (
-                                                        <div className='bg-blue-50 mt-2' style={{ width: '300px' }}
-                                                            key={i}>
-                                                            <Image
-                                                                src={url}
-                                                                alt='عکس ارسال شده'
-                                                                width={300}
-                                                                height={200} />
+                                    {
+                                        selectedItem?.imagesUrl?.length === 0 ?
+                                            <div className='mt-2'>
+                                                تصویری ارسال نشده
+                                            </div>
+                                            :
+                                            <div className='mt-2'>
+                                                تصاویر ارسال شده:
+                                                <div>
+                                                    {
+                                                        selectedItem?.imagesUrl?.map((url, i) => {
+                                                            return (
+                                                                <div className='bg-blue-50 mt-2' style={{ width: '300px' }}
+                                                                    key={i}>
+                                                                    <Image
+                                                                        src={url}
+                                                                        alt='عکس ارسال شده'
+                                                                        width={300}
+                                                                        height={200} />
 
-                                                            <Button variant='outlined' color='error' className='mt-1 mb-4 w-full'
-                                                                onClick={() => {
-                                                                    setImagesToDelete(prev => [
-                                                                        ...prev,
-                                                                        url
-                                                                    ]);
-                                                                    setSelectedItem(prev => ({
-                                                                        ...prev,
-                                                                        imagesURL: prev.imagesURL.filter(theUrl => theUrl !== url)
-                                                                    }))
-                                                                }}
-                                                            >
-                                                                حذف عکس بالا
-                                                            </Button>
+                                                                    <Button variant='outlined' color='error' className='mt-1 mb-4 w-full'
+                                                                        onClick={() => {
+                                                                            setImagesToDelete(prev => [
+                                                                                ...prev,
+                                                                                url
+                                                                            ]);
+                                                                            setSelectedItem(prev => ({
+                                                                                ...prev,
+                                                                                imagesUrl: prev?.imagesUrl?.filter(theUrl => theUrl !== url)
+                                                                            }))
+                                                                        }}
+                                                                    >
+                                                                        حذف عکس بالا
+                                                                    </Button>
 
-                                                            <br />
-                                                        </div>
-                                                    )
-                                                })
+                                                                    <br />
+                                                                </div>
+                                                            )
+                                                        })
 
-                                            }
-                                        </div>
-                                    </div>
+                                                    }
+                                                </div>
+                                            </div>
+                                    }
+
+
                                     <br />
                                     <label
                                         className="block mt-2 mb-1  text-gray-800" htmlFor="inline-image-upload">
@@ -222,6 +291,53 @@ export default function ModalEdit() {
                                     <div className='bg-slate-300 overflow-hidden0 rounded'>
 
                                     </div>
+                                </Grid>
+
+                                <Grid item xs={12}>
+                                    <label
+                                        className="block mt-2 mb-1 text-slate-50" htmlFor="inline-image-upload">
+                                        آپلود تصویر
+                                    </label>
+
+                                    <MultiFileDropzone
+                                        value={fileStates}
+                                        onChange={(files) => {
+                                            setFileStates(files);
+                                        }}
+                                        onFilesAdded={async (addedFiles) => {
+                                            setFileStates([...fileStates, ...addedFiles]);
+                                            await Promise.all(
+                                                addedFiles.map(async (addedFileState) => {
+                                                    try {
+                                                        const res = await edgestore.myPublicImages.upload({
+                                                            file: addedFileState.file,
+                                                            options: {
+                                                                temporary: true
+                                                            },
+                                                            onProgressChange: async (progress) => {
+                                                                updateFileProgress(addedFileState.key, progress);
+                                                                if (progress === 100) {
+                                                                    // wait 1 second to set it to complete
+                                                                    // so that the user can see the progress bar at 100%
+                                                                    await new Promise((resolve) => setTimeout(resolve, 1000));
+                                                                    updateFileProgress(addedFileState.key, 'COMPLETE');
+                                                                }
+                                                            },
+                                                        });
+                                                        setUploadRes((uploadRes) => [
+                                                            ...uploadRes,
+                                                            {
+                                                                url: res.url,
+                                                                filename: addedFileState.file.name,
+                                                            },
+                                                        ]);
+                                                    } catch (err) {
+                                                        updateFileProgress(addedFileState.key, 'ERROR');
+                                                    }
+                                                }),
+                                            );
+                                        }}
+                                    />
                                 </Grid>
 
                                 <Grid item xs={12}>
@@ -234,7 +350,6 @@ export default function ModalEdit() {
                             </Grid>
                         </FormControl>
                     </div>
-
 
 
                     <div className='mt-2 flex justify-between'>
