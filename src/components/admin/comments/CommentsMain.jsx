@@ -10,15 +10,17 @@ export default function CommentsMain() {
     const itemsPerPage = 20
 
     return (
-        <div><ItemsContext.Provider
-            value={{
-                ...ObjNotValidated,
-                itemsPerPage,
-                validated: false,
-            }}
-        >
-            <CommentsTable />
-        </ItemsContext.Provider>
+        <div>
+
+            <ItemsContext.Provider
+                value={{
+                    ...ObjNotValidated,
+                    itemsPerPage,
+                    validated: false,
+                }}
+            >
+                <CommentsTable />
+            </ItemsContext.Provider>
 
             <ItemsContext.Provider
                 value={{

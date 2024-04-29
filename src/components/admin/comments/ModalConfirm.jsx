@@ -30,7 +30,6 @@ export default function ModalConfirm({ id }) {
 
     const ConfirmItem = async () => {
         const res = await toggleValidateComment(id, Token)
-        console.log(res)
     }
 
     return (
@@ -51,7 +50,7 @@ export default function ModalConfirm({ id }) {
                 <Fade in={isModalConfirmOpen}>
                     <Box sx={ModalStyle} className='rounded-3xl'>
                         <Typography id="transition-modal-title" variant="h6" component="h2">
-                            آیا از حذف این کاربر مطمئن هستید؟
+                            آیا از تاید این کامنت مطمئن هستید؟
                         </Typography>
 
                         <div className='mt-2 flex justify-between'>

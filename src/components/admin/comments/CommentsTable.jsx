@@ -136,17 +136,20 @@ export default function CommentsTable() {
                                                     <div className='text-center mt-2 text-xs'>درحال انجام عملیات</div>
                                                 ) : (
                                                     <>
-                                                        <Button
-                                                            variant='outlined'
-                                                            className='p-0 m-1'
-                                                            sx={{ color: 'green', borderColor: 'green' }}
-                                                            onClick={() => {
-                                                                setIsModalConfirmOpen(true);
-                                                                setSelectedId(item.id)
-                                                            }}
-                                                        >
-                                                            تایید
-                                                        </Button>
+                                                        {!!validated ? <></> : <>
+                                                            <Button
+                                                                variant='outlined'
+                                                                className='p-0 m-1'
+                                                                sx={{ color: 'green', borderColor: 'green' }}
+                                                                onClick={() => {
+                                                                    setIsModalConfirmOpen(true);
+                                                                    setSelectedId(item.id)
+                                                                }}
+                                                            >
+                                                                تایید
+                                                            </Button>
+                                                        </>}
+
                                                         <Button
                                                             variant='outlined'
                                                             sx={{ color: 'red', borderColor: 'red' }}
@@ -186,17 +189,16 @@ export default function CommentsTable() {
 
             <>
 
-                {/* <ModalDeleteContext.Provider value={{ isModalDeleteOpen, setIsModalDeleteOpen, id: selectedId }}>
-                    <ModalDelete />
+                <ModalDeleteContext.Provider value={{ isModalDeleteOpen, setIsModalDeleteOpen }}>
+                    <ModalDelete id={selectedId} />
                 </ModalDeleteContext.Provider>
 
                 <ModalConfirmContext.Provider value={{
                     isModalConfirmOpen,
-                    setIsModalConfirmOpen,
-                    id: selectedId
+                    setIsModalConfirmOpen
                 }}>
                     <ModalConfirm />
-                </ModalConfirmContext.Provider> */}
+                </ModalConfirmContext.Provider>
             </>
 
         </Stack>

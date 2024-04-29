@@ -18,6 +18,12 @@ export const getAllTxs = async (token, filters) => {
                     phone,
                     name
                 },
+                boughtProducts{
+                    quantity
+                    product{
+                        name
+                    }
+                }
                 address,
                 shouldBeSentAt,
                 boughtAt,

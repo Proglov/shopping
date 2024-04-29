@@ -8,7 +8,7 @@ import { useContext } from 'react';
 import { Button } from '@mui/material';
 import { ModalDeleteContext } from './CommentsTable';
 import { giveMeToken } from '@/utils/Auth';
-import { deleteUser } from '@/services/adminActivities/users';
+import { deleteComment } from '@/services/adminActivities/comment';
 
 const ModalStyle = {
     position: 'absolute',
@@ -29,8 +29,7 @@ export default function ModalDelete({ id }) {
     const Token = giveMeToken();
 
     const deleteItem = async () => {
-        const res = await deleteUser(id, Token)
-        console.log(res)
+        const res = await deleteComment(id, Token)
     }
 
     return (
@@ -51,7 +50,7 @@ export default function ModalDelete({ id }) {
                 <Fade in={isModalDeleteOpen}>
                     <Box sx={ModalStyle} className='rounded-3xl'>
                         <Typography id="transition-modal-title" variant="h6" component="h2">
-                            آیا از حذف این کاربر مطمئن هستید؟
+                            آیا از حذف این کامنت مطمئن هستید؟
                         </Typography>
 
                         <div className='mt-2 flex justify-between'>

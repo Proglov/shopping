@@ -1,9 +1,17 @@
+import { createContext } from "react"
 import UsersTable from "./UsersTable"
+import useUsers from "@/hooks/useUsers"
+
+export const UsersContext = createContext()
 
 export default function UsersMain() {
+
+    const UsersObj = useUsers()
+    const itemsPerPage = 20
+
     return (
-        <div>
+        <UsersContext.Provider value={{ ...UsersObj, itemsPerPage }}>
             <UsersTable />
-        </div>
+        </UsersContext.Provider>
     )
 }

@@ -1,6 +1,6 @@
 "use client"
 import { Button, Stack } from '@mui/material';
-import { useEffect, useState, createContext, useContext } from 'react';
+import { useEffect, createContext, useContext } from 'react';
 import { styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -14,6 +14,7 @@ import { getAllTxs, getTXCount } from '@/services/adminActivities/tx';
 import { convertToFarsiNumbers, formatPrice, price2Farsi } from '@/utils/funcs';
 import PaginationNow from './Pagination';
 import { ItemsContext } from './TXMain';
+import ModalShowMore from './ModalShowMore';
 
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -35,6 +36,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 export const PaginationContext = createContext();
+export const ModalShowMoreContext = createContext();
 
 
 export default function TXTable() {
@@ -56,20 +58,14 @@ export default function TXTable() {
         setItems,
         itemsCount,
         setItemsCount,
+        isModalShowMoreOpen,
+        setIsModalShowMoreOpen,
+        setSelectedItem,
+        selectedItem,
         itemsPerPage,
         isFutureOrder
     } = useContext(ItemsContext)
 
-
-    // const [selectedItem, setSelectedItem] = useState({
-    //     id: '',
-    //     user: {},
-    //     boughtProducts: {},
-    //     address: '',
-    //     shouldBeSentAt: '',
-    //     boughtAt: '',
-    //     totalPrice: 0
-    // });
 
     useEffect(() => {
         const Token = giveMeToken();
@@ -88,7 +84,6 @@ export default function TXTable() {
             try {
                 setLoading(true);
                 const count = await getTXCount(Token, isFutureOrder);
-                console.log(count);
                 setItemsCount(count.TransActionsCount)
             } catch (error) {
                 console.error('Error fetching users count:', error);
@@ -154,42 +149,19 @@ export default function TXTable() {
                                                 تومان
                                             </StyledTableCell>
                                             <StyledTableCell className='flex flex-col justify-center border-b-0 align-middle'>
-                                                {operatingID === item.id ? (
-                                                    <div className='text-center mt-2 text-xs'>درحال انجام عملیات</div>
-                                                ) : (
-                                                    <>
-                                                        <Button
-                                                            variant='outlined'
-                                                            className='p-0 m-1'
-                                                            sx={{ color: 'green', borderColor: 'green' }}
-                                                            onClick={() => {
-                                                                setIsModalEditOpen(true);
-                                                                setSelectedItem(prev => ({
-                                                                    ...item,
-                                                                    imagesURL: prev.imagesURL
-                                                                }))
-                                                            }}
-                                                        >
-                                                            مشاهده بیشتر
-                                                        </Button>
-                                                        <Button
-                                                            variant='outlined'
-                                                            sx={{ color: 'red', borderColor: 'red' }}
-                                                            className='p-0 m-1'
-                                                            onClick={() => {
-                                                                setIsModalDeleteOpen(true);
-                                                                setSelectedItem({
-                                                                    ...item
-                                                                })
-                                                            }}
-                                                        >
-                                                            حذف
-                                                        </Button>
-                                                    </>
-                                                )}
-                                                {operatingID === item.id && operatingError !== '' ? (
-                                                    <div>مشکلی پیش امده است. لطفا اتصال اینترنت را بررسی کنید</div>
-                                                ) : ''}
+                                                <Button
+                                                    variant='outlined'
+                                                    className='p-0 m-1'
+                                                    sx={{ color: 'green', borderColor: 'green' }}
+                                                    onClick={() => {
+                                                        setIsModalShowMoreOpen(true);
+                                                        setSelectedItem({
+                                                            ...item
+                                                        })
+                                                    }}
+                                                >
+                                                    مشاهده بیشتر
+                                                </Button>
                                             </StyledTableCell>
                                         </StyledTableRow>
                                     ))}
@@ -212,19 +184,13 @@ export default function TXTable() {
             )}
 
             <>
-                {/* 
-                <ModalDeleteContext.Provider value={{ isModalDeleteOpen, setIsModalDeleteOpen }}>
-                    <ModalDelete id={selectedItem.id} />
-                </ModalDeleteContext.Provider>
-
-                <ModalEditContext.Provider value={{
-                    isModalEditOpen,
-                    setIsModalEditOpen,
-                    setSelectedItem,
+                <ModalShowMoreContext.Provider value={{
+                    isModalShowMoreOpen,
+                    setIsModalShowMoreOpen,
                     selectedItem
                 }}>
-                    <ModalEdit />
-                </ModalEditContext.Provider> */}
+                    <ModalShowMore />
+                </ModalShowMoreContext.Provider>
             </>
 
         </Stack>

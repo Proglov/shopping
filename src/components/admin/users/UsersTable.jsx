@@ -1,6 +1,6 @@
 "use client"
 import { Button, Stack } from '@mui/material';
-import { useEffect, useState, createContext } from 'react';
+import { useEffect, createContext, useContext } from 'react';
 import { styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -12,9 +12,8 @@ import Paper from '@mui/material/Paper';
 import { getAllUsers, getUsersCount } from '@/services/adminActivities/users';
 import Pagination from './Pagination';
 import ModalDelete from './ModalDelete';
-import ModalEdit from './ModalEdit';
 import { giveMeToken } from '@/utils/Auth';
-import Link from 'next/link';
+import { UsersContext } from './UsersMain';
 
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -37,31 +36,33 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 
 export const PaginationContext = createContext();
 export const ModalDeleteContext = createContext();
-export const ModalEditContext = createContext();
 
 
 export default function UsersTable() {
 
-    const itemsPerPage = 5
-
-    const [isModalDeleteOpen, setIsModalDeleteOpen] = useState(false)
-    const [isModalEditOpen, setIsModalEditOpen] = useState(false)
-
-    const [currentPage, setCurrentPage] = useState(1)
-    const [loading, setLoading] = useState(false);
-    const [isError, setIsError] = useState(false);
-    const [error, setError] = useState('');
-    const [operatingID, setOperatingID] = useState('');
-    const [operatingError, setOperatingError] = useState('');
-    const [items, setItems] = useState([])
-    const [itemsCount, setItemsCount] = useState(0)
-    const [selectedItem, setSelectedItem] = useState({
-        id: '',
-        name: '',
-        email: '',
-        username: '',
-        phone: ''
-    });
+    const {
+        currentPage,
+        setCurrentPage,
+        loading,
+        setLoading,
+        isError,
+        setIsError,
+        error,
+        setError,
+        operatingID,
+        setOperatingID,
+        operatingError,
+        setOperatingError,
+        items,
+        setItems,
+        itemsCount,
+        setItemsCount,
+        isModalDeleteOpen,
+        setIsModalDeleteOpen,
+        setSelectedItem,
+        selectedItem,
+        itemsPerPage
+    } = useContext(UsersContext)
 
     useEffect(() => {
         const Token = giveMeToken();
@@ -145,20 +146,6 @@ export default function UsersTable() {
                                                     <>
                                                         <Button
                                                             variant='outlined'
-                                                            className='p-0 m-1'
-                                                            sx={{ color: 'primary', borderColor: 'primary' }}
-                                                            onClick={() => {
-                                                                setIsModalEditOpen(true);
-                                                                setSelectedItem(prev => ({
-                                                                    ...item,
-                                                                    imagesURL: prev.imagesURL
-                                                                }))
-                                                            }}
-                                                        >
-                                                            ویرایش
-                                                        </Button>
-                                                        <Button
-                                                            variant='outlined'
                                                             sx={{ color: 'red', borderColor: 'red' }}
                                                             className='p-0 m-1'
                                                             onClick={() => {
@@ -169,16 +156,6 @@ export default function UsersTable() {
                                                             }}
                                                         >
                                                             حذف
-                                                        </Button>
-                                                        <Button
-                                                            variant='outlined'
-                                                            sx={{ color: 'green', borderColor: 'green' }}
-                                                            className='p-0 m-1'
-                                                            role='link'
-                                                        >
-                                                            <Link href={`/ADMIN/users/${item.id}`}>
-                                                                مشاهده بیشتر
-                                                            </Link>
                                                         </Button>
                                                     </>
                                                 )}
@@ -207,21 +184,9 @@ export default function UsersTable() {
                     </div>
             )}
 
-            <>
-
-                <ModalDeleteContext.Provider value={{ isModalDeleteOpen, setIsModalDeleteOpen }}>
-                    <ModalDelete id={selectedItem.id} />
-                </ModalDeleteContext.Provider>
-
-                <ModalEditContext.Provider value={{
-                    isModalEditOpen,
-                    setIsModalEditOpen,
-                    setSelectedItem,
-                    selectedItem
-                }}>
-                    <ModalEdit />
-                </ModalEditContext.Provider>
-            </>
+            <ModalDeleteContext.Provider value={{ isModalDeleteOpen, setIsModalDeleteOpen }}>
+                <ModalDelete id={selectedItem.id} />
+            </ModalDeleteContext.Provider>
 
         </Stack>
     );

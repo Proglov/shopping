@@ -1,9 +1,9 @@
 import { useState } from 'react';
 
-export default function useTX() {
+export default function useUsers() {
     const [items, setItems] = useState([])
     const [selectedItem, setSelectedItem] = useState({})
-    const [isModalShowMoreOpen, setIsModalShowMoreOpen] = useState(false);
+    const [isModalDeleteOpen, setIsModalDeleteOpen] = useState(false);
     const [currentPage, setCurrentPage] = useState(1)
     const [loading, setLoading] = useState(false);
     const [isError, setIsError] = useState(false);
@@ -29,8 +29,8 @@ export default function useTX() {
         setOperatingError,
         itemsCount,
         setItemsCount,
-        isModalShowMoreOpen,
-        setIsModalShowMoreOpen,
+        isModalDeleteOpen,
+        setIsModalDeleteOpen,
         selectedItem,
         setSelectedItem
     }

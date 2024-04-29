@@ -11,8 +11,8 @@ export const updateComment = async (obj, token) => {
     });
 
     const mutation = gql`
-        mutation($id:!ID,$body: String!) {
-            CommentAdd(
+        mutation($id:ID!,$body: String!) {
+            CommentAdd(id: $id, body:$body)(
                 input: { 
                     id: $id,
                     body: $body
@@ -38,11 +38,8 @@ export const deleteComment = async (id, token) => {
     });
 
     const mutation = gql`
-        mutation($id:!ID) {
-            CommentDelete(
-                input: { 
-                    id: $id
-            }) {
+        mutation($id:ID!) {
+            CommentDelete(id: $id) {
                 message
             }
         }
@@ -59,7 +56,7 @@ export const toggleValidateComment = async (id, token) => {
     });
 
     const mutation = gql`
-        mutation($id:!ID) {
+        mutation($id:ID!) {
             CommentToggleValidate(id: $id) {
                 message
                 status
