@@ -1,10 +1,6 @@
-import {
-  Action_AddCart,
-  Action_DecrementCart,
-  Action_IncrementCart,
-} from "./ActionType";
+import { createSlice } from "@reduxjs/toolkit";
 
-export const initialCartProducts = [
+const initialState = [
   {
     code: "546",
     number: 5,
@@ -39,22 +35,24 @@ export const initialCartProducts = [
   },
 ];
 
-export function CartProductsReducer(state, action) {
-  switch (action.type) {
-    case Action_AddCart: {
+export const CartProductsSlice = createSlice({
+  name: "CartProducts",
+  initialState,
+  reducers: {
+    AddCart: (state, action) => {
       const itemExists = state.find(
         (item) => item.code === action.payload.code
       );
 
       if (itemExists) {
-        return state.map((item) => {
+        state = state.map((item) => {
           if (item.code === action.payload.code) {
             return { ...item, number: item.number + 1 };
           }
           return item;
         });
       } else {
-        return [
+        state = [
           ...state,
           {
             name: action.payload.name,
@@ -66,17 +64,17 @@ export function CartProductsReducer(state, action) {
           },
         ];
       }
-    }
-    case Action_IncrementCart: {
-      return state.map((item) => {
+    },
+    IncrementCart: (state, action) => {
+      state = state.map((item) => {
         if (item.code === action.payload) {
           return { ...item, number: item.number + 1 };
         }
         return item;
       });
-    }
-    case Action_DecrementCart: {
-      return state
+    },
+    DecrementCart: (state, action) => {
+      state = state
         .map((item) => {
           if (item.code === action.payload) {
             if (item.number === 1) {
@@ -88,9 +86,10 @@ export function CartProductsReducer(state, action) {
           return item;
         })
         .filter((item) => item !== null);
-    }
-    default: {
-      return state;
-    }
-  }
-}
+    },
+  },
+});
+export const { AddCart, IncrementCart, DecrementCart } =
+  CartProductsSlice.actions;
+
+export default CartProductsSlice.reducer;

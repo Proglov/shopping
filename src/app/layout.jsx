@@ -1,7 +1,7 @@
 import "./globals.css";
 import CustomTheme from "../utils/CustomTheme";
 import { EdgeStoreProvider } from "../lib/edgestore";
-import { Context } from "@/context/Context";
+import Providers from "./Providers";
 
 export const metadata = {
   title: "فروشگاه آنلاین",
@@ -14,11 +14,9 @@ export default function RootLayout({ children }) {
       <body>
         <EdgeStoreProvider>
           <CustomTheme>
-            <Context>
-              <EdgeStoreProvider>
-                {children}
-              </EdgeStoreProvider>
-            </Context>
+            <Providers>
+              <EdgeStoreProvider>{children}</EdgeStoreProvider>
+            </Providers>
           </CustomTheme>
         </EdgeStoreProvider>
       </body>

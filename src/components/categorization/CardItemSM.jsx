@@ -1,16 +1,14 @@
 "use client";
 
+import { useAppSelector } from "@/store/Hook";
 import { convertToFarsiNumbers, formatPrice } from "@/utils/funcs";
 import { Box, Button, Card, CardContent, CardMedia } from "@mui/material";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { GroupingContext, useGrouping } from "@/context/GroupingContext";
-import { useContext } from "react";
+import { usePathname } from "next/navigation"
 
 export default function CardItemSM({ product }) {
   const router = usePathname();
-  // const grouping = useGrouping(); ?
-  const grouping = useContext(GroupingContext);
+  const grouping = useAppSelector((state) => state.Grouping);
 
   const place = grouping.filter((item) => {
     return item.href === router.split("/")[2];

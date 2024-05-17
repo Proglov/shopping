@@ -3,12 +3,10 @@
 import { Breadcrumbs, Typography } from "@mui/material";
 import ArrowLeftIcon from "@mui/icons-material/ArrowLeft";
 import Link from "next/link";
-import { GroupingContext, useGrouping } from "@/context/GroupingContext";
-import { useContext } from "react";
+import { useAppSelector } from "@/store/Hook";
 
 export default function BreadCrumbs({ location }) {
-  // const grouping = useGrouping(); ?
-  const grouping = useContext(GroupingContext);
+  const grouping = useAppSelector((state) => state.Grouping);
   const title = (loc) => {
     const place = grouping.filter((item) => {
       return item.href === loc;

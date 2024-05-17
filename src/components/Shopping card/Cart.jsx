@@ -6,18 +6,17 @@ import { forwardRef, useState } from "react";
 import { convertToFarsiNumbers, formatPrice } from "@/utils/funcs";
 import ShoppingCard from "./ShoppingCard";
 import Link from "next/link";
-import { useCartProducts } from "@/context/CartProductsContext";
-import { useLogin } from "@/context/LoginContext";
+import { useAppSelector } from "@/store/Hook";
 
 const Transition = forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
 export default function Cart({ Close, Open }) {
-  const login = useLogin();
+  const login = useAppSelector((state) => state.Login.login);
   const minPrice = 150000;
 
-  const cartProducts = useCartProducts();
+  const cartProducts = useAppSelector((state) => state.CartProducts);
 
   let counter = cartProducts
     .reduce((accumulator, currentObject) => {

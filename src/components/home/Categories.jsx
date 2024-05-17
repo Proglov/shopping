@@ -3,12 +3,10 @@
 import { Grid, Typography } from "@mui/material";
 import CategoryComponent from "./CategoryComponent";
 import { TbCategory } from "react-icons/tb";
-import { GroupingContext, useGrouping } from "@/context/GroupingContext";
-import { useContext } from "react";
+import { useAppSelector } from "@/store/Hook";
 
 export default function Categories() {
-  //const grouping = useGrouping(); ?
-  const grouping = useContext(GroupingContext);
+  const grouping = useAppSelector((state) => state.Grouping);
   return (
     <div className="m-4" id="categorization">
       <div

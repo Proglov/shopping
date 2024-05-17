@@ -3,14 +3,15 @@
 import { Box, Button, TextField } from "@mui/material";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { useSetLogin } from "@/context/LoginContext";
+import { useAppDispatch } from "@/store/Hook";
+import { SetLogin } from "@/features/Login/LoginSlice";
 import Link from "next/link";
 
 export default function AuthenticationComponent() {
   const [code, setCode] = useState("");
   const [show, setShow] = useState([false, false]);
-  const setLogin = useSetLogin();
   const router = useRouter();
+  const dispatch = useAppDispatch();
 
   const submit = () => {
     if (!code) {
@@ -22,7 +23,7 @@ export default function AuthenticationComponent() {
       return;
     }
     setShow([false, false]);
-    setLogin(true);
+    dispatch(SetLogin(true));
     router.push("/");
   };
 

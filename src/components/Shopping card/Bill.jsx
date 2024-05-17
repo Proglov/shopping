@@ -2,16 +2,14 @@
 
 import { convertToFarsiNumbers, formatPrice } from "@/utils/funcs";
 import { Box, Button, Card } from "@mui/material";
-import { useCartProducts } from "@/context/CartProductsContext";
-import { useTime } from "@/context/TimeContext";
-import { useAddress } from "@/context/AddressContext";
 import { GrFormPrevious } from "react-icons/gr";
 import Link from "next/link";
+import { useAppSelector } from "@/store/Hook";
 
 export default function Bill({ step = 1 }) {
-  const product = useCartProducts();
-  const Time = useTime();
-  const address = useAddress();
+  const product = useAppSelector((state) => state.CartProducts);
+  const Time = useAppSelector((state) => state.Time);
+  const address = useAppSelector((state) => state.Address.address);
   const minPrice = 150000;
 
   let serviceFee = 1479;

@@ -16,16 +16,11 @@ import { LiaSignInAltSolid, LiaSignOutAltSolid } from "react-icons/lia";
 import { GiShoppingCart } from "react-icons/gi";
 import Link from "next/link";
 import Cart from "../Shopping card/Cart";
-import { useCartProducts } from "@/context/CartProductsContext";
 import { convertToFarsiNumbers } from "@/utils/funcs";
-import { useLogin, useSetLogin } from "@/context/LoginContext";
-import {
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-} from "@mui/material";
+import { Button, Dialog, DialogActions, DialogContent } from "@mui/material";
 import { GrUserAdmin } from "react-icons/gr";
+import { useAppDispatch, useAppSelector } from "@/store/Hook";
+import { SetLogin } from "@/features/Login/LoginSlice";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -70,9 +65,9 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 export default function NavBar() {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [open, setOpen] = React.useState(false);
-  const cartProducts = useCartProducts();
+  const cartProducts = useAppSelector((state) => state.CartProducts);
   const [openDialog, setOpenDialog] = React.useState(false);
-  const [bga, setBga] = React.useState(false)
+  const [bga, setBga] = React.useState(false);
 
   const handleOpen = () => {
     setOpenDialog(true);
@@ -95,8 +90,8 @@ export default function NavBar() {
     setOpen(false);
   };
 
-  const isLoggedIn = useLogin();
-  const setLogin = useSetLogin();
+  const isLoggedIn = useAppSelector((state) => state.Login.login);
+  const dispatch = useAppDispatch();
 
   // this is temporary and should be changed
   const isAdmin = true;
@@ -113,14 +108,18 @@ export default function NavBar() {
 
   const logOut = () => {
     setOpenDialog(false);
-    setLogin(false);
+    dispatch(SetLogin(false));
   };
 
   return (
     <Box sx={{ flexGrow: 1 }}>
       <div style={{ width: "100%", height: "56px" }}></div>
       <AppBar
-        sx={{ zIndex: "200", direction: "ltr", backgroundColor: `rgba(62, 81, 114, ${bga ? '.9' : '.8'})` }}
+        sx={{
+          zIndex: "200",
+          direction: "ltr",
+          backgroundColor: `rgba(62, 81, 114, ${bga ? ".9" : ".8"})`,
+        }}
       >
         <Toolbar>
           {/* سبد خرید */}
@@ -186,7 +185,10 @@ export default function NavBar() {
           >
             {isAdmin ? (
               <Link href="/ADMIN">
-                <span className="text-red-500 flex" style={{ lineHeight: "24px" }}>
+                <span
+                  className="text-red-500 flex"
+                  style={{ lineHeight: "24px" }}
+                >
                   <GrUserAdmin />
                 </span>
               </Link>
@@ -201,7 +203,11 @@ export default function NavBar() {
           {/* جست و جو */}
           <Search
             dir="rtl"
-            sx={{ flexGrow: 1, flexBasis: "auto", maxWidth: { xs: '200px', sm: '100px', md: '500px' } }}
+            sx={{
+              flexGrow: 1,
+              flexBasis: "auto",
+              maxWidth: { xs: "200px", sm: "100px", md: "500px" },
+            }}
             onClick={() => setBga(true)}
             className="sm:max-w-md"
           >

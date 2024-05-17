@@ -5,13 +5,12 @@ import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import { convertToFarsiNumbers, formatPrice } from "@/utils/funcs";
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
-import { useState } from "react";
-import { useCartProductsDispatch } from "@/context/CartProductsContext";
-import { Action_AddCart } from "@/Reducers/ActionType";
+import { AddCart } from "@/features/CartProducts/CartProductsSlice";
 import Image from "next/image";
+import { useAppDispatch } from "@/store/Hook";
 
 export default function SimilarProducts() {
-  const cartProductsDispatch = useCartProductsDispatch();
+  const dispatch = useAppDispatch();
   const similar = [
     {
       name: "خامه صباح - 200 میلی لیتر",
@@ -127,17 +126,16 @@ export default function SimilarProducts() {
                           },
                         }}
                         onClick={() => {
-                          cartProductsDispatch({
-                            type: Action_AddCart,
-                            payload: {
+                          dispatch(
+                            AddCart({
                               name: item.name,
                               number: 1,
                               src: item.src,
                               price: item.realPrice,
                               off: item.off,
                               code: Math.floor(Math.random() * 99999),
-                            },
-                          });
+                            })
+                          );
                         }}
                       >
                         افزودن به سبد

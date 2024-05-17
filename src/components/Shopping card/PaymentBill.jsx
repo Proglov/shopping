@@ -8,17 +8,16 @@ import {
   CardHeader,
   TextField,
 } from "@mui/material";
-import { useCartProducts } from "@/context/CartProductsContext";
 import { convertToFarsiNumbers, formatPrice } from "@/utils/funcs";
-import { useTime } from "@/context/TimeContext";
 import ConfirmationNumberOutlinedIcon from "@mui/icons-material/ConfirmationNumberOutlined";
 import Link from "next/link";
 import { GrFormNext, GrFormPrevious } from "react-icons/gr";
 import { useState } from "react";
+import { useAppSelector } from "@/store/Hook";
 
 export default function PaymentBill() {
-  const product = useCartProducts();
-  const Time = useTime();
+  const product = useAppSelector((state) => state.CartProducts);
+  const Time = useAppSelector((state) => state.Time);
   let serviceFee = 1479;
   const [pay, setPay] = useState(false);
 

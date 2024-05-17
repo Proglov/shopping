@@ -7,12 +7,12 @@ import { AiOutlineHome } from "react-icons/ai";
 import { TbCategory } from "react-icons/tb";
 import { Badge, Button, Typography } from "@mui/material";
 import Cart from "../Shopping card/Cart";
-import { useCartProducts } from "@/context/CartProductsContext";
 import { convertToFarsiNumbers } from "@/utils/funcs";
+import { useAppSelector } from "@/store/Hook";
 
 export default function FooterMenu({ active }) {
   const [open, setOpen] = React.useState(false);
-  const cartProducts = useCartProducts();
+  const cartProducts = useAppSelector((state) => state.CartProducts);
 
   let counter = cartProducts
     .reduce((accumulator, currentObject) => {
@@ -56,7 +56,7 @@ export default function FooterMenu({ active }) {
             </Button>
           </Link>
 
-          <Link href="#categorization">
+          <Link href="/#categorization">
             <Button
               className={`sm:mx-10 mx-5 flex flex-col ${
                 active === 1 ? "text-blue-700" : "text-black"

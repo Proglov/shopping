@@ -1,15 +1,13 @@
 "use client";
 
+import { useAppSelector } from "@/store/Hook";
 import { convertToFarsiNumbers, formatPrice } from "@/utils/funcs";
 import { Box, Button, Card } from "@mui/material";
 import { usePathname } from "next/navigation";
-import { GroupingContext, useGrouping } from "@/context/GroupingContext";
-import { useContext } from "react";
 
 export default function DetailItem({ detail }) {
   const router = usePathname();
-  // const grouping = useGrouping(); ?
-  const grouping = useContext(GroupingContext);
+  const grouping = useAppSelector((state) => state.Grouping);
 
   const place = grouping.filter((item) => {
     return item.href === router.split("/")[2];
