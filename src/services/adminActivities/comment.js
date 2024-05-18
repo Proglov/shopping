@@ -1,68 +1,29 @@
 'use server'
-import { gql, GraphQLClient } from 'graphql-request'
+import { clientWithAuth } from "@/lib/axios"
 
-const api = process.env.BackEnd_API;
 
-export const updateComment = async (obj, token) => {
-    const graphQLClient = new GraphQLClient(api, {
-        headers: {
-            authorization: `${token}`,
-        },
-    });
-
-    const mutation = gql`
-        mutation($id:ID!,$body: String!) {
-            CommentAdd(id: $id, body:$body)(
-                input: { 
-                    id: $id,
-                    body: $body
-            }) {
-                message
-            }
-        }
-    `;
-
-    const variables = {
-        id: obj.id,
-        body: obj.body
-    };
-
-    return await graphQLClient.request(mutation, variables);
+const Api = {
+    updateComment: async (payload) => {
+        const response = await clientWithAuth.patch(
+            `/commentUpdate/CommentUpdate`,
+            payload
+        );
+        return response;
+    },
+    deleteComment: async (payload) => {
+        const response = await clientWithAuth.delete(
+            `/commentDelete/CommentDelete`,
+            payload
+        );
+        return response;
+    },
+    toggleValidateComment: async (payload) => {
+        const response = await clientWithAuth.patch(
+            `/commentUpdate/CommentToggleValidate`,
+            payload
+        );
+        return response;
+    }
 };
 
-export const deleteComment = async (id, token) => {
-    const graphQLClient = new GraphQLClient(api, {
-        headers: {
-            authorization: `${token}`,
-        },
-    });
-
-    const mutation = gql`
-        mutation($id:ID!) {
-            CommentDelete(id: $id) {
-                message
-            }
-        }
-    `;
-
-    return await graphQLClient.request(mutation, { id });
-};
-
-export const toggleValidateComment = async (id, token) => {
-    const graphQLClient = new GraphQLClient(api, {
-        headers: {
-            authorization: `${token}`,
-        },
-    });
-
-    const mutation = gql`
-        mutation($id:ID!) {
-            CommentToggleValidate(id: $id) {
-                message
-                status
-            }
-        }
-    `;
-
-    return await graphQLClient.request(mutation, { id });
-};
+export default Api;
