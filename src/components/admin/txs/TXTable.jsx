@@ -10,7 +10,7 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { giveMeToken } from '@/utils/Auth';
-import { getAllTxs, getTXCount } from '@/services/adminActivities/tx';
+import Api from '@/services/adminActivities/tx';
 import { convertToFarsiNumbers, formatPrice, price2Farsi } from '@/utils/funcs';
 import PaginationNow from './Pagination';
 import { ItemsContext } from './TXMain';
@@ -40,6 +40,7 @@ export const ModalShowMoreContext = createContext();
 
 
 export default function TXTable() {
+    const { getAllTxs } = Api
 
     const {
         currentPage,

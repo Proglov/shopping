@@ -2,33 +2,33 @@ import { clientWithAuth, clientWithoutAuth } from "@/lib/axios"
 
 
 const Api = {
-    getMe: async () => {
+    getMeSeller: async () => {
         const response = await clientWithAuth.get(
-            `/userGet/getMe`
+            `/sellerGet/getMeSeller`
         );
         return response?.data;
     },
-    signUp: async (payload) => {
+    sellerSignUp: async (payload) => {
         const response = await clientWithoutAuth.post(
-            `/userPost/UserSignUp`,
+            `/sellerPost/SellerSignUp`,
+            {
+                input: payload
+            }
+        );
+        return response?.data;
+    },
+    sellerSignInWithPhone: async (payload) => {
+        const response = await clientWithoutAuth.post(
+            `/sellerPost/SellerSignInWithPhone`,
             {
                 phone: payload?.phone
             }
         );
         return response?.data;
     },
-    signInWithPhone: async (payload) => {
+    sellerSignInWithEmailOrUsername: async (payload) => {
         const response = await clientWithoutAuth.post(
-            `/userPost/signInWithPhone`,
-            {
-                phone: payload?.phone
-            }
-        );
-        return response?.data;
-    },
-    signInWithEmailOrUsername: async (payload) => {
-        const response = await clientWithoutAuth.post(
-            `/userPost/UserSignInWithEmailOrUsername`,
+            `/sellerPost/SellerSignInWithEmailOrUsername`,
             {
                 emailOrUsername: payload?.emailOrUsername,
                 password: payload?.password
@@ -36,9 +36,9 @@ const Api = {
         );
         return response?.data;
     },
-    updateUser: async (payload) => {
+    sellerUpdate: async (payload) => {
         const response = await clientWithAuth.patch(
-            `/userUpdate/UserUpdate`,
+            `/sellerUpdate/SellerUpdate`,
             {
                 input: payload
             }

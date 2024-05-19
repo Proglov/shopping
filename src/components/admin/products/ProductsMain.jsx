@@ -1,12 +1,21 @@
 'use client'
-import React, { useState } from 'react'
+import React, { useState, createContext } from 'react'
 import ProductsTable from './ProductsTable'
 import AddProduct from './AddProduct'
+import useProducts from "@/hooks/useProducts"
 import { Button } from '@mui/material'
 import { IoMdClose } from "react-icons/io";
 
+
+export const ProductsContext = createContext()
+
+
 export default function ProductsMain() {
     const [isHidden, setIsHidden] = useState(true)
+
+    const productsObj = useProducts()
+    const itemsPerPage = 20
+
     return (
         <div>
             <div className='text-start text-sm mb-1'>
@@ -28,7 +37,9 @@ export default function ProductsMain() {
             <div className={`${isHidden ? 'hidden' : ''}`}>
                 <AddProduct />
             </div>
-            <ProductsTable />
+            <ProductsContext.Provider value={{ ...productsObj, itemsPerPage }}>
+                <ProductsTable />
+            </ProductsContext.Provider>
         </div>
     )
 }

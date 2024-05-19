@@ -9,7 +9,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import { getAllUsers, getUsersCount } from '@/services/adminActivities/users';
+import Api from '@/services/adminActivities/user';
 import Pagination from './Pagination';
 import ModalDelete from './ModalDelete';
 import { giveMeToken } from '@/utils/Auth';
@@ -39,6 +39,7 @@ export const ModalDeleteContext = createContext();
 
 
 export default function UsersTable() {
+    const { getAllUsers } = Api
 
     const {
         currentPage,
@@ -69,29 +70,17 @@ export default function UsersTable() {
         const fetchData = async () => {
             try {
                 const users = await getAllUsers(Token, { page: currentPage, perPage: itemsPerPage });
-                setItems(users.UsersGet)
+                setItems(users.users)
+                setItemsCount(users?.allUsersCount)
             } catch (error) {
-                console.error('Error fetching users:', error);
+                setError(`Error fetching users: ${error}`);
                 setIsError(true);
             } finally {
                 setLoading(false);
             }
         };
-        const fetchCount = async () => {
-            try {
-                setLoading(true);
-                const count = await getUsersCount(Token);
-                setItemsCount(count.UsersCount)
-            } catch (error) {
-                console.error('Error fetching users count:', error);
-                setIsError(true);
-            } finally {
-                fetchData();
 
-            }
-        };
-
-        fetchCount();
+        fetchData();
     }, [currentPage]);
     return (
         <Stack spacing={2} className='mt-10'>

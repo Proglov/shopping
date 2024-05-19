@@ -8,7 +8,7 @@ import { useContext } from 'react';
 import { Button } from '@mui/material';
 import { ModalConfirmContext } from './CommentsTable';
 import { giveMeToken } from '@/utils/Auth';
-import { toggleValidateComment } from '@/services/adminActivities/comment';
+import Api from '@/services/adminActivities/comment';
 
 const ModalStyle = {
     position: 'absolute',
@@ -23,6 +23,7 @@ const ModalStyle = {
 };
 
 export default function ModalConfirm({ id }) {
+    const { toggleValidateComment } = Api
     const { isModalConfirmOpen, setIsModalConfirmOpen } = useContext(ModalConfirmContext)
     const handleClose = () => setIsModalConfirmOpen(false);
 

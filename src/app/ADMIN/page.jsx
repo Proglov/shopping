@@ -1,5 +1,5 @@
 import { notFound } from 'next/navigation'
-import { isAdmin } from "@/services/adminActivities/users"
+import { isAdmin } from "@/services/adminActivities/user"
 import Main from '@/components/admin/MainAdmin'
 
 export default async function Home() {

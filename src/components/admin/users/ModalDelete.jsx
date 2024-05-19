@@ -8,7 +8,7 @@ import { useContext } from 'react';
 import { Button } from '@mui/material';
 import { ModalDeleteContext } from './UsersTable';
 import { giveMeToken } from '@/utils/Auth';
-import { deleteUser } from '@/services/adminActivities/users';
+import Api from '@/services/adminActivities/user';
 
 const ModalStyle = {
     position: 'absolute',
@@ -23,6 +23,7 @@ const ModalStyle = {
 };
 
 export default function ModalDelete({ id }) {
+    const { deleteUser } = Api
     const { isModalDeleteOpen, setIsModalDeleteOpen } = useContext(ModalDeleteContext)
     const handleClose = () => setIsModalDeleteOpen(false);
 
