@@ -32,7 +32,7 @@ export default function AuthenticationComponent() {
       <Box component="div" className="grid place-items-center h-full w-full">
         <Box
           component="div"
-          className="w-full md:w-1/3 h-full md:h-2/3 p-10 border border-slate-300 bg-white rounded-lg"
+          className="w-full md:w-1/3 h-full md:h-4/5 p-10 border border-slate-300 bg-white rounded-lg"
         >
           <Box className="mb-12 mt-5 text-2xl text-center" component="div">
             فروشگاه آنلاین
@@ -40,7 +40,7 @@ export default function AuthenticationComponent() {
           <Box className="text-base mb-6 font-thin" component="div">
             کد ارسال شده را وارد کنید
           </Box>
-          <Box className="mb-10">
+          <Box className="mb-4">
             <TextField
               value={code}
               fullWidth
@@ -64,20 +64,20 @@ export default function AuthenticationComponent() {
                 "& legend": { textAlign: "right" },
               }}
             />
-            {show[0] ? (
-              <span className="text-red-600">لطفا کد را وارد کنید</span>
-            ) : (
-              ""
-            )}
-            {show[1] ? (
-              <span className="text-red-600">کد را به درستی وارد کنید</span>
-            ) : (
-              ""
-            )}
           </Box>
+          {show[0] ? (
+            <span className="text-red-600">لطفا کد را وارد کنید!</span>
+          ) : (
+            ""
+          )}
+          {show[1] ? (
+            <span className="text-red-600">کد را به درستی وارد کنید!</span>
+          ) : (
+            ""
+          )}
           <Button
             variant="contained"
-            className="bg-green-500 hover:bg-green-600 text-xl rounded-lg w-full"
+            className="bg-green-500 hover:bg-green-600 text-xl rounded-lg w-full mt-10"
             onClick={submit}
           >
             ورود

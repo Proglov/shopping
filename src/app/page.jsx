@@ -5,7 +5,6 @@ import MajorBuy from "@/components/home/MajorBuy";
 import NavBar from "@/components/home/NavBar";
 import FooterMenu from "@/components/home/FooterMenu";
 
-
 export default function Home() {
   return (
     <>
@@ -16,5 +15,5 @@ export default function Home() {
       <MajorBuy />
       <FooterMenu active={0} />
     </>
-  )
+  );
 }
