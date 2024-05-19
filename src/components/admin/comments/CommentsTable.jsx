@@ -11,7 +11,7 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { convertToFarsiNumbers } from '@/utils/funcs';
 import Pagination from './Pagination';
-import { getAllComments, getCommentsCount } from '@/services/userActivities/comment';
+import Api from '@/services/userActivities/comment';
 import ModalDelete from './ModalDelete';
 import ModalConfirm from './ModalConfirm';
 import { ItemsContext } from './CommentsMain';
@@ -41,6 +41,7 @@ export const ModalConfirmContext = createContext();
 
 
 export default function CommentsTable() {
+    const { getAllComments } = Api
 
     const {
         items,

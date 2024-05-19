@@ -1,28 +1,25 @@
-'use server'
 import { clientWithAuth } from "@/lib/axios"
 
 
 const Api = {
-    getSeller: async (payload) => {
+    getOneSeller: async (payload) => {
         const response = await clientWithAuth.get(
-            `/sellerGet/getSeller`,
-            payload
+            `/sellerGet/getSeller?id=${payload?.id}`
         );
-        return response;
+        return response?.data;
     },
-    getSellers: async (payload) => {
+    getAllSellers: async (payload) => {
         const response = await clientWithAuth.get(
-            `/sellerGet/getSellers`,
-            payload
+            `/sellerGet/getSellers?page=${payload?.page}&perPage=${payload?.perPage}`
         );
-        return response;
+        return response?.data;
     },
-    deleteUser: async (payload) => {
+    deleteSeller: async (payload) => {
         const response = await clientWithAuth.delete(
-            `/sellerDelete/SellerDelete`,
+            `/sellerDelete/SellerDelete?id=${payload?.id}`,
             payload
         );
-        return response;
+        return response?.data;
     }
 };
 

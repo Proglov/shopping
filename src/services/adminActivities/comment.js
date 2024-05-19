@@ -1,4 +1,3 @@
-'use server'
 import { clientWithAuth } from "@/lib/axios"
 
 
@@ -6,23 +5,34 @@ const Api = {
     updateComment: async (payload) => {
         const response = await clientWithAuth.patch(
             `/commentUpdate/CommentUpdate`,
-            payload
+            {
+                input: {
+                    id: payload?.input?.id,
+                    body: payload?.input?.body
+                }
+            }
         );
-        return response;
+        return response?.data;
     },
     deleteComment: async (payload) => {
         const response = await clientWithAuth.delete(
             `/commentDelete/CommentDelete`,
-            payload
+            {
+                id: payload?.id
+            }
         );
-        return response;
+        return response?.data;
     },
     toggleValidateComment: async (payload) => {
         const response = await clientWithAuth.patch(
             `/commentUpdate/CommentToggleValidate`,
-            payload
+            {
+                input: {
+                    id: payload?.input?.id
+                }
+            }
         );
-        return response;
+        return response?.data;
     }
 };
 

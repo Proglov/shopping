@@ -1,4 +1,3 @@
-'use server'
 import { clientWithAuth } from "@/lib/axios"
 
 
@@ -6,16 +5,17 @@ const Api = {
     createTX: async (payload) => {
         const response = await clientWithAuth.post(
             `/transactionPost/TransActionCreate`,
-            payload
+            {
+                input: payload
+            }
         );
-        return response;
+        return response?.data;
     },
-    getATX: async (payload) => {
+    getOneTX: async (payload) => {
         const response = await clientWithAuth.get(
-            `/transactionGet/getOneTransAction`,
-            payload
+            `/transactionGet/getOneTransAction?id=${payload?.id}`
         );
-        return response;
+        return response?.data;
     }
 };
 

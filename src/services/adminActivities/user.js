@@ -1,35 +1,33 @@
-'use server'
 import { clientWithAuth } from "@/lib/axios"
 
 
 const Api = {
-    isAdmin: async (payload) => {
+    isAdmin: async () => {
         const response = await clientWithAuth.get(
-            `/userGet/isUserAdmin`,
-            payload
+            `/userGet/isUserAdmin`
         );
-        return response;
+        return response?.data;
     },
-    getUser: async (payload) => {
+    getOneUser: async (payload) => {
         const response = await clientWithAuth.get(
-            `/userGet/getUser`,
-            payload
+            `/userGet/getUser?id=${payload?.id}`,
         );
-        return response;
+        return response?.data;
     },
     getAllUsers: async (payload) => {
         const response = await clientWithAuth.get(
-            `/userGet/getUsers`,
-            payload
+            `/userGet/getUsers?page=${payload?.page}&perPage=${payload?.perPage}`
         );
-        return response;
+        return response?.data;
     },
     deleteUser: async (payload) => {
         const response = await clientWithAuth.delete(
             `/userDelete/UserDelete`,
-            payload
+            {
+                id: payload?.id
+            }
         );
-        return response;
+        return response?.data;
     }
 };
 

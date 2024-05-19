@@ -1,6 +1,6 @@
 "use client"
 import { Button, Stack } from '@mui/material';
-import { useEffect, useState, createContext } from 'react';
+import { useEffect, useState, createContext, useContext, use } from 'react';
 import { styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -9,11 +9,12 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import { getAllProducts, getProductsCount } from '@/services/userActivities/product';
+import Api from '@/services/userActivities/product';
 import Pagination from './Pagination';
 import { price2Farsi } from '@/utils/funcs';
 import ModalDelete from './ModalDelete';
 import ModalEdit from './ModalEdit';
+import { ProductsContext } from './ProductsMain';
 
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -40,55 +41,49 @@ export const ModalEditContext = createContext();
 
 
 export default function ProductsTable() {
-    const itemsPerPage = 20
+    const { getAllProducts } = Api
 
-    const [isModalDeleteOpen, setIsModalDeleteOpen] = useState(false)
-    const [isModalEditOpen, setIsModalEditOpen] = useState(false)
-
-    const [currentPage, setCurrentPage] = useState(1)
-    const [loading, setLoading] = useState(false);
-    const [isError, setIsError] = useState(false);
-    const [error, setError] = useState('');
-    const [operatingID, setOperatingID] = useState('');
-    const [operatingError, setOperatingError] = useState('');
-    const [items, setItems] = useState([])
-    const [itemsCount, setItemsCount] = useState(0)
-    const [selectedItem, setSelectedItem] = useState({
-        id: '',
-        name: '',
-        price: '',
-        category: '',
-        offPercentage: '',
-        imagesUrl: []
-    });
+    const {
+        items,
+        setItems,
+        currentPage,
+        setCurrentPage,
+        loading,
+        setLoading,
+        isError,
+        setIsError,
+        error,
+        setError,
+        operatingID,
+        setOperatingID,
+        operatingError,
+        setOperatingError,
+        itemsCount,
+        setItemsCount,
+        isModalDeleteOpen,
+        setIsModalDeleteOpen,
+        isModalEditOpen,
+        setIsModalEditOpen,
+        selectedItem,
+        setSelectedItem,
+        itemsPerPage
+    } = useContext(ProductsContext)
 
     useEffect(() => {
         const fetchData = async () => {
             try {
+                setLoading(true);
                 const products = await getAllProducts({ page: currentPage, perPage: itemsPerPage });
-                setItems(products.Products)
+                setItems(products?.products)
+                setItemsCount(products?.allProductsCount)
             } catch (error) {
-                console.error('Error fetching products:', error);
+                setError(`Error fetching products: ${error}`);
                 setIsError(true);
             } finally {
                 setLoading(false);
             }
         };
-        const fetchCount = async () => {
-            try {
-                setLoading(true);
-                const count = await getProductsCount();
-                setItemsCount(count.ProductsCount)
-            } catch (error) {
-                console.error('Error fetching products count:', error);
-                setIsError(true);
-            } finally {
-                fetchData();
-
-            }
-        };
-
-        fetchCount();
+        fetchData();
     }, [currentPage]);
 
 

@@ -1,6 +1,5 @@
 import "./globals.css";
 import CustomTheme from "../utils/CustomTheme";
-import { EdgeStoreProvider } from "../lib/edgestore";
 import Providers from "./Providers";
 
 export const metadata = {
@@ -12,13 +11,11 @@ export default function RootLayout({ children }) {
   return (
     <html lang="fa-IR" dir="rtl">
       <body>
-        <EdgeStoreProvider>
-          <CustomTheme>
-            <Providers>
-              <EdgeStoreProvider>{children}</EdgeStoreProvider>
-            </Providers>
-          </CustomTheme>
-        </EdgeStoreProvider>
+        <CustomTheme>
+          <Providers>
+            {children}
+          </Providers>
+        </CustomTheme>
       </body>
     </html>
   );

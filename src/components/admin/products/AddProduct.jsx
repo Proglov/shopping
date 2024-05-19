@@ -9,17 +9,15 @@ import { categories } from '@/lib/categories';
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { price2Farsi } from '@/utils/funcs';
-import { createProduct } from '@/services/adminActivities/product';
+import Api from '@/services/adminActivities/product';
 import { giveMeToken } from '@/utils/Auth';
-import { useEdgeStore } from '../../../lib/edgestore';
 import { MultiFileDropzone } from '../../multi-image-dropzone';
 
 
 export default function AddProduct() {
-
+    const { createProduct } = Api
     const [fileStates, setFileStates] = useState([]);
     const [uploadRes, setUploadRes] = useState([]);
-    const { edgestore } = useEdgeStore();
     const [AddNewData, setAddNewData] = useState({
         isSubmitting: false,
         formData: {
@@ -110,9 +108,9 @@ export default function AddProduct() {
                 for (const obj of uploadRes) {
                     const url = obj.url
                     imagesUrl.push(url)
-                    await edgestore.myPublicImages.confirmUpload({
-                        url
-                    })
+                    // await edgestore.myPublicImages.confirmUpload({
+                    //     url
+                    // })
                 }
                 obj.imagesUrl = imagesUrl
                 const res = await createProduct(obj, Token)
@@ -230,21 +228,21 @@ export default function AddProduct() {
                                 await Promise.all(
                                     addedFiles.map(async (addedFileState) => {
                                         try {
-                                            const res = await edgestore.myPublicImages.upload({
-                                                file: addedFileState.file,
-                                                options: {
-                                                    temporary: true
-                                                },
-                                                onProgressChange: async (progress) => {
-                                                    updateFileProgress(addedFileState.key, progress);
-                                                    if (progress === 100) {
-                                                        // wait 1 second to set it to complete
-                                                        // so that the user can see the progress bar at 100%
-                                                        await new Promise((resolve) => setTimeout(resolve, 1000));
-                                                        updateFileProgress(addedFileState.key, 'COMPLETE');
-                                                    }
-                                                },
-                                            });
+                                            // const res = await edgestore.myPublicImages.upload({
+                                            //     file: addedFileState.file,
+                                            //     options: {
+                                            //         temporary: true
+                                            //     },
+                                            //     onProgressChange: async (progress) => {
+                                            //         updateFileProgress(addedFileState.key, progress);
+                                            //         if (progress === 100) {
+                                            //             // wait 1 second to set it to complete
+                                            //             // so that the user can see the progress bar at 100%
+                                            //             await new Promise((resolve) => setTimeout(resolve, 1000));
+                                            //             updateFileProgress(addedFileState.key, 'COMPLETE');
+                                            //         }
+                                            //     },
+                                            // });
                                             setUploadRes((uploadRes) => [
                                                 ...uploadRes,
                                                 {

@@ -1,19 +1,16 @@
-'use server'
 import { clientWithoutAuth } from "@/lib/axios"
 
 
 const Api = {
     getAllProducts: async (payload) => {
         const response = await clientWithoutAuth.get(
-            `/productGet/getAllProducts`,
-            payload
+            `/productGet/getAllProducts?page=${payload?.page}&perPage=${payload?.perPage}`
         );
-        return response;
+        return response?.data;
     },
     getOneProduct: async (payload) => {
         const response = await clientWithoutAuth.get(
-            `/productGet/getOneProduct`,
-            payload
+            `/productGet/getOneProduct?id=${payload?.id}`
         );
         return response;
     }

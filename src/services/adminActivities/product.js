@@ -1,4 +1,3 @@
-'use server'
 import { clientWithAuth } from "@/lib/axios"
 
 
@@ -6,23 +5,29 @@ const Api = {
     createProduct: async (payload) => {
         const response = await clientWithAuth.post(
             `/productPost/ProductCreate`,
-            payload
+            {
+                input: payload
+            }
         );
-        return response;
+        return response?.data;
     },
     updateProduct: async (payload) => {
         const response = await clientWithAuth.patch(
             `/productUpdate/ProductUpdate`,
-            payload
+            {
+                input: payload
+            }
         );
-        return response;
+        return response?.data;
     },
     deleteProduct: async (payload) => {
         const response = await clientWithAuth.delete(
             `/productDelete/ProductDelete`,
-            payload
+            {
+                id: payload?.id
+            }
         );
-        return response;
+        return response?.data;
     }
 };
 

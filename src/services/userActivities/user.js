@@ -1,42 +1,49 @@
-'use server'
 import { clientWithAuth, clientWithoutAuth } from "@/lib/axios"
 
 
 const Api = {
-    getMe: async (payload) => {
+    getMe: async () => {
         const response = await clientWithAuth.get(
-            `/userGet/getMe`,
-            payload
+            `/userGet/getMe`
         );
-        return response;
+        return response?.data;
     },
     signUp: async (payload) => {
         const response = await clientWithoutAuth.post(
             `/userPost/UserSignUp`,
-            payload
+            {
+                phone: payload?.phone
+            }
         );
-        return response;
+        return response?.data;
     },
     signInWithPhone: async (payload) => {
         const response = await clientWithoutAuth.post(
             `/userPost/signInWithPhone`,
-            payload
+            {
+                phone: payload?.phone
+            }
         );
-        return response;
+        return response?.data;
     },
     signInWithEmailOrUsername: async (payload) => {
         const response = await clientWithoutAuth.post(
             `/userPost/UserSignInWithEmailOrUsername`,
-            payload
+            {
+                emailOrUsername: payload?.emailOrUsername,
+                password: payload?.password
+            }
         );
-        return response;
+        return response?.data;
     },
     updateUser: async (payload) => {
         const response = await clientWithAuth.patch(
             `/userUpdate/UserUpdate`,
-            payload
+            {
+                input: payload
+            }
         );
-        return response;
+        return response?.data;
     }
 };
 

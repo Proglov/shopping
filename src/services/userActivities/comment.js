@@ -1,4 +1,3 @@
-'use server'
 import { clientWithAuth, clientWithoutAuth } from "@/lib/axios"
 
 
@@ -6,37 +5,41 @@ const Api = {
     createComment: async (payload) => {
         const response = await clientWithAuth.post(
             `/commentPost/CommentAdd`,
-            payload
+            {
+                input: payload
+            }
         );
-        return response;
+        return response?.data;
     },
     getAllComments: async (payload) => {
         const response = await clientWithoutAuth.get(
-            `/commentGet/getAllComments`,
-            payload
+            `/commentGet/getAllComments?page=${payload?.page}&perPage=${payload?.perPage}&validated=${payload?.validated}`
         );
-        return response;
+        return response?.data;
     },
-    getAComment: async (payload) => {
+    getOneComment: async (payload) => {
         const response = await clientWithoutAuth.get(
-            `/commentGet/getOneComment`,
-            payload
+            `/commentGet/getOneComment?id=${payload?.id}`
         );
-        return response;
+        return response?.data;
     },
     toggleLikeComment: async (payload) => {
         const response = await clientWithAuth.patch(
             `/commentUpdate/CommentToggleLike`,
-            payload
+            {
+                input: payload
+            }
         );
-        return response;
+        return response?.data;
     },
     toggleDisLikeComment: async (payload) => {
         const response = await clientWithAuth.patch(
             `/commentUpdate/CommentToggleDisLike`,
-            payload
+            {
+                input: payload
+            }
         );
-        return response;
+        return response?.data;
     }
 };
 
