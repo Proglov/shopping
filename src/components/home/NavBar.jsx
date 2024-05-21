@@ -259,7 +259,7 @@ export default function NavBar() {
         sx={{ marginTop: "35px" }}
       >
         <MenuItem sx={{ padding: "10px" }} onClick={handleMenuClose}>
-          پروفایل من
+          <Link href="/users/profile"> پروفایل من</Link>
         </MenuItem>
       </Menu>
 

@@ -1,8 +1,12 @@
+"use client";
+
 import { Box } from "@mui/material";
 import CardItem from "./CardItem";
 import CardItemSM from "./CardItemSM";
+import { useAppSelector } from "@/store/Hook";
 
 export default function Products() {
+  console.log(useAppSelector((state) => state.products));
   const products = [
     {
       code: 159,
