@@ -126,8 +126,8 @@ const MultiFileDropzone = React.forwardRef(
                                 className: dropZoneClassName,
                             })}
                         >
-                            <input ref={ref} {...getInputProps()} />
-                            <div className="flex flex-col items-center justify-center text-xs text-gray-400">
+                            <input name='images' ref={ref} {...getInputProps()} />
+                            <div className="flex flex-col items-center justify-center text-xs text-gray-400 pt-5">
                                 <UploadCloudIcon className="mb-1 h-7 w-7" />
 
                                 <div className="text-gray-400">تصاویر را در اینجا رها کنید</div><div className="mt-3">

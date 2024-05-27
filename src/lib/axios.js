@@ -14,7 +14,7 @@ export const clientWithoutAuth = axios.create({
     }
 });
 
-localStorage.setItem("token", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NTlmYWNiZTNlZTg2NWY0NDczOGViOTciLCJpYXQiOjE3MTYxMDM2MjMsImV4cCI6MTcxNjE5MDAyM30.dOpO-5z-OS_ZOTK0BJZZeytmZ2KhA7Kf2yTPHKxo5uE")
+typeof window !== "undefined" && localStorage.setItem("token", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjRiNzI5MDY5NjM0YmRhM2U0MDhmOTkiLCJpYXQiOjE3MTY2NDEyNTEsImV4cCI6MTcxNjcyNzY1MX0.aOx1ZxlkxFi8NPCYn4g_meDeIsAfkqsF584MC_-P5dk")
 export const clientWithAuth = axios.create({
     baseURL: `${apiURL}`,
     timeout: 30000,

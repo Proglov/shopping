@@ -9,8 +9,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import { giveMeToken } from '@/utils/Auth';
-import Api from '@/services/adminActivities/tx';
+import Api from '@/services/withAuthActivities/tx';
 import { convertToFarsiNumbers, formatPrice, price2Farsi } from '@/utils/funcs';
 import PaginationNow from './Pagination';
 import { ItemsContext } from './TXMain';
@@ -40,7 +39,7 @@ export const ModalShowMoreContext = createContext();
 
 
 export default function TXTable() {
-    const { getAllTxs } = Api
+    const { getAllTXs } = Api
 
     const {
         currentPage,
@@ -69,33 +68,21 @@ export default function TXTable() {
 
 
     useEffect(() => {
-        const Token = giveMeToken();
         const fetchData = async () => {
             try {
-                const TX = await getAllTxs(Token, { page: currentPage, perPage: itemsPerPage, isFutureOrder });
-                setItems(TX.TransActions)
+                setLoading(false);
+                const TX = await getAllTXs({ page: currentPage, perPage: itemsPerPage, isFutureOrder });
+                setItems(TX?.transactions)
+                setItemsCount(TX?.transactionsCount)
             } catch (error) {
-                console.error('Error fetching users:', error);
+                setError(`Error fetching users: ${error}`);
                 setIsError(true);
             } finally {
                 setLoading(false);
             }
         };
-        const fetchCount = async () => {
-            try {
-                setLoading(true);
-                const count = await getTXCount(Token, isFutureOrder);
-                setItemsCount(count.TransActionsCount)
-            } catch (error) {
-                console.error('Error fetching users count:', error);
-                setIsError(true);
-            } finally {
-                fetchData();
 
-            }
-        };
-
-        fetchCount();
+        fetchData();
     }, [currentPage]);
     return (
         <Stack spacing={2} className='mt-10'>

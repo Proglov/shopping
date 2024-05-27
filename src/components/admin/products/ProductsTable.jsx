@@ -9,7 +9,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import Api from '@/services/userActivities/product';
+import Api from '@/services/withoutAuthActivities/product';
 import Pagination from './Pagination';
 import { price2Farsi } from '@/utils/funcs';
 import ModalDelete from './ModalDelete';
@@ -109,9 +109,8 @@ export default function ProductsTable() {
                                     <TableRow>
                                         <StyledTableCell align='center'>ردیف</StyledTableCell>
                                         <StyledTableCell align='center'>نام</StyledTableCell>
-                                        <StyledTableCell align='center'>قیمت</StyledTableCell>
-                                        <StyledTableCell align='center'>تخفیف</StyledTableCell>
-                                        <StyledTableCell align='center'>قیمت نهایی</StyledTableCell>
+                                        <StyledTableCell align='center'>قیمت به حروف</StyledTableCell>
+                                        <StyledTableCell align='center'>قیمت به عدد</StyledTableCell>
                                         <StyledTableCell align='center'>دسته بندی</StyledTableCell>
                                         <StyledTableCell align='center'>عملیات</StyledTableCell>
                                     </TableRow>
@@ -122,9 +121,8 @@ export default function ProductsTable() {
                                             className='align-middle'>
                                             <StyledTableCell align='center'>{index + 1 + itemsPerPage * (currentPage - 1)}</StyledTableCell>
                                             <StyledTableCell align='center'>{item.name}</StyledTableCell>
+                                            <StyledTableCell align='center'>{price2Farsi(item.price)} تومان</StyledTableCell>
                                             <StyledTableCell align='center'>{item.price}</StyledTableCell>
-                                            <StyledTableCell align='center'>{item.offPercentage}</StyledTableCell>
-                                            <StyledTableCell align='center'>{price2Farsi(item.price * (1 - (item.offPercentage) / 100))} تومان</StyledTableCell>
                                             <StyledTableCell align='center'>{item.category}</StyledTableCell>
                                             <StyledTableCell className='flex flex-col justify-center border-b-0 align-middle'>
                                                 {operatingID === item.id ? (

@@ -9,11 +9,11 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import Api from '@/services/withAuthActivities/user';
-import Pagination from './Pagination';
-import ModalDelete from './ModalDelete';
-import { giveMeToken } from '@/utils/Auth';
-import { UsersContext } from './UsersMain';
+import Api from '@/services/withAuthActivities/tx';
+import { convertToFarsiNumbers, formatPrice, price2Farsi } from '@/utils/funcs';
+import PaginationNow from './Pagination';
+import { ItemsContext } from './TXMain';
+import ModalShowMore from './ModalShowMore';
 
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -35,11 +35,11 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 export const PaginationContext = createContext();
-export const ModalDeleteContext = createContext();
+export const ModalShowMoreContext = createContext();
 
 
-export default function UsersTable() {
-    const { getAllUsers } = Api
+export default function TXTable() {
+    const { getAllMyTXs } = Api
 
     const {
         currentPage,
@@ -58,22 +58,24 @@ export default function UsersTable() {
         setItems,
         itemsCount,
         setItemsCount,
-        isModalDeleteOpen,
-        setIsModalDeleteOpen,
+        isModalShowMoreOpen,
+        setIsModalShowMoreOpen,
         setSelectedItem,
         selectedItem,
-        itemsPerPage
-    } = useContext(UsersContext)
+        itemsPerPage,
+        isFutureOrder
+    } = useContext(ItemsContext)
+
 
     useEffect(() => {
-        const Token = giveMeToken();
         const fetchData = async () => {
             try {
-                const users = await getAllUsers({ page: currentPage, perPage: itemsPerPage });
-                setItems(users.users)
-                setItemsCount(users?.allUsersCount)
+                setLoading(true);
+                const TX = await getAllMyTXs({ page: currentPage, perPage: itemsPerPage, isFutureOrder });
+                setItems(TX.transactions)
+                setItemsCount(TX.transactionsCount)
             } catch (error) {
-                setError(`Error fetching users: ${error}`);
+                setError(`Error fetching transactions: ${error}`);
                 setIsError(true);
             } finally {
                 setLoading(false);
@@ -85,7 +87,8 @@ export default function UsersTable() {
     return (
         <Stack spacing={2} className='mt-10'>
             <span className='w-full text-start'>
-                جدول کاربران
+                جدول تراکنش های سفارشات &nbsp;
+                {!!isFutureOrder ? <>آتی</> : <>اخیر</>}
             </span>
             {isError ? (
                 <div>
@@ -103,10 +106,10 @@ export default function UsersTable() {
                                 <TableHead>
                                     <TableRow>
                                         <StyledTableCell align='center'>ردیف</StyledTableCell>
-                                        <StyledTableCell align='center'>نام</StyledTableCell>
-                                        <StyledTableCell align='center'>نام کاربری</StyledTableCell>
-                                        <StyledTableCell align='center'>ایمیل</StyledTableCell>
-                                        <StyledTableCell align='center'>شماره</StyledTableCell>
+                                        <StyledTableCell align='center'>نام خریدار</StyledTableCell>
+                                        <StyledTableCell align='center'>شماره خریدار</StyledTableCell>
+                                        <StyledTableCell align='center'>زمان ارسال</StyledTableCell>
+                                        <StyledTableCell align='center'>قیمت نهایی</StyledTableCell>
                                         <StyledTableCell align='center'>عملیات</StyledTableCell>
                                     </TableRow>
                                 </TableHead>
@@ -114,55 +117,50 @@ export default function UsersTable() {
                                     {items.map((item, index) => (
                                         <StyledTableRow key={item.id}
                                             className='align-middle'>
-                                            <StyledTableCell align='center'>{index + 1 + itemsPerPage * (currentPage - 1)}</StyledTableCell>
+                                            <StyledTableCell align='center'>{convertToFarsiNumbers(index + 1 + itemsPerPage * (currentPage - 1))}</StyledTableCell>
                                             <StyledTableCell align='center'>
-                                                {item.name}
-                                                {!item.name && <>فاقد نام</>}
+                                                {item.user?.name}
+                                                {!item.user?.name && <>فاقد نام</>}
+                                            </StyledTableCell>
+                                            <StyledTableCell align='center'>{convertToFarsiNumbers(item.user.phone)}</StyledTableCell>
+                                            <StyledTableCell align='center'>
+                                                {new Intl.DateTimeFormat('fa-IR').format(parseInt(item.shouldBeSentAt))}
+                                                <br />
+                                                {convertToFarsiNumbers((new Date(parseInt(item.shouldBeSentAt)).getHours()))}
+                                                :{convertToFarsiNumbers(("0" + (new Date((parseInt(item.shouldBeSentAt))).getMinutes())).slice(-2))}
                                             </StyledTableCell>
                                             <StyledTableCell align='center'>
-                                                {item.username}
-                                                {!item.username && <>فاقد نام کاربری</>}
+                                                {formatPrice(item.totalPrice)}
+                                                <br />
+                                                {price2Farsi(item.totalPrice)}
+                                                <br />
+                                                تومان
                                             </StyledTableCell>
-                                            <StyledTableCell align='center'>
-                                                {item.email}
-                                                {!item.email && <>فاقد ایمیل</>}
-                                            </StyledTableCell>
-                                            <StyledTableCell align='center'>{item.phone}</StyledTableCell>
                                             <StyledTableCell className='flex flex-col justify-center border-b-0 align-middle'>
-                                                {operatingID === item.id ? (
-                                                    <div className='text-center mt-2 text-xs'>درحال انجام عملیات</div>
-                                                ) : (
-                                                    <>
-                                                        <Button
-                                                            variant='outlined'
-                                                            sx={{ color: 'red', borderColor: 'red' }}
-                                                            className='p-0 m-1'
-                                                            onClick={() => {
-                                                                setIsModalDeleteOpen(true);
-                                                                setSelectedItem({
-                                                                    ...item
-                                                                })
-                                                            }}
-                                                        >
-                                                            حذف
-                                                        </Button>
-                                                    </>
-                                                )}
-                                                {operatingID === item.id && operatingError !== '' ? (
-                                                    <div>مشکلی پیش امده است. لطفا اتصال اینترنت را بررسی کنید</div>
-                                                ) : ''}
+                                                <Button
+                                                    variant='outlined'
+                                                    className='p-0 m-1'
+                                                    sx={{ color: 'green', borderColor: 'green' }}
+                                                    onClick={() => {
+                                                        setIsModalShowMoreOpen(true);
+                                                        setSelectedItem({
+                                                            ...item
+                                                        })
+                                                    }}
+                                                >
+                                                    مشاهده بیشتر
+                                                </Button>
                                             </StyledTableCell>
                                         </StyledTableRow>
                                     ))}
                                 </TableBody>
                             </Table>
                         </TableContainer>
-
                         {
                             itemsCount > itemsPerPage &&
                             <div className='flex justify-center' style={{ marginTop: '25px' }}>
                                 <PaginationContext.Provider value={{ lastPage: Math.ceil(itemsCount / itemsPerPage), currentPage, setCurrentPage }}>
-                                    <Pagination />
+                                    <PaginationNow />
                                 </PaginationContext.Provider>
                             </div>
                         }
@@ -173,9 +171,15 @@ export default function UsersTable() {
                     </div>
             )}
 
-            <ModalDeleteContext.Provider value={{ isModalDeleteOpen, setIsModalDeleteOpen }}>
-                <ModalDelete id={selectedItem.id} />
-            </ModalDeleteContext.Provider>
+            <>
+                <ModalShowMoreContext.Provider value={{
+                    isModalShowMoreOpen,
+                    setIsModalShowMoreOpen,
+                    selectedItem
+                }}>
+                    <ModalShowMore />
+                </ModalShowMoreContext.Provider>
+            </>
 
         </Stack>
     );

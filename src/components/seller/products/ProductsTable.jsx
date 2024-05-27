@@ -1,6 +1,6 @@
 "use client"
 import { Button, Stack } from '@mui/material';
-import { useEffect, createContext, useContext } from 'react';
+import { useEffect, createContext, useContext, use } from 'react';
 import { styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -9,11 +9,12 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import Api from '@/services/withAuthActivities/user';
+import Api from '@/services/withAuthActivities/product';
 import Pagination from './Pagination';
+import { price2Farsi } from '@/utils/funcs';
 import ModalDelete from './ModalDelete';
-import { giveMeToken } from '@/utils/Auth';
-import { UsersContext } from './UsersMain';
+import ModalEdit from './ModalEdit';
+import { ProductsContext } from './ProductsMain';
 
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -36,12 +37,15 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 
 export const PaginationContext = createContext();
 export const ModalDeleteContext = createContext();
+export const ModalEditContext = createContext();
 
 
-export default function UsersTable() {
-    const { getAllUsers } = Api
+export default function ProductsTable() {
+    const { getAllMyProducts } = Api
 
     const {
+        items,
+        setItems,
         currentPage,
         setCurrentPage,
         loading,
@@ -54,38 +58,39 @@ export default function UsersTable() {
         setOperatingID,
         operatingError,
         setOperatingError,
-        items,
-        setItems,
         itemsCount,
         setItemsCount,
         isModalDeleteOpen,
         setIsModalDeleteOpen,
-        setSelectedItem,
+        isModalEditOpen,
+        setIsModalEditOpen,
         selectedItem,
+        setSelectedItem,
         itemsPerPage
-    } = useContext(UsersContext)
+    } = useContext(ProductsContext)
 
     useEffect(() => {
-        const Token = giveMeToken();
         const fetchData = async () => {
             try {
-                const users = await getAllUsers({ page: currentPage, perPage: itemsPerPage });
-                setItems(users.users)
-                setItemsCount(users?.allUsersCount)
+                setLoading(true);
+                const products = await getAllMyProducts({ page: currentPage, perPage: itemsPerPage });
+                setItems(products?.products)
+                setItemsCount(products?.allProductsCount)
             } catch (error) {
-                setError(`Error fetching users: ${error}`);
+                setError(`Error fetching products: ${error}`);
                 setIsError(true);
             } finally {
                 setLoading(false);
             }
         };
-
         fetchData();
     }, [currentPage]);
+
+
     return (
         <Stack spacing={2} className='mt-10'>
             <span className='w-full text-start'>
-                جدول کاربران
+                جدول محصولات
             </span>
             {isError ? (
                 <div>
@@ -104,9 +109,9 @@ export default function UsersTable() {
                                     <TableRow>
                                         <StyledTableCell align='center'>ردیف</StyledTableCell>
                                         <StyledTableCell align='center'>نام</StyledTableCell>
-                                        <StyledTableCell align='center'>نام کاربری</StyledTableCell>
-                                        <StyledTableCell align='center'>ایمیل</StyledTableCell>
-                                        <StyledTableCell align='center'>شماره</StyledTableCell>
+                                        <StyledTableCell align='center'>قیمت به حروف</StyledTableCell>
+                                        <StyledTableCell align='center'>قیمت به عدد</StyledTableCell>
+                                        <StyledTableCell align='center'>دسته بندی</StyledTableCell>
                                         <StyledTableCell align='center'>عملیات</StyledTableCell>
                                     </TableRow>
                                 </TableHead>
@@ -115,24 +120,28 @@ export default function UsersTable() {
                                         <StyledTableRow key={item.id}
                                             className='align-middle'>
                                             <StyledTableCell align='center'>{index + 1 + itemsPerPage * (currentPage - 1)}</StyledTableCell>
-                                            <StyledTableCell align='center'>
-                                                {item.name}
-                                                {!item.name && <>فاقد نام</>}
-                                            </StyledTableCell>
-                                            <StyledTableCell align='center'>
-                                                {item.username}
-                                                {!item.username && <>فاقد نام کاربری</>}
-                                            </StyledTableCell>
-                                            <StyledTableCell align='center'>
-                                                {item.email}
-                                                {!item.email && <>فاقد ایمیل</>}
-                                            </StyledTableCell>
-                                            <StyledTableCell align='center'>{item.phone}</StyledTableCell>
+                                            <StyledTableCell align='center'>{item.name}</StyledTableCell>
+                                            <StyledTableCell align='center'>{price2Farsi(item.price)} تومان</StyledTableCell>
+                                            <StyledTableCell align='center'>{item.price}</StyledTableCell>
+                                            <StyledTableCell align='center'>{item.category}</StyledTableCell>
                                             <StyledTableCell className='flex flex-col justify-center border-b-0 align-middle'>
                                                 {operatingID === item.id ? (
                                                     <div className='text-center mt-2 text-xs'>درحال انجام عملیات</div>
                                                 ) : (
                                                     <>
+                                                        <Button
+                                                            variant='outlined'
+                                                            className='p-0 m-1'
+                                                            sx={{ color: 'primary', borderColor: 'primary' }}
+                                                            onClick={() => {
+                                                                setIsModalEditOpen(true);
+                                                                setSelectedItem({
+                                                                    ...item,
+                                                                })
+                                                            }}
+                                                        >
+                                                            ویرایش
+                                                        </Button>
                                                         <Button
                                                             variant='outlined'
                                                             sx={{ color: 'red', borderColor: 'red' }}
@@ -173,9 +182,24 @@ export default function UsersTable() {
                     </div>
             )}
 
-            <ModalDeleteContext.Provider value={{ isModalDeleteOpen, setIsModalDeleteOpen }}>
-                <ModalDelete id={selectedItem.id} />
-            </ModalDeleteContext.Provider>
+            <>
+
+                <ModalDeleteContext.Provider value={{ isModalDeleteOpen, setIsModalDeleteOpen }}>
+                    <ModalDelete id={selectedItem.id} />
+                </ModalDeleteContext.Provider>
+
+                <ModalEditContext.Provider value={{
+                    isModalEditOpen,
+                    setIsModalEditOpen,
+                    setSelectedItem,
+                    selectedItem,
+                    setOperatingID,
+                    setOperatingError,
+                    setItems
+                }}>
+                    <ModalEdit />
+                </ModalEditContext.Provider>
+            </>
 
         </Stack>
     );

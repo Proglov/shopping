@@ -1,7 +1,13 @@
-import { clientWithAuth } from "@/lib/axios"
+import { clientWithAuth, clientWithoutAuth } from "@/lib/axios"
 
 
 const Api = {
+    isUserSeller: async () => {
+        const response = await clientWithoutAuth.get(
+            `/sellerGet/isUserSeller`
+        );
+        return response?.data;
+    },
     getOneSeller: async (payload) => {
         const response = await clientWithAuth.get(
             `/sellerGet/getSeller?id=${payload?.id}`

@@ -11,7 +11,7 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { convertToFarsiNumbers } from '@/utils/funcs';
 import Pagination from './Pagination';
-import Api from '@/services/userActivities/comment';
+import Api from '@/services/withoutAuthActivities/comment';
 import ModalDelete from './ModalDelete';
 import ModalConfirm from './ModalConfirm';
 import { ItemsContext } from './CommentsMain';
@@ -74,30 +74,19 @@ export default function CommentsTable() {
     useEffect(() => {
         const fetchData = async () => {
             try {
+                setLoading(true);
                 const comments = await getAllComments({ page: currentPage, perPage: itemsPerPage, validated });
-                setItems(comments.Comments)
+                setItems(comments?.comments)
+                setItemsCount(comments?.allCommentsCount)
             } catch (error) {
-                console.error('Error fetching users:', error);
+                setError(`Error fetching users: ${error}`);
                 setIsError(true);
             } finally {
                 setLoading(false);
             }
         };
-        const fetchCount = async () => {
-            try {
-                setLoading(true);
-                const count = await getCommentsCount(validated);
-                setItemsCount(count.CommentsCount)
-            } catch (error) {
-                console.error('Error fetching users count:', error);
-                setIsError(true);
-            } finally {
-                fetchData();
 
-            }
-        };
-
-        fetchCount();
+        fetchData();
     }, [currentPage]);
     return (
         <Stack spacing={2} className='mt-10'>

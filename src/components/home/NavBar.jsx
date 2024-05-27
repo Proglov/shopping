@@ -21,6 +21,7 @@ import { Button, Dialog, DialogActions, DialogContent } from "@mui/material";
 import { GrUserAdmin } from "react-icons/gr";
 import { useAppDispatch, useAppSelector } from "@/store/Hook";
 import { SetLogin } from "@/features/Login/LoginSlice";
+import StorefrontIcon from '@mui/icons-material/Storefront';
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -94,7 +95,10 @@ export default function NavBar() {
   const dispatch = useAppDispatch();
 
   // this is temporary and should be changed
-  const isAdmin = true;
+  const isAdmin = false;
+
+  // this is temporary and should be changed
+  const isUserSeller = true;
 
   const isMenuOpen = Boolean(anchorEl);
 
@@ -177,28 +181,59 @@ export default function NavBar() {
 
           {/* ادمین */}
 
-          <IconButton
-            size="large"
-            edge="start"
-            color="inherit"
-            aria-label="open drawer"
-          >
-            {isAdmin ? (
-              <Link href="/ADMIN">
-                <span
-                  className="text-red-500 flex"
-                  style={{ lineHeight: "24px" }}
-                >
-                  <GrUserAdmin />
-                </span>
-              </Link>
-            ) : (
-              <></>
-            )}
-          </IconButton>
+          {isAdmin ? (
+            <>
+              <IconButton
+                size="large"
+                edge="start"
+                color="inherit"
+                aria-label="open drawer"
+              >
+                <Link href="/ADMIN">
+                  <span
+                    className="text-red-500 flex"
+                    style={{ lineHeight: "24px" }}
+                  >
+                    <GrUserAdmin />
+                  </span>
+                </Link>
+              </IconButton>
 
-          {/* فاصله */}
-          <Box sx={{ flexGrow: 1 }} />
+              {/* فاصله */}
+              <Box sx={{ flexGrow: 1 }} />
+            </>
+          ) : (
+            <></>
+          )}
+
+
+          {/* فروشنده */}
+
+          {isUserSeller ? (
+            <>
+              <IconButton
+                size="large"
+                edge="start"
+                color="inherit"
+                aria-label="open drawer"
+              >
+                <Link href="/Seller">
+                  <span className="flex flex-col">
+                    <StorefrontIcon className="mx-auto pt-2" />
+                    <span className="text-sm">
+                      پنل مدیریت
+                    </span>
+                  </span>
+                </Link>
+              </IconButton>
+
+              {/* فاصله */}
+              <Box sx={{ flexGrow: 1 }} />
+            </>
+          ) : (
+            <></>
+          )}
+
 
           {/* جست و جو */}
           <Search

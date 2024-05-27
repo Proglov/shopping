@@ -8,7 +8,7 @@ import { useContext } from 'react';
 import { Button } from '@mui/material';
 import { ModalDeleteContext } from './CommentsTable';
 import { giveMeToken } from '@/utils/Auth';
-import Api from '@/services/adminActivities/comment';
+import Api from '@/services/withAuthActivities/comment';
 
 const ModalStyle = {
     position: 'absolute',

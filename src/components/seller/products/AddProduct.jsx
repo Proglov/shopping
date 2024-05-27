@@ -9,13 +9,14 @@ import { categories } from '@/lib/categories';
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { price2Farsi } from '@/utils/funcs';
-import Api from '@/services/withAuthActivities/product';
-import { giveMeToken } from '@/utils/Auth';
+import Api1 from '@/services/withAuthActivities/product';
+import Api2 from '@/services/withAuthActivities/image';
 import { MultiFileDropzone } from '../../multi-image-dropzone';
 
 
 export default function AddProduct() {
-    const { createProduct } = Api
+    const { createProduct } = Api1
+    const { uploadImages } = Api2
     const [fileStates, setFileStates] = useState([]);
     const [uploadRes, setUploadRes] = useState([]);
     const [AddNewData, setAddNewData] = useState({
@@ -23,15 +24,12 @@ export default function AddProduct() {
         formData: {
             name: '',
             price: '',
-            offPercentage: '',
             category: '',
             desc: '',
             subcategory: 'سوپرمارکت',
             imagesUrl: []
         }
     })
-
-    const Token = giveMeToken()
 
     function updateFileProgress(key, progress) {
         setFileStates((fileStates) => {
@@ -48,15 +46,15 @@ export default function AddProduct() {
 
     const handleChange = (event) => {
         const { name, value } = event.target;
-        if (name === 'price' || name === 'offPercentage') {
+        if (name === 'price') {
             const newValue = parseInt(value) || 0
             setAddNewData(prevProps => {
-                if (newValue == value && ((name === 'offPercentage' && newValue < 100) || name === 'price'))
+                if (newValue == value && name === 'price')
                     return {
                         ...prevProps,
                         formData: {
                             ...prevProps.formData,
-                            [name]: newValue,
+                            price: newValue,
                         }
                     }
                 return {
@@ -113,13 +111,12 @@ export default function AddProduct() {
                     // })
                 }
                 obj.imagesUrl = imagesUrl
-                const res = await createProduct(obj, Token)
+                const res = await createProduct(obj)
                 setAddNewData(prevProps => ({
                     ...prevProps,
                     formData: {
                         name: '',
                         price: '',
-                        offPercentage: '',
                         category: '',
                         desc: '',
                         subcategory: 'سوپرمارکت',
@@ -185,21 +182,6 @@ export default function AddProduct() {
 
                     </Grid>
 
-                    <Grid item xs={12} sm={12} md={12} lg={6}>
-                        <div className='text-start text-sm mb-1 lg:mt-3'>
-                            تخفیف (درصد)
-                        </div>
-                        <input
-                            className="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500"
-                            id="inline-full-name"
-                            type="text"
-                            name="offPercentage"
-                            value={AddNewData.formData.offPercentage}
-                            placeholder={`تخفیف محصول را وارد کنید`}
-                            onChange={handleChange}
-                        />
-                    </Grid>
-
                     <Grid item xs={12} sm={12} md={12} lg={6} className="mt-2 relative">
                         <div className='w-full text-start text-sm'>
                             <label htmlFor="underline_select">دسته بندی</label>
@@ -224,7 +206,7 @@ export default function AddProduct() {
                                 setFileStates(files);
                             }}
                             onFilesAdded={async (addedFiles) => {
-                                setFileStates([...fileStates, ...addedFiles]);
+                                setFileStates(prev => [...prev, ...addedFiles]);
                                 await Promise.all(
                                     addedFiles.map(async (addedFileState) => {
                                         try {
@@ -235,6 +217,7 @@ export default function AddProduct() {
                                             //     },
                                             //     onProgressChange: async (progress) => {
                                             //         updateFileProgress(addedFileState.key, progress);
+
                                             //         if (progress === 100) {
                                             //             // wait 1 second to set it to complete
                                             //             // so that the user can see the progress bar at 100%
@@ -243,6 +226,9 @@ export default function AddProduct() {
                                             //         }
                                             //     },
                                             // });
+
+                                            //put this in submit function
+                                            const res = await uploadImages(addedFileState.file)
                                             setUploadRes((uploadRes) => [
                                                 ...uploadRes,
                                                 {
