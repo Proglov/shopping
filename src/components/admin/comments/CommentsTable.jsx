@@ -87,7 +87,7 @@ export default function CommentsTable() {
         };
 
         fetchData();
-    }, [currentPage]);
+    }, [currentPage, getAllComments, itemsPerPage, setError, setIsError, setItems, setItemsCount, setLoading, validated]);
     return (
         <Stack spacing={2} className='mt-10'>
             <span className='w-full text-start'>

@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react'
 import Api from '@/services/withoutAuthActivities/seller';
 import { Grid } from '@mui/material';
 
-export default function info() {
+export default function Info() {
     const { getMeSeller } = Api
     const [sellerInfo, setSellerInfo] = useState({})
     const [isError, setIsError] = useState(false)

@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import productApi from "@/services/userActivities/product";
+import productApi from "@/services/withoutAuthActivities/product";
 
 const initialState = productApi.getAllProducts();
 

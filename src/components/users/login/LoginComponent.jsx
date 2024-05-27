@@ -4,7 +4,7 @@ import { Box, Button, TextField } from "@mui/material";
 import Link from "next/link";
 import { useState } from "react";
 import AuthenticationComponent from "./AuthenticationComponent";
-import UserApi from "@/services/userActivities/user";
+import UserApi from "@/services/withoutAuthActivities/user";
 
 export default function LoginComponent() {
   const [phoneNumber, setPhoneNumber] = useState("");

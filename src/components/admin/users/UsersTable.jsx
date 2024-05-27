@@ -81,7 +81,7 @@ export default function UsersTable() {
         };
 
         fetchData();
-    }, [currentPage]);
+    }, [currentPage, getAllUsers, itemsPerPage, setError, setIsError, setItems, setItemsCount, setLoading]);
     return (
         <Stack spacing={2} className='mt-10'>
             <span className='w-full text-start'>
