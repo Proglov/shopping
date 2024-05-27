@@ -4,6 +4,7 @@ import { Box, Button, TextField } from "@mui/material";
 import Link from "next/link";
 import { useState } from "react";
 import AuthenticationComponent from "./AuthenticationComponent";
+import UserApi from "@/services/userActivities/user";
 
 export default function LoginComponent() {
   const [phoneNumber, setPhoneNumber] = useState("");
@@ -16,6 +17,7 @@ export default function LoginComponent() {
       return;
     }
     if (!/^[0][9]([0-9]{9})$/.test(phoneNumber)) {
+      // const response = UserApi[signInWithPhone({ phone: phoneNumber })];
       setShow([false, true]);
       return;
     }

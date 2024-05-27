@@ -15,6 +15,9 @@ import { useState } from "react";
 import { useAppDispatch } from "@/store/Hook";
 import { SetLogin } from "@/features/Login/LoginSlice";
 import { useRouter } from "next/navigation";
+import Location from "./Location";
+import ChangePassword from "./ChangePassword";
+import Specifications from "./Specifications";
 
 export default function Profile() {
   const menu = ["مشخصات", "آدرس ها", "تغییر رمز عبور"];
@@ -38,8 +41,8 @@ export default function Profile() {
 
   return (
     <>
-      <Box className="h-3/4 w-full mt-3 mx-5 grid grid-cols-4">
-        <Box className="p-5 shadow-lg shadow-slate-400 relative">
+      <Box className="h-full md:h-3/4 w-full mt-3 md:mx-5 grid md:grid-cols-4 grid-cols-1">
+        <Box className="p-5 shadow-lg shadow-slate-400 relative md:mb-0 mb-5">
           <Box className="flex justify-center">
             <PersonIcon sx={{ fontSize: "150px" }} color="secondary" />
           </Box>
@@ -53,24 +56,36 @@ export default function Profile() {
                 onClick={() => setActive(index)}
               >
                 {index === 0 ? (
-                  <AccountBoxIcon className="m-2" />
+                  <AccountBoxIcon className="m-3" />
                 ) : index === 1 ? (
-                  <LocationOnIcon className="m-2" />
+                  <LocationOnIcon className="m-3" />
                 ) : (
-                  <VpnKeyRoundedIcon className="m-2" />
+                  <VpnKeyRoundedIcon className="m-3" />
                 )}
-                <Box className="m-2">{item}</Box>
+                <Box className="m-3">{item}</Box>
               </div>
             );
           })}
-          <Box className="absolute bottom-3">
+          <Box className="md:hidden">
+            <Button color="error" className="text-lg" onClick={handleOpen} fullWidth>
+              خروج
+            </Button>
+          </Box>
+          <Box className="md:block absolute bottom-3 hidden">
             <Button color="error" className="text-lg" onClick={handleOpen}>
               خروج
             </Button>
           </Box>
         </Box>
-        <Box className="col-span-3"></Box>
-
+        <Box className="col-span-3 p-4">
+          {active === 0 ? (
+            <Specifications />
+          ) : active === 1 ? (
+            <Location />
+          ) : (
+            <ChangePassword />
+          )}
+        </Box>
         <Dialog
           onClose={Close}
           open={openDialog}
