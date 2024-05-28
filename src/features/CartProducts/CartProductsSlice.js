@@ -45,14 +45,14 @@ export const CartProductsSlice = createSlice({
       );
 
       if (itemExists) {
-        state = state.map((item) => {
+        return state.map((item) => {
           if (item.code === action.payload.code) {
             return { ...item, number: item.number + 1 };
           }
           return item;
         });
       } else {
-        state = [
+        return [
           ...state,
           {
             name: action.payload.name,
@@ -60,7 +60,7 @@ export const CartProductsSlice = createSlice({
             src: action.payload.src,
             price: action.payload.price,
             off: action.payload.off,
-            code: action.payload.code,
+            code: action.payload.code.toString(),
           },
         ];
       }

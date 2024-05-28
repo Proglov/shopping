@@ -10,6 +10,7 @@ export default function LoginComponent() {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [show, setShow] = useState([false, false]);
   const [next, setNext] = useState(false);
+  const { signInWithPhone } = UserApi;
 
   const submit = () => {
     if (!phoneNumber) {
@@ -17,12 +18,13 @@ export default function LoginComponent() {
       return;
     }
     if (!/^[0][9]([0-9]{9})$/.test(phoneNumber)) {
-      // const response = UserApi[signInWithPhone({ phone: phoneNumber })];
       setShow([false, true]);
       return;
     }
+    const response = signInWithPhone({ phone: phoneNumber });
+    console.log(response);
     setShow([false, false]);
-    setNext(true);
+    // setNext(true);
   };
 
   return (

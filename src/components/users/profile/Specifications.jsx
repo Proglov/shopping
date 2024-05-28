@@ -22,7 +22,9 @@ export default function Specifications() {
     userName: "",
   });
 
-  const submit = () => {};
+  const submit = () => {
+    setIsEdit(false);
+  };
   return (
     <>
       <Box className="flex justify-center me-4">

@@ -42,9 +42,9 @@ export default function Profile() {
   return (
     <>
       <Box className="h-full md:h-3/4 w-full mt-3 md:mx-5 grid md:grid-cols-4 grid-cols-1">
-        <Box className="p-5 shadow-lg shadow-slate-400 relative md:mb-0 mb-5">
+        <Box className="p-5 shadow-lg shadow-slate-400 relative md:h-96 my-5">
           <Box className="flex justify-center">
-            <PersonIcon sx={{ fontSize: "150px" }} color="secondary" />
+            <PersonIcon sx={{ fontSize: "130px" }} color="secondary" />
           </Box>
           {menu.map((item, index) => {
             return (
@@ -67,7 +67,12 @@ export default function Profile() {
             );
           })}
           <Box className="md:hidden">
-            <Button color="error" className="text-lg" onClick={handleOpen} fullWidth>
+            <Button
+              color="error"
+              className="text-lg"
+              onClick={handleOpen}
+              fullWidth
+            >
               خروج
             </Button>
           </Box>
@@ -77,7 +82,7 @@ export default function Profile() {
             </Button>
           </Box>
         </Box>
-        <Box className="col-span-3 p-4">
+        <Box className="col-span-3 p-4 ">
           {active === 0 ? (
             <Specifications />
           ) : active === 1 ? (

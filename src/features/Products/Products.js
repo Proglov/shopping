@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
-import productApi from "@/services/withoutAuthActivities/product";
+import ProductApi from "@/services/withoutAuthActivities/product";
 
-const initialState = productApi.getAllProducts();
+const initialState = ProductApi.getAllProducts();
 
 export const ProductsSlice = createSlice({
   name: "Products",

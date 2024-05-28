@@ -1,6 +1,7 @@
 "use client";
 
-import { useAppSelector } from "@/store/Hook";
+import { AddCart } from "@/features/CartProducts/CartProductsSlice";
+import { useAppDispatch, useAppSelector } from "@/store/Hook";
 import { convertToFarsiNumbers, formatPrice } from "@/utils/funcs";
 import { Box, Button, Card } from "@mui/material";
 import { usePathname } from "next/navigation";
@@ -8,6 +9,7 @@ import { usePathname } from "next/navigation";
 export default function DetailItem({ detail }) {
   const router = usePathname();
   const grouping = useAppSelector((state) => state.Grouping);
+  const dispatch = useAppDispatch();
 
   const place = grouping.filter((item) => {
     return item.href === router.split("/")[2];
@@ -60,6 +62,18 @@ export default function DetailItem({ detail }) {
                 lg: "14px",
                 xl: "14px",
               },
+            }}
+            onClick={() => {
+              dispatch(
+                AddCart({
+                  name: detail.name,
+                  number: 1,
+                  src: detail.src,
+                  price: detail.price,
+                  off: detail.off,
+                  code: Math.floor(Math.random() * 99999).toString(),
+                })
+              );
             }}
           >
             اضافه کردن به سبد خرید

@@ -23,7 +23,7 @@ import {
 } from "@/features/CartProducts/CartProductsSlice";
 
 export default function ShoppingCard({ step }) {
-  const cartProducts = useAppSelector((state) => state.cartProducts);
+  const cartProducts = useAppSelector((state) => state.CartProducts);
   const dispatch = useAppDispatch();
 
   let counter = cartProducts
