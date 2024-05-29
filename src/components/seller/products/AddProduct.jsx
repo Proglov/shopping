@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import FormControl from '@mui/material/FormControl';
 import { Button, Grid } from '@mui/material';
 import 'react-quill/dist/quill.snow.css';
@@ -102,15 +102,7 @@ export default function AddProduct() {
             try {
                 const obj = AddNewData.formData;
                 obj.desc = DOMPurify.sanitize(AddNewData.formData.desc)
-                const imagesUrl = [];
-                for (const obj of uploadRes) {
-                    const url = obj.url
-                    imagesUrl.push(url)
-                    // await edgestore.myPublicImages.confirmUpload({
-                    //     url
-                    // })
-                }
-                obj.imagesUrl = imagesUrl
+                obj.imagesUrl = uploadRes;
                 const res = await createProduct(obj)
                 setAddNewData(prevProps => ({
                     ...prevProps,
@@ -124,7 +116,7 @@ export default function AddProduct() {
                     },
                     isSubmitting: false
                 }));
-                if (res === 'You are not authorized!')
+                if (res?.message === 'You are not authorized!')
                     throw ("توکن شما منقضی شده. لطفا خارج، و دوباره وارد شوید")
                 toast.success('با موفقیت ارسال شد!')
                 setFileStates([]);
@@ -196,8 +188,8 @@ export default function AddProduct() {
 
                     <Grid item xs={12}>
                         <label
-                            className="block mt-2 mb-1 text-slate-50" htmlFor="inline-image-upload">
-                            آپلود تصویر
+                            className="block mt-2 mb-1 text-right" htmlFor="inline-image-upload">
+                            آپلود تصاویر
                         </label>
 
                         <MultiFileDropzone
@@ -227,14 +219,17 @@ export default function AddProduct() {
                                             //     },
                                             // });
 
-                                            //put this in submit function
-                                            const res = await uploadImages(addedFileState.file)
+                                            //Add an animation
+                                            let temp = 0;
+                                            const interval = setInterval(() => {
+                                                updateFileProgress(addedFileState.key, temp);
+                                                if (++temp === 50) clearInterval(interval)
+                                            }, 10);
+                                            const res = await uploadImages(addedFileState.file);
+                                            updateFileProgress(addedFileState.key, 'COMPLETE');
                                             setUploadRes((uploadRes) => [
                                                 ...uploadRes,
-                                                {
-                                                    url: res.url,
-                                                    filename: addedFileState.file.name,
-                                                },
+                                                res?.name,
                                             ]);
                                         } catch (err) {
                                             updateFileProgress(addedFileState.key, 'ERROR');
