@@ -29,7 +29,7 @@ export default function Info() {
         };
         setLoading(true);
         fetchData();
-    }, []);
+    }, [getMeSeller, isError]);
 
     return (
         <div className='border border-gray-200 shadow-lg rounded-br-2xl rounded-tl-2xl md:p-3 md:mt-2 py-2'>

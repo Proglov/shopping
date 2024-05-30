@@ -83,7 +83,7 @@ export default function TXTable() {
         };
 
         fetchData();
-    }, [currentPage, getAllMyTXs, itemsPerPage, setError, setIsError, setItems, setItemsCount, setLoading]);
+    }, [currentPage, getAllMyTXs, itemsPerPage, setError, setIsError, setItems, setItemsCount, setLoading, isFutureOrder]);
     return (
         <Stack spacing={2} className='mt-10'>
             <span className='w-full text-start'>
