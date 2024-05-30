@@ -2,28 +2,36 @@
 
 import { Box, Button, TextField } from "@mui/material";
 import { useState } from "react";
+import UserApi from "@/services/withoutAuthActivities/user";
 
 export default function Specifications() {
   const [isEdit, setIsEdit] = useState(false);
+  const { updateUser, getMe } = UserApi;
+  const user = getMe({ token: localStorage.getItem("token") });
   const [information, setInformation] = useState({
-    name: "امیرمحمد",
-    family: "یعقوب زاده",
-    phoneNumber: "09332413624",
-    phone: "55005798",
-    email: "moghamamir3@gmail.com",
-    userName: "AmirMohammad",
+    name: user.name,
+    phoneNumber: user.phone,
+    // phone: "55005798",
+    email: user.email,
+    userName: user.username,
   });
   const [preInformation, setPreInformation] = useState({
     name: "",
-    family: "",
     phoneNumber: "",
-    phone: "",
+    // phone: "",
     email: "",
     userName: "",
   });
 
   const submit = () => {
     setIsEdit(false);
+    const response = updateUser({
+      token: localStorage.getItem("token"),
+      name: information.name,
+      phone: information.phoneNumber,
+      email: information.email,
+      username: information.userName,
+    });
   };
   return (
     <>
@@ -35,18 +43,18 @@ export default function Specifications() {
                 <span className="font-bold">نام : </span>
                 <span>{information.name}</span>
               </Box>
-              <Box className="p-3 mb-3">
+              {/* <Box className="p-3 mb-3">
                 <span className="font-bold">نام خانوادگی : </span>
                 <span>{information.family}</span>
-              </Box>
+              </Box> */}
               <Box className="p-3 mb-3">
                 <span className="font-bold">شماره موبایل : </span>
                 <span>{information.phoneNumber}</span>
               </Box>
-              <Box className="p-3 mb-3">
+              {/* <Box className="p-3 mb-3">
                 <span className="font-bold">شماره تلفن : </span>
                 <span>{information.phone}</span>
-              </Box>
+              </Box> */}
               <Box className="p-3 mb-3">
                 <span className="font-bold">ایمیل : </span>
                 <span>{information.email}</span>
@@ -104,7 +112,7 @@ export default function Specifications() {
                     },
                   }}
                 />
-                <TextField
+                {/* <TextField
                   value={information.family}
                   label="نام خانوادگی"
                   onChange={(event) => {
@@ -123,7 +131,7 @@ export default function Specifications() {
                       width: "300px",
                     },
                   }}
-                />
+                /> */}
                 <TextField
                   value={information.phoneNumber}
                   label="شماره موبایل"
@@ -147,7 +155,7 @@ export default function Specifications() {
                     },
                   }}
                 />
-                <TextField
+                {/* <TextField
                   value={information.phone}
                   label="شماره تلفن"
                   onChange={(event) => {
@@ -166,10 +174,11 @@ export default function Specifications() {
                       width: "300px",
                     },
                   }}
-                />
+                /> */}
                 <TextField
                   value={information.email}
                   label="ایمیل"
+                  type="email"
                   onChange={(event) => {
                     setInformation({
                       ...information,

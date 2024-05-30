@@ -1,28 +1,29 @@
+"use client";
+
 import GalleryItem from "./GalleryItem";
 import DetailItem from "./DetailItem";
 import CommentItem from "./CommentItem";
 import SimilarProducts from "./SimilarProducts";
 import ProductApi from "@/services/withoutAuthActivities/product";
+import { usePathname } from "next/navigation";
+import { useAppSelector } from "@/store/Hook";
 
 export default function Item({ productPage }) {
-  const product = {
-    name: "خرما",
-    price: "5456245",
-    off: 40,
-    src: ["/img/home/category-labaniat.jpg", "/img/home/category-labaniat.jpg"],
-    comments: [
-      { message: "salam", name: "amir", id: 5456 },
-      { message: "khoda", name: "ali", id: 4568 },
-    ],
-  };
+  const router = usePathname();
+  const { getOneProduct } = ProductApi;
+  const allProduct = useAppSelector((state) => state.products);
+  const oneProduct = allProduct?.filter((item) => {
+    return item.name === router.split("/")[3];
+  });
 
-  // const pro = ProductApi.getOneProduct({id = ...});
+  const product = getOneProduct({ id: oneProduct?.id });
+
   return (
     <>
-      <GalleryItem images={product.src} />
+      <GalleryItem images={product.imagesUrl} />
       <DetailItem detail={product} />
       <SimilarProducts />
-      <CommentItem comments={product.comments} />
+      <CommentItem comments={product.commentsIds} />
     </>
   );
 }

@@ -31,7 +31,7 @@ export default function DetailItem({ detail }) {
           <Box className="grid grid-cols-4 sm:w-1/2">
             <Box
               className={`sm:text-lg text-sm mb-5 col-span-3  ${
-                detail.off != 0 ? "line-through text-gray-400" : ""
+                detail?.off != 0 ? "line-through text-gray-400" : ""
               }`}
             >
               قیمت:{" "}
@@ -39,13 +39,13 @@ export default function DetailItem({ detail }) {
               تومان
             </Box>
             <span className="bg-red-500 rounded-md text-center h-7 sm:pt-1 pt-1.5 sm:min-w-[50px] p-1 text-white">
-              {convertToFarsiNumbers(detail.off.toString())}%
+              {convertToFarsiNumbers(detail?.off.toString())}%
             </span>
           </Box>
           <Box className="sm:text-lg text-sm">
             قیمت با تخفیف:{" "}
             {convertToFarsiNumbers(
-              formatPrice(parseInt(detail.price).toString())
+              formatPrice(parseInt(detail?.price).toString())
             )}{" "}
             تومان
           </Box>
@@ -68,10 +68,10 @@ export default function DetailItem({ detail }) {
                 AddCart({
                   name: detail.name,
                   number: 1,
-                  src: detail.src,
+                  src: detail.imagesUrl,
                   price: detail.price,
-                  off: detail.off,
-                  code: Math.floor(Math.random() * 99999).toString(),
+                  off: detail?.off,
+                  code: detail.id,
                 })
               );
             }}
@@ -80,7 +80,7 @@ export default function DetailItem({ detail }) {
           </Button>
         </Box>
         <Box className="sm:text-lg text-sm col-span-7 mt-3 sm:mt-0">
-          یک توضیح مناسب محصول در این قسمت قرار میگیرد.
+          {detail.desc}
         </Box>
       </Card>
     </>

@@ -10,11 +10,13 @@ import {
   TextField,
 } from "@mui/material";
 import { useState } from "react";
+import UserApi from "@/services/withoutAuthActivities/user";
 
 let newAddress = { address: "", index: 0 };
 
 export default function EditAddress({ open, close, address, setAddress }) {
   const [edit, setEdit] = useState({});
+  const { updateUser } = UserApi;
 
   const Changed = (str, index) => {
     newAddress = { address: str, index: index };
@@ -34,6 +36,10 @@ export default function EditAddress({ open, close, address, setAddress }) {
       } else {
         setEdit({ ...edit, [newAddress.index]: true });
       }
+      const response = updateUser({
+        token: localStorage.getItem("token"),
+        address: address,
+      });
     } else if (flag === 3) {
       let str = [...address];
       str = str.filter(Boolean);

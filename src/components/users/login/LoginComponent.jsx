@@ -22,7 +22,7 @@ export default function LoginComponent() {
       return;
     }
     const response = signInWithPhone({ phone: phoneNumber });
-    console.log(response);
+    localStorage.setItem("token", response);
     setShow([false, false]);
     // setNext(true);
   };
@@ -94,20 +94,9 @@ export default function LoginComponent() {
             >
               تایید شماره موبایل
             </Button>
-            <Box className="text-xs mt-3" component="div">
-              ورود شما به معنای پذیرش{" "}
-              <Link href="">
-                <span className="text-blue-600"> شرایط سایت </span>
-              </Link>{" "}
-              و
-              <Link href="">
-                <span className="text-blue-600"> قوانین حریم‌ خصوصی </span>
-              </Link>
-              است.
-            </Box>
             <Box component="div" className="mt-5">
               اگر هنوز ثبت نام نکرده اید همین حالا
-              <Link href="">
+              <Link href="/users/signup">
                 <span className="text-blue-600"> ثبت نام </span>
               </Link>
               کنید!

@@ -1,8 +1,8 @@
 export const metadata = {
   title: "فروشگاه آنلاین",
-  description: "ورود",
+  description: "عضویت",
 };
 
-export default function LoginLayout({ children }) {
+export default function SignUpLayout({ children }) {
   return <div className="h-screen bg-gray-100">{children}</div>;
 }

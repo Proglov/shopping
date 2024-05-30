@@ -2,23 +2,34 @@
 
 import { Box, Button, TextField } from "@mui/material";
 import { useState } from "react";
+import UserApi from "@/services/withoutAuthActivities/user";
 
 export default function ChangePassword() {
   const [oldPass, setOldPass] = useState("");
   const [newPass, setNewPass] = useState("");
   const [repeatNewPass, setRepeatNewPass] = useState("");
   const [show, setShow] = useState([false, false, false]);
+  const { updateUser, getMe } = UserApi;
+  const user = getMe({ token: localStorage.getItem("token") });
 
   const submit = () => {
     if ((oldPass == "") | (newPass == "") | (repeatNewPass == "")) {
       setShow([false, false, true]);
       return;
     }
-    if (newPass !== repeatNewPass) {
-      setShow([false, true]);
+    if (oldPass !== user.password) {
+      setShow([true, false, false]);
       return;
     }
-    setShow([false, false]);
+    if (newPass !== repeatNewPass) {
+      setShow([false, true, false]);
+      return;
+    }
+    setShow([false, false, false]);
+    const response = updateUser({
+      token: localStorage.getItem("token"),
+      password: newPass,
+    });
   };
   return (
     <>
@@ -27,6 +38,7 @@ export default function ChangePassword() {
           <TextField
             value={oldPass}
             label="رمز فعلی"
+            type="password"
             onChange={(event) => {
               setOldPass(event.target.value);
             }}
@@ -50,6 +62,7 @@ export default function ChangePassword() {
           <TextField
             value={newPass}
             label="رمز جدید"
+            type="password"
             onChange={(event) => {
               setNewPass(event.target.value);
             }}
@@ -68,6 +81,7 @@ export default function ChangePassword() {
           <TextField
             value={repeatNewPass}
             label="تکرار رمز جدید"
+            type="password"
             onChange={(event) => {
               setRepeatNewPass(event.target.value);
             }}
