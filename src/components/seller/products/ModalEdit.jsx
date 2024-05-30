@@ -57,7 +57,7 @@ export default function ModalEdit() {
         } else if (name === 'quillValue') {
             setSelectedItem(prevSelectedItem => ({
                 ...prevSelectedItem,
-                description: value,
+                desc: value,
             }));
         }
     };
@@ -69,7 +69,7 @@ export default function ModalEdit() {
             name: '',
             price: '',
             category: '',
-            offPercentage: '',
+            desc: '',
             imagesUrl: []
         })
     };
@@ -87,7 +87,6 @@ export default function ModalEdit() {
         });
     }
 
-    const Token = giveMeToken()
 
     const editItem = async (obj) => {
         setOperatingID(obj.id);
@@ -208,27 +207,12 @@ export default function ModalEdit() {
 
                                 </Grid>
 
-                                <Grid item xs={12}>
-                                    <div className='text-start text-sm mb-1 lg:mt-3'>
-                                        تخفیف (درصد)
-                                    </div>
-                                    <input
-                                        className="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500"
-                                        id="inline-full-name"
-                                        type="text"
-                                        name="offPercentage"
-                                        value={selectedItem.offPercentage}
-                                        placeholder={`تخفیف محصول را وارد کنید`}
-                                        onChange={handleChange}
-                                    />
-                                </Grid>
-
                                 <Grid item xs={12} className="mt-2 relative">
                                     <div className='w-full text-start text-sm'>
                                         <label htmlFor="underline_select">دسته بندی</label>
                                     </div>
-                                    <select id="underline_select" className="block py-2.5 px-3 w-full text-sm text-gray-500 bg-transparent my-2 rounded-md border-2 border-gray-200 appearance-none focus:outline-none focus:ring-0 focus:border-gray-200" onChange={handleChange} name='category'>
-                                        <option defaultValue={''}>دسته بندی را انتخاب کنید &#11167;</option>
+                                    <select id="underline_select" className="block py-2.5 px-3 w-full text-sm text-gray-500 bg-transparent my-2 rounded-md border-2 border-gray-200 appearance-none focus:outline-none focus:ring-0 focus:border-gray-200" onChange={handleChange} name='category' defaultValue={selectedItem.category}>
+                                        <option disabled>دسته بندی را انتخاب کنید &#11167;</option>
                                         {
                                             categories.map((category, index) => <option key={index} value={category} className='text-black'>{category}</option>)
                                         }
@@ -342,7 +326,7 @@ export default function ModalEdit() {
                                 <Grid item xs={12}>
                                     <CustomQuill
                                         onChange={(value) => handleChange({ target: { name: 'quillValue', value } })}
-                                        value={selectedItem.description}
+                                        value={selectedItem.desc}
                                     />
                                 </Grid>
 

@@ -12,7 +12,6 @@ import Paper from '@mui/material/Paper';
 import Api from '@/services/withAuthActivities/user';
 import Pagination from './Pagination';
 import ModalDelete from './ModalDelete';
-import { giveMeToken } from '@/utils/Auth';
 import { UsersContext } from './UsersMain';
 
 
@@ -66,7 +65,6 @@ export default function UsersTable() {
     } = useContext(UsersContext)
 
     useEffect(() => {
-        const Token = giveMeToken();
         const fetchData = async () => {
             try {
                 const users = await getAllUsers({ page: currentPage, perPage: itemsPerPage });
