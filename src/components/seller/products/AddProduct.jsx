@@ -202,22 +202,6 @@ export default function AddProduct() {
                                 await Promise.all(
                                     addedFiles.map(async (addedFileState) => {
                                         try {
-                                            // const res = await edgestore.myPublicImages.upload({
-                                            //     file: addedFileState.file,
-                                            //     options: {
-                                            //         temporary: true
-                                            //     },
-                                            //     onProgressChange: async (progress) => {
-                                            //         updateFileProgress(addedFileState.key, progress);
-
-                                            //         if (progress === 100) {
-                                            //             // wait 1 second to set it to complete
-                                            //             // so that the user can see the progress bar at 100%
-                                            //             await new Promise((resolve) => setTimeout(resolve, 1000));
-                                            //             updateFileProgress(addedFileState.key, 'COMPLETE');
-                                            //         }
-                                            //     },
-                                            // });
 
                                             //Add an animation
                                             let temp = 0;
@@ -226,6 +210,7 @@ export default function AddProduct() {
                                                 if (++temp === 50) clearInterval(interval)
                                             }, 10);
                                             const res = await uploadImage(addedFileState.file);
+                                            if (interval) clearInterval(interval)
                                             updateFileProgress(addedFileState.key, 'COMPLETE');
                                             setUploadRes((uploadRes) => [
                                                 ...uploadRes,
