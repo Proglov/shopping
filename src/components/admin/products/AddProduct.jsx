@@ -16,7 +16,7 @@ import { MultiFileDropzone } from '../../multi-image-dropzone';
 
 export default function AddProduct() {
     const { createProduct } = Api
-    const { uploadImages } = Api2
+    const { uploadImage } = Api2
     const [fileStates, setFileStates] = useState([]);
     const [uploadRes, setUploadRes] = useState([]);
     const [AddNewData, setAddNewData] = useState({
@@ -225,7 +225,7 @@ export default function AddProduct() {
                                                 updateFileProgress(addedFileState.key, temp);
                                                 if (++temp === 50) clearInterval(interval)
                                             }, 10);
-                                            const res = await uploadImages(addedFileState.file);
+                                            const res = await uploadImage(addedFileState.file);
                                             updateFileProgress(addedFileState.key, 'COMPLETE');
                                             setUploadRes((uploadRes) => [
                                                 ...uploadRes,

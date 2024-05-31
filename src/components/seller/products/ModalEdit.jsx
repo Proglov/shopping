@@ -232,7 +232,7 @@ export default function ModalEdit() {
                                                     {
                                                         selectedItem?.imagesUrl?.map((url, i) => {
                                                             return (
-                                                                <div className='bg-blue-50 mt-2' style={{ width: '300px' }}
+                                                                <div style={{ width: '300px' }}
                                                                     key={i}>
                                                                     <Image
                                                                         src={url}

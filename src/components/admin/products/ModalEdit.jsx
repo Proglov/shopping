@@ -208,21 +208,6 @@ export default function ModalEdit() {
 
                                 </Grid>
 
-                                <Grid item xs={12}>
-                                    <div className='text-start text-sm mb-1 lg:mt-3'>
-                                        تخفیف (درصد)
-                                    </div>
-                                    <input
-                                        className="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500"
-                                        id="inline-full-name"
-                                        type="text"
-                                        name="offPercentage"
-                                        value={selectedItem.offPercentage}
-                                        placeholder={`تخفیف محصول را وارد کنید`}
-                                        onChange={handleChange}
-                                    />
-                                </Grid>
-
                                 <Grid item xs={12} className="mt-2 relative">
                                     <div className='w-full text-start text-sm'>
                                         <label htmlFor="underline_select">دسته بندی</label>
@@ -248,7 +233,7 @@ export default function ModalEdit() {
                                                     {
                                                         selectedItem?.imagesUrl?.map((url, i) => {
                                                             return (
-                                                                <div className='bg-blue-50 mt-2' style={{ width: '300px' }}
+                                                                <div style={{ width: '300px' }}
                                                                     key={i}>
                                                                     <Image
                                                                         src={url}
