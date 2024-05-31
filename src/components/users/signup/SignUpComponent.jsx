@@ -15,7 +15,7 @@ export default function SignUpComponent() {
   const router = useRouter();
   const dispatch = useAppDispatch();
 
-  const submit = () => {
+  const submit = async () => {
     if (!phoneNumber) {
       setShow([true, false]);
       return;
@@ -24,11 +24,16 @@ export default function SignUpComponent() {
       setShow([false, true]);
       return;
     }
-    const response = signUp({ phone: phoneNumber });
-    localStorage.setItem("token", response);
-    setShow([false, false]);
-    dispatch(SetLogin(true));
-    router.push("/");
+    try {
+      const response = await signUp({ phone: phoneNumber });
+      localStorage.setItem("token", response.token);
+
+      setShow([false, false]);
+      dispatch(SetLogin(true));
+      router.push("/");
+    } catch (error) {
+      alert(error.response.data.message);
+    }
   };
 
   return (

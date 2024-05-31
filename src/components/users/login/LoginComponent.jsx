@@ -12,7 +12,7 @@ export default function LoginComponent() {
   const [next, setNext] = useState(false);
   const { signInWithPhone } = UserApi;
 
-  const submit = () => {
+  const submit = async () => {
     if (!phoneNumber) {
       setShow([true, false]);
       return;
@@ -21,10 +21,14 @@ export default function LoginComponent() {
       setShow([false, true]);
       return;
     }
-    const response = signInWithPhone({ phone: phoneNumber });
-    localStorage.setItem("token", response);
-    setShow([false, false]);
-    // setNext(true);
+    try {
+      const response = signInWithPhone({ phone: phoneNumber });
+      localStorage.setItem("token", response.token);
+      setShow([false, false]);
+      // setNext(true);
+    } catch (error) {
+      alert(error.response.data.message);
+    }
   };
 
   return (

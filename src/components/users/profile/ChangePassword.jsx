@@ -1,7 +1,7 @@
 "use client";
 
 import { Box, Button, TextField } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import UserApi from "@/services/withoutAuthActivities/user";
 
 export default function ChangePassword() {
@@ -10,14 +10,14 @@ export default function ChangePassword() {
   const [repeatNewPass, setRepeatNewPass] = useState("");
   const [show, setShow] = useState([false, false, false]);
   const { updateUser, getMe } = UserApi;
-  const user = getMe({ token: localStorage.getItem("token") });
+  const [password, setPassword] = useState("");
 
-  const submit = () => {
+  const submit = async () => {
     if ((oldPass == "") | (newPass == "") | (repeatNewPass == "")) {
       setShow([false, false, true]);
       return;
     }
-    if (oldPass !== user.password) {
+    if (oldPass !== password) {
       setShow([true, false, false]);
       return;
     }
@@ -26,11 +26,27 @@ export default function ChangePassword() {
       return;
     }
     setShow([false, false, false]);
-    const response = updateUser({
-      token: localStorage.getItem("token"),
-      password: newPass,
-    });
+    try {
+      const response = await updateUser({
+        password: newPass,
+      });
+    } catch (error) {
+      alert(error.response.data.message);
+    }
   };
+
+  useEffect(() => {
+    const GetUser = async () => {
+      try {
+        const user = await getMe();
+        setPassword(user.password);
+      } catch (error) {
+        alert(error.response.data.message);
+      }
+    };
+    GetUser();
+  }, [getMe, setPassword]);
+
   return (
     <>
       <Box className="flex justify-center me-4">

@@ -7,7 +7,7 @@ import { useAppSelector } from "@/store/Hook";
 
 export default function Products() {
   const products = useAppSelector((state) => state.products);
-
+  console.log(products)
   return (
     <>
       <Box className="mt-6">
