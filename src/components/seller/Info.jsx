@@ -19,10 +19,8 @@ export default function Info() {
                 // }
                 setSellerInfo(sellerRes?.seller)
             } catch (error) {
-                setError(error);
+                setError(error?.message);
                 setIsError(true);
-                console.log(error);
-                console.log(isError);
             } finally {
                 setLoading(false);
             }
@@ -41,39 +39,44 @@ export default function Info() {
                     loading ? <>صبر کنید ...</> :
                         isError ? <>{error}</>
                             :
-                            <Grid container rowGap={1}>
-                                <Grid item xs={6} className='border-b-2 border-purple-100'>
-                                    مدیر فروشگاه
+                            !!sellerInfo?.id ?
+                                <>مشخصات فروشگاه یافت نشد! لطفا دوباره وارد شوید
+                                    {console.log(sellerInfo)}
+                                </>
+                                :
+                                <Grid container rowGap={1}>
+                                    <Grid item xs={6} className='border-b-2 border-purple-100'>
+                                        مدیر فروشگاه
+                                    </Grid>
+                                    <Grid item xs={6} className='border-b-2 border-purple-100'>
+                                        {sellerInfo?.name}
+                                    </Grid>
+                                    <Grid item xs={6} className='border-b-2 border-purple-100'>
+                                        نام فروشگاه
+                                    </Grid>
+                                    <Grid item xs={6} className='border-b-2 border-purple-100'>
+                                        {sellerInfo?.storeName}
+                                    </Grid>
+                                    <Grid item xs={6} className='border-b-2 border-purple-100'>
+                                        توضیحات
+                                    </Grid>
+                                    <Grid item xs={6} className='border-b-2 border-purple-100'>
+                                        {sellerInfo?.bio}
+                                    </Grid>
+                                    <Grid item xs={6} className='border-b-2 border-purple-100'>
+                                        تلفن
+                                    </Grid>
+                                    <Grid item xs={6} className='border-b-2 border-purple-100'>
+                                        {sellerInfo?.phone}
+                                    </Grid>
+                                    <Grid item xs={6}>
+                                        وضعیت فروشگاه
+                                    </Grid>
+                                    <Grid item xs={6}>
+                                        {sellerInfo?.validated && <span className='text-green-500'>فعال</span>}
+                                        {!sellerInfo?.validated && <span className='text-red-600'>غیر فعال</span>}
+                                    </Grid>
                                 </Grid>
-                                <Grid item xs={6} className='border-b-2 border-purple-100'>
-                                    {sellerInfo?.name}
-                                </Grid>
-                                <Grid item xs={6} className='border-b-2 border-purple-100'>
-                                    نام فروشگاه
-                                </Grid>
-                                <Grid item xs={6} className='border-b-2 border-purple-100'>
-                                    {sellerInfo?.storeName}
-                                </Grid>
-                                <Grid item xs={6} className='border-b-2 border-purple-100'>
-                                    توضیحات
-                                </Grid>
-                                <Grid item xs={6} className='border-b-2 border-purple-100'>
-                                    {sellerInfo?.bio}
-                                </Grid>
-                                <Grid item xs={6} className='border-b-2 border-purple-100'>
-                                    تلفن
-                                </Grid>
-                                <Grid item xs={6} className='border-b-2 border-purple-100'>
-                                    {sellerInfo?.phone}
-                                </Grid>
-                                <Grid item xs={6}>
-                                    وضعیت فروشگاه
-                                </Grid>
-                                <Grid item xs={6}>
-                                    {sellerInfo?.validated && <span className='text-green-500'>فعال</span>}
-                                    {!sellerInfo?.validated && <span className='text-red-600'>غیر فعال</span>}
-                                </Grid>
-                            </Grid>
                 }
             </div>
         </div>
