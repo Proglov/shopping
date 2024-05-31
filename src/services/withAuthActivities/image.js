@@ -2,11 +2,11 @@ import { clientWithAuth } from "@/lib/axios"
 
 
 const Api = {
-    uploadImages: async (payload) => {
+    uploadImage: async (payload) => {
         const data = new FormData();
         data.append("images", payload)
         const response = await clientWithAuth.post(
-            `/imagePost/uploadImages`,
+            `/imagePost/uploadImage`,
             data
         );
         return response?.data;
