@@ -7,6 +7,9 @@ import UserApi from "@/services/withoutAuthActivities/user";
 import { useRouter } from "next/navigation";
 import { useAppDispatch } from "@/store/Hook";
 import { SetLogin } from "@/features/Login/LoginSlice";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import DOMPurify from "dompurify";
 
 export default function SignUpComponent() {
   const [phoneNumber, setPhoneNumber] = useState("");
@@ -25,14 +28,32 @@ export default function SignUpComponent() {
       return;
     }
     try {
-      const response = await signUp({ phone: phoneNumber });
+      const phone = DOMPurify.sanitize(phoneNumber);
+      const response = await signUp({ phone: phone });
       localStorage.setItem("token", response.token);
-
+      toast.success("ثبت نام شما موفقیت آمیز بود", {
+        position: toast.POSITION.TOP_RIGHT,
+      });
       setShow([false, false]);
       dispatch(SetLogin(true));
       router.push("/");
     } catch (error) {
-      alert(error.response.data.message);
+      const mes = error.response.data.message;
+      if (mes === "phone number is invalid!") {
+        toast.error("شماره تلفن نامعتبر است", {
+          position: toast.POSITION.TOP_RIGHT,
+        });
+      }
+      if (mes === "Phone Already Exists") {
+        toast.error("شما قبلا ثبت نام کرده اید", {
+          position: toast.POSITION.TOP_RIGHT,
+        });
+      }
+      if (mes === "this phone number already exists!") {
+        toast.error("شما قبلا ثبت نام کرده اید", {
+          position: toast.POSITION.TOP_RIGHT,
+        });
+      }
     }
   };
 
@@ -96,10 +117,10 @@ export default function SignUpComponent() {
             className="bg-green-500 hover:bg-green-600 text-xl rounded-lg w-full mt-10"
             onClick={submit}
           >
-            تایید شماره موبایل
+            ثبت نام
           </Button>
           <Box className="text-xs mt-5 text-center" component="div">
-            ورود شما به معنای پذیرش{" "}
+            ثبت نام شما به معنای پذیرش{" "}
             <Link href="">
               <span className="text-blue-600"> شرایط سایت </span>
             </Link>{" "}

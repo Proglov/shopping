@@ -1,80 +1,42 @@
 "use client";
 
 import { Box, Button, TextField } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import UserApi from "@/services/withoutAuthActivities/user";
+import DOMPurify from "dompurify";
 
 export default function ChangePassword() {
-  const [oldPass, setOldPass] = useState("");
   const [newPass, setNewPass] = useState("");
   const [repeatNewPass, setRepeatNewPass] = useState("");
-  const [show, setShow] = useState([false, false, false]);
-  const { updateUser, getMe } = UserApi;
+  const [show, setShow] = useState([false, false]);
+  const { updateUser } = UserApi;
   const [password, setPassword] = useState("");
 
   const submit = async () => {
-    if ((oldPass == "") | (newPass == "") | (repeatNewPass == "")) {
-      setShow([false, false, true]);
-      return;
-    }
-    if (oldPass !== password) {
-      setShow([true, false, false]);
+    if ((newPass == "") | (repeatNewPass == "")) {
+      setShow([false, true]);
       return;
     }
     if (newPass !== repeatNewPass) {
-      setShow([false, true, false]);
+      setShow([true, false]);
       return;
     }
-    setShow([false, false, false]);
+    setShow([false, false]);
     try {
+      const pass = newPass;
+      pass = DOMPurify.sanitize(pass);
       const response = await updateUser({
-        password: newPass,
+        password: pass,
       });
     } catch (error) {
       alert(error.response.data.message);
     }
   };
 
-  useEffect(() => {
-    const GetUser = async () => {
-      try {
-        const user = await getMe();
-        setPassword(user.password);
-      } catch (error) {
-        alert(error.response.data.message);
-      }
-    };
-    GetUser();
-  }, [getMe, setPassword]);
-
   return (
     <>
       <Box className="flex justify-center me-4">
         <Box className="border-2 border-violet-200 h-full w-full p-5 grid gap-5">
-          <TextField
-            value={oldPass}
-            label="رمز فعلی"
-            type="password"
-            onChange={(event) => {
-              setOldPass(event.target.value);
-            }}
-            sx={{
-              "& .MuiInputLabel-root": {
-                left: "inherit !important",
-                right: "1.75rem !important",
-                transformOrigin: "right !important",
-              },
-              "& legend": { textAlign: "right" },
-              "& .MuiInputBase-input": {
-                width: "300px",
-              },
-            }}
-          />
-          {show[0] ? (
-            <span className="text-red-600">رمز اشتباه می باشد !</span>
-          ) : (
-            ""
-          )}
           <TextField
             value={newPass}
             label="رمز جدید"
@@ -113,14 +75,14 @@ export default function ChangePassword() {
               },
             }}
           />
-          {show[1] ? (
+          {show[0] ? (
             <span className="text-red-600">
               رمز جدید را به درستی تکرار نکرده اید !
             </span>
           ) : (
             ""
           )}
-          {show[2] ? (
+          {show[1] ? (
             <span className="text-red-600">
               لطفا تمامی موارد را وارد کنید !
             </span>

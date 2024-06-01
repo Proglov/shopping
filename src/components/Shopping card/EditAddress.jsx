@@ -11,6 +11,7 @@ import {
 } from "@mui/material";
 import { useState } from "react";
 import UserApi from "@/services/withoutAuthActivities/user";
+import DOMPurify from "dompurify";
 
 let newAddress = { address: "", index: 0 };
 
@@ -37,8 +38,12 @@ export default function EditAddress({ open, close, address, setAddress }) {
         setEdit({ ...edit, [newAddress.index]: true });
       }
       try {
+        const obj = address.map((item) => {
+          return DOMPurify.sanitize(item);
+        });
+
         const response = await updateUser({
-          address: address,
+          address: obj,
         });
       } catch (error) {
         alert(error.response.data.message);

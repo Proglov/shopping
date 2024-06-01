@@ -1,6 +1,7 @@
 import "./globals.css";
 import CustomTheme from "../utils/CustomTheme";
 import Providers from "./Providers";
+import { ToastContainer } from "react-toastify";
 
 export const metadata = {
   title: "فروشگاه آنلاین",
@@ -12,10 +13,9 @@ export default function RootLayout({ children }) {
     <html lang="fa-IR" dir="rtl">
       <body>
         <CustomTheme>
-          <Providers>
-            {children}
-          </Providers>
+          <Providers>{children}</Providers>
         </CustomTheme>
+        <ToastContainer />
       </body>
     </html>
   );

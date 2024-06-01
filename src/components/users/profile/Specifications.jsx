@@ -3,6 +3,7 @@
 import { Box, Button, TextField } from "@mui/material";
 import { useEffect, useState } from "react";
 import UserApi from "@/services/withoutAuthActivities/user";
+import DOMPurify from "dompurify";
 
 export default function Specifications() {
   const [isEdit, setIsEdit] = useState(false);
@@ -25,11 +26,16 @@ export default function Specifications() {
   const submit = async () => {
     setIsEdit(false);
     try {
+      const obj = information;
+      obj.name = DOMPurify.sanitize(obj.name);
+      obj.email = DOMPurify.sanitize(obj.email);
+      obj.phoneNumber = DOMPurify.sanitize(obj.phoneNumber);
+      obj.userName = DOMPurify.sanitize(obj.userName);
       const response = await updateUser({
-        name: information.name,
-        phone: information.phoneNumber,
-        email: information.email,
-        username: information.userName,
+        name: obj.name,
+        phone: obj.phoneNumber,
+        email: obj.email,
+        username: obj.userName,
       });
     } catch (error) {
       alert(error.response.data.message);

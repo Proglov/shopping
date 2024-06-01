@@ -3,19 +3,19 @@
 import { Box, Button, TextField } from "@mui/material";
 import Link from "next/link";
 import { useState } from "react";
-import AuthenticationComponent from "./AuthenticationComponent";
-import UserApi from "@/services/withoutAuthActivities/user";
+import SellerApi from "@/services/withoutAuthActivities/seller";
 import { useAppDispatch } from "@/store/Hook";
 import { SetLogin } from "@/features/Login/LoginSlice";
 import DOMPurify from "dompurify";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-export default function LoginComponent() {
+
+export default function LoginSeller() {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [show, setShow] = useState([false, false]);
   const [next, setNext] = useState(false);
-  const { signInWithPhone } = UserApi;
+  const { sellerSignInWithPhone } = SellerApi;
   const dispatch = useAppDispatch();
 
   const submit = async () => {
@@ -29,7 +29,7 @@ export default function LoginComponent() {
     }
     try {
       const phone = DOMPurify.sanitize(phoneNumber);
-      const response = await signInWithPhone({ phone: phone });
+      const response = await sellerSignInWithPhone({ phone: phone });
       localStorage.setItem("token", response.token);
       toast.success("ورود شما موفقیت آمیز بود", {
         position: toast.POSITION.TOP_RIGHT,
@@ -39,7 +39,7 @@ export default function LoginComponent() {
       // setNext(true);
     } catch (error) {
       const mes = error.response.data.message;
-      if (mes === "no user found") {
+      if (mes === "no seller found") {
         toast.error("شماره تلفن شما ثبت نشده است", {
           position: toast.POSITION.TOP_RIGHT,
         });
@@ -50,7 +50,7 @@ export default function LoginComponent() {
   return (
     <>
       {next ? (
-        <AuthenticationComponent />
+        ""
       ) : (
         <Box component="div" className="grid place-items-center h-full w-full">
           <Box
@@ -117,14 +117,14 @@ export default function LoginComponent() {
             </Button>
             <Box component="div" className="mt-5">
               اگر هنوز ثبت نام نکرده اید همین حالا
-              <Link href="/users/signup">
+              <Link href="/Seller/signup">
                 <span className="text-blue-600"> ثبت نام </span>
               </Link>
               کنید !
             </Box>
             <Box component="div" className="mt-4">
-              اگر فروشنده هستید از
-              <Link href="/Seller/login">
+              اگر مشتری هستید از
+              <Link href="/users/login">
                 <span className="text-blue-600"> این قسمت </span>
               </Link>
               وارد شوید .
