@@ -23,8 +23,7 @@ export default function ChangePassword() {
     }
     setShow([false, false]);
     try {
-      const pass = newPass;
-      pass = DOMPurify.sanitize(pass);
+      const pass = DOMPurify.sanitize(newPass);
       const response = await updateUser({
         password: pass,
       });
