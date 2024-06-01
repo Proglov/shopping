@@ -49,7 +49,7 @@ export default function AddProduct() {
         if (name === 'price') {
             const newValue = parseInt(value) || 0
             setAddNewData(prevProps => {
-                if (newValue == value && name === 'price')
+                if (newValue == value)
                     return {
                         ...prevProps,
                         formData: {

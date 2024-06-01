@@ -11,6 +11,17 @@ const Api = {
         );
         return response?.data;
     },
+    deleteImages: async (payload) => {
+        const response = await clientWithAuth.delete(
+            `/imageDelete/deleteImages`,
+            {
+                data: {
+                    filenames: payload?.filenames
+                }
+            }
+        );
+        return response?.data;
+    },
 };
 
 export default Api;

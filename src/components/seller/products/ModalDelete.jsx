@@ -30,14 +30,15 @@ export default function ModalDelete({ productName }) {
     const deleteItem = async () => {
         try {
             setOperatingID(id);
-            const res = await deleteProduct({ id })
-            console.log(res);
+            await deleteProduct({ id })
 
         } catch (error) {
             setOperatingError(error.message)
         } finally {
-            setOperatingError(null)
-            setOperatingID(null)
+            setTimeout(() => {
+                setOperatingError(null)
+                setOperatingID(null)
+            }, 5000);
         }
     }
 
