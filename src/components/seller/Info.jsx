@@ -64,7 +64,13 @@ export default function Info() {
                                         {sellerInfo?.bio}
                                     </Grid>
                                     <Grid item xs={6} className='border-b-2 border-purple-100'>
-                                        تلفن
+                                        تلفن محل کار
+                                    </Grid>
+                                    <Grid item xs={6} className='border-b-2 border-purple-100'>
+                                        {sellerInfo?.workingPhone}
+                                    </Grid>
+                                    <Grid item xs={6} className='border-b-2 border-purple-100'>
+                                        تلفن همراه
                                     </Grid>
                                     <Grid item xs={6} className='border-b-2 border-purple-100'>
                                         {sellerInfo?.phone}
