@@ -24,7 +24,9 @@ const Api = {
         const response = await clientWithAuth.delete(
             `/userDelete/UserDelete`,
             {
-                id: payload?.id
+                data: {
+                    id: payload?.id
+                }
             }
         );
         return response?.data;
