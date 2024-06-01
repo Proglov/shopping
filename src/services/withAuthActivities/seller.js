@@ -22,8 +22,12 @@ const Api = {
     },
     deleteSeller: async (payload) => {
         const response = await clientWithAuth.delete(
-            `/sellerDelete/SellerDelete?id=${payload?.id}`,
-            payload
+            `/sellerDelete/SellerDelete`,
+            {
+                data: {
+                    id: payload?.id
+                }
+            }
         );
         return response?.data;
     }

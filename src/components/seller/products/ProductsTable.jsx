@@ -117,7 +117,7 @@ export default function ProductsTable() {
                                 </TableHead>
                                 <TableBody>
                                     {items.map((item, index) => (
-                                        <StyledTableRow key={item.id}
+                                        <StyledTableRow key={item._id}
                                             className='align-middle'>
                                             <StyledTableCell align='center'>{index + 1 + itemsPerPage * (currentPage - 1)}</StyledTableCell>
                                             <StyledTableCell align='center'>{item.name}</StyledTableCell>
@@ -125,7 +125,7 @@ export default function ProductsTable() {
                                             <StyledTableCell align='center'>{item.price}</StyledTableCell>
                                             <StyledTableCell align='center'>{item.category}</StyledTableCell>
                                             <StyledTableCell className='flex flex-col justify-center border-b-0 align-middle'>
-                                                {operatingID === item.id ? (
+                                                {operatingID === item._id ? (
                                                     <div className='text-center mt-2 text-xs'>درحال انجام عملیات</div>
                                                 ) : (
                                                     <>
@@ -157,7 +157,7 @@ export default function ProductsTable() {
                                                         </Button>
                                                     </>
                                                 )}
-                                                {operatingID === item.id && operatingError !== '' ? (
+                                                {operatingID === item._id && operatingError !== '' ? (
                                                     <div>مشکلی پیش امده است. لطفا اتصال اینترنت را بررسی کنید</div>
                                                 ) : ''}
                                             </StyledTableCell>
@@ -184,8 +184,11 @@ export default function ProductsTable() {
 
             <>
 
-                <ModalDeleteContext.Provider value={{ isModalDeleteOpen, setIsModalDeleteOpen }}>
-                    <ModalDelete id={selectedItem.id} />
+                <ModalDeleteContext.Provider value={{
+                    isModalDeleteOpen, setIsModalDeleteOpen, id: selectedItem._id, setOperatingID,
+                    setOperatingError,
+                }}>
+                    <ModalDelete productName={selectedItem?.name} />
                 </ModalDeleteContext.Provider>
 
                 <ModalEditContext.Provider value={{
