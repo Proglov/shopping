@@ -19,7 +19,6 @@ import Location from "./Location";
 import ChangePassword from "./ChangePassword";
 import Specifications from "./Specifications";
 
-
 export default function Profile() {
   const menu = ["مشخصات", "آدرس ها", "تغییر رمز عبور"];
   const [active, setActive] = useState(0);
@@ -37,6 +36,7 @@ export default function Profile() {
   const logOut = () => {
     setOpenDialog(false);
     dispatch(SetLogin(false));
+    localStorage.removeItem("token");
     router.push("/");
   };
 

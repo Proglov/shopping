@@ -21,7 +21,8 @@ import { Button, Dialog, DialogActions, DialogContent } from "@mui/material";
 import { GrUserAdmin } from "react-icons/gr";
 import { useAppDispatch, useAppSelector } from "@/store/Hook";
 import { SetLogin } from "@/features/Login/LoginSlice";
-import StorefrontIcon from '@mui/icons-material/Storefront';
+import StorefrontIcon from "@mui/icons-material/Storefront";
+import { fetchProducts } from "@/features/Products/Products";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -115,6 +116,10 @@ export default function NavBar() {
     dispatch(SetLogin(false));
   };
 
+  React.useEffect(() => {
+    dispatch(fetchProducts());
+  }, []);
+
   return (
     <Box sx={{ flexGrow: 1 }}>
       <div style={{ width: "100%", height: "56px" }}></div>
@@ -206,7 +211,6 @@ export default function NavBar() {
             <></>
           )}
 
-
           {/* فروشنده */}
 
           {isUserSeller ? (
@@ -220,9 +224,7 @@ export default function NavBar() {
                 <Link href="/Seller">
                   <span className="flex flex-col">
                     <StorefrontIcon className="mx-auto pt-2" />
-                    <span className="text-sm">
-                      پنل مدیریت
-                    </span>
+                    <span className="text-sm">پنل مدیریت</span>
                   </span>
                 </Link>
               </IconButton>
@@ -233,7 +235,6 @@ export default function NavBar() {
           ) : (
             <></>
           )}
-
 
           {/* جست و جو */}
           <Search

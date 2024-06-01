@@ -1,19 +1,18 @@
 "use client";
 
 import { Box, Button, TextField } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import UserApi from "@/services/withoutAuthActivities/user";
 
 export default function Specifications() {
   const [isEdit, setIsEdit] = useState(false);
   const { updateUser, getMe } = UserApi;
-  const user = getMe({ token: localStorage.getItem("token") });
   const [information, setInformation] = useState({
-    name: user.name,
-    phoneNumber: user.phone,
+    name: "",
+    phoneNumber: "",
     // phone: "55005798",
-    email: user.email,
-    userName: user.username,
+    email: "",
+    userName: "",
   });
   const [preInformation, setPreInformation] = useState({
     name: "",
@@ -23,16 +22,38 @@ export default function Specifications() {
     userName: "",
   });
 
-  const submit = () => {
+  const submit = async () => {
     setIsEdit(false);
-    const response = updateUser({
-      token: localStorage.getItem("token"),
-      name: information.name,
-      phone: information.phoneNumber,
-      email: information.email,
-      username: information.userName,
-    });
+    try {
+      const response = await updateUser({
+        name: information.name,
+        phone: information.phoneNumber,
+        email: information.email,
+        username: information.userName,
+      });
+    } catch (error) {
+      alert(error.response.data.message);
+    }
   };
+
+  useEffect(() => {
+    const GetUser = async () => {
+      try {
+        const user = await getMe();
+        setInformation({
+          name: user.name,
+          phoneNumber: user.phone,
+          // phone: "",
+          email: user.email,
+          userName: user.username,
+        });
+      } catch (error) {
+        alert(error.response.data.message);
+      }
+    };
+    GetUser();
+  }, [getMe, setInformation]);
+
   return (
     <>
       <Box className="flex justify-center me-4">

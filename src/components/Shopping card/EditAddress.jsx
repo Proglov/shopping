@@ -22,7 +22,7 @@ export default function EditAddress({ open, close, address, setAddress }) {
     newAddress = { address: str, index: index };
   };
 
-  const onSet = (flag) => {
+  const onSet = async (flag) => {
     if (flag === 1) {
       let str = ["", ...address];
       setAddress(str);
@@ -36,10 +36,13 @@ export default function EditAddress({ open, close, address, setAddress }) {
       } else {
         setEdit({ ...edit, [newAddress.index]: true });
       }
-      const response = updateUser({
-        token: localStorage.getItem("token"),
-        address: address,
-      });
+      try {
+        const response = await updateUser({
+          address: address,
+        });
+      } catch (error) {
+        alert(error.response.data.message);
+      }
     } else if (flag === 3) {
       let str = [...address];
       str = str.filter(Boolean);

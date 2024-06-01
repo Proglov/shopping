@@ -4,7 +4,6 @@ import LoginReducer from "../features/Login/LoginSlice";
 import TimeReducer from "../features/ShippingTime/TimeSlice";
 import CartProductsReducer from "../features/CartProducts/CartProductsSlice";
 import GroupingReducer from "../features/Grouping/GroupingSlice";
-import OfferProductsReducer from "../features/OfferProducts/OfferProductsSlice";
 import ProductsReducer from "../features/Products/Products";
 
 const Store = configureStore({
@@ -14,7 +13,6 @@ const Store = configureStore({
     Time: TimeReducer,
     CartProducts: CartProductsReducer,
     Grouping: GroupingReducer,
-    OfferProducts: OfferProductsReducer,
     Products: ProductsReducer,
   },
 });
