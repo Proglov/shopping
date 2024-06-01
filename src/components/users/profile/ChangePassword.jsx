@@ -2,7 +2,7 @@
 
 import { Box, Button, TextField } from "@mui/material";
 import { useState } from "react";
-import UserApi from "@/services/withoutAuthActivities/user";
+import UserApi from "@/services/withAuthActivities/user";
 import DOMPurify from "dompurify";
 
 export default function ChangePassword() {

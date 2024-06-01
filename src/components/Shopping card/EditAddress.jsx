@@ -10,7 +10,7 @@ import {
   TextField,
 } from "@mui/material";
 import { useState } from "react";
-import UserApi from "@/services/withoutAuthActivities/user";
+import UserApi from "@/services/withAuthActivities/user";
 import DOMPurify from "dompurify";
 
 let newAddress = { address: "", index: 0 };

@@ -1,6 +1,6 @@
 'use client'
 import { useEffect, useState } from 'react'
-import Api from '@/services/withoutAuthActivities/seller';
+import Api from '@/services/withAuthActivities/seller';
 import { Grid } from '@mui/material';
 
 export default function Info() {

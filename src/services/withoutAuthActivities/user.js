@@ -35,15 +35,6 @@ const Api = {
             }
         );
         return response?.data;
-    },
-    updateUser: async (payload) => {
-        const response = await clientWithAuth.patch(
-            `/userUpdate/UserUpdate`,
-            {
-                input: payload
-            }
-        );
-        return response?.data;
     }
 };
 

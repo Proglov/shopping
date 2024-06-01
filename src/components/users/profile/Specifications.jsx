@@ -3,11 +3,13 @@
 import { Box, Button, TextField } from "@mui/material";
 import { useEffect, useState } from "react";
 import UserApi from "@/services/withoutAuthActivities/user";
+import UserApi2 from "@/services/withAuthActivities/user";
 import DOMPurify from "dompurify";
 
 export default function Specifications() {
   const [isEdit, setIsEdit] = useState(false);
-  const { updateUser, getMe } = UserApi;
+  const { getMe } = UserApi;
+  const { updateUser } = UserApi2;
   const [information, setInformation] = useState({
     name: "",
     phoneNumber: "",
