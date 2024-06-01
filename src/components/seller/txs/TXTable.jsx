@@ -14,6 +14,7 @@ import { convertToFarsiNumbers, formatPrice, price2Farsi } from '@/utils/funcs';
 import PaginationNow from './Pagination';
 import { ItemsContext } from './TXMain';
 import ModalShowMore from './ModalShowMore';
+import ModalDone from './ModalDone';
 
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -36,6 +37,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 
 export const PaginationContext = createContext();
 export const ModalShowMoreContext = createContext();
+export const ModalDoneContext = createContext();
 
 
 export default function TXTable() {
@@ -60,6 +62,8 @@ export default function TXTable() {
         setItemsCount,
         isModalShowMoreOpen,
         setIsModalShowMoreOpen,
+        isModalDoneOpen,
+        setIsModalDoneOpen,
         setSelectedItem,
         selectedItem,
         itemsPerPage,
@@ -109,6 +113,7 @@ export default function TXTable() {
                                         <StyledTableCell align='center'>نام خریدار</StyledTableCell>
                                         <StyledTableCell align='center'>شماره خریدار</StyledTableCell>
                                         <StyledTableCell align='center'>زمان ارسال</StyledTableCell>
+                                        <StyledTableCell align='center'>ارسال شده</StyledTableCell>
                                         <StyledTableCell align='center'>قیمت نهایی</StyledTableCell>
                                         <StyledTableCell align='center'>عملیات</StyledTableCell>
                                     </TableRow>
@@ -119,15 +124,23 @@ export default function TXTable() {
                                             className='align-middle'>
                                             <StyledTableCell align='center'>{convertToFarsiNumbers(index + 1 + itemsPerPage * (currentPage - 1))}</StyledTableCell>
                                             <StyledTableCell align='center'>
-                                                {item.user?.name}
-                                                {!item.user?.name && <>فاقد نام</>}
+                                                {item.userId?.name}
+                                                {!item.userId?.name && <>فاقد نام</>}
                                             </StyledTableCell>
-                                            <StyledTableCell align='center'>{convertToFarsiNumbers(item.user.phone)}</StyledTableCell>
+                                            <StyledTableCell align='center'>{convertToFarsiNumbers(item.userId.phone)}</StyledTableCell>
                                             <StyledTableCell align='center'>
                                                 {new Intl.DateTimeFormat('fa-IR').format(parseInt(item.shouldBeSentAt))}
                                                 <br />
                                                 {convertToFarsiNumbers((new Date(parseInt(item.shouldBeSentAt)).getHours()))}
                                                 :{convertToFarsiNumbers(("0" + (new Date((parseInt(item.shouldBeSentAt))).getMinutes())).slice(-2))}
+                                            </StyledTableCell>
+                                            <StyledTableCell align='center'>
+                                                {!!item?.done ?
+                                                    <span className='text-green-500'>
+                                                        بله
+                                                    </span> : <span className='text-orange-500'>
+                                                        خیر
+                                                    </span>}
                                             </StyledTableCell>
                                             <StyledTableCell align='center'>
                                                 {formatPrice(item.totalPrice)}
@@ -150,6 +163,25 @@ export default function TXTable() {
                                                 >
                                                     مشاهده بیشتر
                                                 </Button>
+                                                {
+                                                    !item?.done &&
+                                                    <Button
+                                                        variant='outlined'
+                                                        className='p-0 m-1'
+                                                        sx={{ color: 'blue', borderColor: '' }}
+                                                        onClick={async () => {
+                                                            setIsModalDoneOpen(true);
+                                                            setSelectedItem({
+                                                                ...item
+                                                            })
+                                                        }}
+                                                    >
+                                                        ارسال شد
+                                                    </Button>
+                                                }
+                                                {operatingID === item._id && operatingError !== '' ? (
+                                                    <div>مشکلی پیش امده است. لطفا اتصال اینترنت را بررسی کنید</div>
+                                                ) : ''}
                                             </StyledTableCell>
                                         </StyledTableRow>
                                     ))}
@@ -179,6 +211,15 @@ export default function TXTable() {
                 }}>
                     <ModalShowMore />
                 </ModalShowMoreContext.Provider>
+                <ModalDoneContext.Provider value={{
+                    setOperatingID,
+                    setOperatingError,
+                    isModalDoneOpen,
+                    setIsModalDoneOpen,
+                    selectedItem
+                }}>
+                    <ModalDone />
+                </ModalDoneContext.Provider>
             </>
 
         </Stack>
