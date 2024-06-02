@@ -144,7 +144,7 @@ export default function SignUpComponent() {
               onChange={(event) => {
                 setInformation({
                   ...information,
-                  username: event.target.valueZ,
+                  username: event.target.value,
                 });
               }}
               sx={{
@@ -169,7 +169,7 @@ export default function SignUpComponent() {
               onChange={(event) => {
                 setInformation({
                   ...information,
-                  password: event.target.valueZ,
+                  password: event.target.value,
                 });
               }}
               sx={{
