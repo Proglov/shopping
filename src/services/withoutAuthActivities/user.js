@@ -1,4 +1,4 @@
-import { clientWithAuth, clientWithoutAuth } from "@/lib/axios"
+import { clientWithoutAuth } from "@/lib/axios"
 
 
 const Api = {
@@ -6,7 +6,7 @@ const Api = {
         const response = await clientWithoutAuth.post(
             `/userPost/UserSignUp`,
             {
-                phone: payload?.phone
+                input: payload
             }
         );
         return response?.data;
