@@ -14,7 +14,6 @@ export const clientWithoutAuth = axios.create({
     }
 });
 
-typeof window !== "undefined" && localStorage.setItem("token", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjU0YTU4YjM5ODliMjA4YjRlYzI3ZDUiLCJpYXQiOjE3MTcyMjc5MjAsImV4cCI6MTcxNzMxNDMyMH0.-tuvRG7kGhNYedALAeTdImCannOABfmLT_dxPxX3qQg")
 export const clientWithAuth = axios.create({
     baseURL: `${apiURL}`,
     timeout: 30000,

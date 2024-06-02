@@ -1,7 +1,7 @@
 import dynamic from "next/dynamic";
 import { useMemo } from "react";
 
-export function CustomQuill({ onChange, value }) {
+export function CustomQuill({ onChange, value, disabled }) {
     const ReactQuill = useMemo(
         () => dynamic(() => import("react-quill"), { ssr: false }),
         [],
@@ -46,6 +46,7 @@ export function CustomQuill({ onChange, value }) {
                 onChange={onChange}
                 value={value}
                 style={{ minHeight: '400px' }}
+                readOnly={disabled}
             />
         </div>
     );

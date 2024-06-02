@@ -2,12 +2,6 @@ import { clientWithAuth, clientWithoutAuth } from "@/lib/axios"
 
 
 const Api = {
-    getMe: async () => {
-        const response = await clientWithAuth.get(
-            `/userGet/getMe`
-        );
-        return response?.data;
-    },
     signUp: async (payload) => {
         const response = await clientWithoutAuth.post(
             `/userPost/UserSignUp`,

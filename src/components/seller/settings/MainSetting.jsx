@@ -1,10 +1,8 @@
 'use client'
 import React, { useState } from 'react'
 import { Box, Grid, Tab, Tabs, Typography } from '@mui/material'
-import ProductsMain from './products/ProductsMain';
-import TXMain from './txs/TXMain';
-import Info from './Info';
-import MainSetting from './settings/MainSetting';
+import ChangeProfile from './ChangeProfile';
+import Discounts from './Discounts';
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -31,7 +29,7 @@ function a11yProps(index) {
     };
 }
 
-export default function Main() {
+export default function MainSetting() {
     const [addSegmentsPage, setAddSegmentsPage] = useState(0)
 
     const handleChange = (_event, newAddSegmentsPage) => {
@@ -40,13 +38,10 @@ export default function Main() {
 
     return (
         <Grid container direction={'row-reverse'}
-            className='mt-5 p-3 text-black'
+            className='text-black'
         // sx={{ flexGrow: 1 }}
         >
-            <Grid item xs={12} sm={12} md={5} lg={4} xl={3}>
-                <Info />
-            </Grid>
-            <Grid item xs={12} sm={12} md={7} lg={8} xl={9} className='lg:p-2 p-1'>
+            <Grid item xs={12}>
                 <Tabs
                     orientation='horizontal'
                     value={addSegmentsPage}
@@ -55,23 +50,19 @@ export default function Main() {
                     textColor='inherit'
                     TabIndicatorProps={{
                         style: {
-                            backgroundColor: "#D97D54"
-                        }
+                            backgroundColor: "#D97D54",
+                        },
                     }}
                 >
-                    <Tab label="محصولات" {...a11yProps(0)} />
-                    <Tab label="تراکنش ها" {...a11yProps(1)} />
-                    <Tab label="تنظیمات" {...a11yProps(2)} />
+                    <Tab label="پروفایل" {...a11yProps(0)} />
+                    <Tab label="تخفیف ها و جشنواره" {...a11yProps(1)} />
                 </Tabs>
                 <div style={{ width: '100%' }}>
                     <TabPanel value={addSegmentsPage} index={0} className='text-center'>
-                        <ProductsMain />
+                        <ChangeProfile />
                     </TabPanel>
                     <TabPanel value={addSegmentsPage} index={1} className='text-center'>
-                        <TXMain />
-                    </TabPanel>
-                    <TabPanel value={addSegmentsPage} index={2} className='text-center'>
-                        <MainSetting />
+                        <Discounts />
                     </TabPanel>
                 </div>
             </Grid>

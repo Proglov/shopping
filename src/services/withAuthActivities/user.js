@@ -2,6 +2,12 @@ import { clientWithAuth } from "@/lib/axios"
 
 
 const Api = {
+    getMe: async () => {
+        const response = await clientWithAuth.get(
+            `/userGet/getMe`
+        );
+        return response?.data;
+    },
     isAdmin: async () => {
         const response = await clientWithAuth.get(
             `/userGet/isUserAdmin`

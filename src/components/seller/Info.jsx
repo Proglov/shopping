@@ -19,8 +19,14 @@ export default function Info() {
                 // }
                 setSellerInfo(sellerRes?.seller)
             } catch (error) {
-                setError(error?.message);
-                setIsError(true);
+                console.log(error?.response?.data?.message);
+                if (error?.response?.data?.message === "You Are Not Authorized") {
+                    setError("400");
+                    setIsError(true);
+                } else {
+                    setError(error?.message);
+                    setIsError(true);
+                }
             } finally {
                 setLoading(false);
             }
@@ -37,7 +43,16 @@ export default function Info() {
             <div className='text-center text-[13px] sm:text-base'>
                 {
                     loading ? <>صبر کنید ...</> :
-                        isError ? <>{error}</>
+                        isError ? <>
+                            {
+                                error === "400" ?
+                                    <>
+                                        ورود شما منقضی شده است. لطفا دوباره از صفحه ی <a href='/Seller/login' className='text-purple-700 underline'>ورود</a> وارد شوید
+                                    </>
+                                    :
+                                    { error }
+                            }
+                        </>
                             :
                             !!sellerInfo?.id ?
                                 <>مشخصات فروشگاه یافت نشد! لطفا دوباره وارد شوید

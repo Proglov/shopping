@@ -182,3 +182,18 @@ export function price2Farsi(number) {
 
     return res
 }
+
+export const isPhoneValid = phone => {
+    const regex = /^09\d{9}$/;
+    return regex.test(phone)
+}
+
+export const isWorkingPhoneValid = phone => {
+    const regex = /^0\d{2,3}\d{8}$/;
+    return regex.test(phone)
+}
+
+export const isEmailValid = email => {
+    const regex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g;
+    return regex.test(email)
+}
