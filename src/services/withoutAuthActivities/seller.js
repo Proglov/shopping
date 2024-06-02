@@ -1,10 +1,10 @@
-import { clientWithAuth, clientWithoutAuth } from "@/lib/axios"
+import { clientWithoutAuth } from "@/lib/axios"
 
 
 const Api = {
-    getMeSeller: async () => {
-        const response = await clientWithAuth.get(
-            `/sellerGet/getMeSeller`
+    isUserSeller: async () => {
+        const response = await clientWithoutAuth.get(
+            `/sellerGet/isUserSeller`
         );
         return response?.data;
     },
@@ -32,15 +32,6 @@ const Api = {
             {
                 emailOrUsername: payload?.emailOrUsername,
                 password: payload?.password
-            }
-        );
-        return response?.data;
-    },
-    sellerUpdate: async (payload) => {
-        const response = await clientWithAuth.patch(
-            `/sellerUpdate/SellerUpdate`,
-            {
-                input: payload
             }
         );
         return response?.data;

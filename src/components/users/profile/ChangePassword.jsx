@@ -2,7 +2,7 @@
 
 import { Box, Button, TextField } from "@mui/material";
 import { useState } from "react";
-import UserApi from "@/services/withoutAuthActivities/user";
+import UserApi from "@/services/withAuthActivities/user";
 import DOMPurify from "dompurify";
 
 export default function ChangePassword() {
@@ -22,8 +22,7 @@ export default function ChangePassword() {
     }
     setShow([false, false]);
     try {
-      const pass = newPass;
-      pass = DOMPurify.sanitize(pass);
+      const pass = DOMPurify.sanitize(newPass);
       const response = await updateUser({
         password: pass,
       });

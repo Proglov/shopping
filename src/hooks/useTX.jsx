@@ -4,6 +4,7 @@ export default function useTX() {
     const [items, setItems] = useState([])
     const [selectedItem, setSelectedItem] = useState({})
     const [isModalShowMoreOpen, setIsModalShowMoreOpen] = useState(false);
+    const [isModalDoneOpen, setIsModalDoneOpen] = useState(false);
     const [currentPage, setCurrentPage] = useState(1)
     const [loading, setLoading] = useState(false);
     const [isError, setIsError] = useState(false);
@@ -31,6 +32,8 @@ export default function useTX() {
         setItemsCount,
         isModalShowMoreOpen,
         setIsModalShowMoreOpen,
+        isModalDoneOpen,
+        setIsModalDoneOpen,
         selectedItem,
         setSelectedItem
     }
