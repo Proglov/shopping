@@ -22,7 +22,6 @@ import { GrUserAdmin } from "react-icons/gr";
 import { useAppDispatch, useAppSelector } from "@/store/Hook";
 import { SetLogin } from "@/features/Login/LoginSlice";
 import StorefrontIcon from "@mui/icons-material/Storefront";
-import { fetchProducts } from "@/features/Products/Products";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -115,10 +114,6 @@ export default function NavBar() {
     setOpenDialog(false);
     dispatch(SetLogin(false));
   };
-
-  React.useEffect(() => {
-    dispatch(fetchProducts());
-  }, []);
 
   return (
     <Box sx={{ flexGrow: 1 }}>

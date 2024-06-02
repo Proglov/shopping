@@ -1,19 +1,25 @@
 "use client";
 
 import { Box, Button, Checkbox, TextField } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import ThumbUpAltOutlinedIcon from "@mui/icons-material/ThumbUpAltOutlined";
 import ThumbUpAltIcon from "@mui/icons-material/ThumbUpAlt";
 import ThumbDownAltOutlinedIcon from "@mui/icons-material/ThumbDownAltOutlined";
 import ThumbDownAltIcon from "@mui/icons-material/ThumbDownAlt";
+import CommentsApi from "@/services/withoutAuthActivities/comment";
 
-export default function CommentItem({ comments }) {
+export default function CommentItem({ productID }) {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [name, setName] = useState("");
-  const [commentsList, setCommentsList] = useState(comments);
+  const [commentsList, setCommentsList] = useState([
+    { message: "salam", name: "amir", id: 7895555 },
+    { message: "khoda", name: "ali", id: 555555555555 },
+  ]);
   const [newComment, setNewComment] = useState("");
   const [like, setLike] = useState({});
+  const { getCommentsOfAProduct } = CommentsApi;
+
   const com = [
     { message: "salam", name: "amir", id: 1 },
     { message: "khoda", name: "ali", id: 5 },
@@ -31,6 +37,18 @@ export default function CommentItem({ comments }) {
     setName("");
     setPhoneNumber("");
   };
+
+  useEffect(() => {
+    const GetComments = async () => {
+      try {
+        const comments = await getCommentsOfAProduct({ id: productID });
+        console.log(comments);
+      } catch (error) {
+        alert(error.response.data.message);
+      }
+    };
+    GetComments();
+  }, [getCommentsOfAProduct]);
 
   return (
     <Box className="p-5 m-5 border-2 rounded-lg">

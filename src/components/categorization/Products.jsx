@@ -6,7 +6,7 @@ import CardItemSM from "./CardItemSM";
 import { useAppSelector } from "@/store/Hook";
 
 export default function Products() {
-  const products = useAppSelector((state) => state.products);
+  const products = useAppSelector((state) => state.Products.products);
   console.log(products)
   return (
     <>

@@ -12,7 +12,7 @@ import { useEffect, useState } from "react";
 export default function Item() {
   const router = usePathname();
   const { getOneProduct } = ProductApi;
-  const allProduct = useAppSelector((state) => state.products);
+  const allProduct = useAppSelector((state) => state.Products.products);
   const oneProduct = allProduct?.filter((item) => {
     return item.name === router.split("/")[3];
   });
@@ -35,7 +35,7 @@ export default function Item() {
       <GalleryItem images={product.imagesUrl} />
       <DetailItem detail={product} />
       <SimilarProducts />
-      <CommentItem comments={product.commentsIds} />
+      <CommentItem productID={product._id} />
     </>
   );
 }

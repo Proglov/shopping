@@ -3,10 +3,18 @@
 import { Grid, Typography } from "@mui/material";
 import CategoryComponent from "./CategoryComponent";
 import { TbCategory } from "react-icons/tb";
-import { useAppSelector } from "@/store/Hook";
+import { useAppDispatch, useAppSelector } from "@/store/Hook";
+import { useEffect } from "react";
+import { fetchProducts } from "@/features/Products/Products";
 
 export default function Categories() {
   const grouping = useAppSelector((state) => state.Grouping);
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch(fetchProducts());
+  }, []);
+
   return (
     <div className="m-4" id="categorization">
       <div

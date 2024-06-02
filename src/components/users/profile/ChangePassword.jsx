@@ -10,10 +10,9 @@ export default function ChangePassword() {
   const [repeatNewPass, setRepeatNewPass] = useState("");
   const [show, setShow] = useState([false, false]);
   const { updateUser } = UserApi;
-  const [password, setPassword] = useState("");
 
   const submit = async () => {
-    if ((newPass == "") | (repeatNewPass == "")) {
+    if ((newPass === "") | (repeatNewPass === "")) {
       setShow([false, true]);
       return;
     }

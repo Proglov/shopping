@@ -155,7 +155,7 @@ export default function SignUpSeller() {
             <br />
             لطفا اطلاعات خواسته شده را وارد کنید :
           </Box>
-          <Box className="mb-4 grid grid-cols-2 gap-4">
+          <Box className="mb-4 grid md:grid-cols-2 grid-cols-1 gap-4">
             <TextField
               value={information.name}
               label="نام و نام خانوادگی"
