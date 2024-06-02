@@ -15,7 +15,13 @@ import DOMPurify from "dompurify";
 
 let newAddress = { address: "", index: 0 };
 
-export default function EditAddress({ open, close, address, setAddress }) {
+export default function EditAddress({
+  open,
+  close,
+  address,
+  setAddress,
+  user = false,
+}) {
   const [edit, setEdit] = useState({});
   const { updateUser } = UserApi;
 
@@ -75,7 +81,11 @@ export default function EditAddress({ open, close, address, setAddress }) {
     >
       <DialogTitle>
         <Box className="grid md:grid-cols-2 justify-center">
-          <span className="md:text-3xl text-lg">آدرس تحویل سفارش</span>
+          {user ? (
+            <span className="md:text-3xl text-lg">آدرس ها</span>
+          ) : (
+            <span className="md:text-3xl text-lg">آدرس تحویل سفارش</span>
+          )}
           <Box component="div" className="mt-2 md:mt-0 md:flex md:justify-end">
             <Button
               variant="contained"
