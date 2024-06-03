@@ -23,17 +23,17 @@ export default function Bill({ step = 1 }) {
 
   function totalPrice(arr) {
     let price = arr.reduce((sum, obj) => {
-      return sum + (obj.number * parseInt(obj.price) * (100 - obj.off)) / 100;
+      return sum + obj.number * parseInt(obj.price);
     }, 0);
     return price.toString();
   }
 
-  function profit(arr) {
-    let price = arr.reduce((sum, obj) => {
-      return sum + (obj.number * parseInt(obj.price) * obj.off) / 100;
-    }, 0);
-    return price.toString();
-  }
+  // function profit(arr) {
+  //   let price = arr.reduce((sum, obj) => {
+  //     return sum + (obj.number * parseInt(obj.price) * obj.off) / 100;
+  //   }, 0);
+  //   return price.toString();
+  // }
 
   return (
     <>
@@ -154,7 +154,7 @@ export default function Bill({ step = 1 }) {
             ) : (
               ""
             )}
-            <Box
+            {/* <Box
               className="col-span-3 lg:text-2xl text-green-500 mb-2"
               sx={{
                 fontSize: {
@@ -178,7 +178,7 @@ export default function Bill({ step = 1 }) {
             >
               {convertToFarsiNumbers(formatPrice(profit(product)))}{" "}
               <span className="text-lg text-green-400">تومان</span>
-            </Box>
+            </Box> */}
             {step !== 0 ? (
               <>
                 <Box

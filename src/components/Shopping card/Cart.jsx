@@ -26,7 +26,7 @@ export default function Cart({ Close, Open }) {
 
   function totalPrice(arr) {
     let price = arr.reduce((sum, obj) => {
-      return sum + (obj.number * parseInt(obj.price) * (100 - obj.off)) / 100;
+      return sum + obj.number * parseInt(obj.price);
     }, 0);
     return price.toString();
   }

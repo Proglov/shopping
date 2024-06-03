@@ -164,36 +164,13 @@ export default function ShoppingCard({ step }) {
                                 </Button>
                               </div>
                             </div>
-                            <div className="grid grid-rows-2">
-                              {item.off === "0" ? (
-                                ""
-                              ) : (
-                                <div className="flex justify-start px-2 sm:text-base text-sm">
-                                  <span className="bg-red-500 rounded-md mt-2 text-center h-7 sm:pt-1 pt-1.5 sm:min-w-[50px] p-1 text-white">
-                                    {convertToFarsiNumbers(item.off.toString())}
-                                    %
-                                  </span>
-                                  <div className="flex justify-end m-3 ml-8 line-through text-gray-400">
-                                    {convertToFarsiNumbers(
-                                      formatPrice(
-                                        (
-                                          item.number * parseInt(item.price)
-                                        ).toString()
-                                      )
-                                    )}{" "}
-                                    تومان
-                                  </div>
-                                </div>
-                              )}
+                            <div className="grid">
                               <div>
                                 قیمت :
                                 {convertToFarsiNumbers(
                                   formatPrice(
                                     Math.ceil(
-                                      (item.number *
-                                        parseInt(item.price) *
-                                        (100 - item.off)) /
-                                        100
+                                      item.number * parseInt(item.price)
                                     ).toString()
                                   )
                                 )}{" "}
