@@ -36,7 +36,7 @@ const ModalStyle = {
 export default function ModalEdit() {
     const { updateProduct } = Api1
     const { uploadImage, deleteImages } = Api2
-    const { isModalEditOpen, setIsModalEditOpen, selectedItem, setSelectedItem, setOperatingID, setOperatingError } = useContext(ProductsContext)
+    const { isModalEditOpen, setIsModalEditOpen, selectedItem, setSelectedItem, setOperatingError } = useContext(ProductsContext)
 
     const [fileStates, setFileStates] = useState([]);
     const [uploadRes, setUploadRes] = useState([]);
@@ -93,7 +93,6 @@ export default function ModalEdit() {
     }
 
     const editItem = async (obj) => {
-        setOperatingID(obj._id);
         setIsModalEditOpen(false);
 
         try {
@@ -121,6 +120,7 @@ export default function ModalEdit() {
 
             setSelectedItem(prevProps => ({
                 ...prevProps,
+                _id: '',
                 name: '',
                 price: '',
                 category: '',
@@ -142,7 +142,6 @@ export default function ModalEdit() {
             setUploadRes([]);
             setTimeout(() => {
                 setOperatingError(null)
-                setOperatingID(null)
             }, 5000);
         }
 

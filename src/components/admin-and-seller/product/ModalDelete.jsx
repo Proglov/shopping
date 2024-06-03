@@ -23,21 +23,28 @@ const ModalStyle = {
 
 export default function ModalDelete({ productName }) {
     const { deleteProduct } = Api
-    const { isModalDeleteOpen, setIsModalDeleteOpen, id, setOperatingID,
-        setOperatingError } = useContext(ProductsContext)
+    const { isModalDeleteOpen, setIsModalDeleteOpen, setSelectedItem,
+        setOperatingError, selectedItem } = useContext(ProductsContext)
     const handleClose = () => setIsModalDeleteOpen(false);
 
     const deleteItem = async () => {
         try {
-            setOperatingID(id);
-            await deleteProduct({ id })
-
+            await deleteProduct({ id: selectedItem?._id })
+            setSelectedItem(prevProps => ({
+                ...prevProps,
+                _id: '',
+                name: '',
+                price: '',
+                category: '',
+                desc: '',
+                subcategory: 'سوپرمارکت',
+                imagesUrl: []
+            }));
         } catch (error) {
             setOperatingError(error.message)
         } finally {
             setTimeout(() => {
                 setOperatingError(null)
-                setOperatingID(null)
             }, 5000);
             setTimeout(() => {
                 window.location.reload()
@@ -67,7 +74,7 @@ export default function ModalDelete({ productName }) {
                         </Typography>
 
                         <div className='mt-2 flex justify-between'>
-                            <Button onClick={() => { deleteItem(id); handleClose() }} variant='outlined'
+                            <Button onClick={() => { deleteItem(selectedItem?._id); handleClose() }} variant='outlined'
                                 className='p-0 m-1'
                                 sx={{ color: 'green', borderColor: 'green' }}>
                                 تایید

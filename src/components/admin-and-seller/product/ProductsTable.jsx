@@ -1,6 +1,6 @@
 "use client"
 import { Button, Stack } from '@mui/material';
-import { useEffect, createContext, useContext, Suspense } from 'react';
+import { useEffect, createContext, useContext } from 'react';
 import { styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -36,10 +36,6 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
     },
 }));
 
-export const PaginationContext = createContext();
-export const ModalDeleteContext = createContext();
-export const ModalEditContext = createContext();
-
 
 export default function ProductsTable() {
     const { getAllMyProducts } = Api
@@ -49,27 +45,22 @@ export default function ProductsTable() {
         items,
         setItems,
         currentPage,
-        setCurrentPage,
         loading,
         setLoading,
         isError,
         setIsError,
         error,
         setError,
-        operatingID,
-        setOperatingID,
         operatingError,
-        setOperatingError,
         itemsCount,
         setItemsCount,
-        isModalDeleteOpen,
         setIsModalDeleteOpen,
-        isModalEditOpen,
         setIsModalEditOpen,
         selectedItem,
         setSelectedItem,
         itemsPerPage,
-        which
+        which,
+        setLastPage
     } = useContext(ProductsContext)
 
     useEffect(() => {
@@ -81,11 +72,13 @@ export default function ProductsTable() {
                     products = await getAllMyProducts({ page: currentPage, perPage: itemsPerPage });
                     setItems(products?.products)
                     setItemsCount(products?.allProductsCount)
+                    setLastPage(Math.ceil(products?.allProductsCount / itemsPerPage))
                 }
                 else if (which === "ADMIN") {
                     products = await getAllProducts({ page: currentPage, perPage: itemsPerPage });
                     setItems(products?.products)
                     setItemsCount(products?.allProductsCount)
+                    setLastPage(Math.ceil(products?.allProductsCount / itemsPerPage))
                 }
                 setItems(products?.products)
                 setItemsCount(products?.allProductsCount)
@@ -138,7 +131,7 @@ export default function ProductsTable() {
                                             <StyledTableCell align='center'>{item.price}</StyledTableCell>
                                             <StyledTableCell align='center'>{item.category}</StyledTableCell>
                                             <StyledTableCell className='flex flex-col justify-center border-b-0 align-middle'>
-                                                {operatingID === item._id ? (
+                                                {selectedItem?._id === item._id ? (
                                                     <div className='text-center mt-2 text-xs'>درحال انجام عملیات</div>
                                                 ) : (
                                                     <>
@@ -170,7 +163,7 @@ export default function ProductsTable() {
                                                         </Button>
                                                     </>
                                                 )}
-                                                {operatingID === item._id && operatingError !== '' ? (
+                                                {selectedItem?._id === item._id && operatingError !== '' ? (
                                                     <>
                                                         <div>مشکلی پیش امده است. لطفا اتصال اینترنت را بررسی کنید</div>
                                                         <div>{operatingError}</div>
@@ -186,9 +179,7 @@ export default function ProductsTable() {
                         {
                             itemsCount > itemsPerPage &&
                             <div className='flex justify-center' style={{ marginTop: '25px' }}>
-                                <PaginationContext.Provider value={{ lastPage: Math.ceil(itemsCount / itemsPerPage), currentPage, setCurrentPage }}>
-                                    <Pagination which={which} />
-                                </PaginationContext.Provider>
+                                <Pagination />
                             </div>
                         }
 
@@ -198,31 +189,8 @@ export default function ProductsTable() {
                     </div>
             )}
 
-            <>
-
-                <ModalDeleteContext.Provider value={{
-                    isModalDeleteOpen, setIsModalDeleteOpen, id: selectedItem._id, setOperatingID,
-                    setOperatingError,
-                }}>
-                    <Suspense fallback={<div>Loading context...</div>}>
-                        <ModalDelete productName={selectedItem?.name} which={which} />
-                    </Suspense>
-                </ModalDeleteContext.Provider>
-
-                <ModalEditContext.Provider value={{
-                    isModalEditOpen,
-                    setIsModalEditOpen,
-                    setSelectedItem,
-                    selectedItem,
-                    setOperatingID,
-                    setOperatingError,
-                    setItems
-                }}>
-                    <Suspense fallback={<div>Loading context...</div>}>
-                        <ModalEdit which={which} />
-                    </Suspense>
-                </ModalEditContext.Provider>
-            </>
+            <ModalDelete productName={selectedItem?.name} />
+            <ModalEdit />
 
         </Stack>
     );

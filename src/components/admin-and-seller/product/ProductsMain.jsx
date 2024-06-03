@@ -14,7 +14,7 @@ export default function ProductsMain({ which }) {
     const [isHidden, setIsHidden] = useState(true)
 
     const productsObj = useProducts()
-    const itemsPerPage = 20
+    const itemsPerPage = 10
 
     return (
         <div>
