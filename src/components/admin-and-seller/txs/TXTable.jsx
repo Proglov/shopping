@@ -92,11 +92,19 @@ export default function TXTable() {
         fetchData();
     }, [currentPage, getAllMyTXs, itemsPerPage, setError, setIsError, setItems, setItemsCount, setLoading, isFutureOrder]);
     return (
-        <Stack spacing={2} className='mt-10'>
-            <span className='w-full text-start'>
+        <Stack spacing={2} className={`${!isFutureOrder && 'mt-16'}`}>
+            <div className='w-full text-start'>
                 جدول تراکنش های سفارشات &nbsp;
                 {!!isFutureOrder ? <>آتی</> : <>اخیر</>}
-            </span>
+            </div>
+            <div className='text-start'>
+                {
+                    itemsCount !== 0 &&
+                    <>
+                        تعداد : {itemsCount}
+                    </>
+                }
+            </div>
             {isError ? (
                 <div>
                     مشکلی رخ داد! لطفا دوباره تلاش کنید ...

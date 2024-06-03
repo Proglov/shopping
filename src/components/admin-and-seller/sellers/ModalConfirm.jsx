@@ -6,8 +6,8 @@ import Fade from '@mui/material/Fade';
 import Typography from '@mui/material/Typography';
 import { useContext } from 'react';
 import { Button } from '@mui/material';
-import { ItemsContext } from './CommentsMain';
-import Api from '@/services/withAuthActivities/comment';
+import { ItemsContext } from './SellersMain';
+import Api from '@/services/withAuthActivities/seller';
 
 const ModalStyle = {
     position: 'absolute',
@@ -22,7 +22,7 @@ const ModalStyle = {
 };
 
 export default function ModalConfirm() {
-    const { toggleValidateComment } = Api
+    const { sellerValidate } = Api
     const { isModalConfirmOpen, setIsModalConfirmOpen, selectedId, setSelectedId, setOperatingError } = useContext(ItemsContext)
     const handleClose = () => {
         setIsModalConfirmOpen(false);
@@ -32,7 +32,7 @@ export default function ModalConfirm() {
 
     const ConfirmItem = async () => {
         try {
-            await toggleValidateComment({ id: selectedId })
+            await sellerValidate({ id: selectedId })
             setSelectedId('');
             setTimeout(() => {
                 window.location.reload()
@@ -64,7 +64,7 @@ export default function ModalConfirm() {
                 <Fade in={isModalConfirmOpen}>
                     <Box sx={ModalStyle} className='rounded-3xl'>
                         <Typography id="transition-modal-title" variant="h6" component="h2">
-                            آیا از تایید این کامنت مطمئن هستید؟
+                            آیا از تایید این فروشنده مطمئن هستید؟
                         </Typography>
 
                         <div className='mt-2 flex justify-between'>

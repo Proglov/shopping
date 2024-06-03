@@ -45,7 +45,6 @@ export default function CommentsTable() {
         setItems,
         currentPage,
         setLastPage,
-        setCurrentPage,
         loading,
         setLoading,
         isError,
@@ -83,10 +82,18 @@ export default function CommentsTable() {
         fetchData();
     }, [currentPage, getAllComments, itemsPerPage, setError, setIsError, setItems, setItemsCount, setLoading, validated]);
     return (
-        <Stack spacing={2} className='mt-10'>
-            <span className='w-full text-start'>
+        <Stack spacing={2}>
+            <div className='w-full text-start'>
                 جدول کامنت های تایید {!!validated ? <></> : <>ن</>}شده
-            </span>
+            </div>
+            <div className='text-start'>
+                {
+                    itemsCount !== 0 &&
+                    <>
+                        تعداد : {itemsCount}
+                    </>
+                }
+            </div>
             {isError ? (
                 <div>
                     مشکلی رخ داد! لطفا دوباره تلاش کنید ...

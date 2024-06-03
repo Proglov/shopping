@@ -6,8 +6,8 @@ import Fade from '@mui/material/Fade';
 import Typography from '@mui/material/Typography';
 import { useContext } from 'react';
 import { Button } from '@mui/material';
-import { ItemsContext } from './CommentsMain';
-import Api from '@/services/withAuthActivities/comment';
+import { ItemsContext } from './SellersMain';
+import Api from '@/services/withAuthActivities/seller';
 
 const ModalStyle = {
     position: 'absolute',
@@ -21,18 +21,18 @@ const ModalStyle = {
     p: 4,
 };
 
-export default function ModalConfirm() {
-    const { toggleValidateComment } = Api
-    const { isModalConfirmOpen, setIsModalConfirmOpen, selectedId, setSelectedId, setOperatingError } = useContext(ItemsContext)
+export default function ModalDelete() {
+    const { deleteSeller } = Api
+    const { isModalDeleteOpen, setIsModalDeleteOpen, selectedId, setSelectedId, setOperatingError } = useContext(ItemsContext)
     const handleClose = () => {
-        setIsModalConfirmOpen(false);
+        setIsModalDeleteOpen(false);
         setSelectedId('');
     }
 
 
-    const ConfirmItem = async () => {
+    const deleteItem = async () => {
         try {
-            await toggleValidateComment({ id: selectedId })
+            await deleteSeller({ id: selectedId })
             setSelectedId('');
             setTimeout(() => {
                 window.location.reload()
@@ -51,7 +51,7 @@ export default function ModalConfirm() {
             <Modal
                 aria-labelledby="transition-modal-title"
                 aria-describedby="transition-modal-description"
-                open={isModalConfirmOpen}
+                open={isModalDeleteOpen}
                 onClose={handleClose}
                 closeAfterTransition
                 slots={{ backdrop: Backdrop }}
@@ -61,14 +61,14 @@ export default function ModalConfirm() {
                     },
                 }}
             >
-                <Fade in={isModalConfirmOpen}>
+                <Fade in={isModalDeleteOpen}>
                     <Box sx={ModalStyle} className='rounded-3xl'>
                         <Typography id="transition-modal-title" variant="h6" component="h2">
-                            آیا از تایید این کامنت مطمئن هستید؟
+                            آیا از حذف این فروشنده مطمئن هستید؟
                         </Typography>
 
                         <div className='mt-2 flex justify-between'>
-                            <Button onClick={() => { ConfirmItem(); handleClose() }} variant='outlined'
+                            <Button onClick={() => { deleteItem(); handleClose() }} variant='outlined'
                                 className='p-0 m-1'
                                 sx={{ color: 'green', borderColor: 'green' }}>
                                 تایید

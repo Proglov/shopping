@@ -1,6 +1,6 @@
 "use client"
 import { Button, Stack } from '@mui/material';
-import { useEffect, createContext, useContext } from 'react';
+import { useEffect, useContext } from 'react';
 import { styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -9,13 +9,12 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import Api from '@/services/withAuthActivities/product';
-import Api2 from '@/services/withoutAuthActivities/product';
+import { convertToFarsiNumbers } from '@/utils/funcs';
 import Pagination from './Pagination';
-import { price2Farsi } from '@/utils/funcs';
+import Api from '@/services/withAuthActivities/seller';
 import ModalDelete from './ModalDelete';
-import ModalEdit from './ModalEdit';
-import { ProductsContext } from './ProductsMain';
+import ModalConfirm from './ModalConfirm';
+import { ItemsContext } from './SellersMain';
 
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -37,14 +36,15 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 
-export default function ProductsTable() {
-    const { getAllMyProducts } = Api
-    const { getAllProducts } = Api2
+
+export default function SellersTable() {
+    const { getAllSellers } = Api
 
     const {
         items,
         setItems,
         currentPage,
+        setLastPage,
         loading,
         setLoading,
         isError,
@@ -54,47 +54,37 @@ export default function ProductsTable() {
         operatingError,
         itemsCount,
         setItemsCount,
+        selectedId,
+        setSelectedId,
+        setIsModalConfirmOpen,
         setIsModalDeleteOpen,
-        setIsModalEditOpen,
-        selectedItem,
-        setSelectedItem,
         itemsPerPage,
-        which,
-        setLastPage
-    } = useContext(ProductsContext)
+        validated,
+    } = useContext(ItemsContext)
+
 
     useEffect(() => {
         const fetchData = async () => {
             try {
                 setLoading(true);
-                let products;
-                if (which === "Seller") {
-                    products = await getAllMyProducts({ page: currentPage, perPage: itemsPerPage });
-                    setItems(products?.products)
-                    setItemsCount(products?.allProductsCount)
-                    setLastPage(Math.ceil(products?.allProductsCount / itemsPerPage))
-                }
-                else if (which === "ADMIN") {
-                    products = await getAllProducts({ page: currentPage, perPage: itemsPerPage });
-                    setItems(products?.products)
-                    setItemsCount(products?.allProductsCount)
-                    setLastPage(Math.ceil(products?.allProductsCount / itemsPerPage))
-                }
+                const sellers = await getAllSellers({ page: currentPage, perPage: itemsPerPage, validated });
+                setItems(sellers?.sellers)
+                setItemsCount(sellers?.allSellersCount)
+                setLastPage(Math.ceil(sellers?.allSellersCount / itemsPerPage))
             } catch (error) {
-                setError(`Error fetching products: ${error}`);
+                setError(`Error fetching users: ${error}`);
                 setIsError(true);
             } finally {
                 setLoading(false);
             }
         };
+
         fetchData();
-    }, [currentPage, getAllMyProducts, itemsPerPage, setError, setIsError, setItems, setItemsCount, setLoading]);
-
-
+    }, [currentPage, getAllSellers, itemsPerPage, setError, setIsError, setItems, setItemsCount, setLoading, validated]);
     return (
-        <Stack spacing={2} className='mt-7'>
+        <Stack spacing={2} className={`${!!validated && 'mt-16'}`}>
             <div className='w-full text-start'>
-                جدول محصولات
+                جدول فروشندگان های تایید {!!validated ? <></> : <>ن</>}شده
             </div>
             <div className='text-start'>
                 {
@@ -121,58 +111,59 @@ export default function ProductsTable() {
                                     <TableRow>
                                         <StyledTableCell align='center'>ردیف</StyledTableCell>
                                         <StyledTableCell align='center'>نام</StyledTableCell>
-                                        <StyledTableCell align='center'>قیمت به حروف</StyledTableCell>
-                                        <StyledTableCell align='center'>قیمت به عدد</StyledTableCell>
-                                        <StyledTableCell align='center'>دسته بندی</StyledTableCell>
+                                        <StyledTableCell align='center'>نام فروشگاه</StyledTableCell>
+                                        <StyledTableCell align='center'>شماره همراه</StyledTableCell>
+                                        <StyledTableCell align='center'>شماره فروشگاه</StyledTableCell>
                                         <StyledTableCell align='center'>عملیات</StyledTableCell>
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
                                     {items.map((item, index) => (
-                                        <StyledTableRow key={item._id}
+                                        <StyledTableRow key={item.id}
                                             className='align-middle'>
-                                            <StyledTableCell align='center'>{index + 1 + itemsPerPage * (currentPage - 1)}</StyledTableCell>
+                                            <StyledTableCell align='center'>{convertToFarsiNumbers(index + 1 + itemsPerPage * (currentPage - 1))}</StyledTableCell>
                                             <StyledTableCell align='center'>{item.name}</StyledTableCell>
-                                            <StyledTableCell align='center'>{price2Farsi(item.price)} تومان</StyledTableCell>
-                                            <StyledTableCell align='center'>{item.price}</StyledTableCell>
-                                            <StyledTableCell align='center'>{item.category}</StyledTableCell>
+                                            <StyledTableCell align='center'>{item.storeName}</StyledTableCell>
+                                            <StyledTableCell align='center'>{item.phone}</StyledTableCell>
+                                            <StyledTableCell align='center'>{item.workingPhone}</StyledTableCell>
                                             <StyledTableCell className='flex flex-col justify-center border-b-0 align-middle'>
-                                                {selectedItem?._id === item._id ? (
+                                                {selectedId === item._id ? (
                                                     <div className='text-center mt-2 text-xs'>درحال انجام عملیات</div>
                                                 ) : (
                                                     <>
-                                                        <Button
-                                                            variant='outlined'
-                                                            className='p-0 m-1'
-                                                            sx={{ color: 'primary', borderColor: 'primary' }}
-                                                            onClick={() => {
-                                                                setIsModalEditOpen(true);
-                                                                setSelectedItem({
-                                                                    ...item,
-                                                                })
-                                                            }}
-                                                        >
-                                                            ویرایش
-                                                        </Button>
+                                                        {!!validated ? <></> : <>
+                                                            <Button
+                                                                variant='outlined'
+                                                                className='p-0 m-1'
+                                                                sx={{ color: 'green', borderColor: 'green' }}
+                                                                onClick={() => {
+                                                                    setIsModalConfirmOpen(true);
+                                                                    setSelectedId(item._id)
+                                                                }}
+                                                            >
+                                                                تایید
+                                                            </Button>
+                                                        </>}
+
                                                         <Button
                                                             variant='outlined'
                                                             sx={{ color: 'red', borderColor: 'red' }}
                                                             className='p-0 m-1'
                                                             onClick={() => {
                                                                 setIsModalDeleteOpen(true);
-                                                                setSelectedItem({
-                                                                    ...item
-                                                                })
+                                                                setSelectedId(item._id)
                                                             }}
                                                         >
                                                             حذف
                                                         </Button>
                                                     </>
                                                 )}
-                                                {selectedItem?._id === item._id && operatingError !== '' ? (
+                                                {selectedId === item._id && operatingError !== '' ? (
                                                     <>
+                                                        <div>
+                                                            {error}
+                                                        </div>
                                                         <div>مشکلی پیش امده است. لطفا اتصال اینترنت را بررسی کنید</div>
-                                                        <div>{operatingError}</div>
                                                     </>
                                                 ) : ''}
                                             </StyledTableCell>
@@ -181,7 +172,6 @@ export default function ProductsTable() {
                                 </TableBody>
                             </Table>
                         </TableContainer>
-
                         {
                             itemsCount > itemsPerPage &&
                             <div className='flex justify-center' style={{ marginTop: '25px' }}>
@@ -195,8 +185,8 @@ export default function ProductsTable() {
                     </div>
             )}
 
-            <ModalDelete productName={selectedItem?.name} />
-            <ModalEdit />
+            <ModalDelete />
+            <ModalConfirm />
 
         </Stack>
     );

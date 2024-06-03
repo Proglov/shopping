@@ -16,7 +16,7 @@ const Api = {
     },
     getAllSellers: async (payload) => {
         const response = await clientWithAuth.get(
-            `/sellerGet/getSellers?page=${payload?.page}&perPage=${payload?.perPage}`
+            `/sellerGet/getSellers?page=${payload?.page}&perPage=${payload?.perPage}&validated=${payload?.validated}`
         );
         return response?.data;
     },
@@ -34,6 +34,15 @@ const Api = {
     sellerUpdate: async (payload) => {
         const response = await clientWithAuth.patch(
             `/sellerUpdate/SellerUpdate`,
+            {
+                input: payload
+            }
+        );
+        return response?.data;
+    },
+    sellerValidate: async (payload) => {
+        const response = await clientWithAuth.patch(
+            `/sellerUpdate/SellerValidate`,
             {
                 input: payload
             }

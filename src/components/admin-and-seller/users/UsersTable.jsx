@@ -63,7 +63,6 @@ export default function UsersTable() {
             try {
                 const users = await getAllUsers({ page: currentPage, perPage: itemsPerPage });
                 setItems(users.users)
-                console.log(users);
                 setItemsCount(users?.usersCount)
                 setLastPage(Math.ceil(users?.usersCount / itemsPerPage))
             } catch (error) {
@@ -77,10 +76,18 @@ export default function UsersTable() {
         fetchData();
     }, [currentPage, getAllUsers, itemsPerPage, setError, setIsError, setItems, setItemsCount, setLoading]);
     return (
-        <Stack spacing={2} className='mt-10'>
-            <span className='w-full text-start'>
+        <Stack spacing={2}>
+            <div className='w-full text-start'>
                 جدول کاربران
-            </span>
+            </div>
+            <div className='text-start'>
+                {
+                    itemsCount !== 0 &&
+                    <>
+                        تعداد : {itemsCount}
+                    </>
+                }
+            </div>
             {isError ? (
                 <div>
                     مشکلی رخ داد! لطفا دوباره تلاش کنید ...
