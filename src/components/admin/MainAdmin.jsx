@@ -6,6 +6,8 @@ import SellersMain from '../admin-and-seller/sellers/SellersMain';
 import UsersMain from '../admin-and-seller/users/UsersMain';
 import TXMain from '../admin-and-seller/txs/TXMain';
 import CommentsMain from '../admin-and-seller/comments/CommentsMain';
+import Link from 'next/link';
+import { TiArrowBackOutline } from "react-icons/ti";
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -44,6 +46,10 @@ export default function Main() {
             className='mt-5 p-3 flex flex-col text-black'
             sx={{ flexGrow: 1 }}
         >
+            <Link href={'/'} className='flex text-red-500'>
+                بازگشت
+                <TiArrowBackOutline className='mr-1 mt-1' />
+            </Link>
             <Tabs
                 orientation='horizontal'
                 value={addSegmentsPage}
