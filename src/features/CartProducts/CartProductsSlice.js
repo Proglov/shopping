@@ -66,7 +66,7 @@ export const CartProductsSlice = createSlice({
       }
     },
     IncrementCart: (state, action) => {
-      state = state.map((item) => {
+      return state.map((item) => {
         if (item.code === action.payload) {
           return { ...item, number: item.number + 1 };
         }
@@ -74,7 +74,7 @@ export const CartProductsSlice = createSlice({
       });
     },
     DecrementCart: (state, action) => {
-      state = state
+      return state
         .map((item) => {
           if (item.code === action.payload) {
             if (item.number === 1) {

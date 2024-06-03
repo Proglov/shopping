@@ -56,7 +56,7 @@ export default function DetailItem({ detail }) {
                   src: detail.imagesUrl,
                   price: detail.price,
                   off: detail?.off,
-                  code: detail.id,
+                  code: detail._id,
                 })
               );
             }}
@@ -64,9 +64,12 @@ export default function DetailItem({ detail }) {
             اضافه کردن به سبد خرید
           </Button>
         </Box>
-        <Box className="sm:text-lg text-sm col-span-7 mt-3 sm:mt-0">
-          توضیحات محصول: {detail.desc}
-        </Box>
+        <div
+          className="sm:text-lg text-sm col-span-7 mt-3 sm:mt-0"
+          dangerouslySetInnerHTML={{
+            __html: `توضیحات محصول: <br/> ${detail.desc}`,
+          }}
+        ></div>
       </Card>
     </>
   );
