@@ -5,7 +5,7 @@ import useTX from '@/hooks/useTX'
 
 export const ItemsContext = createContext()
 
-export default function TXMain() {
+export default function TXMain({ which }) {
     const ObjNow = useTX()
     const ObjLast = useTX()
     const itemsPerPage = 20
@@ -18,6 +18,7 @@ export default function TXMain() {
                     ...ObjNow,
                     itemsPerPage,
                     isFutureOrder: true,
+                    which
                 }}>
                 <TXTable />
 
@@ -29,6 +30,7 @@ export default function TXMain() {
                     ...ObjLast,
                     itemsPerPage,
                     isFutureOrder: false,
+                    which
                 }}>
                 <TXTable />
             </ItemsContext.Provider>

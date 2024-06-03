@@ -80,8 +80,6 @@ export default function ProductsTable() {
                     setItemsCount(products?.allProductsCount)
                     setLastPage(Math.ceil(products?.allProductsCount / itemsPerPage))
                 }
-                setItems(products?.products)
-                setItemsCount(products?.allProductsCount)
             } catch (error) {
                 setError(`Error fetching products: ${error}`);
                 setIsError(true);

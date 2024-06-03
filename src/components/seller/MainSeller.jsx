@@ -2,7 +2,7 @@
 import React, { useState } from 'react'
 import { Box, Grid, Tab, Tabs, Typography } from '@mui/material'
 import ProductsMain from '../admin-and-seller/product/ProductsMain';
-import TXMain from './txs/TXMain';
+import TXMain from '../admin-and-seller/txs/TXMain';
 import Info from './Info';
 import MainSetting from './settings/MainSetting';
 import Link from 'next/link';
@@ -75,7 +75,7 @@ export default function Main() {
                         <ProductsMain which={"Seller"} />
                     </TabPanel>
                     <TabPanel value={addSegmentsPage} index={1} className='text-center'>
-                        <TXMain />
+                        <TXMain which={"Seller"} />
                     </TabPanel>
                     <TabPanel value={addSegmentsPage} index={2} className='text-center'>
                         <MainSetting />

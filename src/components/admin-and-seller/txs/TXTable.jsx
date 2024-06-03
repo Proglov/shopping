@@ -1,6 +1,6 @@
 "use client"
 import { Button, Stack } from '@mui/material';
-import { useEffect, createContext, useContext } from 'react';
+import { useEffect, useContext } from 'react';
 import { styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -11,7 +11,7 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Api from '@/services/withAuthActivities/tx';
 import { convertToFarsiNumbers, formatPrice, price2Farsi } from '@/utils/funcs';
-import PaginationNow from './Pagination';
+import Pagination from './Pagination';
 import { ItemsContext } from './TXMain';
 import ModalShowMore from './ModalShowMore';
 import ModalDone from './ModalDone';
@@ -35,39 +35,32 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
     },
 }));
 
-export const PaginationContext = createContext();
-export const ModalShowMoreContext = createContext();
-export const ModalDoneContext = createContext();
 
 
 export default function TXTable() {
-    const { getAllMyTXs } = Api
+    const { getAllMyTXs, getAllTXs } = Api
 
     const {
         currentPage,
-        setCurrentPage,
+        setLastPage,
         loading,
         setLoading,
         isError,
         setIsError,
         error,
         setError,
-        operatingID,
-        setOperatingID,
         operatingError,
-        setOperatingError,
         items,
         setItems,
         itemsCount,
         setItemsCount,
-        isModalShowMoreOpen,
         setIsModalShowMoreOpen,
-        isModalDoneOpen,
         setIsModalDoneOpen,
         setSelectedItem,
         selectedItem,
         itemsPerPage,
-        isFutureOrder
+        isFutureOrder,
+        which
     } = useContext(ItemsContext)
 
 
@@ -75,9 +68,19 @@ export default function TXTable() {
         const fetchData = async () => {
             try {
                 setLoading(true);
-                const TX = await getAllMyTXs({ page: currentPage, perPage: itemsPerPage, isFutureOrder });
-                setItems(TX.transactions)
-                setItemsCount(TX.transactionsCount)
+                let TX = {};
+                if (which === "Seller") {
+                    TX = await getAllMyTXs({ page: currentPage, perPage: itemsPerPage, isFutureOrder });
+                    setItems(TX.transactions)
+                    setItemsCount(TX.transactionsCount)
+                    setLastPage(Math.ceil(TX.transactionsCount / itemsPerPage))
+                }
+                else if (which === "ADMIN") {
+                    TX = await getAllTXs({ page: currentPage, perPage: itemsPerPage, isFutureOrder });
+                    setItems(TX.transactions)
+                    setItemsCount(TX.transactionsCount)
+                    setLastPage(Math.ceil(TX.transactionsCount / itemsPerPage))
+                }
             } catch (error) {
                 setError(`Error fetching transactions: ${error}`);
                 setIsError(true);
@@ -164,7 +167,7 @@ export default function TXTable() {
                                                     مشاهده بیشتر
                                                 </Button>
                                                 {
-                                                    !item?.done &&
+                                                    !item?.done && which === "Seller" &&
                                                     <Button
                                                         variant='outlined'
                                                         className='p-0 m-1'
@@ -179,8 +182,13 @@ export default function TXTable() {
                                                         ارسال شد
                                                     </Button>
                                                 }
-                                                {operatingID === item._id && operatingError !== '' ? (
-                                                    <div>مشکلی پیش امده است. لطفا اتصال اینترنت را بررسی کنید</div>
+                                                {selectedItem?._id === item._id && operatingError != '' ? (
+                                                    <>
+                                                        <div>
+                                                            {operatingError}
+                                                        </div>
+                                                        <div>مشکلی پیش امده است. لطفا اتصال اینترنت را بررسی کنید</div>
+                                                    </>
                                                 ) : ''}
                                             </StyledTableCell>
                                         </StyledTableRow>
@@ -191,9 +199,7 @@ export default function TXTable() {
                         {
                             itemsCount > itemsPerPage &&
                             <div className='flex justify-center' style={{ marginTop: '25px' }}>
-                                <PaginationContext.Provider value={{ lastPage: Math.ceil(itemsCount / itemsPerPage), currentPage, setCurrentPage }}>
-                                    <PaginationNow />
-                                </PaginationContext.Provider>
+                                <Pagination />
                             </div>
                         }
 
@@ -203,24 +209,8 @@ export default function TXTable() {
                     </div>
             )}
 
-            <>
-                <ModalShowMoreContext.Provider value={{
-                    isModalShowMoreOpen,
-                    setIsModalShowMoreOpen,
-                    selectedItem
-                }}>
-                    <ModalShowMore />
-                </ModalShowMoreContext.Provider>
-                <ModalDoneContext.Provider value={{
-                    setOperatingID,
-                    setOperatingError,
-                    isModalDoneOpen,
-                    setIsModalDoneOpen,
-                    selectedItem
-                }}>
-                    <ModalDone />
-                </ModalDoneContext.Provider>
-            </>
+            <ModalShowMore />
+            <ModalDone />
 
         </Stack>
     );

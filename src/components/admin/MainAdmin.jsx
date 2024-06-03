@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 import { Box, Tab, Tabs, Typography } from '@mui/material'
 import ProductsMain from '../admin-and-seller/product/ProductsMain';
 import UsersMain from './users/UsersMain';
-import TXMain from './txs/TXMain';
+import TXMain from '../admin-and-seller/txs/TXMain';
 import CommentsMain from './comments/CommentsMain';
 
 function TabPanel(props) {
@@ -68,7 +68,7 @@ export default function Main() {
                     <UsersMain />
                 </TabPanel>
                 <TabPanel value={addSegmentsPage} index={2} className='text-center'>
-                    <TXMain />
+                    <TXMain which={"ADMIN"} />
                 </TabPanel>
                 <TabPanel value={addSegmentsPage} index={3} className='text-center'>
                     <CommentsMain />
