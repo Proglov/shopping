@@ -11,7 +11,7 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Api from '@/services/withAuthActivities/tx';
 import { convertToFarsiNumbers, formatPrice, price2Farsi } from '@/utils/funcs';
-import Pagination from './Pagination';
+import Pagination from '../../Pagination';
 import { ItemsContext } from './TXMain';
 import ModalShowMore from './ModalShowMore';
 import ModalDone from './ModalDone';
@@ -42,6 +42,8 @@ export default function TXTable() {
 
     const {
         currentPage,
+        setCurrentPage,
+        lastPage,
         setLastPage,
         loading,
         setLoading,
@@ -207,7 +209,7 @@ export default function TXTable() {
                         {
                             itemsCount > itemsPerPage &&
                             <div className='flex justify-center' style={{ marginTop: '25px' }}>
-                                <Pagination />
+                                <Pagination currentPage={currentPage} setCurrentPage={setCurrentPage} lastPage={lastPage} />
                             </div>
                         }
 

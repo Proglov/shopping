@@ -10,7 +10,7 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { convertToFarsiNumbers } from '@/utils/funcs';
-import Pagination from './Pagination';
+import Pagination from '../../Pagination'
 import Api from '@/services/withAuthActivities/seller';
 import ModalDelete from './ModalDelete';
 import ModalConfirm from './ModalConfirm';
@@ -44,6 +44,8 @@ export default function SellersTable() {
         items,
         setItems,
         currentPage,
+        setCurrentPage,
+        lastPage,
         setLastPage,
         loading,
         setLoading,
@@ -175,7 +177,7 @@ export default function SellersTable() {
                         {
                             itemsCount > itemsPerPage &&
                             <div className='flex justify-center' style={{ marginTop: '25px' }}>
-                                <Pagination />
+                                <Pagination currentPage={currentPage} setCurrentPage={setCurrentPage} lastPage={lastPage} />
                             </div>
                         }
 

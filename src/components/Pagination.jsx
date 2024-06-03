@@ -1,10 +1,7 @@
 'use client'
-import { useContext } from 'react'
-import { ItemsContext } from './CommentsMain'
 import { BiSolidChevronsLeft, BiSolidChevronsRight, BiSolidChevronLeft, BiSolidChevronRight } from 'react-icons/bi'
 
-export default function Pagination() {
-    const { currentPage, setCurrentPage, lastPage } = useContext(ItemsContext)
+export default function Pagination({ currentPage, setCurrentPage, lastPage }) {
 
     const handleFirstPage = () => {
         if (currentPage !== 1) {
@@ -48,11 +45,11 @@ export default function Pagination() {
             pageButtons.push(
                 <button
                     key={page}
-                    className={`p-1 me-1 hover:bg-sky-500`}
+                    className={`p-1 me-1 hover:bg-sky-500 hover:text-white`}
                     style={{
-                        borderRadius: '50%',
+                        borderRadius: '40%',
                         border: `${page === currentPage ? '1px solid yellowgreen' : ''}`,
-                        fontSize: '10px',
+                        fontSize: '12px',
                         width: '30px',
                         height: '30px',
                         lineHeight: '23px'

@@ -10,7 +10,7 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Api from '@/services/withAuthActivities/user';
-import Pagination from './Pagination';
+import Pagination from '../../Pagination';
 import ModalDelete from './ModalDelete';
 import { UsersContext } from './UsersMain';
 
@@ -40,6 +40,8 @@ export default function UsersTable() {
 
     const {
         currentPage,
+        setCurrentPage,
+        lastPage,
         setLastPage,
         loading,
         setLoading,
@@ -165,7 +167,7 @@ export default function UsersTable() {
                         {
                             itemsCount > itemsPerPage &&
                             <div className='flex justify-center' style={{ marginTop: '25px' }}>
-                                <Pagination />
+                                <Pagination currentPage={currentPage} lastPage={lastPage} setCurrentPage={setCurrentPage} />
                             </div>
                         }
 
