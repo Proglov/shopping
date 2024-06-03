@@ -25,21 +25,15 @@ export default function ModalDelete({ productName }) {
     const { deleteProduct } = Api
     const { isModalDeleteOpen, setIsModalDeleteOpen, setSelectedItem,
         setOperatingError, selectedItem } = useContext(ProductsContext)
-    const handleClose = () => setIsModalDeleteOpen(false);
+    const handleClose = () => {
+        setIsModalDeleteOpen(false);
+        setSelectedItem({});
+    }
 
     const deleteItem = async () => {
         try {
             await deleteProduct({ id: selectedItem?._id })
-            setSelectedItem(prevProps => ({
-                ...prevProps,
-                _id: '',
-                name: '',
-                price: '',
-                category: '',
-                desc: '',
-                subcategory: 'سوپرمارکت',
-                imagesUrl: []
-            }));
+            setSelectedItem({});
         } catch (error) {
             setOperatingError(error.message)
         } finally {

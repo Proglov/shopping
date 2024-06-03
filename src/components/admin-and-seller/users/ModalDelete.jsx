@@ -6,8 +6,7 @@ import Fade from '@mui/material/Fade';
 import Typography from '@mui/material/Typography';
 import { useContext } from 'react';
 import { Button } from '@mui/material';
-import { ModalDeleteContext } from './UsersTable';
-import { giveMeToken } from '@/utils/Auth';
+import { UsersContext } from './UsersMain';
 import Api from '@/services/withAuthActivities/user';
 
 const ModalStyle = {
@@ -22,16 +21,29 @@ const ModalStyle = {
     p: 4,
 };
 
-export default function ModalDelete({ id }) {
+export default function ModalDelete() {
     const { deleteUser } = Api
-    const { isModalDeleteOpen, setIsModalDeleteOpen } = useContext(ModalDeleteContext)
-    const handleClose = () => setIsModalDeleteOpen(false);
+    const { isModalDeleteOpen, setIsModalDeleteOpen, selectedItem, setSelectedItem, setOperatingError } = useContext(UsersContext)
+    const handleClose = () => {
+        setIsModalDeleteOpen(false);
+        setSelectedItem({});
+    }
 
-    const Token = giveMeToken();
 
     const deleteItem = async () => {
-        const res = await deleteUser(id, Token)
-        console.log(res)
+        try {
+            await deleteUser({ id: selectedItem?._id })
+            setSelectedItem({});
+        } catch (error) {
+            setOperatingError(error.message)
+        } finally {
+            setTimeout(() => {
+                setOperatingError(null)
+            }, 5000);
+            setTimeout(() => {
+                window.location.reload()
+            }, 1000)
+        }
     }
 
     return (
@@ -56,7 +68,7 @@ export default function ModalDelete({ id }) {
                         </Typography>
 
                         <div className='mt-2 flex justify-between'>
-                            <Button onClick={() => { deleteItem(id); handleClose() }} variant='outlined'
+                            <Button onClick={() => { deleteItem(); handleClose() }} variant='outlined'
                                 className='p-0 m-1'
                                 sx={{ color: 'green', borderColor: 'green' }}>
                                 تایید

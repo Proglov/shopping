@@ -30,7 +30,10 @@ export default function ModalDone() {
         selectedItem,
         setSelectedItem
     } = useContext(ItemsContext)
-    const handleClose = () => setIsModalDoneOpen(false);
+    const handleClose = () => {
+        setIsModalDoneOpen(false);
+        setSelectedItem({});
+    }
 
     const doneItem = async () => {
         try {

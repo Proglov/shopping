@@ -5,10 +5,10 @@ export default function useUsers() {
     const [selectedItem, setSelectedItem] = useState({})
     const [isModalDeleteOpen, setIsModalDeleteOpen] = useState(false);
     const [currentPage, setCurrentPage] = useState(1)
+    const [lastPage, setLastPage] = useState(1)
     const [loading, setLoading] = useState(false);
     const [isError, setIsError] = useState(false);
     const [error, setError] = useState('');
-    const [operatingID, setOperatingID] = useState('');
     const [operatingError, setOperatingError] = useState('');
     const [itemsCount, setItemsCount] = useState(0)
 
@@ -17,14 +17,14 @@ export default function useUsers() {
         setItems,
         currentPage,
         setCurrentPage,
+        lastPage,
+        setLastPage,
         loading,
         setLoading,
         isError,
         setIsError,
         error,
         setError,
-        operatingID,
-        setOperatingID,
         operatingError,
         setOperatingError,
         itemsCount,

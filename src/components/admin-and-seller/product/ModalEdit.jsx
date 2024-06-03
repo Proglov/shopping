@@ -45,14 +45,7 @@ export default function ModalEdit() {
 
     const handleClose = () => {
         setIsModalEditOpen(false);
-        setSelectedItem({
-            id: '',
-            name: '',
-            price: '',
-            category: '',
-            desc: '',
-            imagesUrl: []
-        })
+        setSelectedItem({});
     };
 
     const handleChange = (event) => {

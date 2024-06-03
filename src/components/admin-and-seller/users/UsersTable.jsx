@@ -1,6 +1,6 @@
 "use client"
 import { Button, Stack } from '@mui/material';
-import { useEffect, createContext, useContext } from 'react';
+import { useEffect, useContext } from 'react';
 import { styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -33,8 +33,6 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
     },
 }));
 
-export const PaginationContext = createContext();
-export const ModalDeleteContext = createContext();
 
 
 export default function UsersTable() {
@@ -42,22 +40,18 @@ export default function UsersTable() {
 
     const {
         currentPage,
-        setCurrentPage,
+        setLastPage,
         loading,
         setLoading,
         isError,
         setIsError,
         error,
         setError,
-        operatingID,
-        setOperatingID,
         operatingError,
-        setOperatingError,
         items,
         setItems,
         itemsCount,
         setItemsCount,
-        isModalDeleteOpen,
         setIsModalDeleteOpen,
         setSelectedItem,
         selectedItem,
@@ -69,7 +63,9 @@ export default function UsersTable() {
             try {
                 const users = await getAllUsers({ page: currentPage, perPage: itemsPerPage });
                 setItems(users.users)
-                setItemsCount(users?.allUsersCount)
+                console.log(users);
+                setItemsCount(users?.usersCount)
+                setLastPage(Math.ceil(users?.usersCount / itemsPerPage))
             } catch (error) {
                 setError(`Error fetching users: ${error}`);
                 setIsError(true);
@@ -127,7 +123,7 @@ export default function UsersTable() {
                                             </StyledTableCell>
                                             <StyledTableCell align='center'>{item.phone}</StyledTableCell>
                                             <StyledTableCell className='flex flex-col justify-center border-b-0 align-middle'>
-                                                {operatingID === item.id ? (
+                                                {selectedItem?._id === item._id ? (
                                                     <div className='text-center mt-2 text-xs'>درحال انجام عملیات</div>
                                                 ) : (
                                                     <>
@@ -146,8 +142,11 @@ export default function UsersTable() {
                                                         </Button>
                                                     </>
                                                 )}
-                                                {operatingID === item.id && operatingError !== '' ? (
-                                                    <div>مشکلی پیش امده است. لطفا اتصال اینترنت را بررسی کنید</div>
+                                                {selectedItem?._id === item._id && operatingError !== '' ? (
+                                                    <>
+                                                        <div>{error}</div>
+                                                        <div>مشکلی پیش امده است. لطفا اتصال اینترنت را بررسی کنید</div>
+                                                    </>
                                                 ) : ''}
                                             </StyledTableCell>
                                         </StyledTableRow>
@@ -159,9 +158,7 @@ export default function UsersTable() {
                         {
                             itemsCount > itemsPerPage &&
                             <div className='flex justify-center' style={{ marginTop: '25px' }}>
-                                <PaginationContext.Provider value={{ lastPage: Math.ceil(itemsCount / itemsPerPage), currentPage, setCurrentPage }}>
-                                    <Pagination />
-                                </PaginationContext.Provider>
+                                <Pagination />
                             </div>
                         }
 
@@ -171,9 +168,7 @@ export default function UsersTable() {
                     </div>
             )}
 
-            <ModalDeleteContext.Provider value={{ isModalDeleteOpen, setIsModalDeleteOpen }}>
-                <ModalDelete id={selectedItem.id} />
-            </ModalDeleteContext.Provider>
+            <ModalDelete />
 
         </Stack>
     );

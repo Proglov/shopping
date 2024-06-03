@@ -2,7 +2,7 @@
 import React, { useState } from 'react'
 import { Box, Tab, Tabs, Typography } from '@mui/material'
 import ProductsMain from '../admin-and-seller/product/ProductsMain';
-import UsersMain from './users/UsersMain';
+import UsersMain from '../admin-and-seller/users/UsersMain';
 import TXMain from '../admin-and-seller/txs/TXMain';
 import CommentsMain from './comments/CommentsMain';
 
