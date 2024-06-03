@@ -1,7 +1,7 @@
 'use client'
 import React, { useState } from 'react'
 import { Box, Tab, Tabs, Typography } from '@mui/material'
-import ProductsMain from '../admin-and-seller/product/ProductsMain';
+import ProductsMain from '../admin-and-seller/products/ProductsMain';
 import UsersMain from '../admin-and-seller/users/UsersMain';
 import TXMain from '../admin-and-seller/txs/TXMain';
 import CommentsMain from '../admin-and-seller/comments/CommentsMain';
