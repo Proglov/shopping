@@ -13,7 +13,7 @@ const Api = {
     },
     signInWithPhone: async (payload) => {
         const response = await clientWithoutAuth.post(
-            `/userPost/signInWithPhone`,
+            `/userPost/UserSignInWithPhone`,
             {
                 phone: payload?.phone
             }

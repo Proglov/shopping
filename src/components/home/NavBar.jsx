@@ -95,10 +95,10 @@ export default function NavBar() {
   const dispatch = useAppDispatch();
 
   // this is temporary and should be changed
-  const isAdmin = false;
+  const isAdmin = true;
 
   // this is temporary and should be changed
-  const isUserSeller = true;
+  const isUserSeller = false;
 
   const isMenuOpen = Boolean(anchorEl);
 
