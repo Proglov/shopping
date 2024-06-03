@@ -34,15 +34,15 @@ export default function ModalDelete() {
         try {
             await deleteUser({ id: selectedItem?._id })
             setSelectedItem({});
+            setTimeout(() => {
+                window.location.reload()
+            }, 1000)
         } catch (error) {
             setOperatingError(error.message)
         } finally {
             setTimeout(() => {
                 setOperatingError(null)
             }, 5000);
-            setTimeout(() => {
-                window.location.reload()
-            }, 1000)
         }
     }
 

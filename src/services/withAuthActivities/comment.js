@@ -30,7 +30,7 @@ const Api = {
             `/commentUpdate/CommentToggleValidate`,
             {
                 input: {
-                    id: payload?.input?.id
+                    id: payload?.id
                 }
             }
         );
@@ -49,7 +49,9 @@ const Api = {
         const response = await clientWithAuth.patch(
             `/commentUpdate/CommentToggleLike`,
             {
-                input: payload
+                input: {
+                    id: payload?.id
+                }
             }
         );
         return response?.data;
@@ -58,7 +60,9 @@ const Api = {
         const response = await clientWithAuth.patch(
             `/commentUpdate/CommentToggleDisLike`,
             {
-                input: payload
+                input: {
+                    id: payload?.id
+                }
             }
         );
         return response?.data;

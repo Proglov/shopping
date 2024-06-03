@@ -1,6 +1,6 @@
 "use client"
 import { Button, Stack } from '@mui/material';
-import { useEffect, createContext, useContext } from 'react';
+import { useEffect, useContext } from 'react';
 import { styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -35,9 +35,6 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
     },
 }));
 
-export const PaginationContext = createContext();
-export const ModalDeleteContext = createContext();
-export const ModalConfirmContext = createContext();
 
 
 export default function CommentsTable() {
@@ -47,6 +44,7 @@ export default function CommentsTable() {
         items,
         setItems,
         currentPage,
+        setLastPage,
         setCurrentPage,
         loading,
         setLoading,
@@ -54,17 +52,12 @@ export default function CommentsTable() {
         setIsError,
         error,
         setError,
-        operatingID,
-        setOperatingID,
         operatingError,
-        setOperatingError,
         itemsCount,
         setItemsCount,
         selectedId,
         setSelectedId,
-        isModalConfirmOpen,
         setIsModalConfirmOpen,
-        isModalDeleteOpen,
         setIsModalDeleteOpen,
         itemsPerPage,
         validated,
@@ -78,6 +71,7 @@ export default function CommentsTable() {
                 const comments = await getAllComments({ page: currentPage, perPage: itemsPerPage, validated });
                 setItems(comments?.comments)
                 setItemsCount(comments?.allCommentsCount)
+                setLastPage(Math.ceil(comments?.allCommentsCount / itemsPerPage))
             } catch (error) {
                 setError(`Error fetching users: ${error}`);
                 setIsError(true);
@@ -119,10 +113,10 @@ export default function CommentsTable() {
                                         <StyledTableRow key={item.id}
                                             className='align-middle'>
                                             <StyledTableCell align='center'>{convertToFarsiNumbers(index + 1 + itemsPerPage * (currentPage - 1))}</StyledTableCell>
-                                            <StyledTableCell align='center'>{item.user?.phone}</StyledTableCell>
+                                            <StyledTableCell align='center'>{item.userId?.phone}</StyledTableCell>
                                             <StyledTableCell align='center'>{item.body}</StyledTableCell>
                                             <StyledTableCell className='flex flex-col justify-center border-b-0 align-middle'>
-                                                {operatingID === item.id ? (
+                                                {selectedId === item._id ? (
                                                     <div className='text-center mt-2 text-xs'>درحال انجام عملیات</div>
                                                 ) : (
                                                     <>
@@ -133,7 +127,7 @@ export default function CommentsTable() {
                                                                 sx={{ color: 'green', borderColor: 'green' }}
                                                                 onClick={() => {
                                                                     setIsModalConfirmOpen(true);
-                                                                    setSelectedId(item.id)
+                                                                    setSelectedId(item._id)
                                                                 }}
                                                             >
                                                                 تایید
@@ -146,15 +140,20 @@ export default function CommentsTable() {
                                                             className='p-0 m-1'
                                                             onClick={() => {
                                                                 setIsModalDeleteOpen(true);
-                                                                setSelectedId(item.id)
+                                                                setSelectedId(item._id)
                                                             }}
                                                         >
                                                             حذف
                                                         </Button>
                                                     </>
                                                 )}
-                                                {operatingID === item.id && operatingError !== '' ? (
-                                                    <div>مشکلی پیش امده است. لطفا اتصال اینترنت را بررسی کنید</div>
+                                                {selectedId === item._id && operatingError !== '' ? (
+                                                    <>
+                                                        <div>
+                                                            {error}
+                                                        </div>
+                                                        <div>مشکلی پیش امده است. لطفا اتصال اینترنت را بررسی کنید</div>
+                                                    </>
                                                 ) : ''}
                                             </StyledTableCell>
                                         </StyledTableRow>
@@ -165,9 +164,7 @@ export default function CommentsTable() {
                         {
                             itemsCount > itemsPerPage &&
                             <div className='flex justify-center' style={{ marginTop: '25px' }}>
-                                <PaginationContext.Provider value={{ lastPage: Math.ceil(itemsCount / itemsPerPage), currentPage, setCurrentPage }}>
-                                    <Pagination />
-                                </PaginationContext.Provider>
+                                <Pagination />
                             </div>
                         }
 
@@ -177,19 +174,8 @@ export default function CommentsTable() {
                     </div>
             )}
 
-            <>
-
-                <ModalDeleteContext.Provider value={{ isModalDeleteOpen, setIsModalDeleteOpen }}>
-                    <ModalDelete id={selectedId} />
-                </ModalDeleteContext.Provider>
-
-                <ModalConfirmContext.Provider value={{
-                    isModalConfirmOpen,
-                    setIsModalConfirmOpen
-                }}>
-                    <ModalConfirm />
-                </ModalConfirmContext.Provider>
-            </>
+            <ModalDelete />
+            <ModalConfirm />
 
         </Stack>
     );

@@ -37,19 +37,18 @@ export default function ModalDone() {
 
     const doneItem = async () => {
         try {
-            handleClose()
-            await TXDone({ id: selectedItem?._id })
 
+            await TXDone({ id: selectedItem?._id })
+            setTimeout(() => {
+                setOperatingError(null)
+                setSelectedItem({})
+            }, 5000);
         } catch (error) {
             setOperatingError(error.message)
         } finally {
             setTimeout(() => {
                 window.location.reload()
             }, 1000)
-            setTimeout(() => {
-                setOperatingError(null)
-                setSelectedItem({})
-            }, 5000);
         }
     }
 
@@ -75,7 +74,7 @@ export default function ModalDone() {
                         </Typography>
 
                         <div className='mt-2 flex justify-between'>
-                            <Button onClick={() => { doneItem() }} variant='outlined'
+                            <Button onClick={() => { doneItem(); handleClose() }} variant='outlined'
                                 className='p-0 m-1'
                                 sx={{ color: 'green', borderColor: 'green' }}>
                                 تایید

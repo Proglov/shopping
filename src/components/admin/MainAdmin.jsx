@@ -4,7 +4,7 @@ import { Box, Tab, Tabs, Typography } from '@mui/material'
 import ProductsMain from '../admin-and-seller/product/ProductsMain';
 import UsersMain from '../admin-and-seller/users/UsersMain';
 import TXMain from '../admin-and-seller/txs/TXMain';
-import CommentsMain from './comments/CommentsMain';
+import CommentsMain from '../admin-and-seller/comments/CommentsMain';
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;

@@ -6,8 +6,7 @@ import Fade from '@mui/material/Fade';
 import Typography from '@mui/material/Typography';
 import { useContext } from 'react';
 import { Button } from '@mui/material';
-import { ModalDeleteContext } from './CommentsTable';
-import { giveMeToken } from '@/utils/Auth';
+import { ItemsContext } from './CommentsMain';
 import Api from '@/services/withAuthActivities/comment';
 
 const ModalStyle = {
@@ -22,15 +21,29 @@ const ModalStyle = {
     p: 4,
 };
 
-export default function ModalDelete({ id }) {
-    const { deleteComment } = Api
-    const { isModalDeleteOpen, setIsModalDeleteOpen } = useContext(ModalDeleteContext)
-    const handleClose = () => setIsModalDeleteOpen(false);
+export default function ModalConfirm() {
+    const { toggleValidateComment } = Api
+    const { isModalConfirmOpen, setIsModalConfirmOpen, selectedId, setSelectedId, setOperatingError } = useContext(ItemsContext)
+    const handleClose = () => {
+        setIsModalConfirmOpen(false);
+        setSelectedId('');
+    }
 
-    const Token = giveMeToken();
 
-    const deleteItem = async () => {
-        const res = await deleteComment(id, Token)
+    const ConfirmItem = async () => {
+        try {
+            await toggleValidateComment({ id: selectedId })
+            setSelectedId('');
+            setTimeout(() => {
+                window.location.reload()
+            }, 1000)
+        } catch (error) {
+            setOperatingError(error.message)
+        } finally {
+            setTimeout(() => {
+                setOperatingError(null)
+            }, 5000);
+        }
     }
 
     return (
@@ -38,7 +51,7 @@ export default function ModalDelete({ id }) {
             <Modal
                 aria-labelledby="transition-modal-title"
                 aria-describedby="transition-modal-description"
-                open={isModalDeleteOpen}
+                open={isModalConfirmOpen}
                 onClose={handleClose}
                 closeAfterTransition
                 slots={{ backdrop: Backdrop }}
@@ -48,14 +61,14 @@ export default function ModalDelete({ id }) {
                     },
                 }}
             >
-                <Fade in={isModalDeleteOpen}>
+                <Fade in={isModalConfirmOpen}>
                     <Box sx={ModalStyle} className='rounded-3xl'>
                         <Typography id="transition-modal-title" variant="h6" component="h2">
-                            آیا از حذف این کامنت مطمئن هستید؟
+                            آیا از تاید این کامنت مطمئن هستید؟
                         </Typography>
 
                         <div className='mt-2 flex justify-between'>
-                            <Button onClick={() => { deleteItem(id); handleClose() }} variant='outlined'
+                            <Button onClick={() => { ConfirmItem(); handleClose() }} variant='outlined'
                                 className='p-0 m-1'
                                 sx={{ color: 'green', borderColor: 'green' }}>
                                 تایید

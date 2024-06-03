@@ -4,10 +4,10 @@ export default function useComment() {
     const [isModalDeleteOpen, setIsModalDeleteOpen] = useState(false);
     const [isModalConfirmOpen, setIsModalConfirmOpen] = useState(false);
     const [currentPage, setCurrentPage] = useState(1)
+    const [lastPage, setLastPage] = useState(1)
     const [loading, setLoading] = useState(true);
     const [isError, setIsError] = useState(false);
     const [error, setError] = useState('');
-    const [operatingID, setOperatingID] = useState('');
     const [operatingError, setOperatingError] = useState('');
     const [items, setItems] = useState([])
     const [itemsCount, setItemsCount] = useState(0)
@@ -18,14 +18,14 @@ export default function useComment() {
         setItems,
         currentPage,
         setCurrentPage,
+        lastPage,
+        setLastPage,
         loading,
         setLoading,
         isError,
         setIsError,
         error,
         setError,
-        operatingID,
-        setOperatingID,
         operatingError,
         setOperatingError,
         itemsCount,
