@@ -7,12 +7,24 @@ const initialState = {
 
 export const fetchProducts = createAsyncThunk(
   "Products/fetchProducts",
-  async (err) => {
+  async () => {
     try {
-      const response = await ProductApi.getAllProducts();
-      return response.products;
+      let response = await ProductApi.getAllProducts();
+      response = response.products.map((item) => {
+        if (item.imagesUrl.length == 0) {
+          return {
+            ...item,
+            imagesUrl: [
+              "img/home/category-labaniat.jpg",
+              "img/home/tanagholat.jpg",
+            ],
+          };
+        }
+        return item;
+      });
+      return response;
     } catch (error) {
-      err(error.response.data.message);
+      alert(error.response.data.message);
     }
   }
 );
