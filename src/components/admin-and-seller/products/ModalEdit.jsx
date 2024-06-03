@@ -111,25 +111,15 @@ export default function ModalEdit() {
             delete augmentedObj.imagesName;
             const res = await updateProduct(augmentedObj)
 
-            setSelectedItem(prevProps => ({
-                ...prevProps,
-                _id: '',
-                name: '',
-                price: '',
-                category: '',
-                desc: '',
-                subcategory: 'سوپرمارکت',
-                imagesUrl: []
-            }));
+            setSelectedItem({});
             if (res?.message === 'You are not authorized!')
                 throw ("توکن شما منقضی شده. لطفا خارج، و دوباره وارد شوید")
-
-        } catch (error) {
-            setOperatingError(error?.message);
-        } finally {
             setTimeout(() => {
                 window.location.reload()
             }, 1000)
+        } catch (error) {
+            setOperatingError(error?.message);
+        } finally {
             setFileStates([]);
             setImagesToDelete([]);
             setUploadRes([]);

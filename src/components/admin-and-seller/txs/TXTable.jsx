@@ -11,7 +11,7 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Api from '@/services/withAuthActivities/tx';
 import { convertToFarsiNumbers, formatPrice, price2Farsi } from '@/utils/funcs';
-import Pagination from './Pagination';
+import Pagination from '../../Pagination';
 import { ItemsContext } from './TXMain';
 import ModalShowMore from './ModalShowMore';
 import ModalDone from './ModalDone';
@@ -42,6 +42,8 @@ export default function TXTable() {
 
     const {
         currentPage,
+        setCurrentPage,
+        lastPage,
         setLastPage,
         loading,
         setLoading,
@@ -92,11 +94,19 @@ export default function TXTable() {
         fetchData();
     }, [currentPage, getAllMyTXs, itemsPerPage, setError, setIsError, setItems, setItemsCount, setLoading, isFutureOrder]);
     return (
-        <Stack spacing={2} className='mt-10'>
-            <span className='w-full text-start'>
+        <Stack spacing={2} className={`${!isFutureOrder && 'mt-16'}`}>
+            <div className='w-full text-start'>
                 جدول تراکنش های سفارشات &nbsp;
                 {!!isFutureOrder ? <>آتی</> : <>اخیر</>}
-            </span>
+            </div>
+            <div className='text-start'>
+                {
+                    itemsCount !== 0 &&
+                    <>
+                        تعداد : {itemsCount}
+                    </>
+                }
+            </div>
             {isError ? (
                 <div>
                     مشکلی رخ داد! لطفا دوباره تلاش کنید ...
@@ -199,7 +209,7 @@ export default function TXTable() {
                         {
                             itemsCount > itemsPerPage &&
                             <div className='flex justify-center' style={{ marginTop: '25px' }}>
-                                <Pagination />
+                                <Pagination currentPage={currentPage} setCurrentPage={setCurrentPage} lastPage={lastPage} />
                             </div>
                         }
 

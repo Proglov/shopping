@@ -6,8 +6,8 @@ import Fade from '@mui/material/Fade';
 import Typography from '@mui/material/Typography';
 import { useContext } from 'react';
 import { Button } from '@mui/material';
-import { ProductsContext } from './ProductsMain';
-import Api from '@/services/withAuthActivities/product';
+import { ItemsContext } from './SellersMain';
+import Api from '@/services/withAuthActivities/seller';
 
 const ModalStyle = {
     position: 'absolute',
@@ -21,28 +21,28 @@ const ModalStyle = {
     p: 4,
 };
 
-export default function ModalDelete({ productName }) {
-    const { deleteProduct } = Api
-    const { isModalDeleteOpen, setIsModalDeleteOpen, setSelectedItem,
-        setOperatingError, selectedItem } = useContext(ProductsContext)
+export default function ModalConfirm() {
+    const { sellerValidate } = Api
+    const { isModalConfirmOpen, setIsModalConfirmOpen, selectedId, setSelectedId, setOperatingError } = useContext(ItemsContext)
     const handleClose = () => {
-        setIsModalDeleteOpen(false);
-        setSelectedItem({});
+        setIsModalConfirmOpen(false);
+        setSelectedId('');
     }
 
-    const deleteItem = async () => {
+
+    const ConfirmItem = async () => {
         try {
-            await deleteProduct({ id: selectedItem?._id })
-            setSelectedItem({});
+            await sellerValidate({ id: selectedId })
+            setSelectedId('');
+            setTimeout(() => {
+                window.location.reload()
+            }, 1000)
         } catch (error) {
             setOperatingError(error.message)
         } finally {
             setTimeout(() => {
                 setOperatingError(null)
             }, 5000);
-            setTimeout(() => {
-                window.location.reload()
-            }, 1000)
         }
     }
 
@@ -51,7 +51,7 @@ export default function ModalDelete({ productName }) {
             <Modal
                 aria-labelledby="transition-modal-title"
                 aria-describedby="transition-modal-description"
-                open={isModalDeleteOpen}
+                open={isModalConfirmOpen}
                 onClose={handleClose}
                 closeAfterTransition
                 slots={{ backdrop: Backdrop }}
@@ -61,14 +61,14 @@ export default function ModalDelete({ productName }) {
                     },
                 }}
             >
-                <Fade in={isModalDeleteOpen}>
+                <Fade in={isModalConfirmOpen}>
                     <Box sx={ModalStyle} className='rounded-3xl'>
                         <Typography id="transition-modal-title" variant="h6" component="h2">
-                            آیا از حذف این محصول ( {productName} ) مطمئن هستید؟
+                            آیا از تایید این فروشنده مطمئن هستید؟
                         </Typography>
 
                         <div className='mt-2 flex justify-between'>
-                            <Button onClick={() => { deleteItem(selectedItem?._id); handleClose() }} variant='outlined'
+                            <Button onClick={() => { ConfirmItem(); handleClose() }} variant='outlined'
                                 className='p-0 m-1'
                                 sx={{ color: 'green', borderColor: 'green' }}>
                                 تایید

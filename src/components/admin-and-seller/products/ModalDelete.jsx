@@ -6,9 +6,8 @@ import Fade from '@mui/material/Fade';
 import Typography from '@mui/material/Typography';
 import { useContext } from 'react';
 import { Button } from '@mui/material';
-import { ModalDeleteContext } from './CommentsTable';
-import { giveMeToken } from '@/utils/Auth';
-import Api from '@/services/withAuthActivities/comment';
+import { ProductsContext } from './ProductsMain';
+import Api from '@/services/withAuthActivities/product';
 
 const ModalStyle = {
     position: 'absolute',
@@ -22,15 +21,29 @@ const ModalStyle = {
     p: 4,
 };
 
-export default function ModalDelete({ id }) {
-    const { deleteComment } = Api
-    const { isModalDeleteOpen, setIsModalDeleteOpen } = useContext(ModalDeleteContext)
-    const handleClose = () => setIsModalDeleteOpen(false);
-
-    const Token = giveMeToken();
+export default function ModalDelete({ productName }) {
+    const { deleteProduct } = Api
+    const { isModalDeleteOpen, setIsModalDeleteOpen, setSelectedItem,
+        setOperatingError, selectedItem } = useContext(ProductsContext)
+    const handleClose = () => {
+        setIsModalDeleteOpen(false);
+        setSelectedItem({});
+    }
 
     const deleteItem = async () => {
-        const res = await deleteComment(id, Token)
+        try {
+            await deleteProduct({ id: selectedItem?._id })
+            setSelectedItem({});
+            setTimeout(() => {
+                window.location.reload()
+            }, 1000)
+        } catch (error) {
+            setOperatingError(error.message)
+        } finally {
+            setTimeout(() => {
+                setOperatingError(null)
+            }, 5000);
+        }
     }
 
     return (
@@ -51,11 +64,11 @@ export default function ModalDelete({ id }) {
                 <Fade in={isModalDeleteOpen}>
                     <Box sx={ModalStyle} className='rounded-3xl'>
                         <Typography id="transition-modal-title" variant="h6" component="h2">
-                            آیا از حذف این کامنت مطمئن هستید؟
+                            آیا از حذف این محصول ( {productName} ) مطمئن هستید؟
                         </Typography>
 
                         <div className='mt-2 flex justify-between'>
-                            <Button onClick={() => { deleteItem(id); handleClose() }} variant='outlined'
+                            <Button onClick={() => { deleteItem(selectedItem?._id); handleClose() }} variant='outlined'
                                 className='p-0 m-1'
                                 sx={{ color: 'green', borderColor: 'green' }}>
                                 تایید

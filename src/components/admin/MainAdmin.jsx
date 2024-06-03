@@ -1,10 +1,11 @@
 'use client'
 import React, { useState } from 'react'
 import { Box, Tab, Tabs, Typography } from '@mui/material'
-import ProductsMain from '../admin-and-seller/product/ProductsMain';
+import ProductsMain from '../admin-and-seller/products/ProductsMain';
+import SellersMain from '../admin-and-seller/sellers/SellersMain';
 import UsersMain from '../admin-and-seller/users/UsersMain';
 import TXMain from '../admin-and-seller/txs/TXMain';
-import CommentsMain from './comments/CommentsMain';
+import CommentsMain from '../admin-and-seller/comments/CommentsMain';
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -57,8 +58,9 @@ export default function Main() {
             >
                 <Tab label="محصولات" {...a11yProps(0)} />
                 <Tab label="کاربران" {...a11yProps(1)} />
-                <Tab label="تراکنش ها" {...a11yProps(2)} />
-                <Tab label="کامنت ها" {...a11yProps(2)} />
+                <Tab label="فروشندگان" {...a11yProps(2)} />
+                <Tab label="تراکنش ها" {...a11yProps(3)} />
+                <Tab label="کامنت ها" {...a11yProps(4)} />
             </Tabs>
             <div style={{ width: '100%' }}>
                 <TabPanel value={addSegmentsPage} index={0} className='text-center'>
@@ -68,9 +70,12 @@ export default function Main() {
                     <UsersMain />
                 </TabPanel>
                 <TabPanel value={addSegmentsPage} index={2} className='text-center'>
-                    <TXMain which={"ADMIN"} />
+                    <SellersMain />
                 </TabPanel>
                 <TabPanel value={addSegmentsPage} index={3} className='text-center'>
+                    <TXMain which={"ADMIN"} />
+                </TabPanel>
+                <TabPanel value={addSegmentsPage} index={4} className='text-center'>
                     <CommentsMain />
                 </TabPanel>
             </div>

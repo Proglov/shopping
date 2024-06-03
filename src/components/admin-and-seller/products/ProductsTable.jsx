@@ -11,7 +11,7 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Api from '@/services/withAuthActivities/product';
 import Api2 from '@/services/withoutAuthActivities/product';
-import Pagination from './Pagination';
+import Pagination from '../../Pagination';
 import { price2Farsi } from '@/utils/funcs';
 import ModalDelete from './ModalDelete';
 import ModalEdit from './ModalEdit';
@@ -45,6 +45,8 @@ export default function ProductsTable() {
         items,
         setItems,
         currentPage,
+        setCurrentPage,
+        lastPage,
         loading,
         setLoading,
         isError,
@@ -92,10 +94,18 @@ export default function ProductsTable() {
 
 
     return (
-        <Stack spacing={2} className='mt-10'>
-            <span className='w-full text-start'>
+        <Stack spacing={2} className='mt-7'>
+            <div className='w-full text-start'>
                 جدول محصولات
-            </span>
+            </div>
+            <div className='text-start'>
+                {
+                    itemsCount !== 0 &&
+                    <>
+                        تعداد : {itemsCount}
+                    </>
+                }
+            </div>
             {isError ? (
                 <div>
                     مشکلی رخ داد! لطفا دوباره تلاش کنید ...
@@ -177,7 +187,7 @@ export default function ProductsTable() {
                         {
                             itemsCount > itemsPerPage &&
                             <div className='flex justify-center' style={{ marginTop: '25px' }}>
-                                <Pagination />
+                                <Pagination currentPage={currentPage} setCurrentPage={setCurrentPage} lastPage={lastPage} />
                             </div>
                         }
 

@@ -1,6 +1,6 @@
 "use client"
 import { Button, Stack } from '@mui/material';
-import { useEffect, createContext, useContext } from 'react';
+import { useEffect, useContext } from 'react';
 import { styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -10,11 +10,11 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { convertToFarsiNumbers } from '@/utils/funcs';
-import Pagination from './Pagination';
-import Api from '@/services/withoutAuthActivities/comment';
+import Pagination from '../../Pagination'
+import Api from '@/services/withAuthActivities/seller';
 import ModalDelete from './ModalDelete';
 import ModalConfirm from './ModalConfirm';
-import { ItemsContext } from './CommentsMain';
+import { ItemsContext } from './SellersMain';
 
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -35,36 +35,30 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
     },
 }));
 
-export const PaginationContext = createContext();
-export const ModalDeleteContext = createContext();
-export const ModalConfirmContext = createContext();
 
 
-export default function CommentsTable() {
-    const { getAllComments } = Api
+export default function SellersTable() {
+    const { getAllSellers } = Api
 
     const {
         items,
         setItems,
         currentPage,
         setCurrentPage,
+        lastPage,
+        setLastPage,
         loading,
         setLoading,
         isError,
         setIsError,
         error,
         setError,
-        operatingID,
-        setOperatingID,
         operatingError,
-        setOperatingError,
         itemsCount,
         setItemsCount,
         selectedId,
         setSelectedId,
-        isModalConfirmOpen,
         setIsModalConfirmOpen,
-        isModalDeleteOpen,
         setIsModalDeleteOpen,
         itemsPerPage,
         validated,
@@ -75,9 +69,10 @@ export default function CommentsTable() {
         const fetchData = async () => {
             try {
                 setLoading(true);
-                const comments = await getAllComments({ page: currentPage, perPage: itemsPerPage, validated });
-                setItems(comments?.comments)
-                setItemsCount(comments?.allCommentsCount)
+                const sellers = await getAllSellers({ page: currentPage, perPage: itemsPerPage, validated });
+                setItems(sellers?.sellers)
+                setItemsCount(sellers?.allSellersCount)
+                setLastPage(Math.ceil(sellers?.allSellersCount / itemsPerPage))
             } catch (error) {
                 setError(`Error fetching users: ${error}`);
                 setIsError(true);
@@ -87,12 +82,20 @@ export default function CommentsTable() {
         };
 
         fetchData();
-    }, [currentPage, getAllComments, itemsPerPage, setError, setIsError, setItems, setItemsCount, setLoading, validated]);
+    }, [currentPage, getAllSellers, itemsPerPage, setError, setIsError, setItems, setItemsCount, setLoading, validated]);
     return (
-        <Stack spacing={2} className='mt-10'>
-            <span className='w-full text-start'>
-                جدول کامنت های تایید {!!validated ? <></> : <>ن</>}شده
-            </span>
+        <Stack spacing={2} className={`${!!validated && 'mt-16'}`}>
+            <div className='w-full text-start'>
+                جدول فروشندگان های تایید {!!validated ? <></> : <>ن</>}شده
+            </div>
+            <div className='text-start'>
+                {
+                    itemsCount !== 0 &&
+                    <>
+                        تعداد : {itemsCount}
+                    </>
+                }
+            </div>
             {isError ? (
                 <div>
                     مشکلی رخ داد! لطفا دوباره تلاش کنید ...
@@ -109,8 +112,10 @@ export default function CommentsTable() {
                                 <TableHead>
                                     <TableRow>
                                         <StyledTableCell align='center'>ردیف</StyledTableCell>
-                                        <StyledTableCell align='center'>شماره کاربر</StyledTableCell>
-                                        <StyledTableCell align='center'>متن ارسال شده</StyledTableCell>
+                                        <StyledTableCell align='center'>نام</StyledTableCell>
+                                        <StyledTableCell align='center'>نام فروشگاه</StyledTableCell>
+                                        <StyledTableCell align='center'>شماره همراه</StyledTableCell>
+                                        <StyledTableCell align='center'>شماره فروشگاه</StyledTableCell>
                                         <StyledTableCell align='center'>عملیات</StyledTableCell>
                                     </TableRow>
                                 </TableHead>
@@ -119,10 +124,12 @@ export default function CommentsTable() {
                                         <StyledTableRow key={item.id}
                                             className='align-middle'>
                                             <StyledTableCell align='center'>{convertToFarsiNumbers(index + 1 + itemsPerPage * (currentPage - 1))}</StyledTableCell>
-                                            <StyledTableCell align='center'>{item.user?.phone}</StyledTableCell>
-                                            <StyledTableCell align='center'>{item.body}</StyledTableCell>
+                                            <StyledTableCell align='center'>{item.name}</StyledTableCell>
+                                            <StyledTableCell align='center'>{item.storeName}</StyledTableCell>
+                                            <StyledTableCell align='center'>{item.phone}</StyledTableCell>
+                                            <StyledTableCell align='center'>{item.workingPhone}</StyledTableCell>
                                             <StyledTableCell className='flex flex-col justify-center border-b-0 align-middle'>
-                                                {operatingID === item.id ? (
+                                                {selectedId === item._id ? (
                                                     <div className='text-center mt-2 text-xs'>درحال انجام عملیات</div>
                                                 ) : (
                                                     <>
@@ -133,7 +140,7 @@ export default function CommentsTable() {
                                                                 sx={{ color: 'green', borderColor: 'green' }}
                                                                 onClick={() => {
                                                                     setIsModalConfirmOpen(true);
-                                                                    setSelectedId(item.id)
+                                                                    setSelectedId(item._id)
                                                                 }}
                                                             >
                                                                 تایید
@@ -146,15 +153,20 @@ export default function CommentsTable() {
                                                             className='p-0 m-1'
                                                             onClick={() => {
                                                                 setIsModalDeleteOpen(true);
-                                                                setSelectedId(item.id)
+                                                                setSelectedId(item._id)
                                                             }}
                                                         >
                                                             حذف
                                                         </Button>
                                                     </>
                                                 )}
-                                                {operatingID === item.id && operatingError !== '' ? (
-                                                    <div>مشکلی پیش امده است. لطفا اتصال اینترنت را بررسی کنید</div>
+                                                {selectedId === item._id && operatingError !== '' ? (
+                                                    <>
+                                                        <div>
+                                                            {error}
+                                                        </div>
+                                                        <div>مشکلی پیش امده است. لطفا اتصال اینترنت را بررسی کنید</div>
+                                                    </>
                                                 ) : ''}
                                             </StyledTableCell>
                                         </StyledTableRow>
@@ -165,9 +177,7 @@ export default function CommentsTable() {
                         {
                             itemsCount > itemsPerPage &&
                             <div className='flex justify-center' style={{ marginTop: '25px' }}>
-                                <PaginationContext.Provider value={{ lastPage: Math.ceil(itemsCount / itemsPerPage), currentPage, setCurrentPage }}>
-                                    <Pagination />
-                                </PaginationContext.Provider>
+                                <Pagination currentPage={currentPage} setCurrentPage={setCurrentPage} lastPage={lastPage} />
                             </div>
                         }
 
@@ -177,19 +187,8 @@ export default function CommentsTable() {
                     </div>
             )}
 
-            <>
-
-                <ModalDeleteContext.Provider value={{ isModalDeleteOpen, setIsModalDeleteOpen }}>
-                    <ModalDelete id={selectedId} />
-                </ModalDeleteContext.Provider>
-
-                <ModalConfirmContext.Provider value={{
-                    isModalConfirmOpen,
-                    setIsModalConfirmOpen
-                }}>
-                    <ModalConfirm />
-                </ModalConfirmContext.Provider>
-            </>
+            <ModalDelete />
+            <ModalConfirm />
 
         </Stack>
     );

@@ -9,10 +9,12 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import Api from '@/services/withAuthActivities/user';
+import { convertToFarsiNumbers } from '@/utils/funcs';
 import Pagination from '../../Pagination';
+import Api from '@/services/withoutAuthActivities/comment';
 import ModalDelete from './ModalDelete';
-import { UsersContext } from './UsersMain';
+import ModalConfirm from './ModalConfirm';
+import { ItemsContext } from './CommentsMain';
 
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -35,10 +37,12 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 
 
 
-export default function UsersTable() {
-    const { getAllUsers } = Api
+export default function CommentsTable() {
+    const { getAllComments } = Api
 
     const {
+        items,
+        setItems,
         currentPage,
         setCurrentPage,
         lastPage,
@@ -50,23 +54,25 @@ export default function UsersTable() {
         error,
         setError,
         operatingError,
-        items,
-        setItems,
         itemsCount,
         setItemsCount,
+        selectedId,
+        setSelectedId,
+        setIsModalConfirmOpen,
         setIsModalDeleteOpen,
-        setSelectedItem,
-        selectedItem,
-        itemsPerPage
-    } = useContext(UsersContext)
+        itemsPerPage,
+        validated,
+    } = useContext(ItemsContext)
+
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const users = await getAllUsers({ page: currentPage, perPage: itemsPerPage });
-                setItems(users.users)
-                setItemsCount(users?.usersCount)
-                setLastPage(Math.ceil(users?.usersCount / itemsPerPage))
+                setLoading(true);
+                const comments = await getAllComments({ page: currentPage, perPage: itemsPerPage, validated });
+                setItems(comments?.comments)
+                setItemsCount(comments?.allCommentsCount)
+                setLastPage(Math.ceil(comments?.allCommentsCount / itemsPerPage))
             } catch (error) {
                 setError(`Error fetching users: ${error}`);
                 setIsError(true);
@@ -76,11 +82,11 @@ export default function UsersTable() {
         };
 
         fetchData();
-    }, [currentPage, getAllUsers, itemsPerPage, setError, setIsError, setItems, setItemsCount, setLoading]);
+    }, [currentPage, getAllComments, itemsPerPage, setError, setIsError, setItems, setItemsCount, setLoading, validated]);
     return (
         <Stack spacing={2}>
             <div className='w-full text-start'>
-                جدول کاربران
+                جدول کامنت های تایید {!!validated ? <></> : <>ن</>}شده
             </div>
             <div className='text-start'>
                 {
@@ -106,10 +112,8 @@ export default function UsersTable() {
                                 <TableHead>
                                     <TableRow>
                                         <StyledTableCell align='center'>ردیف</StyledTableCell>
-                                        <StyledTableCell align='center'>نام</StyledTableCell>
-                                        <StyledTableCell align='center'>نام کاربری</StyledTableCell>
-                                        <StyledTableCell align='center'>ایمیل</StyledTableCell>
-                                        <StyledTableCell align='center'>شماره</StyledTableCell>
+                                        <StyledTableCell align='center'>شماره کاربر</StyledTableCell>
+                                        <StyledTableCell align='center'>متن ارسال شده</StyledTableCell>
                                         <StyledTableCell align='center'>عملیات</StyledTableCell>
                                     </TableRow>
                                 </TableHead>
@@ -117,43 +121,46 @@ export default function UsersTable() {
                                     {items.map((item, index) => (
                                         <StyledTableRow key={item.id}
                                             className='align-middle'>
-                                            <StyledTableCell align='center'>{index + 1 + itemsPerPage * (currentPage - 1)}</StyledTableCell>
-                                            <StyledTableCell align='center'>
-                                                {item.name}
-                                                {!item.name && <>فاقد نام</>}
-                                            </StyledTableCell>
-                                            <StyledTableCell align='center'>
-                                                {item.username}
-                                                {!item.username && <>فاقد نام کاربری</>}
-                                            </StyledTableCell>
-                                            <StyledTableCell align='center'>
-                                                {item.email}
-                                                {!item.email && <>فاقد ایمیل</>}
-                                            </StyledTableCell>
-                                            <StyledTableCell align='center'>{item.phone}</StyledTableCell>
+                                            <StyledTableCell align='center'>{convertToFarsiNumbers(index + 1 + itemsPerPage * (currentPage - 1))}</StyledTableCell>
+                                            <StyledTableCell align='center'>{item.userId?.phone}</StyledTableCell>
+                                            <StyledTableCell align='center'>{item.body}</StyledTableCell>
                                             <StyledTableCell className='flex flex-col justify-center border-b-0 align-middle'>
-                                                {selectedItem?._id === item._id ? (
+                                                {selectedId === item._id ? (
                                                     <div className='text-center mt-2 text-xs'>درحال انجام عملیات</div>
                                                 ) : (
                                                     <>
+                                                        {!!validated ? <></> : <>
+                                                            <Button
+                                                                variant='outlined'
+                                                                className='p-0 m-1'
+                                                                sx={{ color: 'green', borderColor: 'green' }}
+                                                                onClick={() => {
+                                                                    setIsModalConfirmOpen(true);
+                                                                    setSelectedId(item._id)
+                                                                }}
+                                                            >
+                                                                تایید
+                                                            </Button>
+                                                        </>}
+
                                                         <Button
                                                             variant='outlined'
                                                             sx={{ color: 'red', borderColor: 'red' }}
                                                             className='p-0 m-1'
                                                             onClick={() => {
                                                                 setIsModalDeleteOpen(true);
-                                                                setSelectedItem({
-                                                                    ...item
-                                                                })
+                                                                setSelectedId(item._id)
                                                             }}
                                                         >
                                                             حذف
                                                         </Button>
                                                     </>
                                                 )}
-                                                {selectedItem?._id === item._id && operatingError !== '' ? (
+                                                {selectedId === item._id && operatingError !== '' ? (
                                                     <>
-                                                        <div>{error}</div>
+                                                        <div>
+                                                            {error}
+                                                        </div>
                                                         <div>مشکلی پیش امده است. لطفا اتصال اینترنت را بررسی کنید</div>
                                                     </>
                                                 ) : ''}
@@ -163,11 +170,10 @@ export default function UsersTable() {
                                 </TableBody>
                             </Table>
                         </TableContainer>
-
                         {
                             itemsCount > itemsPerPage &&
                             <div className='flex justify-center' style={{ marginTop: '25px' }}>
-                                <Pagination currentPage={currentPage} lastPage={lastPage} setCurrentPage={setCurrentPage} />
+                                <Pagination currentPage={currentPage} setCurrentPage={setCurrentPage} lastPage={lastPage} />
                             </div>
                         }
 
@@ -178,6 +184,7 @@ export default function UsersTable() {
             )}
 
             <ModalDelete />
+            <ModalConfirm />
 
         </Stack>
     );

@@ -6,8 +6,7 @@ import Fade from '@mui/material/Fade';
 import Typography from '@mui/material/Typography';
 import { useContext } from 'react';
 import { Button } from '@mui/material';
-import { ModalConfirmContext } from './CommentsTable';
-import { giveMeToken } from '@/utils/Auth';
+import { ItemsContext } from './CommentsMain';
 import Api from '@/services/withAuthActivities/comment';
 
 const ModalStyle = {
@@ -22,15 +21,29 @@ const ModalStyle = {
     p: 4,
 };
 
-export default function ModalConfirm({ id }) {
+export default function ModalConfirm() {
     const { toggleValidateComment } = Api
-    const { isModalConfirmOpen, setIsModalConfirmOpen } = useContext(ModalConfirmContext)
-    const handleClose = () => setIsModalConfirmOpen(false);
+    const { isModalConfirmOpen, setIsModalConfirmOpen, selectedId, setSelectedId, setOperatingError } = useContext(ItemsContext)
+    const handleClose = () => {
+        setIsModalConfirmOpen(false);
+        setSelectedId('');
+    }
 
-    const Token = giveMeToken();
 
     const ConfirmItem = async () => {
-        const res = await toggleValidateComment(id, Token)
+        try {
+            await toggleValidateComment({ id: selectedId })
+            setSelectedId('');
+            setTimeout(() => {
+                window.location.reload()
+            }, 1000)
+        } catch (error) {
+            setOperatingError(error.message)
+        } finally {
+            setTimeout(() => {
+                setOperatingError(null)
+            }, 5000);
+        }
     }
 
     return (
@@ -51,11 +64,11 @@ export default function ModalConfirm({ id }) {
                 <Fade in={isModalConfirmOpen}>
                     <Box sx={ModalStyle} className='rounded-3xl'>
                         <Typography id="transition-modal-title" variant="h6" component="h2">
-                            آیا از تاید این کامنت مطمئن هستید؟
+                            آیا از تایید این کامنت مطمئن هستید؟
                         </Typography>
 
                         <div className='mt-2 flex justify-between'>
-                            <Button onClick={() => { ConfirmItem(id); handleClose() }} variant='outlined'
+                            <Button onClick={() => { ConfirmItem(); handleClose() }} variant='outlined'
                                 className='p-0 m-1'
                                 sx={{ color: 'green', borderColor: 'green' }}>
                                 تایید

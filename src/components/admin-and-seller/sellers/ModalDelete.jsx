@@ -6,8 +6,8 @@ import Fade from '@mui/material/Fade';
 import Typography from '@mui/material/Typography';
 import { useContext } from 'react';
 import { Button } from '@mui/material';
-import { UsersContext } from './UsersMain';
-import Api from '@/services/withAuthActivities/user';
+import { ItemsContext } from './SellersMain';
+import Api from '@/services/withAuthActivities/seller';
 
 const ModalStyle = {
     position: 'absolute',
@@ -22,18 +22,18 @@ const ModalStyle = {
 };
 
 export default function ModalDelete() {
-    const { deleteUser } = Api
-    const { isModalDeleteOpen, setIsModalDeleteOpen, selectedItem, setSelectedItem, setOperatingError } = useContext(UsersContext)
+    const { deleteSeller } = Api
+    const { isModalDeleteOpen, setIsModalDeleteOpen, selectedId, setSelectedId, setOperatingError } = useContext(ItemsContext)
     const handleClose = () => {
         setIsModalDeleteOpen(false);
-        setSelectedItem({});
+        setSelectedId('');
     }
 
 
     const deleteItem = async () => {
         try {
-            await deleteUser({ id: selectedItem?._id })
-            setSelectedItem({});
+            await deleteSeller({ id: selectedId })
+            setSelectedId('');
             setTimeout(() => {
                 window.location.reload()
             }, 1000)
@@ -64,7 +64,7 @@ export default function ModalDelete() {
                 <Fade in={isModalDeleteOpen}>
                     <Box sx={ModalStyle} className='rounded-3xl'>
                         <Typography id="transition-modal-title" variant="h6" component="h2">
-                            آیا از حذف این کاربر مطمئن هستید؟
+                            آیا از حذف این فروشنده مطمئن هستید؟
                         </Typography>
 
                         <div className='mt-2 flex justify-between'>

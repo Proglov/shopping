@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-export default function useComment() {
+export default function useSellers() {
     const [isModalDeleteOpen, setIsModalDeleteOpen] = useState(false);
     const [isModalConfirmOpen, setIsModalConfirmOpen] = useState(false);
     const [currentPage, setCurrentPage] = useState(1)
