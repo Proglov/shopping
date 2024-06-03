@@ -10,7 +10,7 @@ import { IoMdClose } from "react-icons/io";
 export const ProductsContext = createContext()
 
 
-export default function ProductsMain() {
+export default function ProductsMain({ which }) {
     const [isHidden, setIsHidden] = useState(true)
 
     const productsObj = useProducts()
@@ -37,7 +37,7 @@ export default function ProductsMain() {
             <div className={`${isHidden ? 'hidden' : ''}`}>
                 <AddProduct />
             </div>
-            <ProductsContext.Provider value={{ ...productsObj, itemsPerPage }}>
+            <ProductsContext.Provider value={{ ...productsObj, itemsPerPage, which }}>
                 <ProductsTable />
             </ProductsContext.Provider>
         </div>

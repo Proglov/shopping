@@ -6,8 +6,7 @@ import Fade from '@mui/material/Fade';
 import Typography from '@mui/material/Typography';
 import { useContext } from 'react';
 import { Button } from '@mui/material';
-import { ModalDeleteContext } from './ProductsTable';
-import { giveMeToken } from '@/utils/Auth';
+import { ProductsContext } from './ProductsMain';
 import Api from '@/services/withAuthActivities/product';
 
 const ModalStyle = {
@@ -22,15 +21,28 @@ const ModalStyle = {
     p: 4,
 };
 
-export default function ModalDelete({ id }) {
+export default function ModalDelete({ productName }) {
     const { deleteProduct } = Api
-    const { isModalDeleteOpen, setIsModalDeleteOpen } = useContext(ModalDeleteContext)
+    const { isModalDeleteOpen, setIsModalDeleteOpen, id, setOperatingID,
+        setOperatingError } = useContext(ProductsContext)
     const handleClose = () => setIsModalDeleteOpen(false);
 
-    const Token = giveMeToken();
-
     const deleteItem = async () => {
-        const res = await deleteProduct(id, Token)
+        try {
+            setOperatingID(id);
+            await deleteProduct({ id })
+
+        } catch (error) {
+            setOperatingError(error.message)
+        } finally {
+            setTimeout(() => {
+                setOperatingError(null)
+                setOperatingID(null)
+            }, 5000);
+            setTimeout(() => {
+                window.location.reload()
+            }, 1000)
+        }
     }
 
     return (
@@ -51,7 +63,7 @@ export default function ModalDelete({ id }) {
                 <Fade in={isModalDeleteOpen}>
                     <Box sx={ModalStyle} className='rounded-3xl'>
                         <Typography id="transition-modal-title" variant="h6" component="h2">
-                            آیا از حذف این محصول مطمئن هستید؟
+                            آیا از حذف این محصول ( {productName} ) مطمئن هستید؟
                         </Typography>
 
                         <div className='mt-2 flex justify-between'>
