@@ -22,7 +22,7 @@ export default function PaymentBill() {
   const [pay, setPay] = useState(false);
 
   let price = product.reduce((sum, obj) => {
-    return sum + (obj.number * parseInt(obj.price) * (100 - obj.off)) / 100;
+    return sum + obj.number * parseInt(obj.price);
   }, 0);
 
   return (

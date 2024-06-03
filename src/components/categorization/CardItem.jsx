@@ -15,42 +15,25 @@ export default function CardItem({ product }) {
   });
 
   return (
-    <Card sx={{ minWidth: 200, height: 330 }} className="mt-5 ml-6">
-      <CardMedia sx={{ height: 150 }} component="img" image={product.imagesUrl[0]} />
+    <Card sx={{ maxWidth: 200, height: 330 }} className="mt-5 ml-6">
+      <CardMedia
+        sx={{ height: 150, width: 200 }}
+        component="img"
+        image={product.imagesUrl[0]}
+      />
       <CardContent>
-        <Box component="div" className="text-lg">
+        <Box component="div" className="text-lg break-words">
           {product.name}
         </Box>
         <Box>
-          {product?.off == "0" ? (
-            <div className="h-12"></div>
-          ) : (
-            <div className="flex justify-start sm:text-base text-sm">
-              <span className="bg-red-500 rounded-md mt-2 text-center h-7 sm:min-w-[50px] p-1 text-white">
-                {convertToFarsiNumbers(product?.off.toString())}%
-              </span>
-              <div className="flex justify-end m-3 ml-0 mr-1 line-through text-gray-400">
-                {convertToFarsiNumbers(
-                  formatPrice(parseInt(product.price).toString())
-                )}{" "}
-                تومان
-              </div>
-            </div>
-          )}
-          <div>
-            قیمت :
-            {convertToFarsiNumbers(
-              formatPrice(
-                Math.ceil(
-                  (parseInt(product.price) * (100 - product?.off)) / 100
-                ).toString()
-              )
-            )}{" "}
-            تومان
-          </div>
+          قیمت :
+          {convertToFarsiNumbers(
+            formatPrice(Math.ceil(parseInt(product.price)).toString())
+          )}{" "}
+          تومان
         </Box>
         <Box className="mt-3">
-          <Link href={`/categories/${place[0].href}/${product.name}`}>
+          <Link href={`/categories/${place[0].href}/${product._id}`}>
             <Button variant="outlined" color="info" className="w-full">
               مشاهده محصول
             </Button>

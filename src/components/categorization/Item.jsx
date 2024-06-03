@@ -12,17 +12,23 @@ import { useEffect, useState } from "react";
 export default function Item() {
   const router = usePathname();
   const { getOneProduct } = ProductApi;
-  const allProduct = useAppSelector((state) => state.Products.products);
-  const oneProduct = allProduct?.filter((item) => {
-    return item.name === router.split("/")[3];
+  const [product, setProduct] = useState({
+    category: "",
+    desc: "",
+    imagesUrl: [],
+    name: "",
+    price: 0,
+    sellerId: "",
+    subcategory: "",
+    __v: 0,
+    _id: "",
   });
-  const [product, setProduct] = useState({});
 
   useEffect(() => {
     const getProduct = async () => {
       try {
-        const p = await getOneProduct({ id: oneProduct?._id });
-        setProduct({ ...p });
+        const p = await getOneProduct({ id: router.split("/")[3] });
+        setProduct({ ...p.data.product });
       } catch (error) {
         alert(error.response.data.message);
       }
@@ -32,7 +38,11 @@ export default function Item() {
 
   return (
     <>
-      <GalleryItem images={product.imagesUrl} />
+      {product.imagesUrl.length === 0 ? (
+        ""
+      ) : (
+        <GalleryItem images={product.imagesUrl} />
+      )}
       <DetailItem detail={product} />
       <SimilarProducts />
       <CommentItem productID={product._id} />

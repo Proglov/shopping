@@ -8,14 +8,7 @@ import ArrowBackIosOutlinedIcon from "@mui/icons-material/ArrowBackIosOutlined";
 
 export default function GalleryItem({ images }) {
   const [currentImage, setCurrentImage] = useState(0);
-  // const images = [
-  //   "/img/home/category-labaniat.jpg",
-  //   "/img/home/category-labaniat.jpg",
-  //   "/img/home/category-labaniat.jpg",
-  //   "/img/home/category-labaniat.jpg",
-  //   "/img/home/category-labaniat.jpg",
-  //   "/img/home/category-labaniat.jpg",
-  // ];
+
   const nextImage = () => {
     setCurrentImage((currentImage + 1) % images.length);
   };
@@ -26,7 +19,10 @@ export default function GalleryItem({ images }) {
 
   return (
     <Box className="m-5 flex justify-center flex-col items-center">
-      <Box className="border-2 border-gray-200 p-5 w-fit bg-gray-100 rounded relative">
+      <Box
+        className="border-2 border-gray-200 p-5 w-fit bg-gray-100 rounded relative"
+        sx={{ maxWidth: 500, maxHeight: 300 }}
+      >
         <Image
           src={images[currentImage]}
           alt="gallery"
