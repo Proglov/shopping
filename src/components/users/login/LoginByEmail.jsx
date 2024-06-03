@@ -10,46 +10,63 @@ import { SetLogin } from "@/features/Login/LoginSlice";
 import DOMPurify from "dompurify";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import LoginByEmail from "./LoginByEmail";
+import LoginComponent from "./LoginComponent";
+import { isEmailValid } from "@/utils/funcs";
 import { useRouter } from "next/navigation";
 
-export default function LoginComponent() {
-  const [phoneNumber, setPhoneNumber] = useState("");
-  const [show, setShow] = useState([false, false]);
+export default function LoginByEmail() {
+  const [information, setInformation] = useState({
+    emailOrUsername: "",
+    password: "",
+  });
+  const [show, setShow] = useState([false, false, false]);
   const [next, setNext] = useState(false);
-  const [email, setEmail] = useState(false);
-  const { signInWithPhone } = UserApi;
+  const [email, setEmail] = useState(true);
+  const { signInWithEmailOrUsername } = UserApi;
   const dispatch = useAppDispatch();
   const router = useRouter();
 
   const submit = async () => {
-    if (!phoneNumber) {
-      setShow([true, false]);
+    if ((information.emailOrUsername === "") | (information.password === "")) {
+      setShow([true, false, false]);
       return;
     }
-    if (!/^[0][9]([0-9]{9})$/.test(phoneNumber)) {
-      setShow([false, true]);
+    if (!isEmailValid(information.emailOrUsername)) {
+      if (information.emailOrUsername.length < 8) {
+        setShow([false, true, false]);
+        return;
+      }
+    }
+    if (information.password.length < 8) {
+      setShow([false, false, true]);
       return;
     }
     try {
-      const phone = DOMPurify.sanitize(phoneNumber);
-      const response = await signInWithPhone({ phone: phone });
+      const obj = information;
+      obj.password = DOMPurify.sanitize(obj.password);
+      obj.emailOrUsername = DOMPurify.sanitize(obj.emailOrUsername);
+      const response = await signInWithEmailOrUsername(obj);
       localStorage.setItem("token", response.token);
       toast.success("ورود شما موفقیت آمیز بود", {
         position: toast.POSITION.TOP_RIGHT,
       });
-      setShow([false, false]);
+      setShow([false, false, false]);
       dispatch(SetLogin(true));
       router.push("/");
       // setNext(true);
     } catch (error) {
       const mes = error.response.data.message;
-      if (mes === "no user found") {
-        toast.error("شماره تلفن شما ثبت نشده است", {
+      if (mes === "Invalid Credentials") {
+        toast.error("ایمیل یا نام کاربری یا رمز عبور اشتباه می باشد", {
           position: toast.POSITION.TOP_RIGHT,
         });
       }
-      setShow([false, false]);
+      if (mes === "no user found") {
+        toast.error("شما قبلا ثبت نام نکرده اید", {
+          position: toast.POSITION.TOP_RIGHT,
+        });
+      }
+      setShow([false, false, false]);
     }
   };
 
@@ -57,8 +74,8 @@ export default function LoginComponent() {
     <>
       {next ? (
         <AuthenticationComponent />
-      ) : email ? (
-        <LoginByEmail />
+      ) : !email ? (
+        <LoginComponent />
       ) : (
         <Box component="div" className="grid place-items-center h-fit w-full">
           <Box
@@ -74,22 +91,48 @@ export default function LoginComponent() {
             <Box className="text-base mb-6 font-thin" component="div">
               سلام!
               <br />
-              لطفا شماره موبایل خود را وارد کنید
+              لطفا ایمیل یا نام کاربری و رمز عبور خود را وارد کنید
             </Box>
-            <Box className="mb-4">
+            <Box className="mb-4 grid gap-4">
               <TextField
-                value={phoneNumber}
+                value={information.emailOrUsername}
                 fullWidth
-                label="شماره موبایل"
+                label="نام کاربری یا ایمیل"
                 onKeyDown={(event) => {
                   if (event.key === "Enter") {
                     submit();
                   }
                 }}
                 onChange={(event) => {
-                  const input = event.target.value;
-                  const filteredInput = input.replace(/\D/g, "");
-                  setPhoneNumber(filteredInput);
+                  setInformation({
+                    ...information,
+                    emailOrUsername: event.target.value,
+                  });
+                }}
+                sx={{
+                  " & .MuiInputLabel-root": {
+                    left: "inherit !important",
+                    right: "1.75rem !important",
+                    transformOrigin: "right !important",
+                  },
+                  "& legend": { textAlign: "right" },
+                }}
+              />
+              <TextField
+                value={information.password}
+                fullWidth
+                label="رمز عبور"
+                type="password"
+                onKeyDown={(event) => {
+                  if (event.key === "Enter") {
+                    submit();
+                  }
+                }}
+                onChange={(event) => {
+                  setInformation({
+                    ...information,
+                    password: event.target.value,
+                  });
                 }}
                 sx={{
                   " & .MuiInputLabel-root": {
@@ -101,20 +144,29 @@ export default function LoginComponent() {
                 }}
               />
             </Box>
-            {show[0] ? (
-              <span className="text-red-600">
-                لطفا این قسمت را خالی نگذارید!
-              </span>
-            ) : (
-              ""
-            )}
-            {show[1] ? (
-              <span className="text-red-600">
-                شماره موبایل به درستی وارد نشده است!
-              </span>
-            ) : (
-              ""
-            )}
+            <Box className="text-center mt-3">
+              {show[0] ? (
+                <span className="text-red-600">
+                  لطفا تمامی موارد خواسته شده را وارد کنید!
+                </span>
+              ) : (
+                ""
+              )}
+              {show[1] ? (
+                <span className="text-red-600">
+                  نام کاربری یا ایمیل به درستی وارد نشده است!
+                </span>
+              ) : (
+                ""
+              )}
+              {show[2] ? (
+                <span className="text-red-600">
+                  رمز عبور حداقل هشت کاراکتر است!
+                </span>
+              ) : (
+                ""
+              )}
+            </Box>
             <Button
               variant="contained"
               className="bg-green-500 hover:bg-green-600 text-xl rounded-lg w-full mt-10"
@@ -138,15 +190,15 @@ export default function LoginComponent() {
               وارد شوید .
             </Box>
             <Box component="div" className="mt-4">
-              برای وارد شدن با نام کاربری و رمز عبور از
+              برای وارد شدن با شماره موبایل از
               <span
                 className="text-blue-600 cursor-pointer"
-                onClick={() => setEmail(true)}
+                onClick={() => setEmail(false)}
               >
                 {" "}
                 این قسمت{" "}
               </span>
-              اقدام کنید .
+              اقدام کنید
             </Box>
           </Box>
         </Box>
