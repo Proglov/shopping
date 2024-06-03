@@ -6,7 +6,7 @@ import Fade from '@mui/material/Fade';
 import Typography from '@mui/material/Typography';
 import { useContext } from 'react';
 import { Button } from '@mui/material';
-import { ModalDoneContext } from './TXTable';
+import { ItemsContext } from './TXMain';
 import Api from '@/services/withAuthActivities/tx';
 
 const ModalStyle = {
@@ -24,18 +24,20 @@ const ModalStyle = {
 export default function ModalDone() {
     const { TXDone } = Api
     const {
-        setOperatingID,
         setOperatingError,
         isModalDoneOpen,
         setIsModalDoneOpen,
-        selectedItem
-    } = useContext(ModalDoneContext)
-    const handleClose = () => setIsModalDoneOpen(false);
+        selectedItem,
+        setSelectedItem
+    } = useContext(ItemsContext)
+    const handleClose = () => {
+        setIsModalDoneOpen(false);
+        setSelectedItem({});
+    }
 
     const doneItem = async () => {
         try {
             handleClose()
-            setOperatingID(selectedItem?._id);
             await TXDone({ id: selectedItem?._id })
 
         } catch (error) {
@@ -46,7 +48,7 @@ export default function ModalDone() {
             }, 1000)
             setTimeout(() => {
                 setOperatingError(null)
-                setOperatingID(null)
+                setSelectedItem({})
             }, 5000);
         }
     }

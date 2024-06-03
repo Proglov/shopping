@@ -7,7 +7,7 @@ export const UsersContext = createContext()
 export default function UsersMain() {
 
     const UsersObj = useUsers()
-    const itemsPerPage = 20
+    const itemsPerPage = 10
 
     return (
         <UsersContext.Provider value={{ ...UsersObj, itemsPerPage }}>

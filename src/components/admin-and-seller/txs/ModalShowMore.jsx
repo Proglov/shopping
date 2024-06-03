@@ -5,8 +5,8 @@ import Modal from '@mui/material/Modal';
 import Fade from '@mui/material/Fade';
 import { useContext } from 'react';
 import { Button } from '@mui/material';
-import { ModalShowMoreContext } from './TXTable';
-import React from 'react';
+import { ItemsContext } from './TXMain'
+import { MdKeyboardDoubleArrowLeft, MdKeyboardDoubleArrowRight } from "react-icons/md";
 import { convertToFarsiNumbers } from '@/utils/funcs';
 
 const ModalStyle = {
@@ -22,7 +22,7 @@ const ModalStyle = {
 };
 
 export default function ModalShowMore() {
-    const { isModalShowMoreOpen, setIsModalShowMoreOpen, selectedItem } = useContext(ModalShowMoreContext)
+    const { isModalShowMoreOpen, setIsModalShowMoreOpen, selectedItem } = useContext(ItemsContext)
     const handleClose = () => setIsModalShowMoreOpen(false);
 
     return (
@@ -52,12 +52,21 @@ export default function ModalShowMore() {
                                     {
                                         selectedItem?.boughtProducts !== undefined &&
                                         selectedItem?.boughtProducts.map((bp, i) => (
-                                            <div key={i}>
-                                                {bp.product.name}
+                                            <div key={i} className='flex'>
+                                                <span className='flex'>
+                                                    <MdKeyboardDoubleArrowRight className='mt-1 text-red-600' />
+                                                    {bp.productId.name}
+                                                    <MdKeyboardDoubleArrowLeft className='mt-1 text-red-600' />
+                                                </span>
+
                                                 &nbsp;
                                                 به تعداد
                                                 &nbsp;
-                                                {bp.quantity}
+                                                <span className='flex'>
+                                                    <MdKeyboardDoubleArrowRight className='mt-1 text-red-600' />
+                                                    {bp.quantity}
+                                                    <MdKeyboardDoubleArrowLeft className='mt-1 text-red-600' />
+                                                </span>
                                                 &nbsp;
                                                 عدد
                                             </div>
@@ -72,16 +81,17 @@ export default function ModalShowMore() {
                                     <div className='mr-4'>{selectedItem.address}</div>
                                 </div>
 
+                                {/* the field below doesn't work properly, even though the createdAt property is correct*/}
                                 {/* <div>
                                     <div>زمان خریداری شده :</div>
                                     <div className='mr-4'>
                                         {
-                                            selectedItem?.boughtAt !== '' &&
+                                            selectedItem?.createdAt !== '' && selectedItem?.createdAt != null &&
                                             <>
-                                                {new Intl.DateTimeFormat('fa-IR').format(parseInt(selectedItem?.boughtAt))}
+                                                {new Intl.DateTimeFormat('fa-IR').format(parseInt(selectedItem?.createdAt))}
                                                 <br />
-                                                {convertToFarsiNumbers((new Date(parseInt(selectedItem?.boughtAt)).getHours()))}
-                                                :{convertToFarsiNumbers(("0" + (new Date((parseInt(selectedItem?.boughtAt))).getMinutes())).slice(-2))}
+                                                {convertToFarsiNumbers((new Date(parseInt(selectedItem?.createdAt)).getHours()))}
+                                                :{convertToFarsiNumbers(("0" + (new Date((parseInt(selectedItem?.createdAt))).getMinutes())).slice(-2))}
                                             </>
                                         }
 
