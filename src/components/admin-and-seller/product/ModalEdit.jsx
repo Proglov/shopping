@@ -11,12 +11,12 @@ import { Grid } from '@mui/material';
 import Image from 'next/image';
 import 'react-quill/dist/quill.snow.css';
 import CustomQuill from '../../CustomQuil';
-import { ModalEditContext } from './ProductsTable';
 import { price2Farsi } from '@/utils/funcs';
 import { categories } from '@/lib/categories';
-import { giveMeToken } from '@/utils/Auth';
 import { MultiFileDropzone } from '../../multi-image-dropzone';
-import Api from '@/services/withAuthActivities/product';
+import Api1 from '@/services/withAuthActivities/product';
+import Api2 from '@/services/withAuthActivities/image';
+import { ProductsContext } from "./ProductsMain";
 
 
 const ModalStyle = {
@@ -34,33 +34,14 @@ const ModalStyle = {
 };
 
 export default function ModalEdit() {
-    const { updateProduct } = Api
-    const { isModalEditOpen, setIsModalEditOpen, selectedItem, setSelectedItem, setOperatingID, setItems, setOperatingError } = useContext(ModalEditContext)
+    const { updateProduct } = Api1
+    const { uploadImage, deleteImages } = Api2
+    const { isModalEditOpen, setIsModalEditOpen, selectedItem, setSelectedItem, setOperatingError } = useContext(ProductsContext)
 
     const [fileStates, setFileStates] = useState([]);
     const [uploadRes, setUploadRes] = useState([]);
     const [imagesToDelete, setImagesToDelete] = useState([]);
 
-    const handleChange = (event) => {
-        const { name, value } = event.target;
-
-        if (name === 'telegram') {
-            setSelectedItem(prevSelectedItem => ({
-                ...prevSelectedItem,
-                telegram: event.target.checked,
-            }));
-        } else if (name === 'title') {
-            setSelectedItem(prevSelectedItem => ({
-                ...prevSelectedItem,
-                title: value,
-            }));
-        } else if (name === 'quillValue') {
-            setSelectedItem(prevSelectedItem => ({
-                ...prevSelectedItem,
-                description: value,
-            }));
-        }
-    };
 
     const handleClose = () => {
         setIsModalEditOpen(false);
@@ -69,9 +50,33 @@ export default function ModalEdit() {
             name: '',
             price: '',
             category: '',
-            offPercentage: '',
+            desc: '',
             imagesUrl: []
         })
+    };
+
+    const handleChange = (event) => {
+        const { name, value } = event.target;
+        if (name === 'price') {
+            const newValue = parseInt(value) || 0
+            setSelectedItem(prevProps => {
+                if (newValue == value && name === 'price')
+                    return {
+                        ...prevProps,
+                        price: newValue,
+                    }
+                return {
+                    ...prevProps
+                }
+            })
+        } else {
+            setSelectedItem(prevProps => {
+                return {
+                    ...prevProps,
+                    [name]: value,
+                }
+            })
+        }
     };
 
     function updateFileProgress(key, progress) {
@@ -87,60 +92,59 @@ export default function ModalEdit() {
         });
     }
 
-    const Token = giveMeToken()
-
     const editItem = async (obj) => {
-        setOperatingID(obj.id);
         setIsModalEditOpen(false);
 
-        //confirm the new pics in edgestore
-        const imagesURL = [];
-        for (const obj of uploadRes) {
-            const url = obj.url
-            imagesURL.push(url)
-            // await edgestore.myPublicImages.confirmUpload({
-            //     url
-            // })
-        }
-
-        //add new pics to mongodb
-        const augmentedObj = {
-            ...obj,
-            imagesUrl: [...obj.imagesUrl, ...imagesURL]
-        }
-
-
-        //delete the imagesToDelete
-        for (const url of imagesToDelete) {
-            // await edgestore.myPublicImages.delete({ url });
-        }
-
         try {
-            const res = await updateProduct(augmentedObj, Token)
-            setAddNewData(prevProps => ({
+
+            //delete images
+            if (imagesToDelete.length !== 0)
+                await deleteImages({ filenames: imagesToDelete })
+
+            let newImagesName = [];
+            if (selectedItem && selectedItem.imagesName) {
+                newImagesName = [...selectedItem.imagesName];
+            }
+            if (uploadRes) {
+                newImagesName = [...newImagesName, ...uploadRes];
+            }
+            const augmentedObj = {
+                ...obj,
+                id: obj._id,
+                imagesUrl: newImagesName
+            }
+            delete augmentedObj.__v;
+            delete augmentedObj._id;
+            delete augmentedObj.imagesName;
+            const res = await updateProduct(augmentedObj)
+
+            setSelectedItem(prevProps => ({
                 ...prevProps,
-                formData: {
-                    name: '',
-                    price: '',
-                    offPercentage: '',
-                    category: '',
-                    desc: '',
-                    subcategory: 'سوپرمارکت',
-                    imagesUrl: []
-                },
-                isSubmitting: false
+                _id: '',
+                name: '',
+                price: '',
+                category: '',
+                desc: '',
+                subcategory: 'سوپرمارکت',
+                imagesUrl: []
             }));
-            setOperatingID('');
-            if (res === 'You are not authorized!')
+            if (res?.message === 'You are not authorized!')
                 throw ("توکن شما منقضی شده. لطفا خارج، و دوباره وارد شوید")
-            setFileStates([]);
-            setUploadRes([]);
-        } catch (err) {
-            setOperatingError(err);
+
+        } catch (error) {
+            setOperatingError(error?.message);
+        } finally {
+            setTimeout(() => {
+                window.location.reload()
+            }, 1000)
             setFileStates([]);
             setImagesToDelete([]);
             setUploadRes([]);
+            setTimeout(() => {
+                setOperatingError(null)
+            }, 5000);
         }
+
     };
 
     return (
@@ -178,7 +182,7 @@ export default function ModalEdit() {
                                             className="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500"
                                             id="inline-full-name"
                                             type="text"
-                                            name="title"
+                                            name="name"
                                             value={selectedItem.name}
                                             placeholder="عنوان خبر را وارد کنید"
                                             onChange={handleChange}
@@ -212,8 +216,8 @@ export default function ModalEdit() {
                                     <div className='w-full text-start text-sm'>
                                         <label htmlFor="underline_select">دسته بندی</label>
                                     </div>
-                                    <select id="underline_select" className="block py-2.5 px-3 w-full text-sm text-gray-500 bg-transparent my-2 rounded-md border-2 border-gray-200 appearance-none focus:outline-none focus:ring-0 focus:border-gray-200" onChange={handleChange} name='category'>
-                                        <option defaultValue={''}>دسته بندی را انتخاب کنید &#11167;</option>
+                                    <select id="underline_select" className="block py-2.5 px-3 w-full text-sm text-gray-500 bg-transparent my-2 rounded-md border-2 border-gray-200 appearance-none focus:outline-none focus:ring-0 focus:border-gray-200" onChange={handleChange} name='category' defaultValue={selectedItem.category}>
+                                        <option disabled>دسته بندی را انتخاب کنید &#11167;</option>
                                         {
                                             categories.map((category, index) => <option key={index} value={category} className='text-black'>{category}</option>)
                                         }
@@ -238,18 +242,19 @@ export default function ModalEdit() {
                                                                     <Image
                                                                         src={url}
                                                                         alt='عکس ارسال شده'
-                                                                        width={300}
-                                                                        height={200} />
+                                                                        width={1080}
+                                                                        height={1920} />
 
                                                                     <Button variant='outlined' color='error' className='mt-1 mb-4 w-full'
                                                                         onClick={() => {
                                                                             setImagesToDelete(prev => [
                                                                                 ...prev,
-                                                                                url
+                                                                                selectedItem?.imagesName[i]
                                                                             ]);
                                                                             setSelectedItem(prev => ({
                                                                                 ...prev,
-                                                                                imagesUrl: prev?.imagesUrl?.filter(theUrl => theUrl !== url)
+                                                                                imagesUrl: prev?.imagesUrl?.filter(theUrl => theUrl !== url),
+                                                                                imagesName: prev?.imagesName?.filter(theUrl => theUrl !== selectedItem?.imagesName[i]),
                                                                             }))
                                                                         }}
                                                                     >
@@ -289,31 +294,23 @@ export default function ModalEdit() {
                                             setFileStates(files);
                                         }}
                                         onFilesAdded={async (addedFiles) => {
-                                            setFileStates([...fileStates, ...addedFiles]);
+                                            setFileStates(prev => [...prev, ...addedFiles]);
                                             await Promise.all(
                                                 addedFiles.map(async (addedFileState) => {
                                                     try {
-                                                        // const res = await edgestore.myPublicImages.upload({
-                                                        //     file: addedFileState.file,
-                                                        //     options: {
-                                                        //         temporary: true
-                                                        //     },
-                                                        //     onProgressChange: async (progress) => {
-                                                        //         updateFileProgress(addedFileState.key, progress);
-                                                        //         if (progress === 100) {
-                                                        //             // wait 1 second to set it to complete
-                                                        //             // so that the user can see the progress bar at 100%
-                                                        //             await new Promise((resolve) => setTimeout(resolve, 1000));
-                                                        //             updateFileProgress(addedFileState.key, 'COMPLETE');
-                                                        //         }
-                                                        //     },
-                                                        // });
+
+                                                        //Add an animation
+                                                        let temp = 0;
+                                                        const interval = setInterval(() => {
+                                                            updateFileProgress(addedFileState.key, temp);
+                                                            if (++temp === 50) clearInterval(interval)
+                                                        }, 10);
+                                                        const res = await uploadImage(addedFileState.file);
+                                                        if (interval) clearInterval(interval)
+                                                        updateFileProgress(addedFileState.key, 'COMPLETE');
                                                         setUploadRes((uploadRes) => [
                                                             ...uploadRes,
-                                                            {
-                                                                url: res.url,
-                                                                filename: addedFileState.file.name,
-                                                            },
+                                                            res?.name,
                                                         ]);
                                                     } catch (err) {
                                                         updateFileProgress(addedFileState.key, 'ERROR');
@@ -326,8 +323,8 @@ export default function ModalEdit() {
 
                                 <Grid item xs={12}>
                                     <CustomQuill
-                                        onChange={(value) => handleChange({ target: { name: 'quillValue', value } })}
-                                        value={selectedItem.description}
+                                        onChange={(value) => handleChange({ target: { name: 'desc', value } })}
+                                        value={selectedItem.desc}
                                     />
                                 </Grid>
 

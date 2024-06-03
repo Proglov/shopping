@@ -1,7 +1,7 @@
 'use client'
 import React, { useState } from 'react'
 import { Box, Grid, Tab, Tabs, Typography } from '@mui/material'
-import ProductsMain from './products/ProductsMain';
+import ProductsMain from '../admin-and-seller/product/ProductsMain';
 import TXMain from './txs/TXMain';
 import Info from './Info';
 import MainSetting from './settings/MainSetting';
@@ -72,7 +72,7 @@ export default function Main() {
                 </Tabs>
                 <div style={{ width: '100%' }}>
                     <TabPanel value={addSegmentsPage} index={0} className='text-center'>
-                        <ProductsMain />
+                        <ProductsMain which={"Seller"} />
                     </TabPanel>
                     <TabPanel value={addSegmentsPage} index={1} className='text-center'>
                         <TXMain />
