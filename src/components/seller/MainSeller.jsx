@@ -5,6 +5,8 @@ import ProductsMain from './products/ProductsMain';
 import TXMain from './txs/TXMain';
 import Info from './Info';
 import MainSetting from './settings/MainSetting';
+import Link from 'next/link';
+import { IoMdHome } from 'react-icons/io';
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -43,6 +45,11 @@ export default function Main() {
             className='mt-5 p-3 text-black'
         // sx={{ flexGrow: 1 }}
         >
+            <div className='w-full text-purple-600 mb-3 underline hover:text-red-500'>
+                <Link href={'/'} className='flex'>
+                    بازگشت به صفحه اصلی <IoMdHome className='mr-1 mt-1' />
+                </Link>
+            </div>
             <Grid item xs={12} sm={12} md={5} lg={4} xl={3}>
                 <Info />
             </Grid>
