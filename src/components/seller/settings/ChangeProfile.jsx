@@ -281,6 +281,9 @@ export default function ChangeProfile() {
             } catch (err) {
                 toast.error(err)
             } finally {
+                setTimeout(() => {
+                    window.location.reload()
+                }, 1000)
                 setAddNewData(prevProps => ({
                     ...prevProps,
                     isSubmitting: false,

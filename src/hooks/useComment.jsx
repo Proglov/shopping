@@ -4,7 +4,7 @@ export default function useComment() {
     const [isModalDeleteOpen, setIsModalDeleteOpen] = useState(false);
     const [isModalConfirmOpen, setIsModalConfirmOpen] = useState(false);
     const [currentPage, setCurrentPage] = useState(1)
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
     const [isError, setIsError] = useState(false);
     const [error, setError] = useState('');
     const [operatingID, setOperatingID] = useState('');

@@ -6,7 +6,7 @@ export default function useTX() {
     const [isModalShowMoreOpen, setIsModalShowMoreOpen] = useState(false);
     const [isModalDoneOpen, setIsModalDoneOpen] = useState(false);
     const [currentPage, setCurrentPage] = useState(1)
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
     const [isError, setIsError] = useState(false);
     const [error, setError] = useState('');
     const [operatingID, setOperatingID] = useState('');

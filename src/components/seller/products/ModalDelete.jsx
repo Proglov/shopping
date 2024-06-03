@@ -39,6 +39,9 @@ export default function ModalDelete({ productName }) {
                 setOperatingError(null)
                 setOperatingID(null)
             }, 5000);
+            setTimeout(() => {
+                window.location.reload()
+            }, 1000)
         }
     }
 

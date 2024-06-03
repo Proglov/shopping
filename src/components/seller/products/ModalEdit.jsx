@@ -102,8 +102,13 @@ export default function ModalEdit() {
             if (imagesToDelete.length !== 0)
                 await deleteImages({ filenames: imagesToDelete })
 
-
-            let newImagesName = [...selectedItem?.imagesName, ...uploadRes];
+            let newImagesName = [];
+            if (selectedItem && selectedItem.imagesName) {
+                newImagesName = [...selectedItem.imagesName];
+            }
+            if (uploadRes) {
+                newImagesName = [...newImagesName, ...uploadRes];
+            }
             const augmentedObj = {
                 ...obj,
                 id: obj._id,
@@ -129,6 +134,9 @@ export default function ModalEdit() {
         } catch (error) {
             setOperatingError(error?.message);
         } finally {
+            setTimeout(() => {
+                window.location.reload()
+            }, 1000)
             setFileStates([]);
             setImagesToDelete([]);
             setUploadRes([]);

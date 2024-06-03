@@ -127,6 +127,10 @@ export default function AddProduct() {
                     isSubmitting: false
                 }));
                 toast.error(err)
+            } finally {
+                setTimeout(() => {
+                    window.location.reload()
+                }, 1000)
             }
         }
 

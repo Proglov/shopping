@@ -158,7 +158,10 @@ export default function ProductsTable() {
                                                     </>
                                                 )}
                                                 {operatingID === item._id && operatingError !== '' ? (
-                                                    <div>مشکلی پیش امده است. لطفا اتصال اینترنت را بررسی کنید</div>
+                                                    <>
+                                                        <div>مشکلی پیش امده است. لطفا اتصال اینترنت را بررسی کنید</div>
+                                                        <div>{operatingError}</div>
+                                                    </>
                                                 ) : ''}
                                             </StyledTableCell>
                                         </StyledTableRow>

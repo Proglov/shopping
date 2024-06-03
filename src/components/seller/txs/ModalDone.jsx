@@ -42,6 +42,9 @@ export default function ModalDone() {
             setOperatingError(error.message)
         } finally {
             setTimeout(() => {
+                window.location.reload()
+            }, 1000)
+            setTimeout(() => {
                 setOperatingError(null)
                 setOperatingID(null)
             }, 5000);
