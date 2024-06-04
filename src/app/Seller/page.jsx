@@ -1,14 +1,18 @@
-import { notFound } from 'next/navigation'
-import Api from "@/services/withAuthActivities/seller"
 import Main from '@/components/seller/MainSeller'
+import SellerProtector from '@/app/Seller/SellerProtector'
+
+const Wait = () => {
+  return (
+    <div className='text-center w-screen h-screen bg-black text-slate-50'>
+      لطفا صبر کنید ...
+    </div>
+  )
+}
 
 export default async function Home() {
-  // const {isUserSeller} = Api
-  // const isSellerData = await isUserSeller(token)
-
-  // if (!isSellerData?.isSeller) notFound()
-
   return (
-    <Main />
+    <SellerProtector Wait={<Wait />}>
+      <Main />
+    </SellerProtector>
   )
 }

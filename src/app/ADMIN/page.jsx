@@ -1,13 +1,18 @@
-import { notFound } from 'next/navigation'
-import { isAdmin } from "@/services/withAuthActivities/user"
 import Main from '@/components/admin/MainAdmin'
+import AdminProtector from './AdminProtector'
+
+const Wait = () => {
+  return (
+    <div className='text-center w-screen h-screen bg-black text-slate-50'>
+      لطفا صبر کنید ...
+    </div>
+  )
+}
 
 export default async function Home() {
-  // const isAd = await isAdmin(token)
-
-  // if (!isAd) notFound()
-
   return (
-    <Main />
+    <AdminProtector Wait={<Wait />} shouldRouterPush={true}>
+      <Main />
+    </AdminProtector>
   )
 }

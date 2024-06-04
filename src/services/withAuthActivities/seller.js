@@ -8,6 +8,12 @@ const Api = {
         );
         return response?.data;
     },
+    isUserSeller: async () => {
+        const response = await clientWithAuth.get(
+            `/sellerGet//isUserSeller`
+        );
+        return response?.data;
+    },
     getOneSeller: async (payload) => {
         const response = await clientWithAuth.get(
             `/sellerGet/getSeller?id=${payload?.id}`

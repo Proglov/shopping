@@ -22,6 +22,8 @@ import { GrUserAdmin } from "react-icons/gr";
 import { useAppDispatch, useAppSelector } from "@/store/Hook";
 import { SetLogin } from "@/features/Login/LoginSlice";
 import StorefrontIcon from "@mui/icons-material/Storefront";
+import AdminProtector from "@/app/ADMIN/AdminProtector";
+import SellerProtector from "@/app/Seller/SellerProtector";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -94,12 +96,6 @@ export default function NavBar() {
   const isLoggedIn = useAppSelector((state) => state.Login.login);
   const dispatch = useAppDispatch();
 
-  // this is temporary and should be changed
-  const isAdmin = true;
-
-  // this is temporary and should be changed
-  const isUserSeller = false;
-
   const isMenuOpen = Boolean(anchorEl);
 
   const handleProfileMenuOpen = (event) => {
@@ -126,6 +122,7 @@ export default function NavBar() {
         }}
       >
         <Toolbar>
+
           {/* سبد خرید */}
           <Typography
             className="mr-1 z-50"
@@ -156,7 +153,6 @@ export default function NavBar() {
           </Typography>
 
           {/* ورود و خروج */}
-
           <IconButton
             size="large"
             edge="start"
@@ -180,56 +176,46 @@ export default function NavBar() {
           </IconButton>
 
           {/* ادمین */}
+          <AdminProtector Wait={<></>} shouldRouterPush={false} showNotFound={<></>}>
+            <IconButton
+              size="large"
+              edge="start"
+              color="inherit"
+              aria-label="open drawer"
+            >
+              <Link href="/ADMIN">
+                <span
+                  className="text-red-500 flex"
+                  style={{ lineHeight: "24px" }}
+                >
+                  <GrUserAdmin />
+                </span>
+              </Link>
+            </IconButton>
 
-          {isAdmin ? (
-            <>
-              <IconButton
-                size="large"
-                edge="start"
-                color="inherit"
-                aria-label="open drawer"
-              >
-                <Link href="/ADMIN">
-                  <span
-                    className="text-red-500 flex"
-                    style={{ lineHeight: "24px" }}
-                  >
-                    <GrUserAdmin />
-                  </span>
-                </Link>
-              </IconButton>
-
-              {/* فاصله */}
-              <Box sx={{ flexGrow: 1 }} />
-            </>
-          ) : (
-            <></>
-          )}
+            {/* فاصله */}
+            <Box sx={{ flexGrow: 1 }} />
+          </AdminProtector>
 
           {/* فروشنده */}
+          <SellerProtector Wait={<></>} shouldRouterPush={false} showNotFound={<></>} setState={setOpen}>
+            <IconButton
+              size="large"
+              edge="start"
+              color="inherit"
+              aria-label="open drawer"
+            >
+              <Link href="/Seller">
+                <span className="flex flex-col">
+                  <StorefrontIcon className="mx-auto pt-2" />
+                  <span className="text-sm">پنل مدیریت</span>
+                </span>
+              </Link>
+            </IconButton>
 
-          {isUserSeller ? (
-            <>
-              <IconButton
-                size="large"
-                edge="start"
-                color="inherit"
-                aria-label="open drawer"
-              >
-                <Link href="/Seller">
-                  <span className="flex flex-col">
-                    <StorefrontIcon className="mx-auto pt-2" />
-                    <span className="text-sm">پنل مدیریت</span>
-                  </span>
-                </Link>
-              </IconButton>
-
-              {/* فاصله */}
-              <Box sx={{ flexGrow: 1 }} />
-            </>
-          ) : (
-            <></>
-          )}
+            {/* فاصله */}
+            <Box sx={{ flexGrow: 1 }} />
+          </SellerProtector>
 
           {/* جست و جو */}
           <Search

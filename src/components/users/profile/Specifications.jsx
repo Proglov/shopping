@@ -7,8 +7,7 @@ import DOMPurify from "dompurify";
 
 export default function Specifications() {
   const [isEdit, setIsEdit] = useState(false);
-  const { getMe } = UserApi;
-  const { updateUser } = UserApi2;
+  const { getMe, updateUser } = UserApi;
   const [information, setInformation] = useState({
     name: "",
     phoneNumber: "",
