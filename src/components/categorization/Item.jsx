@@ -38,11 +38,7 @@ export default function Item() {
 
   return (
     <>
-      {product.imagesUrl.length === 0 ? (
-        ""
-      ) : (
-        <GalleryItem images={product.imagesUrl} />
-      )}
+      <GalleryItem images={product.imagesUrl} />
       <DetailItem detail={product} />
       <SimilarProducts />
       <CommentItem productID={product._id} />
