@@ -124,14 +124,15 @@ export default function CommentsTable() {
                                             <StyledTableCell align='center'>{convertToFarsiNumbers(index + 1 + itemsPerPage * (currentPage - 1))}</StyledTableCell>
                                             <StyledTableCell align='center'>{item.userId?.phone}</StyledTableCell>
                                             <StyledTableCell align='center'>{item.body}</StyledTableCell>
-                                            <StyledTableCell className='flex flex-col justify-center border-b-0 align-middle'>
+                                            <StyledTableCell className='border-b-0'>
                                                 {selectedId === item._id ? (
                                                     <div className='text-center mt-2 text-xs'>درحال انجام عملیات</div>
                                                 ) : (
-                                                    <>
+                                                    <div className='flex flex-col gap-2'>
                                                         {!!validated ? <></> : <>
                                                             <Button
                                                                 variant='outlined'
+                                                                color='success'
                                                                 className='p-0 m-1'
                                                                 sx={{ color: 'green', borderColor: 'green' }}
                                                                 onClick={() => {
@@ -145,6 +146,7 @@ export default function CommentsTable() {
 
                                                         <Button
                                                             variant='outlined'
+                                                            color='error'
                                                             sx={{ color: 'red', borderColor: 'red' }}
                                                             className='p-0 m-1'
                                                             onClick={() => {
@@ -154,7 +156,7 @@ export default function CommentsTable() {
                                                         >
                                                             حذف
                                                         </Button>
-                                                    </>
+                                                    </div>
                                                 )}
                                                 {selectedId === item._id && operatingError !== '' ? (
                                                     <>

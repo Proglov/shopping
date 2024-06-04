@@ -138,11 +138,11 @@ export default function ProductsTable() {
                                             <StyledTableCell align='center'>{price2Farsi(item.price)} تومان</StyledTableCell>
                                             <StyledTableCell align='center'>{item.price}</StyledTableCell>
                                             <StyledTableCell align='center'>{item.category}</StyledTableCell>
-                                            <StyledTableCell className='flex flex-col justify-center border-b-0 align-middle'>
+                                            <StyledTableCell className='border-b-0'>
                                                 {selectedItem?._id === item._id ? (
                                                     <div className='text-center mt-2 text-xs'>درحال انجام عملیات</div>
                                                 ) : (
-                                                    <>
+                                                    <div className='flex flex-col gap-2'>
                                                         <Button
                                                             variant='outlined'
                                                             className='p-0 m-1'
@@ -169,7 +169,7 @@ export default function ProductsTable() {
                                                         >
                                                             حذف
                                                         </Button>
-                                                    </>
+                                                    </div>
                                                 )}
                                                 {selectedItem?._id === item._id && operatingError !== '' ? (
                                                     <>
