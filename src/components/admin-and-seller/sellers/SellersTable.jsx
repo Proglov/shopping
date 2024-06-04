@@ -128,11 +128,11 @@ export default function SellersTable() {
                                             <StyledTableCell align='center'>{item.storeName}</StyledTableCell>
                                             <StyledTableCell align='center'>{item.phone}</StyledTableCell>
                                             <StyledTableCell align='center'>{item.workingPhone}</StyledTableCell>
-                                            <StyledTableCell className='flex flex-col justify-center border-b-0 align-middle'>
+                                            <StyledTableCell className='border-b-0'>
                                                 {selectedId === item._id ? (
                                                     <div className='text-center mt-2 text-xs'>درحال انجام عملیات</div>
                                                 ) : (
-                                                    <>
+                                                    <div className='flex flex-col gap-2'>
                                                         {!!validated ? <></> : <>
                                                             <Button
                                                                 variant='outlined'
@@ -158,7 +158,7 @@ export default function SellersTable() {
                                                         >
                                                             حذف
                                                         </Button>
-                                                    </>
+                                                    </div>
                                                 )}
                                                 {selectedId === item._id && operatingError !== '' ? (
                                                     <>

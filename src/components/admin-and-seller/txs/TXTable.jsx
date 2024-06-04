@@ -162,9 +162,10 @@ export default function TXTable() {
                                                 <br />
                                                 تومان
                                             </StyledTableCell>
-                                            <StyledTableCell className='flex flex-col justify-center border-b-0 align-middle'>
+                                            <StyledTableCell className='flex flex-col justify-center border-b-0 align-middle gap-2'>
                                                 <Button
                                                     variant='outlined'
+                                                    color='success'
                                                     className='p-0 m-1'
                                                     sx={{ color: 'green', borderColor: 'green' }}
                                                     onClick={() => {
