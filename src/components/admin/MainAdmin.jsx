@@ -6,6 +6,7 @@ import SellersMain from '../admin-and-seller/sellers/SellersMain';
 import UsersMain from '../admin-and-seller/users/UsersMain';
 import TXMain from '../admin-and-seller/txs/TXMain';
 import CommentsMain from '../admin-and-seller/comments/CommentsMain';
+import CategoriesMain from '../admin-and-seller/categories/CategoriesMain';
 import Link from 'next/link';
 import { TiArrowBackOutline } from "react-icons/ti";
 
@@ -65,8 +66,9 @@ export default function Main() {
                 <Tab label="محصولات" {...a11yProps(0)} />
                 <Tab label="کاربران" {...a11yProps(1)} />
                 <Tab label="فروشندگان" {...a11yProps(2)} />
-                <Tab label="تراکنش ها" {...a11yProps(3)} />
-                <Tab label="کامنت ها" {...a11yProps(4)} />
+                <Tab label="دسته بندی ها" {...a11yProps(3)} />
+                <Tab label="تراکنش ها" {...a11yProps(4)} />
+                <Tab label="کامنت ها" {...a11yProps(5)} />
             </Tabs>
             <div style={{ width: '100%' }}>
                 <TabPanel value={addSegmentsPage} index={0} className='text-center'>
@@ -79,9 +81,12 @@ export default function Main() {
                     <SellersMain />
                 </TabPanel>
                 <TabPanel value={addSegmentsPage} index={3} className='text-center'>
-                    <TXMain which={"ADMIN"} />
+                    <CategoriesMain />
                 </TabPanel>
                 <TabPanel value={addSegmentsPage} index={4} className='text-center'>
+                    <TXMain which={"ADMIN"} />
+                </TabPanel>
+                <TabPanel value={addSegmentsPage} index={5} className='text-center'>
                     <CommentsMain />
                 </TabPanel>
             </div>
