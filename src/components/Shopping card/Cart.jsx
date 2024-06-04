@@ -2,7 +2,7 @@
 
 import { Box, Button, Dialog, IconButton, Slide } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import { forwardRef } from "react";
+import { forwardRef, useEffect, useState } from "react";
 import { convertToFarsiNumbers, formatPrice } from "@/utils/funcs";
 import ShoppingCard from "./ShoppingCard";
 import Link from "next/link";
@@ -14,6 +14,7 @@ const Transition = forwardRef(function Transition(props, ref) {
 
 export default function Cart({ Close, Open }) {
   const minPrice = 150000;
+  const [LoginUser, setLoginUser] = useState(false);
 
   const cartProducts = useAppSelector((state) => state.CartProducts);
 
@@ -30,6 +31,14 @@ export default function Cart({ Close, Open }) {
     }, 0);
     return price.toString();
   }
+
+  useEffect(() => {
+    if (localStorage.getItem("UserLogin") == "true") {
+      setLoginUser(true);
+    } else {
+      setLoginUser(false);
+    }
+  }, [setLoginUser]);
 
   return (
     <>
@@ -100,7 +109,7 @@ export default function Cart({ Close, Open }) {
               {convertToFarsiNumbers(formatPrice(minPrice.toString()))} تومان
             </Box>
             <Box className="p-3 grid justify-items-center" component="div">
-              {localStorage.getItem("UserLogin") == "true" ? (
+              {LoginUser ? (
                 minPrice < totalPrice(cartProducts) ? (
                   <Link href="/shopping-card">
                     <Button

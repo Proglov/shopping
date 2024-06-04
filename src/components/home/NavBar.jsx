@@ -72,8 +72,10 @@ export default function NavBar() {
   const cartProducts = useAppSelector((state) => state.CartProducts);
   const [openDialog, setOpenDialog] = React.useState(false);
   const [bga, setBga] = React.useState(false);
-  const route = useRouter();
-  const dispatch = useAppDispatch()
+  const router = useRouter();
+  const dispatch = useAppDispatch();
+  const [LoginUser, setLoginUser] = React.useState(false);
+  const [LoginSeller, setLoginSeller] = React.useState(false);
 
   const handleOpen = () => {
     setOpenDialog(true);
@@ -97,9 +99,6 @@ export default function NavBar() {
     setOpen(false);
   };
 
-  const isLoggedIn = localStorage.getItem("UserLogin") || "false";
-  const isSellerLoggedIn = localStorage.getItem("SellerLogin") || "false";
-
   const isMenuOpen = Boolean(anchorEl);
 
   const handleProfileMenuOpen = (event) => {
@@ -114,15 +113,26 @@ export default function NavBar() {
     setOpenDialog(false);
     localStorage.removeItem("UserLogin");
     localStorage.removeItem("SellerLogin");
-    route.push("/");
+    setLoginUser(false);
+    setLoginSeller(false);
+    router.refresh();
   };
 
   React.useEffect(() => {
-    if(localStorage.getItem("cart")){
-      dispatch(SetCart(localStorage.getItem("cart")))
+    if (localStorage.getItem("cart")) {
+      dispatch(SetCart(localStorage.getItem("cart")));
     }
-  }, [])
-  
+    if (localStorage.getItem("UserLogin") == "true") {
+      setLoginUser(true);
+    } else {
+      setLoginUser(false);
+    }
+    if (localStorage.getItem("SellerLogin") == "true") {
+      setLoginSeller(true);
+    } else {
+      setLoginSeller(false);
+    }
+  }, [setLoginSeller, setLoginUser]);
 
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -172,7 +182,7 @@ export default function NavBar() {
             aria-label="open drawer"
             className="mr-2"
           >
-            {isLoggedIn != "true" ? (
+            {!(LoginUser | LoginSeller) ? (
               <Link href="/users/login">
                 <span className="text-white flex">
                   <LiaSignInAltSolid />
@@ -214,7 +224,7 @@ export default function NavBar() {
           </AdminProtector>
 
           {/* فروشنده */}
-          {isSellerLoggedIn == "true" ? (
+          {LoginSeller ? (
             <SellerProtector
               Wait={<></>}
               shouldRouterPush={false}
@@ -263,7 +273,7 @@ export default function NavBar() {
           </Search>
 
           {/* پروفایل */}
-          {isLoggedIn == "true" ? (
+          {LoginUser ? (
             <Box>
               <IconButton
                 size="large"
