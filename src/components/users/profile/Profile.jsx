@@ -12,19 +12,25 @@ import AccountBoxIcon from "@mui/icons-material/AccountBox";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import VpnKeyRoundedIcon from "@mui/icons-material/VpnKeyRounded";
 import { useState } from "react";
-import { useAppDispatch } from "@/store/Hook";
-import { SetLogin } from "@/features/Login/LoginSlice";
 import { useRouter } from "next/navigation";
 import Location from "./Location";
 import ChangePassword from "./ChangePassword";
 import Specifications from "./Specifications";
+import { toast } from "react-toastify";
 
 export default function Profile() {
   const menu = ["مشخصات", "آدرس ها", "تغییر رمز عبور"];
   const [active, setActive] = useState(0);
   const [openDialog, setOpenDialog] = useState(false);
-  const dispatch = useAppDispatch();
   const router = useRouter();
+  const login = localStorage.getItem("UserLogin") || "false";
+
+  if (login == "false") {
+    toast.warning("شما وارد نشده اید", {
+      position: toast.POSITION.TOP_RIGHT,
+    });
+    router.push("/users/login");
+  }
 
   const handleOpen = () => {
     setOpenDialog(true);
@@ -35,7 +41,7 @@ export default function Profile() {
 
   const logOut = () => {
     setOpenDialog(false);
-    dispatch(SetLogin(false));
+    localStorage.removeItem("UserLogin");
     localStorage.removeItem("token");
     router.push("/");
   };

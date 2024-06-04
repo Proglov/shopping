@@ -21,17 +21,28 @@ import {
   IncrementCart,
   DecrementCart,
 } from "@/features/CartProducts/CartProductsSlice";
+import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
 
 export default function ShoppingCard({ step }) {
   const cartProducts = useAppSelector((state) => state.CartProducts);
   const dispatch = useAppDispatch();
-
-  let counter = cartProducts
-    .reduce((accumulator, currentObject) => {
-      return accumulator + currentObject.number;
-    }, 0)
-    .toString();
-
+  const login = localStorage.getItem("UserLogin") || "false";
+  const route = useRouter();
+ console.log(login);
+  let counter =
+    cartProducts
+      ?.reduce((accumulator, currentObject) => {
+        return accumulator + currentObject.number;
+      }, 0)
+      .toString() || "0";
+ 
+  if (login == "false") {
+    toast.warning("شما وارد نشده اید", {
+      position: toast.POSITION.TOP_RIGHT,
+    });
+    route.push("/users/login");
+  }
   return (
     <>
       <Box className="p-5 mb-1" component="div">
@@ -113,7 +124,7 @@ export default function ShoppingCard({ step }) {
               {convertToFarsiNumbers(counter)} کالا
             </Typography>
             <div className="grid justify-items-center">
-              {cartProducts.length === 0
+              {counter == "0"
                 ? "سبد خرید شما خالی است!"
                 : cartProducts.map((item, index) => {
                     return (

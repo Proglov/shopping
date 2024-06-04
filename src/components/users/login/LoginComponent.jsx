@@ -5,8 +5,6 @@ import Link from "next/link";
 import { useState } from "react";
 import AuthenticationComponent from "./AuthenticationComponent";
 import UserApi from "@/services/withoutAuthActivities/user";
-import { useAppDispatch } from "@/store/Hook";
-import { SetLogin } from "@/features/Login/LoginSlice";
 import DOMPurify from "dompurify";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -19,7 +17,6 @@ export default function LoginComponent() {
   const [next, setNext] = useState(false);
   const [email, setEmail] = useState(false);
   const { signInWithPhone } = UserApi;
-  const dispatch = useAppDispatch();
   const router = useRouter();
 
   const submit = async () => {
@@ -39,7 +36,7 @@ export default function LoginComponent() {
         position: toast.POSITION.TOP_RIGHT,
       });
       setShow([false, false]);
-      dispatch(SetLogin(true));
+      localStorage.setItem("UserLogin","true");
       router.push("/");
       // setNext(true);
     } catch (error) {

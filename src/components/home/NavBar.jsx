@@ -20,10 +20,11 @@ import { convertToFarsiNumbers } from "@/utils/funcs";
 import { Button, Dialog, DialogActions, DialogContent } from "@mui/material";
 import { GrUserAdmin } from "react-icons/gr";
 import { useAppDispatch, useAppSelector } from "@/store/Hook";
-import { SetLogin } from "@/features/Login/LoginSlice";
 import StorefrontIcon from "@mui/icons-material/Storefront";
 import AdminProtector from "@/app/ADMIN/AdminProtector";
 import SellerProtector from "@/app/Seller/SellerProtector";
+import { useRouter } from "next/navigation";
+import { SetCart } from "@/features/CartProducts/CartProductsSlice";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -71,6 +72,8 @@ export default function NavBar() {
   const cartProducts = useAppSelector((state) => state.CartProducts);
   const [openDialog, setOpenDialog] = React.useState(false);
   const [bga, setBga] = React.useState(false);
+  const route = useRouter();
+  const dispatch = useAppDispatch()
 
   const handleOpen = () => {
     setOpenDialog(true);
@@ -79,11 +82,12 @@ export default function NavBar() {
     setOpenDialog(false);
   };
 
-  let counter = cartProducts
-    .reduce((accumulator, currentObject) => {
-      return accumulator + currentObject.number;
-    }, 0)
-    .toString();
+  let counter =
+    cartProducts
+      ?.reduce((accumulator, currentObject) => {
+        return accumulator + currentObject.number;
+      }, 0)
+      .toString() | "0";
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -93,8 +97,8 @@ export default function NavBar() {
     setOpen(false);
   };
 
-  const isLoggedIn = useAppSelector((state) => state.Login.login);
-  const dispatch = useAppDispatch();
+  const isLoggedIn = localStorage.getItem("UserLogin") || "false";
+  const isSellerLoggedIn = localStorage.getItem("SellerLogin") || "false";
 
   const isMenuOpen = Boolean(anchorEl);
 
@@ -108,8 +112,17 @@ export default function NavBar() {
 
   const logOut = () => {
     setOpenDialog(false);
-    dispatch(SetLogin(false));
+    localStorage.removeItem("UserLogin");
+    localStorage.removeItem("SellerLogin");
+    route.push("/");
   };
+
+  React.useEffect(() => {
+    if(localStorage.getItem("cart")){
+      dispatch(SetCart(localStorage.getItem("cart")))
+    }
+  }, [])
+  
 
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -122,7 +135,6 @@ export default function NavBar() {
         }}
       >
         <Toolbar>
-
           {/* سبد خرید */}
           <Typography
             className="mr-1 z-50"
@@ -160,7 +172,7 @@ export default function NavBar() {
             aria-label="open drawer"
             className="mr-2"
           >
-            {!isLoggedIn ? (
+            {isLoggedIn != "true" ? (
               <Link href="/users/login">
                 <span className="text-white flex">
                   <LiaSignInAltSolid />
@@ -176,7 +188,11 @@ export default function NavBar() {
           </IconButton>
 
           {/* ادمین */}
-          <AdminProtector Wait={<></>} shouldRouterPush={false} showNotFound={<></>}>
+          <AdminProtector
+            Wait={<></>}
+            shouldRouterPush={false}
+            showNotFound={<></>}
+          >
             <IconButton
               size="large"
               edge="start"
@@ -198,24 +214,33 @@ export default function NavBar() {
           </AdminProtector>
 
           {/* فروشنده */}
-          <SellerProtector Wait={<></>} shouldRouterPush={false} showNotFound={<></>} setState={setOpen}>
-            <IconButton
-              size="large"
-              edge="start"
-              color="inherit"
-              aria-label="open drawer"
+          {isSellerLoggedIn == "true" ? (
+            <SellerProtector
+              Wait={<></>}
+              shouldRouterPush={false}
+              showNotFound={<></>}
+              setState={setOpen}
             >
-              <Link href="/Seller">
-                <span className="flex flex-col">
-                  <StorefrontIcon className="mx-auto pt-2" />
-                  <span className="text-sm">پنل مدیریت</span>
-                </span>
-              </Link>
-            </IconButton>
+              <IconButton
+                size="large"
+                edge="start"
+                color="inherit"
+                aria-label="open drawer"
+              >
+                <Link href="/Seller">
+                  <span className="flex flex-col">
+                    <StorefrontIcon className="mx-auto pt-2" />
+                    <span className="text-sm">پنل مدیریت</span>
+                  </span>
+                </Link>
+              </IconButton>
 
-            {/* فاصله */}
-            <Box sx={{ flexGrow: 1 }} />
-          </SellerProtector>
+              {/* فاصله */}
+              <Box sx={{ flexGrow: 1 }} />
+            </SellerProtector>
+          ) : (
+            ""
+          )}
 
           {/* جست و جو */}
           <Search
@@ -238,7 +263,7 @@ export default function NavBar() {
           </Search>
 
           {/* پروفایل */}
-          {isLoggedIn ? (
+          {isLoggedIn == "true" ? (
             <Box>
               <IconButton
                 size="large"

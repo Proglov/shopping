@@ -5,8 +5,6 @@ import Link from "next/link";
 import { useState } from "react";
 import AuthenticationComponent from "./AuthenticationComponent";
 import UserApi from "@/services/withoutAuthActivities/user";
-import { useAppDispatch } from "@/store/Hook";
-import { SetLogin } from "@/features/Login/LoginSlice";
 import DOMPurify from "dompurify";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -23,11 +21,10 @@ export default function LoginByEmail() {
   const [next, setNext] = useState(false);
   const [email, setEmail] = useState(true);
   const { signInWithEmailOrUsername } = UserApi;
-  const dispatch = useAppDispatch();
   const router = useRouter();
 
   const submit = async () => {
-    if ((information.emailOrUsername === "") | (information.password === "")) {
+    if ((information.emailOrUsername === "") || (information.password === "")) {
       setShow([true, false, false]);
       return;
     }
@@ -51,7 +48,7 @@ export default function LoginByEmail() {
         position: toast.POSITION.TOP_RIGHT,
       });
       setShow([false, false, false]);
-      dispatch(SetLogin(true));
+      localStorage.setItem("UserLogin","true");
       router.push("/");
       // setNext(true);
     } catch (error) {

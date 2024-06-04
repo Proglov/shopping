@@ -2,7 +2,7 @@
 
 import { Box, Button, Dialog, IconButton, Slide } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import { forwardRef, useState } from "react";
+import { forwardRef } from "react";
 import { convertToFarsiNumbers, formatPrice } from "@/utils/funcs";
 import ShoppingCard from "./ShoppingCard";
 import Link from "next/link";
@@ -13,16 +13,16 @@ const Transition = forwardRef(function Transition(props, ref) {
 });
 
 export default function Cart({ Close, Open }) {
-  const login = useAppSelector((state) => state.Login.login);
   const minPrice = 150000;
 
   const cartProducts = useAppSelector((state) => state.CartProducts);
 
-  let counter = cartProducts
-    .reduce((accumulator, currentObject) => {
-      return accumulator + currentObject.number;
-    }, 0)
-    .toString();
+  let counter =
+    cartProducts
+      ?.reduce((accumulator, currentObject) => {
+        return accumulator + currentObject.number;
+      }, 0)
+      .toString() || "0";
 
   function totalPrice(arr) {
     let price = arr.reduce((sum, obj) => {
@@ -89,72 +89,78 @@ export default function Cart({ Close, Open }) {
             </IconButton>
           </Box>
         </Box>
-        <ShoppingCard step={0} />
-        <Box
-          className="grid justify-center text-blue-700 text-base"
-          component="div"
-        >
-          حداقل سفارش {convertToFarsiNumbers(formatPrice(minPrice.toString()))}{" "}
-          تومان
-        </Box>
-        <Box className="p-3 grid justify-items-center" component="div">
-          {login ? (
-            minPrice < totalPrice(cartProducts) ? (
-              <Link href="/shopping-card">
-                <Button
-                  variant="contained"
-                  className="bg-green-500 hover:bg-green-600 text-base rounded-lg"
-                  sx={{
-                    width: {
-                      xs: "280px",
-                      sm: "500px",
-                      md: "650px",
-                      lg: "800px",
-                      xl: "1200px",
-                    },
-                  }}
-                >
-                  نهایی کردن خرید
-                </Button>
-              </Link>
-            ) : (
-              <Button
-                variant="contained"
-                disabled
-                className="bg-green-500 hover:bg-green-600 text-base rounded-lg"
-                sx={{
-                  width: {
-                    xs: "280px",
-                    sm: "500px",
-                    md: "650px",
-                    lg: "800px",
-                    xl: "1200px",
-                  },
-                }}
-              >
-                نهایی کردن خرید
-              </Button>
-            )
-          ) : (
-            <Link href="/users/login">
-              <Button
-                variant="contained"
-                className="bg-green-500 hover:bg-green-600 text-base rounded-lg"
-                sx={{
-                  width: {
-                    xs: "280px",
-                    sm: "500px",
-                    md: "650px",
-                    lg: "800px",
-                    xl: "1200px",
-                  },
-                }}
-              >
-                ورود / عضویت
-              </Button>
-            </Link>
-          )}
-        </Box>
+        {counter != "0" ? (
+          <>
+            <ShoppingCard step={0} />
+            <Box
+              className="grid justify-center text-blue-700 text-base"
+              component="div"
+            >
+              حداقل سفارش{" "}
+              {convertToFarsiNumbers(formatPrice(minPrice.toString()))} تومان
+            </Box>
+            <Box className="p-3 grid justify-items-center" component="div">
+              {localStorage.getItem("UserLogin") == "true" ? (
+                minPrice < totalPrice(cartProducts) ? (
+                  <Link href="/shopping-card">
+                    <Button
+                      variant="contained"
+                      className="bg-green-500 hover:bg-green-600 text-base rounded-lg"
+                      sx={{
+                        width: {
+                          xs: "280px",
+                          sm: "500px",
+                          md: "650px",
+                          lg: "800px",
+                          xl: "1200px",
+                        },
+                      }}
+                    >
+                      نهایی کردن خرید
+                    </Button>
+                  </Link>
+                ) : (
+                  <Button
+                    variant="contained"
+                    disabled
+                    className="bg-green-500 hover:bg-green-600 text-base rounded-lg"
+                    sx={{
+                      width: {
+                        xs: "280px",
+                        sm: "500px",
+                        md: "650px",
+                        lg: "800px",
+                        xl: "1200px",
+                      },
+                    }}
+                  >
+                    نهایی کردن خرید
+                  </Button>
+                )
+              ) : (
+                <Link href="/users/login">
+                  <Button
+                    variant="contained"
+                    className="bg-green-500 hover:bg-green-600 text-base rounded-lg"
+                    sx={{
+                      width: {
+                        xs: "280px",
+                        sm: "500px",
+                        md: "650px",
+                        lg: "800px",
+                        xl: "1200px",
+                      },
+                    }}
+                  >
+                    ورود / عضویت
+                  </Button>
+                </Link>
+              )}
+            </Box>
+          </>
+        ) : (
+          ""
+        )}
       </Dialog>
     </>
   );

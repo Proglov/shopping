@@ -15,8 +15,8 @@ export const fetchProducts = createAsyncThunk(
           return {
             ...item,
             imagesUrl: [
-              "img/home/category-labaniat.jpg",
-              "img/home/tanagholat.jpg",
+              "/img/home/category-labaniat.jpg",
+              "/img/home/tanagholat.jpg",
             ],
           };
         }

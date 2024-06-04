@@ -5,8 +5,6 @@ import Link from "next/link";
 import { useState } from "react";
 import SellerApi from "@/services/withoutAuthActivities/seller";
 import { useRouter } from "next/navigation";
-import { useAppDispatch } from "@/store/Hook";
-import { SetLogin } from "@/features/Login/LoginSlice";
 import DOMPurify from "dompurify";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -27,19 +25,18 @@ export default function SignUpSeller() {
   const [show, setShow] = useState([false, false, false, false]);
   const { sellerSignUp } = SellerApi;
   const router = useRouter();
-  const dispatch = useAppDispatch();
 
   const submit = async () => {
     if (
-      (information.name === "") |
-      (information.storeName === "") |
-      (information.email === "") |
-      (information.username === "") |
-      (information.password === "") |
-      (information.phone === "") |
-      (information.workingPhone === "") |
-      (information.address === "") |
-      (information.bio === "") |
+      (information.name === "") ||
+      (information.storeName === "") ||
+      (information.email === "") ||
+      (information.username === "") ||
+      (information.password === "") ||
+      (information.phone === "") ||
+      (information.workingPhone === "") ||
+      (information.address === "") ||
+      (information.bio === "") ||
       (repeatPassword === "")
     ) {
       setShow([true, false, false, false]);
@@ -75,7 +72,7 @@ export default function SignUpSeller() {
         position: toast.POSITION.TOP_RIGHT,
       });
       setShow([false, false, false, false]);
-      dispatch(SetLogin(true));
+      localStorage.setItem("SellerLogin", "true");
       router.push("/");
     } catch (error) {
       const mes = error.response.data.message;
