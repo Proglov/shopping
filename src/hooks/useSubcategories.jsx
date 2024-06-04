@@ -2,6 +2,7 @@ import { useState } from 'react';
 
 export default function useCategories() {
     const [items, setItems] = useState([])
+    const [categories, setCategories] = useState([])
     const [currentPage, setCurrentPage] = useState(1)
     const [lastPage, setLastPage] = useState(1)
     const [loading, setLoading] = useState(true);
@@ -13,6 +14,8 @@ export default function useCategories() {
     return {
         items,
         setItems,
+        categories,
+        setCategories,
         currentPage,
         setCurrentPage,
         lastPage,

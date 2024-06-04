@@ -9,6 +9,7 @@ import CommentsMain from '../admin-and-seller/comments/CommentsMain';
 import CategoriesMain from '../admin-and-seller/categories/CategoriesMain';
 import Link from 'next/link';
 import { TiArrowBackOutline } from "react-icons/ti";
+import SubcategoriesMain from '../admin-and-seller/subcategories/SubcategoriesMain';
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -55,6 +56,8 @@ export default function Main() {
                 orientation='horizontal'
                 value={addSegmentsPage}
                 onChange={handleChange}
+                variant="scrollable"
+                visibleScrollbar
                 aria-label="horizontal tabs example"
                 textColor='inherit'
                 TabIndicatorProps={{
@@ -67,8 +70,9 @@ export default function Main() {
                 <Tab label="کاربران" {...a11yProps(1)} />
                 <Tab label="فروشندگان" {...a11yProps(2)} />
                 <Tab label="دسته بندی ها" {...a11yProps(3)} />
-                <Tab label="تراکنش ها" {...a11yProps(4)} />
-                <Tab label="کامنت ها" {...a11yProps(5)} />
+                <Tab label="زیر دسته بندی ها" {...a11yProps(4)} />
+                <Tab label="تراکنش ها" {...a11yProps(5)} />
+                <Tab label="کامنت ها" {...a11yProps(6)} />
             </Tabs>
             <div style={{ width: '100%' }}>
                 <TabPanel value={addSegmentsPage} index={0} className='text-center'>
@@ -84,9 +88,12 @@ export default function Main() {
                     <CategoriesMain />
                 </TabPanel>
                 <TabPanel value={addSegmentsPage} index={4} className='text-center'>
-                    <TXMain which={"ADMIN"} />
+                    <SubcategoriesMain />
                 </TabPanel>
                 <TabPanel value={addSegmentsPage} index={5} className='text-center'>
+                    <TXMain which={"ADMIN"} />
+                </TabPanel>
+                <TabPanel value={addSegmentsPage} index={6} className='text-center'>
                     <CommentsMain />
                 </TabPanel>
             </div>

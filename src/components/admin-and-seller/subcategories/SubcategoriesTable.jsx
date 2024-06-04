@@ -9,10 +9,9 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import Api from '@/services/withoutAuthActivities/categories';
+import Api from '@/services/withoutAuthActivities/subcategories';
 import Pagination from '../../Pagination';
-import { CategoriesContext } from './CategoriesMain';
-import Image from 'next/image';
+import { SubcategoriesContext } from './SubcategoriesMain';
 
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -34,12 +33,13 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 
-export default function CategoriesTable() {
-    const { getAllCategories } = Api
+export default function SubcategoriesTable() {
+    const { getAllSubcategories } = Api
 
     const {
         items,
         setItems,
+        setCategories,
         currentPage,
         setCurrentPage,
         lastPage,
@@ -53,31 +53,43 @@ export default function CategoriesTable() {
         setItemsCount,
         itemsPerPage,
         setLastPage
-    } = useContext(CategoriesContext)
+    } = useContext(SubcategoriesContext)
 
     useEffect(() => {
         const fetchData = async () => {
             try {
                 setLoading(true);
-                const categories = await getAllCategories({ page: currentPage, perPage: itemsPerPage });
-                setItems(categories?.categories)
-                setItemsCount(categories?.allCategoriesCount)
-                setLastPage(Math.ceil(categories?.allCategoriesCount / itemsPerPage))
+                const subcategories = await getAllSubcategories({ page: currentPage, perPage: itemsPerPage });
+                setItems(subcategories?.subcategories)
+                const subcategoriesWithUniqueCategory = subcategories?.subcategories.filter((obj, index, self) =>
+                    index === self.findIndex((t) => (
+                        t.categoryId._id === obj.categoryId._id
+                    ))
+                );
+                const categories = subcategoriesWithUniqueCategory.map(subCat => ({
+                    categoryId: subCat?.categoryId._id,
+                    name: subCat?.categoryId.name,
+
+                }))
+                setCategories(categories)
+
+                setItemsCount(subcategories?.allSubcategoriesCount)
+                setLastPage(Math.ceil(subcategories?.allSubcategoriesCount / itemsPerPage))
             } catch (error) {
-                setError(`Error fetching categories: ${error}`);
+                setError(`Error fetching subcategories: ${error}`);
                 setIsError(true);
             } finally {
                 setLoading(false);
             }
         };
         fetchData();
-    }, [currentPage, itemsPerPage, setError, setIsError, setItems, setItemsCount, setLoading, getAllCategories, setLastPage]);
+    }, [currentPage, itemsPerPage, setError, setIsError, setItems, setItemsCount, setLoading, getAllSubcategories, setLastPage, setCategories]);
 
 
     return (
         <Stack spacing={2} className='mt-7'>
             <div className='w-full text-start'>
-                جدول دسته بندی ها
+                جدول زیر دسته بندی ها
             </div>
             <div className='text-start'>
                 {
@@ -104,7 +116,7 @@ export default function CategoriesTable() {
                                     <TableRow>
                                         <StyledTableCell align='center'>ردیف</StyledTableCell>
                                         <StyledTableCell align='center'>نام</StyledTableCell>
-                                        <StyledTableCell align='center'>عکس</StyledTableCell>
+                                        <StyledTableCell align='center'>دسته بندی</StyledTableCell>
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
@@ -113,12 +125,7 @@ export default function CategoriesTable() {
                                             className='align-middle'>
                                             <StyledTableCell align='center'>{index + 1 + itemsPerPage * (currentPage - 1)}</StyledTableCell>
                                             <StyledTableCell align='center'>{item.name}</StyledTableCell>
-                                            <StyledTableCell align='center'>
-                                                {
-                                                    !!item?.imageUrl &&
-                                                    <Image alt={item.name} src={item.imageUrl} width={150} height={50} className='mx-auto' />
-                                                }
-                                            </StyledTableCell>
+                                            <StyledTableCell align='center'>{item.categoryId?.name}</StyledTableCell>
                                         </StyledTableRow>
                                     ))}
                                 </TableBody>
