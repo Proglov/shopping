@@ -15,16 +15,18 @@ export default function Bill({ step = 1 }) {
   let serviceFee = 1479;
 
   function Number(arr) {
-    let number = arr.reduce((sum, obj) => {
-      return sum + obj.number;
-    }, 0);
+    let number =
+      arr?.reduce((sum, obj) => {
+        return sum + obj.number;
+      }, 0) || "0";
     return number.toString();
   }
 
   function totalPrice(arr) {
-    let price = arr.reduce((sum, obj) => {
-      return sum + obj.number * parseInt(obj.price);
-    }, 0);
+    let price =
+      arr?.reduce((sum, obj) => {
+        return sum + obj.number * parseInt(obj.price);
+      }, 0) || "0";
     return price.toString();
   }
 
@@ -236,7 +238,7 @@ export default function Bill({ step = 1 }) {
             component="div"
           >
             {minPrice < totalPrice(product) ? (
-              !Time.select | (address === "") ? (
+              !Time.select || (address === "") ? (
                 <div className="text-red-600 mb-2 text-right text-xl">
                   لطفا آدرس یا زمان ارسال را انتخاب کنید!
                 </div>

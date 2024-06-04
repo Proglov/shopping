@@ -5,8 +5,6 @@ import Link from "next/link";
 import { useState } from "react";
 import UserApi from "@/services/withoutAuthActivities/user";
 import { useRouter } from "next/navigation";
-import { useAppDispatch } from "@/store/Hook";
-import { SetLogin } from "@/features/Login/LoginSlice";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import DOMPurify from "dompurify";
@@ -22,13 +20,12 @@ export default function SignUpComponent() {
   const [show, setShow] = useState([false, false, false]);
   const { signUp } = UserApi;
   const router = useRouter();
-  const dispatch = useAppDispatch();
 
   const submit = async () => {
     if (
-      (information.password === "") |
-      (information.phone === "") |
-      (information.username === "") |
+      (information.password === "") ||
+      (information.phone === "") ||
+      (information.username === "") ||
       (repeatPass === "")
     ) {
       setShow([true, false, false]);
@@ -53,7 +50,7 @@ export default function SignUpComponent() {
         position: toast.POSITION.TOP_RIGHT,
       });
       setShow([false, false]);
-      dispatch(SetLogin(true));
+      localStorage.setItem("UserLogin","true");
       router.push("/");
     } catch (error) {
       const mes = error.response.data.message;

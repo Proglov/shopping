@@ -14,11 +14,12 @@ export default function FooterMenu({ active }) {
   const [open, setOpen] = React.useState(false);
   const cartProducts = useAppSelector((state) => state.CartProducts);
 
-  let counter = cartProducts
-    .reduce((accumulator, currentObject) => {
-      return accumulator + currentObject.number;
-    }, 0)
-    .toString();
+  let counter =
+    cartProducts
+      ?.reduce((accumulator, currentObject) => {
+        return accumulator + currentObject.number;
+      }, 0)
+      .toString() | "0";
 
   const handleClickOpen = () => {
     setOpen(true);

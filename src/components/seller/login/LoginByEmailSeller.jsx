@@ -4,8 +4,6 @@ import { Box, Button, TextField } from "@mui/material";
 import Link from "next/link";
 import { useState } from "react";
 import SellerApi from "@/services/withoutAuthActivities/seller";
-import { useAppDispatch } from "@/store/Hook";
-import { SetLogin } from "@/features/Login/LoginSlice";
 import DOMPurify from "dompurify";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -22,11 +20,10 @@ export default function LoginByEmailSeller() {
   const [next, setNext] = useState(false);
   const [email, setEmail] = useState(true);
   const { sellerSignInWithEmailOrUsername } = SellerApi;
-  const dispatch = useAppDispatch();
   const router = useRouter();
 
   const submit = async () => {
-    if ((information.emailOrUsername === "") | (information.password === "")) {
+    if ((information.emailOrUsername === "") || (information.password === "")) {
       setShow([true, false, false]);
       return;
     }
@@ -50,7 +47,7 @@ export default function LoginByEmailSeller() {
         position: toast.POSITION.TOP_RIGHT,
       });
       setShow([false, false, false]);
-      dispatch(SetLogin(true));
+      localStorage.setItem("SellerLogin", "true");
       router.push("/");
       // setNext(true);
     } catch (error) {

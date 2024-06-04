@@ -1,58 +1,30 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const initialState = [
-  {
-    code: "546",
-    number: 5,
-    name: "شامپو پرژک مدل سیر حجم 450 میلی لیتر",
-    src: "/img/home/category-labaniat.jpg",
-    price: "1000",
-    off: "50",
-  },
-  {
-    code: "525",
-    number: 7,
-    name: "شامپو پرژک مدل سیر حجم 450 میلی لیتر",
-    src: "/img/home/tanagholat.jpg",
-    price: "1700",
-    off: "60",
-  },
-  {
-    code: "446",
-    number: 1,
-    name: "شامپو پرژک مدل سیر حجم 450 میلی لیتر",
-    src: "/img/home/category-labaniat.jpg",
-    price: "1080.45",
-    off: "0",
-  },
-  {
-    code: "687",
-    number: 2,
-    name: "شامپو پرژک مدل سیر حجم 450 میلی لیتر",
-    src: "/img/home/tanagholat.jpg",
-    price: "1500",
-    off: "60",
-  },
-];
+const initialState = [{}];
 
 export const CartProductsSlice = createSlice({
   name: "CartProducts",
   initialState,
   reducers: {
+    SetCart: (state, action) => {
+      return [...action.payload];
+    },
     AddCart: (state, action) => {
       const itemExists = state.find(
         (item) => item.code === action.payload.code
       );
 
       if (itemExists) {
-        return state.map((item) => {
+        const newState = state.map((item) => {
           if (item.code === action.payload.code) {
             return { ...item, number: item.number + 1 };
           }
           return item;
         });
+        localStorage.setItem("cart", newState);
+        return newState;
       } else {
-        return [
+        const newState = [
           ...state,
           {
             name: action.payload.name,
@@ -63,18 +35,22 @@ export const CartProductsSlice = createSlice({
             code: action.payload.code.toString(),
           },
         ];
+        localStorage.setItem("cart", newState);
+        return newState;
       }
     },
     IncrementCart: (state, action) => {
-      return state.map((item) => {
+      const newState = state.map((item) => {
         if (item.code === action.payload) {
           return { ...item, number: item.number + 1 };
         }
         return item;
       });
+      localStorage.setItem("cart", newState);
+      return newState;
     },
     DecrementCart: (state, action) => {
-      return state
+      const newState = state
         .map((item) => {
           if (item.code === action.payload) {
             if (item.number === 1) {
@@ -86,10 +62,12 @@ export const CartProductsSlice = createSlice({
           return item;
         })
         .filter((item) => item !== null);
+      localStorage.setItem("cart", newState);
+      return newState;
     },
   },
 });
-export const { AddCart, IncrementCart, DecrementCart } =
+export const { AddCart, IncrementCart, DecrementCart, SetCart } =
   CartProductsSlice.actions;
 
 export default CartProductsSlice.reducer;

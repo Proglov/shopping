@@ -12,7 +12,7 @@ export default function ChangePassword() {
   const { updateUser } = UserApi;
 
   const submit = async () => {
-    if ((newPass === "") | (repeatNewPass === "")) {
+    if ((newPass === "") || (repeatNewPass === "")) {
       setShow([false, true]);
       return;
     }
