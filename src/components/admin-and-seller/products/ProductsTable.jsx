@@ -90,7 +90,7 @@ export default function ProductsTable() {
             }
         };
         fetchData();
-    }, [currentPage, getAllMyProducts, itemsPerPage, setError, setIsError, setItems, setItemsCount, setLoading]);
+    }, [currentPage, getAllMyProducts, itemsPerPage, setError, setIsError, setItems, setItemsCount, setLoading, getAllProducts, setLastPage, which]);
 
 
     return (

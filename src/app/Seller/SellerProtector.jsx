@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 
 
 
-export default function SellerProtector({ children, Wait, shouldRouterPush, showNotFound, setState }) {
+export default function SellerProtector({ children, Wait, shouldRouterPush, showNotFound }) {
     const [loading, setLoading] = useState(true);
     const [show, setShow] = useState(false);
     const { isUserSeller } = Api
@@ -23,9 +23,6 @@ export default function SellerProtector({ children, Wait, shouldRouterPush, show
                         setShow(false)
                 } else {
                     setShow(true)
-                    if (typeof setState === "function") {
-                        setState(true)
-                    }
                 }
             } catch (error) {
                 if (shouldRouterPush)
@@ -37,7 +34,7 @@ export default function SellerProtector({ children, Wait, shouldRouterPush, show
             }
         }
         isAd()
-    }, [])
+    }, [isUserSeller, router, shouldRouterPush])
 
     if (loading) {
         return Wait

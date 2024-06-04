@@ -34,7 +34,7 @@ export default function AdminProtector({ children, Wait, shouldRouterPush, showN
             }
         }
         isAd()
-    }, [])
+    }, [isAdmin, router, shouldRouterPush])
 
     if (loading) {
         return Wait

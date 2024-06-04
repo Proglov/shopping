@@ -48,7 +48,7 @@ export default function CommentItem({ productID }) {
       }
     };
     GetComments();
-  }, [getCommentsOfAProduct]);
+  }, [getCommentsOfAProduct, productID]);
 
   return (
     <Box className="p-5 m-5 border-2 rounded-lg">

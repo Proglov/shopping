@@ -34,7 +34,7 @@ export default function Item() {
       }
     };
     getProduct();
-  }, [getOneProduct, setProduct]);
+  }, [getOneProduct, setProduct, router]);
 
   return (
     <>

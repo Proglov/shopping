@@ -82,7 +82,7 @@ export default function SellersTable() {
         };
 
         fetchData();
-    }, [currentPage, getAllSellers, itemsPerPage, setError, setIsError, setItems, setItemsCount, setLoading, validated]);
+    }, [currentPage, getAllSellers, itemsPerPage, setError, setIsError, setItems, setItemsCount, setLoading, validated, setLastPage]);
     return (
         <Stack spacing={2} className={`${!!validated && 'mt-16'}`}>
             <div className='w-full text-start'>

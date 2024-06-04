@@ -76,7 +76,7 @@ export default function UsersTable() {
         };
 
         fetchData();
-    }, [currentPage, getAllUsers, itemsPerPage, setError, setIsError, setItems, setItemsCount, setLoading]);
+    }, [currentPage, getAllUsers, itemsPerPage, setError, setIsError, setItems, setItemsCount, setLoading, setLastPage]);
     return (
         <Stack spacing={2}>
             <div className='w-full text-start'>

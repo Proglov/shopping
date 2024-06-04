@@ -82,7 +82,7 @@ export default function CommentsTable() {
         };
 
         fetchData();
-    }, [currentPage, getAllComments, itemsPerPage, setError, setIsError, setItems, setItemsCount, setLoading, validated]);
+    }, [currentPage, getAllComments, itemsPerPage, setError, setIsError, setItems, setItemsCount, setLoading, validated, setLastPage]);
     return (
         <Stack spacing={2}>
             <div className='w-full text-start'>

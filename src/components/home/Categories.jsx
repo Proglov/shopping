@@ -13,7 +13,7 @@ export default function Categories() {
 
   useEffect(() => {
     dispatch(fetchProducts());
-  }, []);
+  }, [dispatch]);
 
   return (
     <div className="m-4" id="categorization">

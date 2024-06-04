@@ -1,5 +1,5 @@
 'use client'
-import React, { useCallback, useState } from 'react'
+import React, { useState } from 'react'
 import { Box, Grid, Tab, Tabs, Typography } from '@mui/material'
 import ProductsMain from '../admin-and-seller/products/ProductsMain';
 import TXMain from '../admin-and-seller/txs/TXMain';
@@ -7,7 +7,6 @@ import Info from './Info';
 import MainSetting from './settings/MainSetting';
 import Link from 'next/link';
 import { IoMdHome } from 'react-icons/io';
-import Api from '@/services/withAuthActivities/seller';
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -41,13 +40,7 @@ export default function Main() {
         setAddSegmentsPage(newAddSegmentsPage);
     };
 
-    const { isUserSeller } = Api
-    const isSellerData = useCallback(async () => {
-        return await isUserSeller()
-    }, [])
-
-    if (!isSellerData) notFound()
-    else return (
+    return (
         <Grid container direction={'row-reverse'}
             className='mt-5 p-3 text-black'
         // sx={{ flexGrow: 1 }}

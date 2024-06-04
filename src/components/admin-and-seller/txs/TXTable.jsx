@@ -92,7 +92,7 @@ export default function TXTable() {
         };
 
         fetchData();
-    }, [currentPage, getAllMyTXs, itemsPerPage, setError, setIsError, setItems, setItemsCount, setLoading, isFutureOrder]);
+    }, [currentPage, getAllMyTXs, itemsPerPage, setError, setIsError, setItems, setItemsCount, setLoading, isFutureOrder, setLastPage, getAllTXs, which]);
     return (
         <Stack spacing={2} className={`${!isFutureOrder && 'mt-16'}`}>
             <div className='w-full text-start'>

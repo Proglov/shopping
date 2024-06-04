@@ -87,7 +87,7 @@ export default function ChangeProfile() {
             }
         }
         fetchMe()
-    }, [])
+    }, [getMeSeller])
 
     const handleChange = (event) => {
         if (AddNewData.disabled) return
