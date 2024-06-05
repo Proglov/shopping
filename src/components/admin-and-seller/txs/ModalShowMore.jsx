@@ -50,7 +50,7 @@ export default function ModalShowMore() {
                                 <div>محصولات :</div>
                                 <div className='mr-4'>
                                     {
-                                        selectedItem?.boughtProducts !== undefined &&
+                                        !!selectedItem?.boughtProducts &&
                                         selectedItem?.boughtProducts.map((bp, i) => (
                                             <div key={i} className='flex'>
                                                 <span className='flex'>

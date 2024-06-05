@@ -10,6 +10,7 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Api from '@/services/withoutAuthActivities/subcategories';
+import Api2 from '@/services/withoutAuthActivities/categories';
 import Pagination from '../../Pagination';
 import { SubcategoriesContext } from './SubcategoriesMain';
 
@@ -35,6 +36,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 
 export default function SubcategoriesTable() {
     const { getAllSubcategories } = Api
+    const { getAllCategories } = Api2
 
     const {
         items,
@@ -61,20 +63,11 @@ export default function SubcategoriesTable() {
                 setLoading(true);
                 const subcategories = await getAllSubcategories({ page: currentPage, perPage: itemsPerPage });
                 setItems(subcategories?.subcategories)
-                const subcategoriesWithUniqueCategory = subcategories?.subcategories.filter((obj, index, self) =>
-                    index === self.findIndex((t) => (
-                        t.categoryId._id === obj.categoryId._id
-                    ))
-                );
-                const categories = subcategoriesWithUniqueCategory.map(subCat => ({
-                    categoryId: subCat?.categoryId._id,
-                    name: subCat?.categoryId.name,
-
-                }))
-                setCategories(categories)
-
                 setItemsCount(subcategories?.allSubcategoriesCount)
                 setLastPage(Math.ceil(subcategories?.allSubcategoriesCount / itemsPerPage))
+
+                const getCategories = await getAllCategories()
+                setCategories(getCategories?.categories)
             } catch (error) {
                 setError(`Error fetching subcategories: ${error}`);
                 setIsError(true);
