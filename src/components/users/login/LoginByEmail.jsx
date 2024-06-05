@@ -83,7 +83,7 @@ export default function LoginByEmail() {
               فروشگاه آنلاین
             </Box>
             <Box className="mb-6 text-xl font-bold" component="div">
-              ورود
+              ورود کاربران
             </Box>
             <Box className="text-base mb-6 font-thin" component="div">
               سلام!
