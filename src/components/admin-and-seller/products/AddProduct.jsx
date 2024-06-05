@@ -1,35 +1,72 @@
 'use client'
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import FormControl from '@mui/material/FormControl';
 import { Button, Grid } from '@mui/material';
 import 'react-quill/dist/quill.snow.css';
 import CustomQuill from '@/components/CustomQuil';
 import DOMPurify from 'dompurify';
-import { categories } from '@/lib/categories';
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { price2Farsi } from '@/utils/funcs';
 import Api1 from '@/services/withAuthActivities/product';
 import Api2 from '@/services/withAuthActivities/image';
+import Api3 from '@/services/withoutAuthActivities/subcategories';
 import { MultiFileDropzone } from '../../multi-image-dropzone';
 
 
 export default function AddProduct() {
     const { createProduct } = Api1
     const { uploadImage } = Api2
+    const { getAllSubcategories } = Api3
     const [fileStates, setFileStates] = useState([]);
+    const [categories, setCategories] = useState([]);
     const [uploadRes, setUploadRes] = useState([]);
     const [AddNewData, setAddNewData] = useState({
         isSubmitting: false,
         formData: {
             name: '',
-            price: '',
+            price: 0,
             category: '',
             desc: '',
-            subcategory: 'سوپرمارکت',
+            subcategory: '',
             imagesUrl: []
         }
     })
+
+    useEffect(() => {
+        const fetchCategories = async () => {
+            try {
+                const res = await getAllSubcategories()
+                const allSubcategories = res.subcategories;
+                const allCategories = allSubcategories.reduce((acc, curr) => {
+                    const existingCategory = acc.find(item => item.categoryId === curr.categoryId._id);
+
+                    if (existingCategory) {
+                        existingCategory.subcategories.push({
+                            subcategoryId: curr._id,
+                            subcategoryName: curr.name
+                        });
+                    } else {
+                        acc.push({
+                            categoryId: curr.categoryId._id,
+                            categoryName: curr.categoryId.name,
+                            subcategories: [{
+                                subcategoryId: curr._id,
+                                subcategoryName: curr.name
+                            }]
+                        });
+                    }
+
+                    return acc;
+                }, []);
+                setCategories(allCategories);
+
+            } catch (error) {
+                toast.error("مشکلی در گرفتن دسته بندی ها رخ داد!")
+            }
+        }
+        fetchCategories();
+    }, [])
 
     function updateFileProgress(key, progress) {
         setFileStates((fileStates) => {
@@ -67,7 +104,7 @@ export default function AddProduct() {
                     ...prevProps,
                     formData: {
                         ...prevProps.formData,
-                        [name]: value,
+                        [name]: DOMPurify.sanitize(value),
                     }
                 }
             })
@@ -98,11 +135,39 @@ export default function AddProduct() {
                 ...prevProps,
                 isSubmitting: false
             }))
+        } else if (AddNewData.formData.subcategory === '') {
+            toast.error('زیر دسته بندی محصول ضروری میباشد')
+            setAddNewData(prevProps => ({
+                ...prevProps,
+                isSubmitting: false
+            }))
         } else {
             try {
-                const obj = AddNewData.formData;
-                obj.desc = DOMPurify.sanitize(AddNewData.formData.desc)
-                obj.imagesUrl = uploadRes;
+                // set the subcategoryId
+                let subcategoryId = '';
+                let bool = true;
+                let i = 0;
+                while (bool) {
+                    for (let j = 0; j < categories[i].subcategories.length; j++) {
+                        if (categories[i].subcategories[j]?.subcategoryName === AddNewData?.formData.subcategory) {
+                            subcategoryId = categories[i].subcategories[j]?.subcategoryId
+                            bool = false;
+                            break
+                        }
+                    }
+                    i++;
+                }
+
+                // build up the object
+                const obj = {
+                    name: AddNewData.formData.name,
+                    price: AddNewData.formData.price,
+                    desc: AddNewData.formData.desc,
+                    subcategoryId,
+                    imagesUrl: uploadRes
+                };
+
+                //make a request
                 const res = await createProduct(obj)
                 setAddNewData(prevProps => ({
                     ...prevProps,
@@ -111,7 +176,7 @@ export default function AddProduct() {
                         price: '',
                         category: '',
                         desc: '',
-                        subcategory: 'سوپرمارکت',
+                        subcategory: '',
                         imagesUrl: []
                     },
                     isSubmitting: false
@@ -180,15 +245,34 @@ export default function AddProduct() {
 
                     <Grid item xs={12} sm={12} md={12} lg={6} className="mt-2 relative">
                         <div className='w-full text-start text-sm'>
-                            <label htmlFor="underline_select">دسته بندی</label>
+                            <label htmlFor="underline_select_category">دسته بندی</label>
                         </div>
-                        <select id="underline_select" className="block py-2.5 px-3 w-full text-sm text-gray-500 bg-transparent my-2 rounded-md border-2 border-gray-200 appearance-none focus:outline-none focus:ring-0 focus:border-gray-200" onChange={handleChange} name='category'>
+                        <select id="underline_select_category" className="block py-2.5 px-3 w-full text-sm text-gray-500 bg-transparent my-2 rounded-md border-2 border-gray-200 appearance-none focus:outline-none focus:ring-0 focus:border-gray-200" onChange={handleChange} name='category'>
                             <option defaultValue={''}>دسته بندی را انتخاب کنید &#11167;</option>
                             {
-                                categories.map((category, index) => <option key={index} value={category} className='text-black'>{category}</option>)
+                                categories.map((categoryObj, index) => <option key={index} value={categoryObj?.categoryName} className='text-black'>{categoryObj?.categoryName}</option>)
                             }
                         </select>
                     </Grid>
+
+                    {
+                        !!AddNewData?.formData?.category &&
+                        <Grid item xs={12} sm={12} md={12} lg={6} className="mt-2 relative">
+                            <div className='w-full text-start text-sm'>
+                                <label htmlFor="underline_select_subcategory">زیر دسته بندی</label>
+                            </div>
+                            <select id="underline_select_subcategory" className="block py-2.5 px-3 w-full text-sm text-gray-500 bg-transparent my-2 rounded-md border-2 border-gray-200 appearance-none focus:outline-none focus:ring-0 focus:border-gray-200" onChange={handleChange} name='subcategory'>
+                                <option defaultValue={''}>زیر دسته بندی را انتخاب کنید &#11167;</option>
+                                {
+                                    categories.map(categoryObj => {
+                                        if (categoryObj?.categoryName === AddNewData?.formData?.category) {
+                                            return categoryObj?.subcategories.map((sub, i) => <option key={i} value={sub?.subcategoryName} className='text-black'>{sub?.subcategoryName}</option>)
+                                        } else return <></>
+                                    })
+                                }
+                            </select>
+                        </Grid>
+                    }
 
                     <Grid item xs={12}>
                         <label

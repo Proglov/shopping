@@ -126,6 +126,7 @@ export default function ProductsTable() {
                                         <StyledTableCell align='center'>قیمت به حروف</StyledTableCell>
                                         <StyledTableCell align='center'>قیمت به عدد</StyledTableCell>
                                         <StyledTableCell align='center'>دسته بندی</StyledTableCell>
+                                        <StyledTableCell align='center'>زیر دسته بندی</StyledTableCell>
                                         <StyledTableCell align='center'>عملیات</StyledTableCell>
                                     </TableRow>
                                 </TableHead>
@@ -137,7 +138,8 @@ export default function ProductsTable() {
                                             <StyledTableCell align='center'>{item.name}</StyledTableCell>
                                             <StyledTableCell align='center'>{price2Farsi(item.price)} تومان</StyledTableCell>
                                             <StyledTableCell align='center'>{item.price}</StyledTableCell>
-                                            <StyledTableCell align='center'>{item.category}</StyledTableCell>
+                                            <StyledTableCell align='center'>{item.subcategoryId?.categoryId.name}</StyledTableCell>
+                                            <StyledTableCell align='center'>{item.subcategoryId.name}</StyledTableCell>
                                             <StyledTableCell className='border-b-0'>
                                                 {selectedItem?._id === item._id ? (
                                                     <div className='text-center mt-2 text-xs'>درحال انجام عملیات</div>
