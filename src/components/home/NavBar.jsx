@@ -113,6 +113,7 @@ export default function NavBar() {
     setOpenDialog(false);
     localStorage.removeItem("UserLogin");
     localStorage.removeItem("SellerLogin");
+    localStorage.removeItem("token");
     setLoginUser(false);
     setLoginSeller(false);
     router.refresh();

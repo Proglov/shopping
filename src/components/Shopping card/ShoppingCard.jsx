@@ -29,20 +29,22 @@ export default function ShoppingCard({ step }) {
   const dispatch = useAppDispatch();
   const login = localStorage.getItem("UserLogin") || "false";
   const route = useRouter();
- console.log(login);
+  console.log(login);
   let counter =
     cartProducts
       ?.reduce((accumulator, currentObject) => {
         return accumulator + currentObject.number;
       }, 0)
-      .toString() || "0";
- 
-  if (login == "false") {
-    toast.warning("شما وارد نشده اید", {
-      position: toast.POSITION.TOP_RIGHT,
-    });
-    route.push("/users/login");
+      .toString() | "0";
+  if (step != 0) {
+    if (login == "false") {
+      toast.warning("شما وارد نشده اید", {
+        position: toast.POSITION.TOP_RIGHT,
+      });
+      route.push("/users/login");
+    }
   }
+
   return (
     <>
       <Box className="p-5 mb-1" component="div">
@@ -124,7 +126,7 @@ export default function ShoppingCard({ step }) {
               {convertToFarsiNumbers(counter)} کالا
             </Typography>
             <div className="grid justify-items-center">
-              {counter == "0"
+              {counter == 0
                 ? "سبد خرید شما خالی است!"
                 : cartProducts.map((item, index) => {
                     return (

@@ -47,11 +47,11 @@ export default function Specifications() {
       try {
         const user = await getMe();
         setInformation({
-          name: user.name,
-          phoneNumber: user.phone,
+          name: user.user.name,
+          phoneNumber: user.user.phone,
           // phone: "",
-          email: user.email,
-          userName: user.username,
+          email: user.user.email,
+          userName: user.user.username,
         });
       } catch (error) {
         alert(error.response.data.message);
@@ -68,7 +68,7 @@ export default function Specifications() {
             <Box>
               <Box className="p-3 mb-3">
                 <span className="font-bold">نام : </span>
-                <span>{information.name}</span>
+                <span>{information.name === "" ? "فاقد نام" : information.name}</span>
               </Box>
               {/* <Box className="p-3 mb-3">
                 <span className="font-bold">نام خانوادگی : </span>
@@ -76,7 +76,7 @@ export default function Specifications() {
               </Box> */}
               <Box className="p-3 mb-3">
                 <span className="font-bold">شماره موبایل : </span>
-                <span>{information.phoneNumber}</span>
+                <span>{information.phoneNumber === "" ? "فاقد شماره موبایل" : information.phoneNumber}</span>
               </Box>
               {/* <Box className="p-3 mb-3">
                 <span className="font-bold">شماره تلفن : </span>
@@ -84,11 +84,11 @@ export default function Specifications() {
               </Box> */}
               <Box className="p-3 mb-3">
                 <span className="font-bold">ایمیل : </span>
-                <span>{information.email}</span>
+                <span>{information.email === "" ? "فاقد ایمیل" : information.email}</span>
               </Box>
               <Box className="p-3 mb-3">
                 <span className="font-bold">نام کاربری : </span>
-                <span>{information.userName}</span>
+                <span>{information.userName === "" ? "فاقد نام کاربری" : information.userName}</span>
               </Box>
               <Box className="md:float-left">
                 <Button

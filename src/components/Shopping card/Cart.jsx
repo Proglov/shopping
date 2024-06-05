@@ -23,7 +23,7 @@ export default function Cart({ Close, Open }) {
       ?.reduce((accumulator, currentObject) => {
         return accumulator + currentObject.number;
       }, 0)
-      .toString() || "0";
+      .toString() | "0";
 
   function totalPrice(arr) {
     let price = arr.reduce((sum, obj) => {
@@ -98,40 +98,21 @@ export default function Cart({ Close, Open }) {
             </IconButton>
           </Box>
         </Box>
-        {counter != "0" ? (
-          <>
-            <ShoppingCard step={0} />
-            <Box
-              className="grid justify-center text-blue-700 text-base"
-              component="div"
-            >
-              حداقل سفارش{" "}
-              {convertToFarsiNumbers(formatPrice(minPrice.toString()))} تومان
-            </Box>
-            <Box className="p-3 grid justify-items-center" component="div">
-              {LoginUser ? (
-                minPrice < totalPrice(cartProducts) ? (
-                  <Link href="/shopping-card">
-                    <Button
-                      variant="contained"
-                      className="bg-green-500 hover:bg-green-600 text-base rounded-lg"
-                      sx={{
-                        width: {
-                          xs: "280px",
-                          sm: "500px",
-                          md: "650px",
-                          lg: "800px",
-                          xl: "1200px",
-                        },
-                      }}
-                    >
-                      نهایی کردن خرید
-                    </Button>
-                  </Link>
-                ) : (
+        <>
+          <ShoppingCard step={0} />
+          <Box
+            className="grid justify-center text-blue-700 text-base"
+            component="div"
+          >
+            حداقل سفارش{" "}
+            {convertToFarsiNumbers(formatPrice(minPrice.toString()))} تومان
+          </Box>
+          <Box className="p-3 grid justify-items-center" component="div">
+            {LoginUser ? (
+              minPrice < totalPrice(cartProducts) ? (
+                <Link href="/shopping-card">
                   <Button
                     variant="contained"
-                    disabled
                     className="bg-green-500 hover:bg-green-600 text-base rounded-lg"
                     sx={{
                       width: {
@@ -145,31 +126,46 @@ export default function Cart({ Close, Open }) {
                   >
                     نهایی کردن خرید
                   </Button>
-                )
-              ) : (
-                <Link href="/users/login">
-                  <Button
-                    variant="contained"
-                    className="bg-green-500 hover:bg-green-600 text-base rounded-lg"
-                    sx={{
-                      width: {
-                        xs: "280px",
-                        sm: "500px",
-                        md: "650px",
-                        lg: "800px",
-                        xl: "1200px",
-                      },
-                    }}
-                  >
-                    ورود / عضویت
-                  </Button>
                 </Link>
-              )}
-            </Box>
-          </>
-        ) : (
-          ""
-        )}
+              ) : (
+                <Button
+                  variant="contained"
+                  disabled
+                  className="bg-green-500 hover:bg-green-600 text-base rounded-lg"
+                  sx={{
+                    width: {
+                      xs: "280px",
+                      sm: "500px",
+                      md: "650px",
+                      lg: "800px",
+                      xl: "1200px",
+                    },
+                  }}
+                >
+                  نهایی کردن خرید
+                </Button>
+              )
+            ) : (
+              <Link href="/users/login">
+                <Button
+                  variant="contained"
+                  className="bg-green-500 hover:bg-green-600 text-base rounded-lg"
+                  sx={{
+                    width: {
+                      xs: "280px",
+                      sm: "500px",
+                      md: "650px",
+                      lg: "800px",
+                      xl: "1200px",
+                    },
+                  }}
+                >
+                  ورود / عضویت
+                </Button>
+              </Link>
+            )}
+          </Box>
+        </>
       </Dialog>
     </>
   );
