@@ -50,7 +50,7 @@ export default function SignUpComponent() {
         position: toast.POSITION.TOP_RIGHT,
       });
       setShow([false, false]);
-      localStorage.setItem("UserLogin","true");
+      localStorage.setItem("UserLogin", "true");
       router.push("/");
     } catch (error) {
       const mes = error.response.data.message;
@@ -231,6 +231,13 @@ export default function SignUpComponent() {
           >
             ثبت نام
           </Button>
+          <Box component="div" className="mt-5">
+            اگر قبلا ثبت نام کرده اید
+            <Link href="/users/login">
+              <span className="text-blue-600"> از اینجا وارد </span>
+            </Link>
+            شوید !
+          </Box>
           <Box className="text-xs mt-5 text-center" component="div">
             ثبت نام شما به معنای پذیرش{" "}
             <Link href="">

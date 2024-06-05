@@ -408,6 +408,13 @@ export default function SignUpSeller() {
           >
             ثبت نام
           </Button>
+          <Box component="div" className="mt-5">
+            اگر قبلا ثبت نام کرده اید
+            <Link href="/Seller/login">
+              <span className="text-blue-600"> از اینجا وارد </span>
+            </Link>
+            شوید !
+          </Box>
           <Box className="text-xs mt-5 text-center" component="div">
             ثبت نام شما به معنای پذیرش{" "}
             <Link href="">
