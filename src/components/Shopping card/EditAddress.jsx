@@ -38,21 +38,20 @@ export default function EditAddress({
       let str = [...address];
       str[newAddress.index] = newAddress.address;
       if (str[newAddress.index] !== "" && str[newAddress.index] !== " ") {
-        setAddress(str);
-        newAddress.address = "";
+        try {
+          const obj = address.map((item) => {
+            return DOMPurify.sanitize(item);
+          });
+          const response = await updateUser({
+            address: obj,
+          });
+          setAddress(str);
+          newAddress.address = "";
+        } catch (error) {
+          alert(error.response.data.message);
+        }
       } else {
         setEdit({ ...edit, [newAddress.index]: true });
-      }
-      try {
-        const obj = address.map((item) => {
-          return DOMPurify.sanitize(item);
-        });
-
-        const response = await updateUser({
-          address: obj,
-        });
-      } catch (error) {
-        alert(error.response.data.message);
       }
     } else if (flag === 3) {
       let str = [...address];
@@ -61,10 +60,17 @@ export default function EditAddress({
     }
   };
 
-  const handleDelete = (index) => {
+  const handleDelete = async (index) => {
     let arr = [...address];
     arr.splice(index, 1);
-    setAddress(arr);
+    try {
+      const response = await updateUser({
+        address: arr,
+      });
+      setAddress(arr);
+    } catch (error) {
+      alert(error.response.data.message);
+    }
   };
 
   return (

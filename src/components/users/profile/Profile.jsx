@@ -11,7 +11,7 @@ import PersonIcon from "@mui/icons-material/Person";
 import AccountBoxIcon from "@mui/icons-material/AccountBox";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import VpnKeyRoundedIcon from "@mui/icons-material/VpnKeyRounded";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Location from "./Location";
 import ChangePassword from "./ChangePassword";
@@ -23,14 +23,8 @@ export default function Profile() {
   const [active, setActive] = useState(0);
   const [openDialog, setOpenDialog] = useState(false);
   const router = useRouter();
-  const login = localStorage.getItem("UserLogin") || "false";
-
-  if (login == "false") {
-    toast.warning("شما وارد نشده اید", {
-      position: toast.POSITION.TOP_RIGHT,
-    });
-    router.push("/users/login");
-  }
+  const [login, setLogin] = useState();
+  const [number, setNumber] = useState(0);
 
   const handleOpen = () => {
     setOpenDialog(true);
@@ -45,6 +39,25 @@ export default function Profile() {
     localStorage.removeItem("token");
     router.push("/");
   };
+
+  useEffect(() => {
+    if (localStorage.getItem("UserLogin") == "true") {
+      setLogin(true);
+      setNumber(1);
+    } else {
+      setLogin(false);
+      setNumber(1);
+    }
+    if (number === 1) {
+      if (!login) {
+        toast.warning("شما وارد نشده اید", {
+          position: toast.POSITION.TOP_RIGHT,
+        });
+        router.push("/users/login");
+      }
+      setNumber(0);
+    }
+  }, [setLogin, login]);
 
   return (
     <>
