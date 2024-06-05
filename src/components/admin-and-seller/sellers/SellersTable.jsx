@@ -121,7 +121,7 @@ export default function SellersTable() {
                                 </TableHead>
                                 <TableBody>
                                     {items.map((item, index) => (
-                                        <StyledTableRow key={item.id}
+                                        <StyledTableRow key={item._id}
                                             className='align-middle'>
                                             <StyledTableCell align='center'>{convertToFarsiNumbers(index + 1 + itemsPerPage * (currentPage - 1))}</StyledTableCell>
                                             <StyledTableCell align='center'>{item.name}</StyledTableCell>
