@@ -3,7 +3,7 @@ import Backdrop from '@mui/material/Backdrop';
 import Modal from '@mui/material/Modal';
 import Fade from '@mui/material/Fade';
 import Typography from '@mui/material/Typography';
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { Button } from '@mui/material';
 import Box from '@mui/material/Box';
 import FormControl from '@mui/material/FormControl';
@@ -12,11 +12,12 @@ import Image from 'next/image';
 import 'react-quill/dist/quill.snow.css';
 import CustomQuill from '../../CustomQuil';
 import { price2Farsi } from '@/utils/funcs';
-import { categories } from '@/lib/categories';
 import { MultiFileDropzone } from '../../multi-image-dropzone';
 import Api1 from '@/services/withAuthActivities/product';
 import Api2 from '@/services/withAuthActivities/image';
+import Api3 from '@/services/withoutAuthActivities/subcategories';
 import { ProductsContext } from "./ProductsMain";
+import DOMPurify from 'dompurify';
 
 
 const ModalStyle = {
@@ -36,12 +37,48 @@ const ModalStyle = {
 export default function ModalEdit() {
     const { updateProduct } = Api1
     const { uploadImage, deleteImages } = Api2
+    const { getAllSubcategories } = Api3
     const { isModalEditOpen, setIsModalEditOpen, selectedItem, setSelectedItem, setOperatingError } = useContext(ProductsContext)
 
     const [fileStates, setFileStates] = useState([]);
     const [uploadRes, setUploadRes] = useState([]);
     const [imagesToDelete, setImagesToDelete] = useState([]);
+    const [categories, setCategories] = useState([]);
 
+    useEffect(() => {
+        const fetchCategories = async () => {
+            try {
+                const res = await getAllSubcategories()
+                const allSubcategories = res.subcategories;
+                const allCategories = allSubcategories.reduce((acc, curr) => {
+                    const existingCategory = acc.find(item => item.categoryId === curr.categoryId._id);
+
+                    if (existingCategory) {
+                        existingCategory.subcategories.push({
+                            subcategoryId: curr._id,
+                            subcategoryName: curr.name
+                        });
+                    } else {
+                        acc.push({
+                            categoryId: curr.categoryId._id,
+                            categoryName: curr.categoryId.name,
+                            subcategories: [{
+                                subcategoryId: curr._id,
+                                subcategoryName: curr.name
+                            }]
+                        });
+                    }
+
+                    return acc;
+                }, []);
+                setCategories(allCategories);
+
+            } catch (error) {
+                toast.error("مشکلی در گرفتن دسته بندی ها رخ داد!")
+            }
+        }
+        fetchCategories();
+    }, [])
 
     const handleClose = () => {
         setIsModalEditOpen(false);
@@ -66,7 +103,35 @@ export default function ModalEdit() {
             setSelectedItem(prevProps => {
                 return {
                     ...prevProps,
-                    [name]: value,
+                    [name]: DOMPurify.sanitize(value),
+                }
+            })
+        }
+    };
+
+    const handleChange2 = (event) => {
+        const { name, value } = event.target;
+        if (name === 'category') {
+            setSelectedItem(prevProps => {
+                return {
+                    ...prevProps,
+                    subcategoryId: {
+                        ...prevProps.subcategoryId,
+                        categoryId: {
+                            ...prevProps.subcategoryId.categoryId,
+                            name: DOMPurify.sanitize(value),
+                        }
+                    }
+                }
+            })
+        } else if (name === 'subcategory') {
+            setSelectedItem(prevProps => {
+                return {
+                    ...prevProps,
+                    subcategoryId: {
+                        ...prevProps.subcategoryId,
+                        name: DOMPurify.sanitize(value),
+                    }
                 }
             })
         }
@@ -101,9 +166,26 @@ export default function ModalEdit() {
             if (uploadRes) {
                 newImagesName = [...newImagesName, ...uploadRes];
             }
+
+            // set the subcategoryId
+            let subcategoryId = '';
+            let bool = true;
+            let i = 0;
+            while (bool) {
+                for (let j = 0; j < categories[i].subcategories.length; j++) {
+                    if (categories[i].subcategories[j]?.subcategoryName === selectedItem?.subcategoryId?.name) {
+                        subcategoryId = categories[i].subcategories[j]?.subcategoryId
+                        bool = false;
+                        break
+                    }
+                }
+                i++;
+            }
+
             const augmentedObj = {
                 ...obj,
                 id: obj._id,
+                subcategoryId,
                 imagesUrl: newImagesName
             }
             delete augmentedObj.__v;
@@ -179,7 +261,7 @@ export default function ModalEdit() {
                                     </div>
                                     <input
                                         className="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500"
-                                        id="inline-full-name"
+                                        id="inline-full-price"
                                         type="text"
                                         name="price"
                                         value={selectedItem.price}
@@ -195,17 +277,39 @@ export default function ModalEdit() {
 
                                 </Grid>
 
-                                <Grid item xs={12} className="mt-2 relative">
-                                    <div className='w-full text-start text-sm'>
-                                        <label htmlFor="underline_select">دسته بندی</label>
-                                    </div>
-                                    <select id="underline_select" className="block py-2.5 px-3 w-full text-sm text-gray-500 bg-transparent my-2 rounded-md border-2 border-gray-200 appearance-none focus:outline-none focus:ring-0 focus:border-gray-200" onChange={handleChange} name='category' defaultValue={selectedItem.category}>
-                                        <option disabled>دسته بندی را انتخاب کنید &#11167;</option>
-                                        {
-                                            categories.map((category, index) => <option key={index} value={category} className='text-black'>{category}</option>)
-                                        }
-                                    </select>
-                                </Grid>
+                                {
+                                    !!selectedItem?.subcategoryId?.categoryId.name &&
+                                    <Grid item xs={12} sm={12} md={12} lg={6} className="mt-2 relative">
+                                        <div className='w-full text-start text-sm'>
+                                            <label htmlFor="underline_select_category">دسته بندی</label>
+                                        </div>
+                                        <select id="underline_select_category" className="block py-2.5 px-3 w-full text-sm text-gray-500 bg-transparent my-2 rounded-md border-2 border-gray-200 appearance-none focus:outline-none focus:ring-0 focus:border-gray-200" onChange={handleChange2} name='category' defaultValue={selectedItem?.subcategoryId?.categoryId.name}>
+                                            <option>دسته بندی را انتخاب کنید &#11167;</option>
+                                            {
+                                                categories.map((categoryObj, index) => <option key={index} value={categoryObj?.categoryName} className='text-black'>{categoryObj?.categoryName}</option>)
+                                            }
+                                        </select>
+                                    </Grid>
+                                }
+
+                                {
+                                    !!selectedItem?.subcategoryId?.name &&
+                                    <Grid item xs={12} sm={12} md={12} lg={6} className="mt-2 relative">
+                                        <div className='w-full text-start text-sm'>
+                                            <label htmlFor="underline_select_subcategory">زیر دسته بندی</label>
+                                        </div>
+                                        <select id="underline_select_subcategory" className="block py-2.5 px-3 w-full text-sm text-gray-500 bg-transparent my-2 rounded-md border-2 border-gray-200 appearance-none focus:outline-none focus:ring-0 focus:border-gray-200" onChange={handleChange2} name='subcategory' defaultValue={selectedItem?.subcategoryId?.name}>
+                                            <option>زیر دسته بندی را انتخاب کنید &#11167;</option>
+                                            {
+                                                categories.map(categoryObj => {
+                                                    if (categoryObj?.categoryName === selectedItem?.subcategoryId?.categoryId.name) {
+                                                        return categoryObj?.subcategories.map((sub, i) => <option key={i} value={sub?.subcategoryName} className='text-black'>{sub?.subcategoryName}</option>)
+                                                    } else return <></>
+                                                })
+                                            }
+                                        </select>
+                                    </Grid>
+                                }
 
                                 <Grid item xs={12}>
                                     {
