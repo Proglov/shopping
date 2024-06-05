@@ -35,7 +35,7 @@ export default function LoginSeller() {
         position: toast.POSITION.TOP_RIGHT,
       });
       setShow([false, false]);
-      localStorage.setItem("SellerLogin","true");
+      localStorage.setItem("SellerLogin", "true");
       router.push("/");
       // setNext(true);
     } catch (error) {
@@ -119,20 +119,6 @@ export default function LoginSeller() {
               {/* تایید شماره موبایل */}
               وارد شدن
             </Button>
-            <Box component="div" className="mt-5">
-              اگر هنوز ثبت نام نکرده اید همین حالا
-              <Link href="/Seller/signup">
-                <span className="text-blue-600"> ثبت نام </span>
-              </Link>
-              کنید !
-            </Box>
-            <Box component="div" className="mt-4">
-              اگر مشتری هستید از
-              <Link href="/users/login">
-                <span className="text-blue-600"> این قسمت </span>
-              </Link>
-              وارد شوید .
-            </Box>
             <Box component="div" className="mt-4">
               برای وارد شدن با نام کاربری و رمز عبور از
               <span
@@ -143,6 +129,26 @@ export default function LoginSeller() {
                 این قسمت{" "}
               </span>
               اقدام کنید .
+            </Box>
+            <Box component="div" className="mt-5">
+              اگر هنوز ثبت نام نکرده اید همین حالا
+              <Link href="/Seller/signup">
+                <span className="text-blue-600"> ثبت نام </span>
+              </Link>
+              کنید !
+            </Box>
+            <Box component="div" className="mt-4">
+              اگر
+              &nbsp;
+              <span className="text-red-400 text-lg">
+                مشتری
+              </span>
+              &nbsp;
+              هستید از
+              <Link href="/users/login">
+                <span className="text-blue-600"> این قسمت </span>
+              </Link>
+              وارد شوید .
             </Box>
           </Box>
         </Box>

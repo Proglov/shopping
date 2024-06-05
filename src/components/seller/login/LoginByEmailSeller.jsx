@@ -171,20 +171,6 @@ export default function LoginByEmailSeller() {
               {/* تایید شماره موبایل */}
               وارد شدن
             </Button>
-            <Box component="div" className="mt-5">
-              اگر هنوز ثبت نام نکرده اید همین حالا
-              <Link href="/Seller/signup">
-                <span className="text-blue-600"> ثبت نام </span>
-              </Link>
-              کنید !
-            </Box>
-            <Box component="div" className="mt-4">
-              اگر مشتری هستید از
-              <Link href="/users/login">
-                <span className="text-blue-600"> این قسمت </span>
-              </Link>
-              وارد شوید .
-            </Box>
             <Box component="div" className="mt-4">
               برای وارد شدن با شماره موبایل از
               <span
@@ -195,6 +181,26 @@ export default function LoginByEmailSeller() {
                 این قسمت{" "}
               </span>
               اقدام کنید .
+            </Box>
+            <Box component="div" className="mt-5">
+              اگر هنوز ثبت نام نکرده اید همین حالا
+              <Link href="/Seller/signup">
+                <span className="text-blue-600"> ثبت نام </span>
+              </Link>
+              کنید !
+            </Box>
+            <Box component="div" className="mt-4">
+              اگر
+              &nbsp;
+              <span className="text-red-400 text-lg">
+                مشتری
+              </span>
+              &nbsp;
+              هستید از
+              <Link href="/users/login">
+                <span className="text-blue-600"> این قسمت </span>
+              </Link>
+              وارد شوید .
             </Box>
           </Box>
         </Box>

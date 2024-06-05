@@ -48,7 +48,7 @@ export default function LoginByEmail() {
         position: toast.POSITION.TOP_RIGHT,
       });
       setShow([false, false, false]);
-      localStorage.setItem("UserLogin","true");
+      localStorage.setItem("UserLogin", "true");
       router.push("/");
       // setNext(true);
     } catch (error) {
@@ -172,20 +172,6 @@ export default function LoginByEmail() {
               {/* تایید شماره موبایل */}
               وارد شدن
             </Button>
-            <Box component="div" className="mt-5">
-              اگر هنوز ثبت نام نکرده اید همین حالا
-              <Link href="/users/signup">
-                <span className="text-blue-600"> ثبت نام </span>
-              </Link>
-              کنید !
-            </Box>
-            <Box component="div" className="mt-4">
-              اگر فروشنده هستید از
-              <Link href="/Seller/login">
-                <span className="text-blue-600"> این قسمت </span>
-              </Link>
-              وارد شوید .
-            </Box>
             <Box component="div" className="mt-4">
               برای وارد شدن با شماره موبایل از
               <span
@@ -196,6 +182,24 @@ export default function LoginByEmail() {
                 این قسمت{" "}
               </span>
               اقدام کنید
+            </Box>
+            <Box component="div" className="mt-5">
+              اگر هنوز ثبت نام نکرده اید همین حالا
+              <Link href="/users/signup">
+                <span className="text-blue-600"> ثبت نام </span>
+              </Link>
+              کنید !
+            </Box>
+            <Box component="div" className="mt-4">
+              اگر &nbsp;
+              <span className="text-red-400 text-lg">
+                فروشنده
+              </span>
+              &nbsp; هستید از
+              <Link href="/Seller/login">
+                <span className="text-blue-600"> این قسمت </span>
+              </Link>
+              وارد شوید .
             </Box>
           </Box>
         </Box>
