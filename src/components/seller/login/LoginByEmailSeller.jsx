@@ -48,7 +48,7 @@ export default function LoginByEmailSeller() {
       });
       setShow([false, false, false]);
       localStorage.setItem("SellerLogin", "true");
-      router.push("/");
+      router.back();
       // setNext(true);
     } catch (error) {
       const mes = error.response.data.message;

@@ -1,7 +1,7 @@
 "use client";
 
 import { Box, Button, TextField } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import UserApi from "@/services/withAuthActivities/user";
 import DOMPurify from "dompurify";
 
@@ -9,7 +9,8 @@ export default function ChangePassword() {
   const [newPass, setNewPass] = useState("");
   const [repeatNewPass, setRepeatNewPass] = useState("");
   const [show, setShow] = useState([false, false]);
-  const { updateUser } = UserApi;
+  const { updateUser, getMe } = UserApi;
+  const [userId, setUserId] = useState("");
 
   const submit = async () => {
     if (newPass === "" || repeatNewPass === "") {
@@ -25,11 +26,24 @@ export default function ChangePassword() {
       const pass = DOMPurify.sanitize(newPass);
       const response = await updateUser({
         password: pass,
+        id: userId,
       });
     } catch (error) {
       alert(error.response.data.message);
     }
   };
+
+  useEffect(() => {
+    const GetUser = async () => {
+      try {
+        const user = await getMe();
+        setUserId(user.user._id);
+      } catch (error) {
+        alert(error.response.data.message);
+      }
+    };
+    GetUser();
+  }, [getMe, setUserId]);
 
   return (
     <>

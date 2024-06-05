@@ -5,12 +5,12 @@ import { convertToFarsiNumbers } from "@/utils/funcs";
 import { Box, Button } from "@mui/material";
 import { useEffect, useState } from "react";
 import UserApi from "@/services/withAuthActivities/user";
-import DOMPurify from "dompurify";
 
 export default function Location() {
   const [open, setOpen] = useState(false);
   const [address, setAddress] = useState([]);
   const { getMe } = UserApi;
+  const [userId, setUserId] = useState("");
 
   const handleOpen = () => {
     setOpen(true);
@@ -24,12 +24,13 @@ export default function Location() {
       try {
         const user = await getMe();
         setAddress([...user.user.address]);
+        setUserId(user.user._id);
       } catch (error) {
         alert(error.response.data.message);
       }
     };
     GetUser();
-  }, [getMe, setAddress]);
+  }, [getMe, setAddress, setUserId]);
 
   return (
     <>
@@ -73,7 +74,7 @@ export default function Location() {
         close={handleClose}
         address={address}
         setAddress={setAddress}
-        user={true}
+        user={userId}
       />
     </>
   );

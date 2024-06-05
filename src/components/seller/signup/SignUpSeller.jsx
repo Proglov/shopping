@@ -28,16 +28,16 @@ export default function SignUpSeller() {
 
   const submit = async () => {
     if (
-      (information.name === "") ||
-      (information.storeName === "") ||
-      (information.email === "") ||
-      (information.username === "") ||
-      (information.password === "") ||
-      (information.phone === "") ||
-      (information.workingPhone === "") ||
-      (information.address === "") ||
-      (information.bio === "") ||
-      (repeatPassword === "")
+      information.name === "" ||
+      information.storeName === "" ||
+      information.email === "" ||
+      information.username === "" ||
+      information.password === "" ||
+      information.phone === "" ||
+      information.workingPhone === "" ||
+      information.address === "" ||
+      information.bio === "" ||
+      repeatPassword === ""
     ) {
       setShow([true, false, false, false]);
       return;
@@ -73,7 +73,7 @@ export default function SignUpSeller() {
       });
       setShow([false, false, false, false]);
       localStorage.setItem("SellerLogin", "true");
-      router.push("/");
+      router.back();
     } catch (error) {
       const mes = error.response.data.message;
       if (mes === "working phone number is invalid!") {

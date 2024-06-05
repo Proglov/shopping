@@ -41,7 +41,7 @@ export default function Item() {
       <GalleryItem images={product.imagesUrl} />
       <DetailItem detail={product} />
       <SimilarProducts />
-      <CommentItem productID={product._id} />
+      <CommentItem />
     </>
   );
 }

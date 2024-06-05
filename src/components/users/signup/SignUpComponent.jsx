@@ -23,10 +23,10 @@ export default function SignUpComponent() {
 
   const submit = async () => {
     if (
-      (information.password === "") ||
-      (information.phone === "") ||
-      (information.username === "") ||
-      (repeatPass === "")
+      information.password === "" ||
+      information.phone === "" ||
+      information.username === "" ||
+      repeatPass === ""
     ) {
       setShow([true, false, false]);
       return;
@@ -51,7 +51,7 @@ export default function SignUpComponent() {
       });
       setShow([false, false]);
       localStorage.setItem("UserLogin", "true");
-      router.push("/");
+      router.back();
     } catch (error) {
       const mes = error.response.data.message;
       if (mes === "phone number is invalid!") {
