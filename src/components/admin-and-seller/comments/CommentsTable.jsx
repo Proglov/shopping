@@ -112,7 +112,7 @@ export default function CommentsTable() {
                                 <TableHead>
                                     <TableRow>
                                         <StyledTableCell align='center'>ردیف</StyledTableCell>
-                                        <StyledTableCell align='center'>شماره کاربر</StyledTableCell>
+                                        <StyledTableCell align='center'>آیدی کاربر</StyledTableCell>
                                         <StyledTableCell align='center'>متن ارسال شده</StyledTableCell>
                                         <StyledTableCell align='center'>عملیات</StyledTableCell>
                                     </TableRow>
@@ -122,7 +122,7 @@ export default function CommentsTable() {
                                         <StyledTableRow key={item._id}
                                             className='align-middle'>
                                             <StyledTableCell align='center'>{convertToFarsiNumbers(index + 1 + itemsPerPage * (currentPage - 1))}</StyledTableCell>
-                                            <StyledTableCell align='center'>{item.userId?.phone}</StyledTableCell>
+                                            <StyledTableCell align='center'>{item.userId?._id}</StyledTableCell>
                                             <StyledTableCell align='center'>{item.body}</StyledTableCell>
                                             <StyledTableCell className='border-b-0'>
                                                 {selectedId === item._id ? (

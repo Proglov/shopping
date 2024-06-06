@@ -1,19 +1,30 @@
 "use client";
 
-import { Grid, Typography } from "@mui/material";
+import { Grid, Skeleton, Typography } from "@mui/material";
 import CategoryComponent from "./CategoryComponent";
 import { TbCategory } from "react-icons/tb";
-import { useAppDispatch, useAppSelector } from "@/store/Hook";
-import { useEffect } from "react";
-import { fetchProducts } from "@/features/Products/Products";
+import { useEffect, useState } from "react";
+import Api from "@/services/withoutAuthActivities/categories";
 
 export default function Categories() {
-  const grouping = useAppSelector((state) => state.Grouping);
-  const dispatch = useAppDispatch();
+  const [categories, setCategories] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const { getAllCategories } = Api;
 
   useEffect(() => {
-    dispatch(fetchProducts());
-  }, [dispatch]);
+    const fetchData = async () => {
+      try {
+        setIsLoading(true)
+        const getCategories = await getAllCategories()
+        setCategories(getCategories?.categories)
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setIsLoading(false)
+      }
+    };
+    fetchData();
+  }, []);
 
   return (
     <div className="m-4" id="categorization">
@@ -53,17 +64,26 @@ export default function Categories() {
         </Typography>
       </div>
 
-      <Grid container gap={2} justifyContent="center">
-        {grouping.map((item, index) => (
-          <Grid item xs={3} lg={2} key={index}>
-            <CategoryComponent
-              href={item.href}
-              caption={item.name}
-              src={item.src}
-              charachtersLengthLevel={0}
-            />
-          </Grid>
-        ))}
+      <Grid container gap={isLoading ? 0 : 2} justifyContent="center">
+        {
+          isLoading ?
+            Array.from({ length: 6 }).map((_, index) => (
+              <Grid item xs={12} sm={6} md={4} lg={3} className="grid-item" key={index}>
+                <Skeleton variant="rectangular" width="95%" height={200} className="my-3" />
+              </Grid>
+            ))
+            :
+            categories.map((item, index) => (
+              <Grid item xs={3} lg={2} key={index}>
+                <CategoryComponent
+                  src={item.imageUrl}
+                  caption={item.name}
+                  href={item._id}
+                  charachtersLengthLevel={0}
+                />
+              </Grid>
+            ))
+        }
       </Grid>
     </div>
   );

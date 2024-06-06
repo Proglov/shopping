@@ -13,7 +13,13 @@ const Api = {
             `/productGet/getOneProduct?id=${payload?.id}`
         );
         return response;
-    }
+    },
+    getAllProductsOfACategory: async (payload) => {
+        const response = await clientWithoutAuth.get(
+            `/productGet/getAllProductsOfACategory?id=${payload?.id}`
+        );
+        return response?.data;
+    },
 };
 
 export default Api;
