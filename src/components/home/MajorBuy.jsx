@@ -1,6 +1,94 @@
-import Link from 'next/link'
+'use client'
 import MajorBuyComponent from './MajorBuyComponent'
-import MajorSlider from './MajorSlider'
+import { Swiper, SwiperSlide } from 'swiper/react'
+import { Navigation, Pagination } from 'swiper/modules'
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
+
+const swiperBreaks = {
+    200: {
+        slidesPerView: 3,
+        spaceBetween: 170
+    },
+    400: {
+        slidesPerView: 3,
+        spaceBetween: 150
+    },
+    500: {
+        slidesPerView: 3,
+        spaceBetween: 130
+    },
+    540: {
+        slidesPerView: 3,
+        spaceBetween: 100
+    },
+    580: {
+        slidesPerView: 3,
+        spaceBetween: 50
+    },
+    598: {
+        slidesPerView: 4,
+        spaceBetween: 180
+    },
+    600: {
+        slidesPerView: 4,
+        spaceBetween: 190
+    },
+    640: {
+        slidesPerView: 3,
+        spaceBetween: 120
+    },
+    700: {
+        slidesPerView: 3,
+        spaceBetween: 100
+    },
+    750: {
+        slidesPerView: 3,
+        spaceBetween: 50
+    },
+    800: {
+        slidesPerView: 4,
+        spaceBetween: 150
+    },
+    900: {
+        slidesPerView: 4,
+        spaceBetween: 80
+    },
+    1000: {
+        slidesPerView: 4,
+        spaceBetween: 50
+    },
+    1050: {
+        slidesPerView: 4,
+        spaceBetween: 0
+    },
+    1100: {
+        slidesPerView: 5,
+        spaceBetween: 30
+    },
+    1200: {
+        slidesPerView: 5,
+        spaceBetween: 100
+    },
+    1250: {
+        slidesPerView: 5,
+        spaceBetween: 0
+    },
+    1400: {
+        slidesPerView: 6,
+        spaceBetween: 0
+    },
+    1800: {
+        slidesPerView: 7,
+        spaceBetween: 0
+    },
+    2000: {
+        slidesPerView: 8,
+        spaceBetween: 0
+    },
+}
+
 
 const arr = [
     {
@@ -67,29 +155,27 @@ export default function MajorBuy() {
         <div className="m-4 rounded-xl" style={{ background: 'linear-gradient(to left top, #f9b49b 20%, #9fb6c3)', boxShadow: '0 7px 6px rgba(0, 0, 0, 0.12), 0 1px 4px rgba(0, 0, 0, 0.24)' }}>
             <div className="text-center p-2 text-slate-50" style={{ textShadow: '0px 0px 10px #000000' }}>خرید عمده</div>
 
-            {/* xs */}
-            <div className='overflow-x-scroll relative w-full sm:hidden flex'>
 
-                <div className='flex'>
-                    {arr.map((slide, i) => (
-                        <div key={i}>
-                            <MajorBuyComponent {...slide} isSelected={false} />
-                        </div>
-                    ))}
-                </div>
-
-                <div className='min-w-fit h-5 text-white mx-2' style={{ transform: 'translateY(120px)' }}>
-                    <Link href='/'>
-                        نمایش بیشتر
-                    </Link>
-                </div>
-            </div>
-
-            {/* not xs */}
-            <div className="sm:block hidden">
-                <MajorSlider slides={arr} />
-            </div>
-
+            <Swiper
+                dir="rtl"
+                modules={[Navigation, Pagination]}
+                navigation
+                loop
+                autoplay={{
+                    delay: 2500,
+                    disableOnInteraction: true,
+                }}
+                lazy="true"
+                pagination={{ type: 'progressbar' }}
+                breakpoints={swiperBreaks}
+                className="w-full rounded-lg"
+            >
+                {arr.map((slide, i) => (
+                    <SwiperSlide key={i}>
+                        <MajorBuyComponent {...slide} isSelected={false} />
+                    </SwiperSlide>
+                ))}
+            </Swiper>
 
 
         </div>
