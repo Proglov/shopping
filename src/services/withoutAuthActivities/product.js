@@ -16,7 +16,7 @@ const Api = {
     },
     getAllProductsOfACategory: async (payload) => {
         const response = await clientWithoutAuth.get(
-            `/productGet/getAllProductsOfACategory?id=${payload?.id}`
+            `/productGet/getAllProductsOfACategory?categoryId=${payload?.id}`
         );
         return response?.data;
     },
