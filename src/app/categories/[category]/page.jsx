@@ -5,7 +5,7 @@ import Products from "@/components/categorization/Products";
 export default function Category({ params: { category } }) {
   return (
     <>
-      <BreadCrumbs location={category}/>
+      {/* <BreadCrumbs location={category}/> */}
       {/* <FilterProducts /> */}
       <Products />
     </>

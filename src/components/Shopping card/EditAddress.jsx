@@ -39,7 +39,7 @@ export default function EditAddress({
       str[newAddress.index] = newAddress.address;
       if (str[newAddress.index] !== "" && str[newAddress.index] !== " ") {
         try {
-          const obj = address.map((item) => {
+          const obj = str.map((item) => {
             return DOMPurify.sanitize(item);
           });
           const response = await updateUser({

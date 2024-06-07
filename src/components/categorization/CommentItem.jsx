@@ -13,6 +13,7 @@ import UserApi from "@/services/withAuthActivities/user";
 import { usePathname } from "next/navigation";
 import DOMPurify from "dompurify";
 import { convertToFarsiNumbers } from "@/utils/funcs";
+import { set } from "zod";
 
 export default function CommentItem() {
   const router = usePathname();
@@ -26,6 +27,8 @@ export default function CommentItem() {
   const [login, setLogin] = useState(true);
   const [userId, setUserId] = useState("");
   const [SHOW, setSHOW] = useState({});
+  const [likes, setLikes] = useState({});
+  const [disLikes, setDisLikes] = useState({});
 
   const liked = async (id) => {
     try {
@@ -70,17 +73,6 @@ export default function CommentItem() {
     return disLike;
   };
 
-  const checkLiked = (id) => {
-    const check = commentsList.filter((item) => item._id === id).likes;
-    const Like =
-      check?.map((likeId) => {
-        if (likeId === userId) {
-          return true;
-        }
-      }) || false;
-    return Like;
-  };
-
   const handleSubmit = async () => {
     try {
       const body = DOMPurify.sanitize(newComment);
@@ -91,14 +83,7 @@ export default function CommentItem() {
         id: userId,
       });
       setNewComment("");
-      const comments = await getCommentsOfAProduct({ id: productID });
-      const r = comments.comments.filter(
-        (item) => item.parentCommentId !== null
-      );
-      setReply(r);
-      setCommentsList(
-        comments.comments.filter((item) => item.parentCommentId === null)
-      );
+      alert("نظر شما برای بررسی ثبت شد.");
     } catch (error) {
       alert(error.response.data.message);
     }
@@ -117,16 +102,7 @@ export default function CommentItem() {
         productId: productID,
         id: userId,
       });
-      setNewComment("");
-      const comments = await getCommentsOfAProduct({ id: productID });
-      const r = comments.comments.filter(
-        (item) => item.parentCommentId !== null
-      );
-      setReply(r);
-      setCommentsList(
-        comments.comments.filter((item) => item.parentCommentId === null)
-      );
-      setParentId(null);
+      alert("پاسخ شما برای بررسی ثبت شد.");
     } catch (error) {
       alert(error.response.data.message);
     }
@@ -165,6 +141,32 @@ export default function CommentItem() {
       }
     };
     GetUser();
+
+    commentsList.map((item) => {
+      item.likes.map((likeId) => {
+        if (likeId === userId) {
+          setLikes({ ...likes, [item._id]: true });
+        }
+      });
+      item.disLikes.map((disLikeId) => {
+        if (disLikeId === userId) {
+          setDisLikes({ ...disLikes, [item._id]: true });
+        }
+      });
+    });
+
+    replay.map((item) => {
+      item.likes.map((likeId) => {
+        if (likeId === userId) {
+          setLikes({ ...likes, [item._id]: true });
+        }
+      });
+      item.disLikes.map((disLikeId) => {
+        if (disLikeId === userId) {
+          setDisLikes({ ...disLikes, [item._id]: true });
+        }
+      });
+    });
   }, [
     getCommentsOfAProduct,
     productID,
@@ -172,6 +174,11 @@ export default function CommentItem() {
     setCommentsList,
     getMe,
     setUserId,
+    setLikes,
+    setDisLikes,
+    disLikes,
+    likes,
+    commentsList,
   ]);
 
   return (
@@ -226,6 +233,8 @@ export default function CommentItem() {
         {commentsList.length !== 0 ? (
           commentsList.map((item, index) => {
             const show = SHOW[index];
+            const commentLike = likes[item._id];
+            const commentDisLike = disLikes[item._id];
             return (
               <Box
                 key={index}
@@ -236,7 +245,10 @@ export default function CommentItem() {
                 </Box>
                 <Box className="col-span-11 row-span-2">
                   <Box className="sm:text-lg text-sm bold">
-                    {item.userId.username} :
+                    {item.userId.username == ""
+                      ? "فاقد نام"
+                      : item.userId.username}{" "}
+                    :
                   </Box>
                   <Box className="sm:text-base text-xs p-5">{item.body}</Box>
                   <Box className="mt-3 grid grid-cols-2">
@@ -245,7 +257,7 @@ export default function CommentItem() {
                         icon={<ThumbDownAltOutlinedIcon />}
                         checkedIcon={<ThumbDownAltIcon />}
                         color="error"
-                        checked={() => checkDisLiked(item._id)}
+                        checked={commentDisLike}
                         onChange={() => disLiked(item._id)}
                       />
                       <span>
@@ -257,7 +269,7 @@ export default function CommentItem() {
                         icon={<ThumbUpAltOutlinedIcon />}
                         checkedIcon={<ThumbUpAltIcon />}
                         color="error"
-                        checked={() => checkLiked(item._id)}
+                        checked={commentLike}
                         onChange={() => liked(item._id)}
                       />
                       <span>
@@ -354,6 +366,8 @@ export default function CommentItem() {
                   </Box>
                   {replay.map((comment, id) => {
                     if (comment.parentCommentId === item._id) {
+                      const replayLike = likes[comment._id];
+                      const replayDisLike = disLikes[comment._id];
                       return (
                         <Box
                           key={id}
@@ -368,7 +382,10 @@ export default function CommentItem() {
                           </Box>
                           <Box className="col-span-11">
                             <Box className="sm:text-lg text-sm bold">
-                              {comment.userId.username} :
+                              {comment.userId.username == ""
+                                ? "فاقد نام"
+                                : comment.userId.username}{" "}
+                              :
                             </Box>
                             <Box className="sm:text-base text-xs p-5">
                               {comment.body}
@@ -379,7 +396,7 @@ export default function CommentItem() {
                                   icon={<ThumbDownAltOutlinedIcon />}
                                   checkedIcon={<ThumbDownAltIcon />}
                                   color="error"
-                                  checked={() => checkDisLiked(comment._id)}
+                                  checked={replayDisLike}
                                   onChange={() => disLiked(comment._id)}
                                 />
                                 <span>
@@ -393,7 +410,7 @@ export default function CommentItem() {
                                   icon={<ThumbUpAltOutlinedIcon />}
                                   checkedIcon={<ThumbUpAltIcon />}
                                   color="error"
-                                  checked={() => checkLiked(comment._id)}
+                                  checked={replayLike}
                                   onChange={() => liked(comment._id)}
                                 />
                                 <span>
