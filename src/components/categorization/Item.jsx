@@ -13,13 +13,16 @@ export default function Item() {
   const router = usePathname();
   const { getOneProduct } = ProductApi;
   const [product, setProduct] = useState({
-    category: "",
     desc: "",
     imagesUrl: [],
     name: "",
     price: 0,
     sellerId: "",
-    subcategory: "",
+    subcategoryId: {
+      categoryId: {
+        name: "",
+      },
+    },
     __v: 0,
     _id: "",
   });
@@ -27,7 +30,7 @@ export default function Item() {
   useEffect(() => {
     const getProduct = async () => {
       try {
-        const p = await getOneProduct({ id: router.split("/")[3] });
+        const p = await getOneProduct({ id: router.split("/")[4] });
         setProduct({ ...p.data.product });
       } catch (error) {
         alert(error.response.data.message);

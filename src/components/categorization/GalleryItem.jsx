@@ -19,15 +19,13 @@ export default function GalleryItem({ images }) {
 
   return (
     <Box className="m-5 flex justify-center flex-col items-center">
-      <Box
-        className="border-2 border-gray-200 p-5 w-fit bg-gray-100 rounded relative"
-      >
+      <Box className="border-2 border-gray-200 p-5 w-fit bg-gray-100 rounded relative">
         <Image
           src={images[currentImage]}
           alt="gallery"
-          width={500}
-          height={300}
-          className="h-60 w-72 md:h-96 md:w-5/12"
+          width={280}
+          height={100}
+          className="h-60 w-72 md:h-[350px] md:w-[550px]"
         />
         <IconButton
           className="absolute bottom-1/2 -left-3 rounded-lg"

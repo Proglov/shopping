@@ -13,7 +13,6 @@ import UserApi from "@/services/withAuthActivities/user";
 import { usePathname } from "next/navigation";
 import DOMPurify from "dompurify";
 import { convertToFarsiNumbers } from "@/utils/funcs";
-import { set } from "zod";
 
 export default function CommentItem() {
   const router = usePathname();
@@ -60,17 +59,6 @@ export default function CommentItem() {
     } catch (error) {
       alert(error.response.data.message);
     }
-  };
-
-  const checkDisLiked = (id) => {
-    const check = commentsList.filter((item) => item._id === id).disLikes;
-    const disLike =
-      check?.map((dislikeId) => {
-        if (dislikeId === userId) {
-          return true;
-        }
-      }) || false;
-    return disLike;
   };
 
   const handleSubmit = async () => {
@@ -142,31 +130,31 @@ export default function CommentItem() {
     };
     GetUser();
 
-    commentsList.map((item) => {
-      item.likes.map((likeId) => {
-        if (likeId === userId) {
-          setLikes({ ...likes, [item._id]: true });
-        }
-      });
-      item.disLikes.map((disLikeId) => {
-        if (disLikeId === userId) {
-          setDisLikes({ ...disLikes, [item._id]: true });
-        }
-      });
-    });
+    // commentsList.map((item) => {
+    //   item.likes.map((likeId) => {
+    //     if (likeId === userId) {
+    //       setLikes({ ...likes, [item._id]: true });
+    //     }
+    //   });
+    //   item.disLikes.map((disLikeId) => {
+    //     if (disLikeId === userId) {
+    //       setDisLikes({ ...disLikes, [item._id]: true });
+    //     }
+    //   });
+    // });
 
-    replay.map((item) => {
-      item.likes.map((likeId) => {
-        if (likeId === userId) {
-          setLikes({ ...likes, [item._id]: true });
-        }
-      });
-      item.disLikes.map((disLikeId) => {
-        if (disLikeId === userId) {
-          setDisLikes({ ...disLikes, [item._id]: true });
-        }
-      });
-    });
+    // replay.map((item) => {
+    //   item.likes.map((likeId) => {
+    //     if (likeId === userId) {
+    //       setLikes({ ...likes, [item._id]: true });
+    //     }
+    //   });
+    //   item.disLikes.map((disLikeId) => {
+    //     if (disLikeId === userId) {
+    //       setDisLikes({ ...disLikes, [item._id]: true });
+    //     }
+    //   });
+    // });
   }, [
     getCommentsOfAProduct,
     productID,
@@ -174,11 +162,12 @@ export default function CommentItem() {
     setCommentsList,
     getMe,
     setUserId,
-    setLikes,
-    setDisLikes,
-    disLikes,
-    likes,
+    // setLikes,
+    // setDisLikes,
+    // disLikes,
+    // likes,
     commentsList,
+    replay,
   ]);
 
   return (
@@ -233,8 +222,8 @@ export default function CommentItem() {
         {commentsList.length !== 0 ? (
           commentsList.map((item, index) => {
             const show = SHOW[index];
-            const commentLike = likes[item._id];
-            const commentDisLike = disLikes[item._id];
+            const commentLike = likes[item._id] || false;
+            const commentDisLike = disLikes[item._id] || false;
             return (
               <Box
                 key={index}
@@ -366,8 +355,8 @@ export default function CommentItem() {
                   </Box>
                   {replay.map((comment, id) => {
                     if (comment.parentCommentId === item._id) {
-                      const replayLike = likes[comment._id];
-                      const replayDisLike = disLikes[comment._id];
+                      const replayLike = likes[comment._id] || false;
+                      const replayDisLike = disLikes[comment._id] || false;
                       return (
                         <Box
                           key={id}

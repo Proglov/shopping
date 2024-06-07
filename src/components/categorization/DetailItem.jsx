@@ -8,12 +8,7 @@ import { usePathname } from "next/navigation";
 
 export default function DetailItem({ detail }) {
   const router = usePathname();
-  const grouping = useAppSelector((state) => state.Grouping);
   const dispatch = useAppDispatch();
-
-  const place = grouping.filter((item) => {
-    return item.href === router.split("/")[2];
-  });
 
   return (
     <>
@@ -23,7 +18,8 @@ export default function DetailItem({ detail }) {
             نام محصول: {detail.name}
           </Box>
           <Box className="sm:text-lg text-sm mb-3 sm:mb-0">
-            دسته بندی: {place[0].name}
+            دسته بندی: {detail.subcategoryId.categoryId.name} ،{" "}
+            {detail.subcategoryId.name}
           </Box>
         </Box>
         <Box className="grid grid-rows-2 col-span-3">

@@ -3,25 +3,29 @@
 import { Breadcrumbs, Typography } from "@mui/material";
 import ArrowLeftIcon from "@mui/icons-material/ArrowLeft";
 import Link from "next/link";
-import CategoryApi from "@/services/withoutAuthActivities/categories";
+import SubCategoryApi from "@/services/withoutAuthActivities/subcategories";
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 
-export default function BreadCrumbs() {
+export default function BreadCrumbsSub() {
   const router = usePathname();
-  const id = router.split("/")[2];
-  const { getOneCategory } = CategoryApi;
+  const subId = router.split("/")[3];
+  const { getOneSubcategory } = SubCategoryApi;
   const [name, setName] = useState("");
+  const [id, setId] = useState("");
+  const [nameSub, setNameSub] = useState("");
 
   useEffect(() => {
-    const getCategory = async () => {
+    const getSubCategory = async () => {
       try {
-        const response = await getOneCategory({ id: id });
-        setName(response.category.name);
+        const response = await getOneSubcategory({ id: subId });
+        setNameSub(response.subcategory.name);
+        setName(response.subcategory.categoryId.name);
+        setId(response.subcategory.categoryId._id);
       } catch (error) {}
     };
-    getCategory();
-  }, [getOneCategory]);
+    getSubCategory();
+  }, [getOneSubcategory]);
 
   return (
     <>
@@ -40,7 +44,13 @@ export default function BreadCrumbs() {
         >
           دسته بندی
         </Link>
-        <Typography className="text-black text-lg">{name}</Typography>
+        <Link
+          href={`/categories/${id}`}
+          className="text-base hover:underline text-gray-400"
+        >
+          {name}
+        </Link>
+        <Typography className="text-black text-lg">{nameSub}</Typography>
       </Breadcrumbs>
     </>
   );

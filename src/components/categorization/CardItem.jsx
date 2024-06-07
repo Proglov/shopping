@@ -4,18 +4,14 @@ import { convertToFarsiNumbers, formatPrice } from "@/utils/funcs";
 import { Box, Button, Card, CardContent, CardMedia } from "@mui/material";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useAppSelector } from "@/store/Hook";
 
 export default function CardItem({ product }) {
   const router = usePathname();
-  const grouping = useAppSelector((state) => state.Grouping);
-
-  const place = grouping.filter((item) => {
-    return item.href === router.split("/")[2];
-  });
+  const id = router.split("/")[2];
+  const subId = product.subcategoryId;
 
   return (
-    <Card sx={{ maxWidth: 200, height: 330 }} className="mt-5 ml-6">
+    <Card sx={{ maxWidth: 200, height: 330 }} className="ml-6">
       <CardMedia
         sx={{ height: 150, width: 200 }}
         component="img"
@@ -33,7 +29,7 @@ export default function CardItem({ product }) {
           تومان
         </Box>
         <Box className="mt-3">
-          <Link href={`/categories/${place[0].href}/${product._id}`}>
+          <Link href={`/categories/${id}/${subId}/${product._id}`}>
             <Button variant="outlined" color="info" className="w-full">
               مشاهده محصول
             </Button>

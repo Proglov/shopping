@@ -1,13 +1,11 @@
 import BreadCrumbs from "@/components/categorization/BreadCrumbs";
-// import FilterProducts from "@/components/categorization/FilterProducts";
-import Products from "@/components/categorization/Products";
+import SubCategory from "@/components/categorization/SubCategory";
 
-export default function Category({ params: { category } }) {
+export default function Category() {
   return (
     <>
-      {/* <BreadCrumbs location={category}/> */}
-      {/* <FilterProducts /> */}
-      <Products />
+      <BreadCrumbs />
+      <SubCategory />
     </>
   );
 }
