@@ -32,11 +32,16 @@ export default function Specifications() {
       obj.email = DOMPurify.sanitize(obj.email);
       obj.phoneNumber = DOMPurify.sanitize(obj.phoneNumber);
       obj.userName = DOMPurify.sanitize(obj.userName);
+
+      const changedFields = {};
+      Object.keys(obj).forEach((key) => {
+        if (obj[key] !== preInformation[key]) {
+          changedFields[key] = obj[key];
+        }
+      });
+
       const response = await updateUser({
-        name: obj.name,
-        phone: obj.phoneNumber,
-        email: obj.email,
-        username: obj.userName,
+        ...changedFields,
         id: userId,
       });
     } catch (error) {
