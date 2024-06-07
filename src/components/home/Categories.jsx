@@ -79,7 +79,7 @@ export default function Categories() {
                   src={item.imageUrl}
                   caption={item.name}
                   href={item._id}
-                  charachtersLengthLevel={0}
+                  charachtersLengthLevel={item.name.length < 11 ? 0 : item.name.length < 14 ? 1 : 2}
                 />
               </Grid>
             ))

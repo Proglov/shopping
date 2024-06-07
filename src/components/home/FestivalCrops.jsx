@@ -1,6 +1,13 @@
-import Link from "next/link"
+'use client'
 import FestivalCropsComponent from "./FestivalCropsComponent"
-import FestivalSlider from "./FestivalSlider"
+
+import { Swiper, SwiperSlide } from 'swiper/react'
+import { Navigation, Pagination } from 'swiper/modules'
+
+
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
 
 const arr = [
     {
@@ -69,40 +76,116 @@ const arr = [
     },
 
 ]
+const swiperBreaks = {
+    200: {
+        slidesPerView: 3,
+        spaceBetween: 170
+    },
+    400: {
+        slidesPerView: 3,
+        spaceBetween: 150
+    },
+    500: {
+        slidesPerView: 3,
+        spaceBetween: 130
+    },
+    540: {
+        slidesPerView: 3,
+        spaceBetween: 100
+    },
+    580: {
+        slidesPerView: 3,
+        spaceBetween: 50
+    },
+    598: {
+        slidesPerView: 4,
+        spaceBetween: 180
+    },
+    600: {
+        slidesPerView: 4,
+        spaceBetween: 190
+    },
+    640: {
+        slidesPerView: 3,
+        spaceBetween: 120
+    },
+    700: {
+        slidesPerView: 3,
+        spaceBetween: 100
+    },
+    750: {
+        slidesPerView: 3,
+        spaceBetween: 50
+    },
+    800: {
+        slidesPerView: 4,
+        spaceBetween: 150
+    },
+    900: {
+        slidesPerView: 4,
+        spaceBetween: 80
+    },
+    1000: {
+        slidesPerView: 4,
+        spaceBetween: 50
+    },
+    1050: {
+        slidesPerView: 4,
+        spaceBetween: 0
+    },
+    1100: {
+        slidesPerView: 5,
+        spaceBetween: 30
+    },
+    1200: {
+        slidesPerView: 5,
+        spaceBetween: 100
+    },
+    1250: {
+        slidesPerView: 5,
+        spaceBetween: 0
+    },
+    1400: {
+        slidesPerView: 6,
+        spaceBetween: 0
+    },
+    1800: {
+        slidesPerView: 7,
+        spaceBetween: 0
+    },
+    2000: {
+        slidesPerView: 8,
+        spaceBetween: 0
+    },
+}
 
 export default function FestivalCrops() {
-
-
 
     return (
         <div className="m-4 rounded-xl" style={{ background: 'linear-gradient(to left top, #ff0000 10%, #541a1a 90%)', boxShadow: '0 7px 6px rgba(0, 0, 0, 0.12), 0 1px 4px rgba(0, 0, 0, 0.24)' }}>
             <div className="text-center p-2 text-slate-50" style={{ textShadow: '0px 0px 10px white' }}>پیشنهادهای شگفت انگیز</div>
 
-            {/* xs */}
-            <div className='overflow-x-scroll relative w-full sm:hidden flex'>
+            <Swiper
+                dir="rtl"
+                modules={[Navigation, Pagination]}
+                navigation
+                loop
+                autoplay={{
+                    delay: 2500,
+                    disableOnInteraction: true,
+                }}
+                lazy="true"
+                pagination={{ type: 'progressbar' }}
+                breakpoints={swiperBreaks}
+                className="w-full rounded-lg"
+            >
+                {arr.map((slide, i) => (
+                    <SwiperSlide key={i}>
+                        <FestivalCropsComponent {...slide} />
+                    </SwiperSlide>
+                ))}
+            </Swiper>
 
-                <div className='flex'>
-                    {arr.map((slide, i) => (
-                        <div key={i}>
-                            <FestivalCropsComponent {...slide} isSelected={false} />
-                        </div>
-                    ))}
-                </div>
-
-
-                <div className='min-w-fit h-5  text-indigo-300 mx-2' style={{ transform: 'translateY(170px)' }}>
-                    <Link href='/suggestion'>
-                        نمایش بیشتر
-                    </Link>
-                </div>
-
-            </div>
-
-            {/* not xs */}
-            <div className="sm:block hidden">
-                <FestivalSlider slides={arr} />
-            </div>
-
-        </div>
+        </div >
     )
 }
