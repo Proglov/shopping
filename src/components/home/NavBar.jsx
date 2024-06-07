@@ -226,12 +226,7 @@ export default function NavBar() {
 
           {/* فروشنده */}
           {LoginSeller ? (
-            <SellerProtector
-              Wait={<></>}
-              shouldRouterPush={false}
-              showNotFound={<></>}
-              setState={setOpen}
-            >
+            <>
               <IconButton
                 size="large"
                 edge="start"
@@ -248,7 +243,7 @@ export default function NavBar() {
 
               {/* فاصله */}
               <Box sx={{ flexGrow: 1 }} />
-            </SellerProtector>
+            </>
           ) : (
             ""
           )}
