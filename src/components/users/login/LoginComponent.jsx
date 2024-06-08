@@ -37,7 +37,7 @@ export default function LoginComponent() {
       });
       setShow([false, false]);
       localStorage.setItem("UserLogin", "true");
-      router.back();
+      router.push("/");
       // setNext(true);
     } catch (error) {
       const mes = error.response.data.message;

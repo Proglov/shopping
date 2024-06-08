@@ -51,7 +51,7 @@ export default function SignUpComponent() {
       });
       setShow([false, false]);
       localStorage.setItem("UserLogin", "true");
-      router.back();
+      router.push("/");
     } catch (error) {
       const mes = error.response.data.message;
       if (mes === "phone number is invalid!") {

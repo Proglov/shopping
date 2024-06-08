@@ -49,7 +49,7 @@ export default function LoginByEmail() {
       });
       setShow([false, false, false]);
       localStorage.setItem("UserLogin", "true");
-      router.back();
+      router.push("/");
       // setNext(true);
     } catch (error) {
       const mes = error.response.data.message;

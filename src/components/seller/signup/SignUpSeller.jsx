@@ -73,7 +73,7 @@ export default function SignUpSeller() {
       });
       setShow([false, false, false, false]);
       localStorage.setItem("SellerLogin", "true");
-      router.back();
+      router.push("/");
     } catch (error) {
       const mes = error.response.data.message;
       if (mes === "working phone number is invalid!") {

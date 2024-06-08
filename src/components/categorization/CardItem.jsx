@@ -11,7 +11,7 @@ export default function CardItem({ product }) {
   const subId = product.subcategoryId;
 
   return (
-    <Card sx={{ maxWidth: 200, height: 330 }} className="ml-6">
+    <Card className="ml-6 max-w-[200px] md:h-[300px] h-[280px]">
       <CardMedia
         sx={{ height: 150, width: 200 }}
         component="img"
@@ -28,9 +28,9 @@ export default function CardItem({ product }) {
           )}{" "}
           تومان
         </Box>
-        <Box className="mt-3">
+        <Box className="mt-3 text-center">
           <Link href={`/categories/${id}/${subId}/${product._id}`}>
-            <Button variant="outlined" color="info" className="w-full">
+            <Button variant="outlined" color="info" className="md:w-full md:text-base text-xs">
               مشاهده محصول
             </Button>
           </Link>

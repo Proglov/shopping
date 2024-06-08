@@ -16,83 +16,83 @@ import Link from "next/link";
 
 const swiperBreaks = {
   200: {
-    slidesPerView: 3,
-    spaceBetween: 170,
+    slidesPerView: 1,
+    width: 240,
   },
   400: {
-    slidesPerView: 3,
-    spaceBetween: 150,
+    slidesPerView: 1,
+    width: 240,
   },
   500: {
-    slidesPerView: 3,
-    spaceBetween: 130,
+    slidesPerView: 1,
+    width: 240,
   },
   540: {
-    slidesPerView: 3,
-    spaceBetween: 100,
+    slidesPerView: 2,
+    spaceBetween: 0,
   },
   580: {
-    slidesPerView: 3,
-    spaceBetween: 50,
+    slidesPerView: 2,
+    spaceBetween: 0,
   },
   598: {
-    slidesPerView: 4,
-    spaceBetween: 180,
+    slidesPerView: 2,
+    spaceBetween: 0,
   },
   600: {
-    slidesPerView: 4,
-    spaceBetween: 190,
+    slidesPerView: 2,
+    spaceBetween: 0,
   },
   640: {
-    slidesPerView: 3,
-    spaceBetween: 120,
+    slidesPerView: 2,
+    spaceBetween: 0,
   },
   700: {
-    slidesPerView: 3,
-    spaceBetween: 100,
+    slidesPerView: 2,
+    spaceBetween: 0,
   },
   750: {
-    slidesPerView: 3,
-    spaceBetween: 50,
+    slidesPerView: 2,
+    spaceBetween: 0,
   },
   800: {
-    slidesPerView: 4,
-    spaceBetween: 150,
+    slidesPerView: 2,
+    spaceBetween: 0,
   },
   900: {
-    slidesPerView: 4,
-    spaceBetween: 80,
+    slidesPerView: 3,
+    spaceBetween: 0,
   },
   1000: {
-    slidesPerView: 4,
-    spaceBetween: 50,
+    slidesPerView: 3,
+    spaceBetween: 0,
   },
   1050: {
-    slidesPerView: 4,
+    slidesPerView: 3,
     spaceBetween: 0,
   },
   1100: {
-    slidesPerView: 5,
-    spaceBetween: 30,
+    slidesPerView: 4,
+    spaceBetween: 0,
   },
   1200: {
-    slidesPerView: 5,
-    spaceBetween: 100,
+    slidesPerView: 4,
+    spaceBetween: 0,
   },
   1250: {
-    slidesPerView: 5,
+    slidesPerView: 4,
     spaceBetween: 0,
   },
   1400: {
-    slidesPerView: 6,
+    slidesPerView: 5,
     spaceBetween: 0,
   },
   1800: {
-    slidesPerView: 7,
+    slidesPerView: 6,
     spaceBetween: 0,
   },
   2000: {
-    slidesPerView: 8,
+    slidesPerView: 7,
     spaceBetween: 0,
   },
 };
@@ -104,7 +104,6 @@ export default function SubCategory() {
   const { getAllSubcategories } = SubCategoryApi;
   const { getAllProductsOfACategory } = ProductApi;
   const [subCategory, setSubCategory] = useState([]);
-  const [num, setNum] = useState(0);
 
   useEffect(() => {
     const getSubcategory = async () => {
@@ -133,7 +132,7 @@ export default function SubCategory() {
         {subCategory.map((item, index) => {
           return (
             <Box
-              className="rounded-xl mt-5 mb-10 min-h-[100px] border-[1px] border-violet-100 shadow-md"
+              className="rounded-xl mt-5 mb-10 min-h-[100px] border-2 border-violet-100 shadow-lg shadow-violet-300"
               key={index}
             >
               <Box
@@ -173,24 +172,15 @@ export default function SubCategory() {
                 breakpoints={swiperBreaks}
                 className="w-full rounded-lg"
               >
-                <SwiperSlide>
-                  <Box className="p-5">
-                    {products?.map((product, itemIndex) => {
-                      if (item._id === product.subcategoryId) {
-                        return <CardItem product={product} key={itemIndex} />;
-                      }
-                    })}
-                    {products?.find(
-                      (product) => item._id === product.subcategoryId
-                    ) ? (
-                      ""
-                    ) : (
-                      <Box className="min-w-[250px] min-h-[50px] flex items-center justify-center">
-                        <div>محصولی برای نمایش وجود ندارد</div>
-                      </Box>
-                    )}
-                  </Box>
-                </SwiperSlide>
+                {products?.map((product, itemIndex) => {
+                  if (item._id === product.subcategoryId) {
+                    return (
+                      <SwiperSlide key={itemIndex} className="p-5">
+                        <CardItem product={product} />
+                      </SwiperSlide>
+                    );
+                  }
+                })}
               </Swiper>
             </Box>
           );

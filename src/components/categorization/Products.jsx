@@ -27,7 +27,7 @@ export default function Products() {
   return (
     <>
       <Box className="mt-6">
-        <Box className="hidden sm:flex sm:flex-wrap sm:justify-around">
+        <Box className="hidden sm:flex sm:flex-wrap sm:justify-around gap-8">
           {products?.map((item, itemIndex) => {
             if (item.subcategoryId === subId) {
               return <CardItem product={item} key={itemIndex} />;

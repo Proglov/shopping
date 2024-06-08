@@ -36,7 +36,7 @@ export default function LoginSeller() {
       });
       setShow([false, false]);
       localStorage.setItem("SellerLogin", "true");
-      router.back();
+      router.push("/");
       // setNext(true);
     } catch (error) {
       const mes = error.response.data.message;
