@@ -11,21 +11,18 @@ import {
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import RadioButtonUncheckedIcon from "@mui/icons-material/RadioButtonUnchecked";
 import { blue } from "@mui/material/colors";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import EditAddress from "./EditAddress";
 import { useAppDispatch } from "@/store/Hook";
 import { SetAddress } from "@/features/Address/AddressSlice";
+import UserApi from "@/services/withAuthActivities/user";
 
 export default function AddressCard() {
   const [selectAddress, setSelectAddress] = useState(-1);
   const [open, setOpen] = useState(false);
-  const [address, setAddress] = useState([
-    "تهران،هروی-حسین آباد،میدان،ساختمان،پلاک",
-    "تهران،هروی-حسین آباد،میدان،ساختمان،پلاک",
-    "تهران،هروی-حسین آباد،میدان،ساختمان،پلاک",
-    "تهران،هروی-حسین آباد،میدان،ساختمان،پلاک",
-    "تهران،هروی-حسین آباد،میدان،ساختمان،پلاک",
-  ]);
+  const [address, setAddress] = useState([]);
+  const [userId, setUserId] = useState("");
+  const { getMe } = UserApi;
 
   const dispatch = useAppDispatch();
 
@@ -35,6 +32,19 @@ export default function AddressCard() {
   const handleClose = () => {
     setOpen(false);
   };
+
+  useEffect(() => {
+    const GetUser = async () => {
+      try {
+        const user = await getMe();
+        setAddress([...user.user.address]);
+        setUserId(user.user._id);
+      } catch (error) {
+        alert(error.response.data.message);
+      }
+    };
+    GetUser();
+  }, [getMe, setAddress, setUserId]);
 
   return (
     <>
@@ -111,6 +121,7 @@ export default function AddressCard() {
         close={handleClose}
         address={address}
         setAddress={setAddress}
+        userID={userId}
       />
     </>
   );

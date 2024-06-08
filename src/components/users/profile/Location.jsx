@@ -74,7 +74,8 @@ export default function Location() {
         close={handleClose}
         address={address}
         setAddress={setAddress}
-        user={userId}
+        userID={userId}
+        user={true}
       />
     </>
   );

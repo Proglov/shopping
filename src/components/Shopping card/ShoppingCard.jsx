@@ -23,27 +23,40 @@ import {
 } from "@/features/CartProducts/CartProductsSlice";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
+import { useEffect, useState } from "react";
 
 export default function ShoppingCard({ step }) {
   const cartProducts = useAppSelector((state) => state.CartProducts);
   const dispatch = useAppDispatch();
-  const login = localStorage.getItem("UserLogin") || "false";
-  const route = useRouter();
-  console.log(login);
+  const router = useRouter();
+  const [login, setLogin] = useState();
+  const [number, setNumber] = useState(0);
+
   let counter =
     cartProducts
       ?.reduce((accumulator, currentObject) => {
         return accumulator + currentObject.number;
       }, 0)
       .toString() | "0";
-  if (step != 0) {
-    if (login == "false") {
-      toast.warning("شما وارد نشده اید", {
-        position: toast.POSITION.TOP_RIGHT,
-      });
-      route.push("/users/login");
+
+  useEffect(() => {
+    if (localStorage.getItem("UserLogin") == "true") {
+      setLogin(true);
+      setNumber(1);
+    } else {
+      setLogin(false);
+      setNumber(1);
     }
-  }
+    if (number === 1) {
+      if (!login) {
+        toast.warning("شما وارد نشده اید", {
+          position: toast.POSITION.TOP_RIGHT,
+        });
+        router.push("/users/login");
+      }
+      setNumber(0);
+    }
+  }, [setLogin, login]);
 
   return (
     <>

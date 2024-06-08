@@ -20,7 +20,8 @@ export default function EditAddress({
   close,
   address,
   setAddress,
-  user = "",
+  userID,
+  user = false,
 }) {
   const [edit, setEdit] = useState({});
   const { updateUser } = UserApi;
@@ -44,7 +45,7 @@ export default function EditAddress({
           });
           const response = await updateUser({
             address: obj,
-            id: user,
+            id: userID,
           });
           setAddress(str);
           newAddress.address = "";
@@ -67,7 +68,7 @@ export default function EditAddress({
     try {
       const response = await updateUser({
         address: arr,
-        id: user,
+        id: userID,
       });
       setAddress(arr);
     } catch (error) {
@@ -89,7 +90,7 @@ export default function EditAddress({
     >
       <DialogTitle>
         <Box className="grid md:grid-cols-2 justify-center">
-          {user !== "" ? (
+          {user ? (
             <span className="md:text-3xl text-lg">آدرس ها</span>
           ) : (
             <span className="md:text-3xl text-lg">آدرس تحویل سفارش</span>

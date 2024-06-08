@@ -1,6 +1,5 @@
 "use client";
 
-import { useAppSelector } from "@/store/Hook";
 import { convertToFarsiNumbers, formatPrice } from "@/utils/funcs";
 import { Box, Button, Card, CardContent, CardMedia } from "@mui/material";
 import Link from "next/link";
@@ -8,11 +7,8 @@ import { usePathname } from "next/navigation";
 
 export default function CardItemSM({ product }) {
   const router = usePathname();
-  const grouping = useAppSelector((state) => state.Grouping);
-
-  const place = grouping.filter((item) => {
-    return item.href === router.split("/")[2];
-  });
+  const id = router.split("/")[2];
+  const subId = product.subcategoryId;
 
   return (
     <Card className="w-full h-auto p-5 mb-5 flex">
@@ -34,7 +30,7 @@ export default function CardItemSM({ product }) {
           تومان
         </Box>
         <Box className="mt-3">
-          <Link href={`/categories/${place[0].href}/${product._id}`}>
+          <Link href={`/categories/${id}/${subId}/${product._id}`}>
             <Button variant="outlined" color="info" className="w-full">
               مشاهده محصول
             </Button>

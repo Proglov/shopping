@@ -20,6 +20,7 @@ export default function CommentItem() {
   const [commentsList, setCommentsList] = useState([]);
   const [replay, setReply] = useState([]);
   const [newComment, setNewComment] = useState("");
+  const [newReplay, setNewReplay] = useState("");
   const { getCommentsOfAProduct } = CommentsApi;
   const { createComment, toggleLikeComment, toggleDisLikeComment } = Api;
   const { getMe } = UserApi;
@@ -78,18 +79,19 @@ export default function CommentItem() {
   };
 
   const answer = async (id) => {
-    if (newComment === "") {
+    if (newReplay === "") {
       alert("متنی وارد نکرده اید دوباره تلاش کنید");
       return;
     }
     try {
-      const body = DOMPurify.sanitize(newComment);
+      const body = DOMPurify.sanitize(newReplay);
       const response = await createComment({
         body: body,
         parentCommentId: id,
         productId: productID,
         id: userId,
       });
+      setNewReplay("");
       alert("پاسخ شما برای بررسی ثبت شد.");
     } catch (error) {
       alert(error.response.data.message);
@@ -277,8 +279,8 @@ export default function CommentItem() {
                           placeholder="پاسخ خود را وارد کنید."
                           variant="outlined"
                           color="primary"
-                          value={newComment}
-                          onChange={(e) => setNewComment(e.target.value)}
+                          value={newReplay}
+                          onChange={(e) => setNewReplay(e.target.value)}
                           sx={{
                             " & .MuiInputLabel-root": {
                               left: "inherit !important",

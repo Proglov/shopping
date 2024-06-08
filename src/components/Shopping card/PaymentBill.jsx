@@ -6,6 +6,10 @@ import {
   Card,
   CardContent,
   CardHeader,
+  FormControl,
+  FormControlLabel,
+  Radio,
+  RadioGroup,
   TextField,
 } from "@mui/material";
 import { convertToFarsiNumbers, formatPrice } from "@/utils/funcs";
@@ -19,7 +23,7 @@ export default function PaymentBill() {
   const product = useAppSelector((state) => state.CartProducts);
   const Time = useAppSelector((state) => state.Time);
   let serviceFee = 1479;
-  const [pay, setPay] = useState(false);
+  const [pay, setPay] = useState(true);
 
   let price = product.reduce((sum, obj) => {
     return sum + obj.number * parseInt(obj.price);
@@ -114,7 +118,7 @@ export default function PaymentBill() {
                 )}{" "}
                 <span className="text-lg text-gray-600">تومان</span>
               </Box>
-              <Box
+              {/* <Box
                 className="lg:text-2xl col-span-3 mt-2"
                 sx={{
                   fontSize: {
@@ -149,16 +153,42 @@ export default function PaymentBill() {
                     "& legend": { textAlign: "right" },
                   }}
                 />
-              </Box>
+              </Box> */}
             </Box>
           </CardContent>
-          <Box component="div" className="text-center">
-            <Button
+          <Box component="div" className="flex border-t-4 p-5">
+            <FormControl className="flex">
+              <Box id="payment" className="text-lg">
+                نحوه پرداخت:
+              </Box>
+              <RadioGroup
+                row
+                aria-labelledby="payment"
+                name="row-radio-buttons-group"
+              >
+                <FormControlLabel
+                  value="offline"
+                  control={<Radio color="success" />}
+                  label="پرداخت درب منزل"
+                  checked
+                />
+                <FormControlLabel
+                  value="online"
+                  control={<Radio />}
+                  label="پرداخت آنلاین"
+                  disabled
+                />
+              </RadioGroup>
+            </FormControl>
+            <span className="md:block hidden text-sm text-gray-400 mt-10 mr-5">
+              به زودی ...
+            </span>
+            {/* <Button
               className="text-white text-base bg-green-400 hover:bg-green-500 rounded-lg mb-4 w-3/4"
               variant="contained"
             >
               پرداخت آنلاین
-            </Button>
+            </Button> */}
           </Box>
         </Card>
       </Box>

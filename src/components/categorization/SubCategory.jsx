@@ -3,7 +3,6 @@
 import { Box, Button } from "@mui/material";
 import CardItem from "./CardItem";
 import { usePathname } from "next/navigation";
-import SubCategoryApi from "@/services/withoutAuthActivities/subcategories";
 import ProductApi from "@/services/withoutAuthActivities/product";
 import { useEffect, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -101,35 +100,41 @@ export default function SubCategory() {
   const [products, setProducts] = useState([]);
   const router = usePathname();
   const id = router.split("/")[2];
-  const { getAllSubcategories } = SubCategoryApi;
   const { getAllProductsOfACategory } = ProductApi;
-  const [subCategory, setSubCategory] = useState([]);
 
   useEffect(() => {
-    const getSubcategory = async () => {
-      try {
-        const response = await getAllSubcategories();
-        const obj = response.subcategories.filter(
-          (item) => item.categoryId._id === id
-        );
-        setSubCategory(obj);
-      } catch (error) {}
-    };
-    getSubcategory();
-
     const getProduct = async () => {
       try {
         const response = await getAllProductsOfACategory({ id: id });
-        setProducts(response.products);
+        const groupedProducts = response.products.reduce((acc, product) => {
+          const { subcategoryId, subcategoryName, ...rest } = product;
+
+          const existingSubcategory = acc.find(
+            (item) => item.subcategoryId === subcategoryId
+          );
+
+          if (existingSubcategory) {
+            existingSubcategory.products.push(rest);
+          } else {
+            acc.push({
+              subcategoryName,
+              subcategoryId,
+              products: [rest],
+            });
+          }
+
+          return acc;
+        }, []);
+        setProducts(groupedProducts);
       } catch (error) {}
     };
     getProduct();
-  }, [getAllSubcategories, setSubCategory, getAllProductsOfACategory]);
+  }, [setProducts, getAllProductsOfACategory]);
 
   return (
     <>
       <Box className="mt-6">
-        {subCategory.map((item, index) => {
+        {products.map((item, index) => {
           return (
             <Box
               className="rounded-xl mt-5 mb-10 min-h-[100px] border-2 border-violet-100 shadow-lg shadow-violet-300"
@@ -140,23 +145,17 @@ export default function SubCategory() {
                 className="min-h-12 border-b-2 p-5 items-center"
               >
                 <span className="flex-1 text-right text-gray-950 text-bold text-xl">
-                  {item?.name}
+                  {item?.subcategoryName}
                 </span>
-                {products?.find(
-                  (product) => item._id === product.subcategoryId
-                ) ? (
-                  <Link href={`/categories/${id}/${item._id}`}>
-                    <Button
-                      variant="outlined"
-                      className="float-left text-gray-950 text-bold text-base"
-                      color="info"
-                    >
-                      مشاهده بیشتر
-                    </Button>
-                  </Link>
-                ) : (
-                  ""
-                )}
+                <Link href={`/categories/${id}/${item.subcategoryId}`}>
+                  <Button
+                    variant="outlined"
+                    className="float-left text-gray-950 text-bold text-base"
+                    color="info"
+                  >
+                    مشاهده بیشتر
+                  </Button>
+                </Link>
               </Box>
               <Swiper
                 dir="rtl"
@@ -172,14 +171,12 @@ export default function SubCategory() {
                 breakpoints={swiperBreaks}
                 className="w-full rounded-lg"
               >
-                {products?.map((product, itemIndex) => {
-                  if (item._id === product.subcategoryId) {
-                    return (
-                      <SwiperSlide key={itemIndex} className="p-5">
-                        <CardItem product={product} />
-                      </SwiperSlide>
-                    );
-                  }
+                {item?.products.map((product, itemIndex) => {
+                  return (
+                    <SwiperSlide key={itemIndex} className="p-5">
+                      <CardItem product={product} />
+                    </SwiperSlide>
+                  );
                 })}
               </Swiper>
             </Box>

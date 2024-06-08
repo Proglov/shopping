@@ -25,6 +25,7 @@ import AdminProtector from "@/app/ADMIN/AdminProtector";
 import SellerProtector from "@/app/Seller/SellerProtector";
 import { useRouter } from "next/navigation";
 import { SetCart } from "@/features/CartProducts/CartProductsSlice";
+import { loadState } from "@/Storage/Storage";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -120,9 +121,6 @@ export default function NavBar() {
   };
 
   React.useEffect(() => {
-    if (localStorage.getItem("cart")) {
-      dispatch(SetCart(localStorage.getItem("cart")));
-    }
     if (localStorage.getItem("UserLogin") == "true") {
       setLoginUser(true);
     } else {
@@ -133,6 +131,8 @@ export default function NavBar() {
     } else {
       setLoginSeller(false);
     }
+    const state = loadState();
+    dispatch(SetCart(state));
   }, [setLoginSeller, setLoginUser]);
 
   return (

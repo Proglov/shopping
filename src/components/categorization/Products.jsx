@@ -37,7 +37,7 @@ export default function Products() {
         <Box className="sm:hidden">
           {products?.map((item, itemIndex) => {
             if (item.subcategoryId === subId) {
-              return <CardItem product={item} key={itemIndex} />;
+              return <CardItemSM product={item} key={itemIndex} />;
             }
           })}
         </Box>
