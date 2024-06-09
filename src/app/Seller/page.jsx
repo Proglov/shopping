@@ -9,7 +9,7 @@ const Wait = () => {
   )
 }
 
-export default async function Home() {
+export default function Home() {
   return (
     <SellerProtector Wait={<Wait />}>
       <Main />

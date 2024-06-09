@@ -50,7 +50,8 @@ const Api = {
             `/commentUpdate/CommentToggleLike`,
             {
                 input: {
-                    id: payload?.id
+                    id: payload?.id,
+                    ownerType: payload?.ownerType
                 }
             }
         );
@@ -61,7 +62,8 @@ const Api = {
             `/commentUpdate/CommentToggleDisLike`,
             {
                 input: {
-                    id: payload?.id
+                    id: payload?.id,
+                    ownerType: payload?.ownerType
                 }
             }
         );
