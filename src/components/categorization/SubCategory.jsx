@@ -125,6 +125,7 @@ export default function SubCategory() {
 
           return acc;
         }, []);
+        console.log(groupedProducts);
         setProducts(groupedProducts);
       } catch (error) {}
     };
@@ -174,7 +175,7 @@ export default function SubCategory() {
                 {item?.products.map((product, itemIndex) => {
                   return (
                     <SwiperSlide key={itemIndex} className="p-5">
-                      <CardItem product={product} />
+                      <CardItem product={product} subID={item.subcategoryId} />
                     </SwiperSlide>
                   );
                 })}

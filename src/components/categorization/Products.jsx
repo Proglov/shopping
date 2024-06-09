@@ -30,7 +30,7 @@ export default function Products() {
         <Box className="hidden sm:flex sm:flex-wrap sm:justify-around gap-8">
           {products?.map((item, itemIndex) => {
             if (item.subcategoryId === subId) {
-              return <CardItem product={item} key={itemIndex} />;
+              return <CardItem product={item} key={itemIndex} subID={subId} />;
             }
           })}
         </Box>

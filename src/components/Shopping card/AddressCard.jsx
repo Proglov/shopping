@@ -104,7 +104,7 @@ export default function AddressCard() {
                     checkedIcon={<CheckCircleIcon sx={{ color: blue[700] }} />}
                     onClick={() => {
                       setSelectAddress(index);
-                      dispatch(SetAddress(address[selectAddress]));
+                      dispatch(SetAddress(address[index]));
                     }}
                     className="ml-2"
                     checked={selectAddress === index}

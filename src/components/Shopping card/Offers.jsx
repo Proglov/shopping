@@ -136,11 +136,8 @@ export default function Offers() {
             {index === 0 &&
               product.map((item, index) => {
                 return (
-                  <>
-                    <div
-                      className="m-4 h-auto w-full grid grid-cols-1 gap-4 lg:w-3/4 sm:grid-cols-4"
-                      key={index}
-                    >
+                  <div key={index}>
+                    <div className="m-4 h-auto w-full grid grid-cols-1 gap-4 lg:w-3/4 sm:grid-cols-4">
                       <div className="p-1 mx-auto">
                         <Image
                           height={200}
@@ -215,7 +212,7 @@ export default function Offers() {
                       </div>
                     </div>
                     <div className="w-full border border-gray-200" />
-                  </>
+                  </div>
                 );
               })}
             {index === 1 &&

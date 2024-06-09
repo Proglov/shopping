@@ -19,6 +19,7 @@ import ExpandMoreOutlinedIcon from "@mui/icons-material/ExpandMoreOutlined";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import { useAppDispatch } from "@/store/Hook";
 import { SetTime, ChangeTime } from "@/features/ShippingTime/TimeSlice";
+import moment from "jalali-moment";
 
 export default function ShippingTime() {
   const [active, setActive] = useState("today");
@@ -57,6 +58,21 @@ export default function ShippingTime() {
     const price = date.price;
     const select = true;
     dispatch(SetTime({ day: day, time: time, price: price, select: select }));
+  };
+
+  const submit = (date) => {
+    const time = moment().format("jYYYY/jMM/jDD HH:mm:ss");
+    const day = time.split(" ")[0];
+    const hour = date.start + ":00";
+    const jalaliDate = day + " " + hour;
+    const momentDate = moment(jalaliDate, "jYYYY/jMM/jDD HH:mm:ss").utc();
+    const secondsSince1970 = momentDate.unix();
+    if (active === "today") {
+      localStorage.setItem("time", secondsSince1970);
+    } else {
+      const c = parseInt(secondsSince1970) + 86400;
+      localStorage.setItem("time", c.toString());
+    }
   };
 
   return (
@@ -193,6 +209,7 @@ export default function ShippingTime() {
                             onClick={() => {
                               setSelectTime(index);
                               selected(item);
+                              submit(item);
                             }}
                             className="ml-2"
                             checked={selectTime === index}
@@ -229,6 +246,7 @@ export default function ShippingTime() {
                             onClick={() => {
                               setSelectTime(index);
                               selected(item);
+                              submit(item);
                             }}
                             className="ml-2"
                             checked={selectTime === index}
@@ -267,6 +285,7 @@ export default function ShippingTime() {
                             onClick={() => {
                               setSelectTime(index);
                               selected(item);
+                              submit(item);
                             }}
                             className="ml-2"
                             checked={selectTime === index}
@@ -303,6 +322,7 @@ export default function ShippingTime() {
                             onClick={() => {
                               setSelectTime(index);
                               selected(item);
+                              submit(item);
                             }}
                             className="ml-2"
                             checked={selectTime === index}

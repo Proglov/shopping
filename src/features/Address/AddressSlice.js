@@ -10,6 +10,7 @@ export const AddressSlice = createSlice({
   reducers: {
     SetAddress: (state, action) => {
       state.address = action.payload;
+      localStorage.setItem("address", action.payload);
     },
   },
 });
