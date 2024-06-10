@@ -100,10 +100,10 @@ export default function BillComponent() {
         </Box>
         <Box>
           <span className="text-lg">زمان تحویل سفارش: </span>
-          <span>
+          {/* <span>
             ساعت: {convertToFarsiNumbers(time.split(" ")[1].split(":")[0])} -
             روز: {convertToFarsiNumbers(time.split(" ")[0])}
-          </span>
+          </span> */}
         </Box>
         <Box>
           <span className="text-lg">تعداد اقلام: </span>
