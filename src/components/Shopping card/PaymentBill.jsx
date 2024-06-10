@@ -16,18 +16,53 @@ import { convertToFarsiNumbers, formatPrice } from "@/utils/funcs";
 import ConfirmationNumberOutlinedIcon from "@mui/icons-material/ConfirmationNumberOutlined";
 import Link from "next/link";
 import { GrFormNext, GrFormPrevious } from "react-icons/gr";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAppSelector } from "@/store/Hook";
+import TXApi from "@/services/withAuthActivities/tx";
+import UserApi from "@/services/withAuthActivities/user";
+import { loadState } from "@/Storage/Storage";
 
 export default function PaymentBill() {
   const product = useAppSelector((state) => state.CartProducts);
   const Time = useAppSelector((state) => state.Time);
   let serviceFee = 1479;
   const [pay, setPay] = useState(true);
+  const { createTX } = TXApi;
+  const { getMe } = UserApi;
+  const [userId, setUserId] = useState("");
+  const [date, setDate] = useState("");
+  const [address, setAddress] = useState("");
 
   let price = product.reduce((sum, obj) => {
     return sum + obj.number * parseInt(obj.price);
   }, 0);
+
+  const CreateTX = async () => {
+    try {
+      const state = loadState();
+      const response = await createTX({
+        discountId: "",
+        boughtProducts: state,
+        address: address,
+        shouldBeSentAt: date,
+        userId: userId,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    const GetUser = async () => {
+      try {
+        const user = await getMe();
+        setUserId(user.user._id);
+      } catch (error) {}
+    };
+    GetUser();
+    setAddress(localStorage.getItem("address"));
+    setDate(localStorage.getItem("time"));
+  }, [getMe, setUserId, setAddress, setDate]);
 
   return (
     <>
@@ -209,22 +244,18 @@ export default function PaymentBill() {
         </div>
         <div className="text-left">
           {pay ? (
-            <Link href="/shopping-card/payment/bill">
-              <Button
-                variant="contained"
-                className="bg-blue-500 text-bold text-base hover:bg-blue-600 rounded-lg w-fit"
-              >
-                مرحله بعد
-                <GrFormPrevious
-                  className="text-white"
-                  style={{ fontSize: "35px" }}
-                />
-              </Button>
-            </Link>
+            <Button
+              variant="contained"
+              className="bg-green-500 text-bold text-base hover:bg-green-600 rounded-lg w-fit"
+              onClick={CreateTX}
+              size="large"
+            >
+              ثبت نهایی
+            </Button>
           ) : (
             <Button
               variant="contained"
-              className="text-bold text-base rounded-lg disabled:bg-blue-300 disabled:text-white w-fit"
+              className="text-bold text-base rounded-lg disabled:bg-green-300 disabled:text-white w-fit"
               disabled
             >
               مرحله بعد

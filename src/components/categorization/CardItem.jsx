@@ -5,10 +5,10 @@ import { Box, Button, Card, CardContent, CardMedia } from "@mui/material";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-export default function CardItem({ product }) {
+export default function CardItem({ product, subID }) {
   const router = usePathname();
   const id = router.split("/")[2];
-  const subId = product.subcategoryId;
+  const subId = subID;
 
   return (
     <Card className="ml-6 max-w-[200px] md:h-[300px] h-[280px]">
@@ -30,7 +30,11 @@ export default function CardItem({ product }) {
         </Box>
         <Box className="mt-3 text-center">
           <Link href={`/categories/${id}/${subId}/${product._id}`}>
-            <Button variant="outlined" color="info" className="md:w-full md:text-base text-xs">
+            <Button
+              variant="outlined"
+              color="info"
+              className="md:w-full md:text-base text-xs"
+            >
               مشاهده محصول
             </Button>
           </Link>
