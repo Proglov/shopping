@@ -18,10 +18,10 @@ export default function BreadCrumbs() {
       try {
         const response = await getOneCategory({ id: id });
         setName(response.category.name);
-      } catch (error) {}
+      } catch (error) { }
     };
     getCategory();
-  }, [getOneCategory]);
+  }, [getOneCategory, id]);
 
   return (
     <>

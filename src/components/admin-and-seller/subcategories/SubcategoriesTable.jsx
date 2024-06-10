@@ -76,7 +76,7 @@ export default function SubcategoriesTable() {
             }
         };
         fetchData();
-    }, [currentPage, itemsPerPage, setError, setIsError, setItems, setItemsCount, setLoading, getAllSubcategories, setLastPage, setCategories]);
+    }, [currentPage, itemsPerPage, setError, setIsError, setItems, setItemsCount, setLoading, getAllSubcategories, setLastPage, setCategories, getAllCategories]);
 
 
     return (

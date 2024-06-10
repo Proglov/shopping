@@ -24,7 +24,7 @@ export default function Categories() {
       }
     };
     fetchData();
-  }, []);
+  }, [getAllCategories]);
 
   return (
     <div className="m-4" id="categorization">

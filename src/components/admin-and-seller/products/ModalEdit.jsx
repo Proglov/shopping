@@ -78,7 +78,7 @@ export default function ModalEdit() {
             }
         }
         fetchCategories();
-    }, [])
+    }, [getAllSubcategories])
 
     const handleClose = () => {
         setIsModalEditOpen(false);

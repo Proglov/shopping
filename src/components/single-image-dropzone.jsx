@@ -2,6 +2,7 @@
 
 import { Button } from '@mui/material';
 import { UploadCloudIcon, X } from 'lucide-react';
+import Image from 'next/image';
 import * as React from 'react';
 import { useDropzone } from 'react-dropzone';
 import { twMerge } from 'tailwind-merge';
@@ -127,10 +128,12 @@ const SingleImageDropzone = React.forwardRef(
 
                     {imageUrl ? (
                         // Image Preview
-                        <img
+                        <Image
                             className="h-full w-full rounded-md object-cover"
                             src={imageUrl}
                             alt={acceptedFiles[0]?.name}
+                            width={200}
+                            height={150}
                         />
                     ) : (
                         // Upload Icon

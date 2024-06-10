@@ -57,7 +57,7 @@ export default function Profile() {
       }
       setNumber(0);
     }
-  }, [setLogin, login]);
+  }, [setLogin, login, number, router]);
 
   return (
     <>
@@ -70,9 +70,8 @@ export default function Profile() {
             return (
               <div
                 key={index}
-                className={`flex mb-2 rounded hover:bg-slate-400 hover:cursor-pointer ${
-                  active === index ? "bg-slate-300" : ""
-                }`}
+                className={`flex mb-2 rounded hover:bg-slate-400 hover:cursor-pointer ${active === index ? "bg-slate-300" : ""
+                  }`}
                 onClick={() => setActive(index)}
               >
                 {index === 0 ? (

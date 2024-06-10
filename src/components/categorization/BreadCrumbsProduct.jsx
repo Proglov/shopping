@@ -22,17 +22,17 @@ export default function BreadCrumbsProduct() {
       try {
         const response = await getOneCategory({ id: id });
         setName(response.category.name);
-      } catch (error) {}
+      } catch (error) { }
     };
     getCategory();
     const getSubCategory = async () => {
       try {
         const response = await getOneSubcategory({ id: subId });
         setNameSub(response.subcategory.name);
-      } catch (error) {}
+      } catch (error) { }
     };
     getSubCategory();
-  }, [getOneCategory, getOneSubcategory]);
+  }, [getOneCategory, getOneSubcategory, id, subId]);
 
   return (
     <Breadcrumbs

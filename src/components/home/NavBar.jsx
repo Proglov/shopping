@@ -133,7 +133,7 @@ export default function NavBar() {
     }
     const state = loadState();
     dispatch(SetCart(state));
-  }, [setLoginSeller, setLoginUser]);
+  }, [setLoginSeller, setLoginUser, dispatch]);
 
   return (
     <Box sx={{ flexGrow: 1 }}>
