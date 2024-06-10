@@ -21,6 +21,7 @@ import { useAppSelector } from "@/store/Hook";
 import TXApi from "@/services/withAuthActivities/tx";
 import UserApi from "@/services/withAuthActivities/user";
 import { loadState } from "@/Storage/Storage";
+import { useRouter } from "next/navigation";
 
 export default function PaymentBill() {
   const product = useAppSelector((state) => state.CartProducts);
@@ -32,6 +33,7 @@ export default function PaymentBill() {
   const [userId, setUserId] = useState("");
   const [date, setDate] = useState("");
   const [address, setAddress] = useState("");
+  const router = useRouter();
 
   let price = product.reduce((sum, obj) => {
     return sum + obj.number * parseInt(obj.price);
@@ -40,13 +42,18 @@ export default function PaymentBill() {
   const CreateTX = async () => {
     try {
       const state = loadState();
+      const newArray = state.map((item) => {
+        return { productId: item.code, quantity: item.number };
+      });
       const response = await createTX({
         discountId: "",
-        boughtProducts: state,
+        boughtProducts: newArray,
         address: address,
         shouldBeSentAt: date,
         userId: userId,
       });
+      router.push("/shopping-card/payment/bill");
+      alert("سفارش شما با موفقیت ثبت شد")
     } catch (error) {
       console.log(error);
     }

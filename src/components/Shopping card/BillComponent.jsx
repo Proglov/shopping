@@ -8,6 +8,7 @@ import { toast } from "react-toastify";
 import { useEffect, useState } from "react";
 import UserApi from "@/services/withAuthActivities/user";
 import moment from "jalali-moment";
+import { undefined } from "zod";
 
 export default function BillComponent() {
   const cartProducts = useAppSelector((state) => state.CartProducts);
@@ -34,6 +35,9 @@ export default function BillComponent() {
     .toString();
 
   useEffect(() => {
+    if (cartProducts.length == 0) {
+      router.push("/");
+    }
     if (localStorage.getItem("UserLogin") == "true") {
       setLogin(true);
       setNumber(1);
@@ -65,6 +69,18 @@ export default function BillComponent() {
     const date = moment.unix(t).format("jYYYY/jMM/jDD HH:mm:ss");
     setTime(date);
     setAddress(add);
+
+    const handleUnload = () => {
+      localStorage.removeItem("address");
+      localStorage.removeItem("time");
+      localStorage.removeItem("cart");
+    };
+
+    window.onbeforeunload = handleUnload;
+
+    return () => {
+      window.onbeforeunload = null;
+    };
   }, [setLogin, login, setAddress, getMe, setInformation, setTime]);
 
   return (
@@ -92,7 +108,11 @@ export default function BillComponent() {
         </Box>
         <Box>
           <span className="text-lg">شماره تلفن: </span>
-          <span>{convertToFarsiNumbers(information.phoneNumber)}</span>
+          <span>
+            {information.phoneNumber == undefined
+              ? ""
+              : convertToFarsiNumbers(information.phoneNumber)}
+          </span>
         </Box>
         <Box>
           <span className="text-lg">آدرس تحویل سفارش: </span>
@@ -100,76 +120,95 @@ export default function BillComponent() {
         </Box>
         <Box>
           <span className="text-lg">زمان تحویل سفارش: </span>
-          {/* <span>
-            ساعت: {convertToFarsiNumbers(time.split(" ")[1].split(":")[0])} -
-            روز: {convertToFarsiNumbers(time.split(" ")[0])}
-          </span> */}
+          <span>
+            ساعت:{" "}
+            {time === undefined
+              ? "انتخاب نشده"
+              : convertToFarsiNumbers(
+                  time?.split(" ")[1]?.split(":")[0].indexOf(1)
+                )}{" "}
+            - روز:{" "}
+            {time === undefined
+              ? "انتخاب نشده"
+              : convertToFarsiNumbers(time?.split(" ")[0])}
+          </span>
         </Box>
         <Box>
           <span className="text-lg">تعداد اقلام: </span>
-          <span>{counter} عدد</span>
+          <span>
+            {counter == undefined ? "" : convertToFarsiNumbers(counter)} عدد
+          </span>
         </Box>
         <Box>
           <span className="text-lg">مبلغ قابل پرداخت: </span>
-          <span>{convertToFarsiNumbers(formatPrice(price))} تومان</span>
+          <span>
+            {price == undefined
+              ? ""
+              : convertToFarsiNumbers(formatPrice(price))}{" "}
+            تومان
+          </span>
         </Box>
       </Box>
       <Box className="p-5 mb-1" component="div">
         <Box className="border-2 border-gray-200 rounded-xl shadow-md p-5">
           <div className="grid justify-items-center">
-            {cartProducts.map((item, index) => {
-              return (
-                <>
-                  <div className="w-full" key={index} />
-                  <div className="m-4 h-auto w-full grid grid-cols-1 gap-4 lg:w-3/4 sm:grid-cols-4">
-                    <div className="p-1 mx-auto">
-                      <Image
-                        height={200}
-                        width={200}
-                        src={item.src}
-                        alt="Product"
-                      />
-                    </div>
-                    <div className="p-2 text-gray-900 sm:col-span-3 grid grid-rows-3 grid-cols-1 justify-items-center items-center sm:grid-rows-2 sm:grid-cols-2 sm:justify-items-start">
-                      <div className="sm:col-span-2 mb-2 sm:mb-0">
-                        {item.name}
-                      </div>
-                      <div className="mb-2 sm:mb-0">
-                        <div className="w-auto inline-block">
-                          <span>تعداد کالا: </span>
-                          <span>{convertToFarsiNumbers(item.number)} عدد</span>
+            {cartProducts.length == 0
+              ? ""
+              : cartProducts.map((item, index) => {
+                  return (
+                    <>
+                      <div className="w-full" key={index} />
+                      <div className="m-4 h-auto w-full grid grid-cols-1 gap-4 lg:w-3/4 sm:grid-cols-4">
+                        <div className="p-1 mx-auto">
+                          <Image
+                            height={200}
+                            width={200}
+                            src={item.src}
+                            alt="Product"
+                          />
+                        </div>
+                        <div className="p-2 text-gray-900 sm:col-span-3 grid grid-rows-3 grid-cols-1 justify-items-center items-center sm:grid-rows-2 sm:grid-cols-2 sm:justify-items-start">
+                          <div className="sm:col-span-2 mb-2 sm:mb-0">
+                            {item.name}
+                          </div>
+                          <div className="mb-2 sm:mb-0">
+                            <div className="w-auto inline-block">
+                              <span>تعداد کالا: </span>
+                              <span>
+                                {convertToFarsiNumbers(item.number)} عدد
+                              </span>
+                            </div>
+                          </div>
+                          <div className="grid gap-6">
+                            <div>
+                              قیمت هر عدد :
+                              {convertToFarsiNumbers(
+                                formatPrice(item.price.toString())
+                              )}{" "}
+                              تومان
+                            </div>
+                            <div>
+                              قیمت کل :
+                              {convertToFarsiNumbers(
+                                formatPrice(
+                                  Math.ceil(
+                                    item.number * parseInt(item.price)
+                                  ).toString()
+                                )
+                              )}{" "}
+                              تومان
+                            </div>
+                          </div>
                         </div>
                       </div>
-                      <div className="grid gap-6">
-                        <div>
-                          قیمت هر عدد :
-                          {convertToFarsiNumbers(
-                            formatPrice(item.price.toString())
-                          )}{" "}
-                          تومان
-                        </div>
-                        <div>
-                          قیمت کل :
-                          {convertToFarsiNumbers(
-                            formatPrice(
-                              Math.ceil(
-                                item.number * parseInt(item.price)
-                              ).toString()
-                            )
-                          )}{" "}
-                          تومان
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  {cartProducts.length == index + 1 ? (
-                    ""
-                  ) : (
-                    <div className="border-[1px] border-gray-200 w-full h-[2px]"></div>
-                  )}
-                </>
-              );
-            })}
+                      {cartProducts.length == index + 1 ? (
+                        ""
+                      ) : (
+                        <div className="border-[1px] border-gray-200 w-full h-[2px]"></div>
+                      )}
+                    </>
+                  );
+                })}
           </div>
         </Box>
       </Box>

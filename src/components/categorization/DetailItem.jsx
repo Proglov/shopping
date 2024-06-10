@@ -63,7 +63,7 @@ export default function DetailItem({ detail }) {
         <div
           className="sm:text-lg text-sm col-span-7 mt-3 sm:mt-0"
           dangerouslySetInnerHTML={{
-            __html: `توضیحات محصول: <br/> ${detail.desc}`,
+            __html: `توضیحات محصول: ${detail.desc}`,
           }}
         ></div>
       </Card>

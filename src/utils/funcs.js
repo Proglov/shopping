@@ -78,8 +78,8 @@ export const farsiNumCharacter = (x) => {
 export const convertToFarsiNumbers = str => {
     let newStr = ''
     if (typeof str !== "string")
-        str = str.toString()
-    for (let i = 0; i < str.length; i++) {
+        str = str?.toString()
+    for (let i = 0; i < str?.length; i++) {
         newStr += farsiNumCharacter(str[i]);
     }
     return newStr

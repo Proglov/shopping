@@ -32,15 +32,35 @@ export default function CommentItem() {
 
   const liked = async (id) => {
     try {
-      const response = await toggleLikeComment({ id: id });
-      const comments = await getCommentsOfAProduct({ id: productID });
-      const r = comments.comments.filter(
-        (item) => item.parentCommentId !== null
-      );
-      setReply(r);
-      setCommentsList(
-        comments.comments.filter((item) => item.parentCommentId === null)
-      );
+      if (localStorage.getItem("UserLogin") == "true") {
+        const ownerType = "User";
+        const response = await toggleLikeComment({
+          id: id,
+          ownerType: ownerType,
+        });
+        const comments = await getCommentsOfAProduct({ id: productID });
+        const r = comments.comments.filter(
+          (item) => item.parentCommentId !== null
+        );
+        setReply(r);
+        setCommentsList(
+          comments.comments.filter((item) => item.parentCommentId === null)
+        );
+      } else {
+        const ownerType = "Seller";
+        const response = await toggleLikeComment({
+          id: id,
+          ownerType: ownerType,
+        });
+        const comments = await getCommentsOfAProduct({ id: productID });
+        const r = comments.comments.filter(
+          (item) => item.parentCommentId !== null
+        );
+        setReply(r);
+        setCommentsList(
+          comments.comments.filter((item) => item.parentCommentId === null)
+        );
+      }
     } catch (error) {
       alert(error.response.data.message);
     }
@@ -48,15 +68,35 @@ export default function CommentItem() {
 
   const disLiked = async (id) => {
     try {
-      const response = await toggleDisLikeComment({ id: id });
-      const comments = await getCommentsOfAProduct({ id: productID });
-      const r = comments.comments.filter(
-        (item) => item.parentCommentId !== null
-      );
-      setReply(r);
-      setCommentsList(
-        comments.comments.filter((item) => item.parentCommentId === null)
-      );
+      if (localStorage.getItem("UserLogin") == "true") {
+        const ownerType = "User";
+        const response = await toggleDisLikeComment({
+          id: id,
+          ownerType: ownerType,
+        });
+        const comments = await getCommentsOfAProduct({ id: productID });
+        const r = comments.comments.filter(
+          (item) => item.parentCommentId !== null
+        );
+        setReply(r);
+        setCommentsList(
+          comments.comments.filter((item) => item.parentCommentId === null)
+        );
+      } else {
+        const ownerType = "Seller";
+        const response = await toggleDisLikeComment({
+          id: id,
+          ownerType: ownerType,
+        });
+        const comments = await getCommentsOfAProduct({ id: productID });
+        const r = comments.comments.filter(
+          (item) => item.parentCommentId !== null
+        );
+        setReply(r);
+        setCommentsList(
+          comments.comments.filter((item) => item.parentCommentId === null)
+        );
+      }
     } catch (error) {
       alert(error.response.data.message);
     }
@@ -65,14 +105,29 @@ export default function CommentItem() {
   const handleSubmit = async () => {
     try {
       const body = DOMPurify.sanitize(newComment);
-      const response = await createComment({
-        body: body,
-        parentCommentId: null,
-        productId: productID,
-        id: userId,
-      });
-      setNewComment("");
-      alert("نظر شما برای بررسی ثبت شد.");
+      if (localStorage.getItem("UserLogin") == "true") {
+        const ownerType = "User";
+        const response = await createComment({
+          body: body,
+          parentCommentId: null,
+          productId: productID,
+          ownerType: ownerType,
+          id: userId,
+        });
+        setNewComment("");
+        alert("نظر شما برای بررسی ثبت شد.");
+      } else {
+        const ownerType = "Seller";
+        const response = await createComment({
+          body: body,
+          parentCommentId: null,
+          productId: productID,
+          ownerType: ownerType,
+          id: userId,
+        });
+        setNewComment("");
+        alert("نظر شما برای بررسی ثبت شد.");
+      }
     } catch (error) {
       alert(error.response.data.message);
     }
@@ -84,15 +139,31 @@ export default function CommentItem() {
       return;
     }
     try {
-      const body = DOMPurify.sanitize(newReplay);
-      const response = await createComment({
-        body: body,
-        parentCommentId: id,
-        productId: productID,
-        id: userId,
-      });
-      setNewReplay("");
-      alert("پاسخ شما برای بررسی ثبت شد.");
+      if (localStorage.getItem("UserLogin") == "true") {
+        const ownerType = "User";
+        const body = DOMPurify.sanitize(newReplay);
+        const response = await createComment({
+          body: body,
+          parentCommentId: id,
+          productId: productID,
+          ownerType: ownerType,
+          id: userId,
+        });
+        setNewReplay("");
+        alert("پاسخ شما برای بررسی ثبت شد.");
+      } else {
+        const ownerType = "Seller";
+        const body = DOMPurify.sanitize(newReplay);
+        const response = await createComment({
+          body: body,
+          parentCommentId: id,
+          productId: productID,
+          ownerType: ownerType,
+          id: userId,
+        });
+        setNewReplay("");
+        alert("پاسخ شما برای بررسی ثبت شد.");
+      }
     } catch (error) {
       alert(error.response.data.message);
     }
@@ -170,7 +241,7 @@ export default function CommentItem() {
     // likes,
     commentsList,
     replay,
-    login
+    login,
   ]);
 
   return (
@@ -237,12 +308,12 @@ export default function CommentItem() {
                 </Box>
                 <Box className="col-span-11 row-span-2">
                   <Box className="sm:text-lg text-sm bold">
-                    {item.userId.username == ""
+                    {item?.userId?.username == ""
                       ? "فاقد نام"
-                      : item.userId.username}{" "}
+                      : item?.userId?.username}{" "}
                     :
                   </Box>
-                  <Box className="sm:text-base text-xs p-5">{item.body}</Box>
+                  <Box className="sm:text-base text-xs p-5">{item?.body}</Box>
                   <Box className="mt-3 grid grid-cols-2">
                     <Box className="p-3">
                       <Checkbox
@@ -253,7 +324,9 @@ export default function CommentItem() {
                         onChange={() => disLiked(item._id)}
                       />
                       <span>
-                        {convertToFarsiNumbers(item.disLikes.length.toString())}
+                        {convertToFarsiNumbers(
+                          item?.disLikes?.length?.toString()
+                        )}
                       </span>
                     </Box>
                     <Box className="p-3">
@@ -265,7 +338,7 @@ export default function CommentItem() {
                         onChange={() => liked(item._id)}
                       />
                       <span>
-                        {convertToFarsiNumbers(item.likes.length.toString())}
+                        {convertToFarsiNumbers(item?.likes?.length?.toString())}
                       </span>
                     </Box>
                   </Box>
@@ -374,9 +447,9 @@ export default function CommentItem() {
                           </Box>
                           <Box className="col-span-11">
                             <Box className="sm:text-lg text-sm bold">
-                              {comment.userId.username == ""
+                              {comment?.userId?.username == ""
                                 ? "فاقد نام"
-                                : comment.userId.username}{" "}
+                                : comment?.userId?.username}{" "}
                               :
                             </Box>
                             <Box className="sm:text-base text-xs p-5">
@@ -393,7 +466,7 @@ export default function CommentItem() {
                                 />
                                 <span>
                                   {convertToFarsiNumbers(
-                                    comment.disLikes.length.toString()
+                                    comment?.disLikes?.length?.toString()
                                   )}
                                 </span>
                               </Box>
@@ -407,7 +480,7 @@ export default function CommentItem() {
                                 />
                                 <span>
                                   {convertToFarsiNumbers(
-                                    comment.likes.length.toString()
+                                    comment?.likes?.length?.toString()
                                   )}
                                 </span>
                               </Box>
