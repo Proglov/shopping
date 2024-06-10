@@ -66,7 +66,7 @@ export default function AddProduct() {
             }
         }
         fetchCategories();
-    }, [])
+    }, [getAllSubcategories])
 
     function updateFileProgress(key, progress) {
         setFileStates((fileStates) => {

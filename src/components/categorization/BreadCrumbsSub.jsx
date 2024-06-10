@@ -22,10 +22,10 @@ export default function BreadCrumbsSub() {
         setNameSub(response.subcategory.name);
         setName(response.subcategory.categoryId.name);
         setId(response.subcategory.categoryId._id);
-      } catch (error) {}
+      } catch (error) { }
     };
     getSubCategory();
-  }, [getOneSubcategory]);
+  }, [getOneSubcategory, subId]);
 
   return (
     <>

@@ -170,6 +170,7 @@ export default function CommentItem() {
     // likes,
     commentsList,
     replay,
+    login
   ]);
 
   return (

@@ -19,10 +19,10 @@ export default function Products() {
       try {
         const response = await getAllProductsOfACategory({ id: id });
         setProducts(response.products);
-      } catch (error) {}
+      } catch (error) { }
     };
     getProduct();
-  }, [getAllProductsOfACategory]);
+  }, [getAllProductsOfACategory, id]);
 
   return (
     <>
