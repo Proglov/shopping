@@ -230,7 +230,7 @@ export default function CommentItem() {
     // });
   }, [
     getCommentsOfAProduct,
-    productID,
+    // productID,
     setReply,
     setCommentsList,
     getMe,
@@ -239,9 +239,9 @@ export default function CommentItem() {
     // setDisLikes,
     // disLikes,
     // likes,
-    commentsList,
-    replay,
-    login,
+    // commentsList,
+    // replay,
+    // login,
   ]);
 
   return (

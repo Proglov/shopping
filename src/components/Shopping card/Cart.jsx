@@ -123,6 +123,7 @@ export default function Cart({ Close, Open }) {
                         xl: "1200px",
                       },
                     }}
+                    onClick={Close}
                   >
                     نهایی کردن خرید
                   </Button>
@@ -159,6 +160,7 @@ export default function Cart({ Close, Open }) {
                       xl: "1200px",
                     },
                   }}
+                  onClick={Close}
                 >
                   ورود / عضویت
                 </Button>

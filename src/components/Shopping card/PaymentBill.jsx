@@ -52,8 +52,8 @@ export default function PaymentBill() {
         shouldBeSentAt: date,
         userId: userId,
       });
+      alert("سفارش شما با موفقیت ثبت شد");
       router.push("/shopping-card/payment/bill");
-      alert("سفارش شما با موفقیت ثبت شد")
     } catch (error) {
       console.log(error);
     }

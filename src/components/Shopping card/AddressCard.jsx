@@ -66,9 +66,31 @@ export default function AddressCard() {
               }}
             >
               آدرس تحویل سفارش
+              {address.length == 0 ? (
+                ""
+              ) : (
+                <Button
+                  variant="outlined"
+                  className="bg-gray-200 border-gray-300 hover:border-gray-400 hover:bg-gray-300 text-gray-950 font-medium float-left rounded-lg"
+                  sx={{
+                    fontSize: {
+                      xs: "10px",
+                      sm: "10px",
+                      md: "14px",
+                      lg: "18px",
+                      xl: "18px",
+                    },
+                  }}
+                  onClick={handleOpen}
+                >
+                  ویرایش آدرس تحویل
+                </Button>
+              )}
+            </Typography>
+            {address.length == 0 ? (
               <Button
                 variant="outlined"
-                className="bg-gray-200 border-gray-300 hover:border-gray-400 hover:bg-gray-300 text-gray-950 font-medium float-left rounded-lg"
+                className="bg-green-500 border-green-600 hover:border-green-700 hover:bg-green-600 text-white font-medium float-left rounded-lg"
                 sx={{
                   fontSize: {
                     xs: "10px",
@@ -80,39 +102,42 @@ export default function AddressCard() {
                 }}
                 onClick={handleOpen}
               >
-                ویرایش آدرس تحویل
+                اضافه کردن آدرس تحویل
               </Button>
-            </Typography>
-            {address.map((item, index) => {
-              return (
-                <Box
-                  component="div"
-                  className="break-words"
-                  key={index}
-                  sx={{
-                    fontSize: {
-                      xs: "17px",
-                      sm: "20px",
-                      md: "26px",
-                      lg: "26px",
-                      xl: "26px",
-                    },
-                  }}
-                >
-                  <Checkbox
-                    icon={<RadioButtonUncheckedIcon />}
-                    checkedIcon={<CheckCircleIcon sx={{ color: blue[700] }} />}
-                    onClick={() => {
-                      setSelectAddress(index);
-                      dispatch(SetAddress(address[index]));
+            ) : (
+              address.map((item, index) => {
+                return (
+                  <Box
+                    component="div"
+                    className="break-words"
+                    key={index}
+                    sx={{
+                      fontSize: {
+                        xs: "17px",
+                        sm: "20px",
+                        md: "26px",
+                        lg: "26px",
+                        xl: "26px",
+                      },
                     }}
-                    className="ml-2"
-                    checked={selectAddress === index}
-                  />
-                  {item}
-                </Box>
-              );
-            })}
+                  >
+                    <Checkbox
+                      icon={<RadioButtonUncheckedIcon />}
+                      checkedIcon={
+                        <CheckCircleIcon sx={{ color: blue[700] }} />
+                      }
+                      onClick={() => {
+                        setSelectAddress(index);
+                        dispatch(SetAddress(address[index]));
+                      }}
+                      className="ml-2"
+                      checked={selectAddress === index}
+                    />
+                    {item}
+                  </Box>
+                );
+              })
+            )}
           </CardContent>
         </Card>
       </Box>
