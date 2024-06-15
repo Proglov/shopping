@@ -90,7 +90,7 @@ export default function AddressCard() {
             {address.length == 0 ? (
               <Button
                 variant="outlined"
-                className="bg-green-500 border-green-600 hover:border-green-700 hover:bg-green-600 text-white font-medium float-left rounded-lg"
+                className="bg-green-500 border-green-600 hover:border-green-700 hover:bg-green-600 text-white font-medium float-left rounded-lg m-5"
                 sx={{
                   fontSize: {
                     xs: "10px",

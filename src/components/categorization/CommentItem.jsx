@@ -301,16 +301,13 @@ export default function CommentItem() {
             return (
               <Box
                 key={index}
-                className="border-2 shadow-lg rounded-lg p-5 m-3 grid grid-cols-12 grid-rows-2"
+                className="border-2 shadow-lg rounded-lg p-5 m-3 grid grid-rows-2"
               >
-                <Box className="m-3 sm:block hidden row-span-2">
-                  <AccountCircle sx={{ fontSize: 40 }} color="inherit" />
-                </Box>
-                <Box className="col-span-11 row-span-2">
+                <Box className="row-span-2">
                   <Box className="sm:text-lg text-sm bold">
                     {item?.userId?.username == ""
                       ? "فاقد نام"
-                      : item?.userId?.username}{" "}
+                      : item?.ownerId?.name}{" "}
                     :
                   </Box>
                   <Box className="sm:text-base text-xs p-5">{item?.body}</Box>
@@ -436,20 +433,14 @@ export default function CommentItem() {
                       return (
                         <Box
                           key={id}
-                          className="border-2 shadow-lg rounded-lg md:mr-28 p-5 mt-5 grid grid-cols-12"
+                          className="border-2 shadow-lg rounded-lg md:mr-28 p-5 mt-5 grid"
                           component="div"
                         >
-                          <Box className="m-auto sm:block hidden row-span-2">
-                            <AccountCircle
-                              sx={{ fontSize: 40 }}
-                              color="inherit"
-                            />
-                          </Box>
-                          <Box className="col-span-11">
+                          <Box>
                             <Box className="sm:text-lg text-sm bold">
                               {comment?.userId?.username == ""
                                 ? "فاقد نام"
-                                : comment?.userId?.username}{" "}
+                                : comment?.ownerId?.name}{" "}
                               :
                             </Box>
                             <Box className="sm:text-base text-xs p-5">

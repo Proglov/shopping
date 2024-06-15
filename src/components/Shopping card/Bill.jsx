@@ -5,12 +5,14 @@ import { Box, Button, Card } from "@mui/material";
 import { GrFormPrevious } from "react-icons/gr";
 import Link from "next/link";
 import { useAppSelector } from "@/store/Hook";
+import { useRouter } from "next/navigation";
 
 export default function Bill({ step = 1 }) {
   const product = useAppSelector((state) => state.CartProducts);
   const Time = useAppSelector((state) => state.Time);
   const address = useAppSelector((state) => state.Address.address);
   const minPrice = 150000;
+  const router = useRouter();
 
   let serviceFee = 1479;
 
@@ -238,7 +240,7 @@ export default function Bill({ step = 1 }) {
             component="div"
           >
             {minPrice < totalPrice(product) ? (
-              !Time.select || (address === "") ? (
+              !Time.select || address === "" ? (
                 <div className="text-red-600 mb-2 text-right text-xl">
                   لطفا آدرس یا زمان ارسال را انتخاب کنید!
                 </div>
@@ -257,10 +259,13 @@ export default function Bill({ step = 1 }) {
             {minPrice < totalPrice(product) ? (
               Time.select && address !== "" ? (
                 <div className="text-left">
-                  <Link href="/shopping-card/payment">
+                  {/* <Link href="/shopping-card/payment"> */}
                     <Button
                       variant="contained"
                       className="bg-blue-500 text-bold text-base hover:bg-blue-600 rounded-lg w-fit"
+                      onClick={() => {
+                        router.push("/shopping-card/payment");
+                      }}
                     >
                       مرحله بعد
                       <GrFormPrevious
@@ -268,7 +273,7 @@ export default function Bill({ step = 1 }) {
                         style={{ fontSize: "35px" }}
                       />
                     </Button>
-                  </Link>
+                  {/* </Link> */}
                 </div>
               ) : (
                 <div className="text-left">

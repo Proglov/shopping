@@ -9,6 +9,7 @@ import { useEffect, useState } from "react";
 import UserApi from "@/services/withAuthActivities/user";
 import moment from "jalali-moment";
 import { undefined } from "zod";
+import { useRouter } from "next/navigation";
 
 export default function BillComponent() {
   const cartProducts = useAppSelector((state) => state.CartProducts);
@@ -21,6 +22,7 @@ export default function BillComponent() {
     name: "",
     phoneNumber: "",
   });
+  const router = useRouter();
 
   let counter = cartProducts
     ?.reduce((accumulator, currentObject) => {
@@ -81,7 +83,7 @@ export default function BillComponent() {
     return () => {
       window.onbeforeunload = null;
     };
-  }, [setLogin, login, setAddress, getMe, setInformation, setTime]);
+  }, [setLogin, setAddress, getMe, setInformation, setTime]);
 
   return (
     <Card className="p-5 m-5 rounded-md">
@@ -156,8 +158,8 @@ export default function BillComponent() {
               ? ""
               : cartProducts.map((item, index) => {
                   return (
-                    <>
-                      <div className="w-full" key={index} />
+                    <div key={index}>
+                      <div className="w-full" />
                       <div className="m-4 h-auto w-full grid grid-cols-1 gap-4 lg:w-3/4 sm:grid-cols-4">
                         <div className="p-1 mx-auto">
                           <Image
@@ -206,7 +208,7 @@ export default function BillComponent() {
                       ) : (
                         <div className="border-[1px] border-gray-200 w-full h-[2px]"></div>
                       )}
-                    </>
+                    </div>
                   );
                 })}
           </div>
