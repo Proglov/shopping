@@ -9,11 +9,11 @@ import 'swiper/css/pagination';
 const swiperBreaks = {
     200: {
         slidesPerView: 3,
-        spaceBetween: 170
+        spaceBetween: 190
     },
     400: {
         slidesPerView: 3,
-        spaceBetween: 150
+        spaceBetween: 170
     },
     500: {
         slidesPerView: 3,
@@ -33,11 +33,11 @@ const swiperBreaks = {
     },
     600: {
         slidesPerView: 4,
-        spaceBetween: 190
+        spaceBetween: 200
     },
     640: {
         slidesPerView: 3,
-        spaceBetween: 120
+        spaceBetween: 140
     },
     700: {
         slidesPerView: 3,
@@ -49,7 +49,7 @@ const swiperBreaks = {
     },
     800: {
         slidesPerView: 4,
-        spaceBetween: 150
+        spaceBetween: 170
     },
     900: {
         slidesPerView: 4,
@@ -95,7 +95,7 @@ const arr = [
         name: 'خامه صباح - 200 میلی لیتر',
         off: 26,
         realPrice: 32000000,
-        src: '/img/home/category-labaniat.jpg',
+        src: '/img/home/tanagholat.jpg',
         number: 3
     },
     {
@@ -109,7 +109,7 @@ const arr = [
         name: 'خامه صباح - 2 میلی لیتر',
         off: 22,
         realPrice: 32000000,
-        src: '/img/home/category-labaniat.jpg',
+        src: '/img/home/tanagholat.jpg',
         number: 5
     },
     {
@@ -123,7 +123,7 @@ const arr = [
         name: 'خامه صباح - 4 میلی لیتر',
         off: 16,
         realPrice: 32000000,
-        src: '/img/home/category-labaniat.jpg',
+        src: '/img/home/tanagholat.jpg',
         number: 10
     },
     {
@@ -137,7 +137,7 @@ const arr = [
         name: 'خامه صباح - 6 میلی لیتر',
         off: 46,
         realPrice: 32000000,
-        src: '/img/home/category-labaniat.jpg',
+        src: '/img/home/tanagholat.jpg',
         number: 3
     },
     {

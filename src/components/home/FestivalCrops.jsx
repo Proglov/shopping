@@ -23,7 +23,7 @@ const arr = [
         off: 25,
         realPrice: 32000000,
         sold: 48,
-        src: '/img/home/tanagholat.jpg',
+        src: '/img/home/category-labaniat.jpg',
         time: 0
     },
     {
@@ -39,7 +39,7 @@ const arr = [
         off: 2,
         realPrice: 32000000,
         sold: 52,
-        src: '/img/home/tanagholat.jpg',
+        src: '/img/home/category-labaniat.jpg',
         time: 0
     },
     {
@@ -55,7 +55,7 @@ const arr = [
         off: 62,
         realPrice: 32000000,
         sold: 70,
-        src: '/img/home/tanagholat.jpg',
+        src: '/img/home/category-labaniat.jpg',
         time: 0
     },
     {
@@ -71,7 +71,7 @@ const arr = [
         off: 65,
         realPrice: 32000000,
         sold: 100,
-        src: '/img/home/tanagholat.jpg',
+        src: '/img/home/category-labaniat.jpg',
         time: 0
     },
 
