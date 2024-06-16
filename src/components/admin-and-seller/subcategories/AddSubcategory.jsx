@@ -64,7 +64,7 @@ export default function AddSubcategory() {
                 let catId = '';
                 for (const cat of categories) {
                     if (cat.name === AddNewData.formData.category) {
-                        catId = cat.categoryId;
+                        catId = cat._id;
                         break
                     }
                 }

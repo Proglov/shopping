@@ -48,9 +48,8 @@ export default function PaymentBill() {
       const response = await createTX({
         discountId: "",
         boughtProducts: newArray,
-        address: address,
+        address,
         shouldBeSentAt: date,
-        userId: userId,
       });
       alert("سفارش شما با موفقیت ثبت شد");
       router.push("/shopping-card/payment/bill");
@@ -64,7 +63,7 @@ export default function PaymentBill() {
       try {
         const user = await getMe();
         setUserId(user.user._id);
-      } catch (error) {}
+      } catch (error) { }
     };
     GetUser();
     setAddress(localStorage.getItem("address"));
