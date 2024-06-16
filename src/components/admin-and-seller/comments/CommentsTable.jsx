@@ -122,7 +122,7 @@ export default function CommentsTable() {
                                         <StyledTableRow key={item._id}
                                             className='align-middle'>
                                             <StyledTableCell align='center'>{convertToFarsiNumbers(index + 1 + itemsPerPage * (currentPage - 1))}</StyledTableCell>
-                                            <StyledTableCell align='center'>{item.userId?._id}</StyledTableCell>
+                                            <StyledTableCell align='center'>{item.ownerId?._id}</StyledTableCell>
                                             <StyledTableCell align='center'>{item.body}</StyledTableCell>
                                             <StyledTableCell className='border-b-0'>
                                                 {selectedId === item._id ? (

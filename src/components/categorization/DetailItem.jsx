@@ -9,7 +9,7 @@ import { usePathname } from "next/navigation";
 export default function DetailItem({ detail }) {
   const router = usePathname();
   const dispatch = useAppDispatch();
-
+  console.log(detail.desc);
   return (
     <>
       <Card className="mt-11 mb-10 p-5 sm:grid sm:grid-cols-7 h-fit">
