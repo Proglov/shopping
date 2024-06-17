@@ -6,13 +6,14 @@ import 'react-quill/dist/quill.snow.css';
 import DOMPurify from 'dompurify';
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import Api1 from '@/services/withAuthActivities/categories';
 import Api2 from '@/services/withAuthActivities/image';
 import { SingleImageDropzone } from '../../single-image-dropzone';
+import { useDispatch } from 'react-redux';
+import { addCategoryToServer } from '../redux/globalAsyncThunks';
 
 
 export default function AddCategory() {
-    const { createCategories } = Api1
+    const dispatch = useDispatch();
     const { uploadImage } = Api2
     const [fileState, setFileState] = useState();
     const [AddNewData, setAddNewData] = useState({
@@ -54,11 +55,19 @@ export default function AddCategory() {
             }))
         } else {
             try {
+                // upload the image
                 const resUpload = await uploadImage(fileState);
                 const obj = AddNewData.formData;
                 obj.name = DOMPurify.sanitize(AddNewData.formData.name)
                 obj.imageUrl = resUpload?.name;
-                const res = await createCategories(obj)
+                const res = dispatch(addCategoryToServer(obj))
+                if (res?.message === 'You are not authorized!')
+                    throw ("توکن شما منقضی شده. لطفا خارج، و دوباره وارد شوید")
+                toast.success('با موفقیت ارسال شد!')
+            } catch (err) {
+                toast.error(err)
+            } finally {
+                setFileState()
                 setAddNewData(prevProps => ({
                     ...prevProps,
                     isSubmitting: false,
@@ -66,19 +75,6 @@ export default function AddCategory() {
                         name: ''
                     }
                 }));
-                if (res?.message === 'You are not authorized!')
-                    throw ("توکن شما منقضی شده. لطفا خارج، و دوباره وارد شوید")
-                toast.success('با موفقیت ارسال شد!')
-            } catch (err) {
-                toast.error(err)
-            } finally {
-                setAddNewData(prevProps => ({
-                    ...prevProps,
-                    isSubmitting: false
-                }));
-                setTimeout(() => {
-                    window.location.reload()
-                }, 1000)
             }
         }
 

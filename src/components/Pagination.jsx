@@ -1,35 +1,38 @@
 'use client'
 import { BiSolidChevronsLeft, BiSolidChevronsRight, BiSolidChevronLeft, BiSolidChevronRight } from 'react-icons/bi'
+import { useDispatch } from 'react-redux';
 
 export default function Pagination({ currentPage, setCurrentPage, lastPage }) {
+    const dispatch = useDispatch();
 
     const handleFirstPage = () => {
         if (currentPage !== 1) {
-            setCurrentPage(1)
+            dispatch(setCurrentPage(1))
         }
     }
 
     const handleLastPage = () => {
         if (currentPage !== lastPage) {
             setCurrentPage(lastPage)
+            dispatch(setCurrentPage(lastPage))
         }
     }
 
     const handleNextPage = () => {
         if (currentPage !== lastPage) {
-            setCurrentPage((prev) => prev + 1)
+            dispatch(setCurrentPage("INC"))
         }
     }
 
     const handlePreviousPage = () => {
         if (currentPage !== 1) {
-            setCurrentPage((prev) => prev - 1)
+            dispatch(setCurrentPage("DEC"))
         }
     }
 
     const handlePageClick = (page) => {
         if (currentPage !== page) {
-            setCurrentPage(page)
+            dispatch(setCurrentPage(page))
         }
     }
 

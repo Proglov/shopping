@@ -91,29 +91,17 @@ export default function PopularCrops() {
                             md: '20px',
                             lg: '24px',
                             xl: '30px'
-                        }
+                        },
+                        marginLeft: 'auto',
+                        marginRight: 'auto'
                     }}
-                    className='bg-white m-2 flex justify-center mx-auto'>
+                    className='bg-white m-2 flex justify-center'>
                     <ImFire className='mt-1 text-orange-600' />
                     <span className='mx-2'>پرفروش ترین کالاها</span>
                 </Typography>
             </div>
 
-            {/* greater than md */}
-            <Grid container className='md:flex hidden'>
-                {
-                    arr.map((v, i) => {
-                        return (
-                            <Grid key={i} item xs={12} sm={6} md={4}>
-                                <PopularCropsComponent href={v.href} name={v.name} src={v.src} number={i + 1} />
-                            </Grid>
-                        )
-                    })
-                }
-            </Grid>
-
-            {/* xs , sm  */}
-            <Grid container className='md:hidden flex'>
+            <Grid container className='flex'>
                 {
                     arr.map((v, i) => {
                         if (showMore)

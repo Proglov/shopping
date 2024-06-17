@@ -1,6 +1,7 @@
 "use client"
 import { Stack } from '@mui/material';
-import { useEffect, useContext } from 'react';
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -9,10 +10,10 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import Api from '@/services/withoutAuthActivities/categories';
 import Pagination from '../../Pagination';
-import { CategoriesContext } from './CategoriesMain';
 import Image from 'next/image';
+import { getCategoriesFromServer } from '../redux/globalAsyncThunks';
+import { setCurrentPage } from '../redux/reducers/global';
 
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -35,43 +36,21 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 
 
 export default function CategoriesTable() {
-    const { getAllCategories } = Api
+    const dispatch = useDispatch();
 
     const {
         items,
-        setItems,
         currentPage,
-        setCurrentPage,
         lastPage,
         loading,
-        setLoading,
-        isError,
-        setIsError,
         error,
-        setError,
         itemsCount,
-        setItemsCount,
-        itemsPerPage,
-        setLastPage
-    } = useContext(CategoriesContext)
+        itemsPerPage
+    } = useSelector((state) => state.global);
 
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                setLoading(true);
-                const categories = await getAllCategories({ page: currentPage, perPage: itemsPerPage });
-                setItems(categories?.categories)
-                setItemsCount(categories?.allCategoriesCount)
-                setLastPage(Math.ceil(categories?.allCategoriesCount / itemsPerPage))
-            } catch (error) {
-                setError(`Error fetching categories: ${error}`);
-                setIsError(true);
-            } finally {
-                setLoading(false);
-            }
-        };
-        fetchData();
-    }, [currentPage, itemsPerPage, setError, setIsError, setItems, setItemsCount, setLoading, getAllCategories, setLastPage]);
+        dispatch(getCategoriesFromServer({ currentPage, itemsPerPage }))
+    }, [currentPage, itemsPerPage]);
 
 
     return (
@@ -87,7 +66,7 @@ export default function CategoriesTable() {
                     </>
                 }
             </div>
-            {isError ? (
+            {!!error ? (
                 <div>
                     مشکلی رخ داد! لطفا دوباره تلاش کنید ...
                     <br />

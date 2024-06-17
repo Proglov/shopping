@@ -241,7 +241,8 @@ export default function CommentItem() {
     // likes,
     // commentsList,
     // replay,
-    // login,
+    login,
+    productID
   ]);
 
   return (
