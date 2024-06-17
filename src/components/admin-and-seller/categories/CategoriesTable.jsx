@@ -1,6 +1,7 @@
 "use client"
 import { Stack } from '@mui/material';
-import { useEffect, useContext } from 'react';
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -11,8 +12,9 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Api from '@/services/withoutAuthActivities/categories';
 import Pagination from '../../Pagination';
-import { CategoriesContext } from './CategoriesMain';
 import Image from 'next/image';
+import { getCategoriesFromServer } from '../redux/reducers/categories';
+import { setCurrentPage } from '../redux/reducers/categories';
 
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -36,42 +38,22 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 
 export default function CategoriesTable() {
     const { getAllCategories } = Api
+    const dispatch = useDispatch();
+    const categories = useSelector((state) => state.categories);
 
     const {
         items,
-        setItems,
         currentPage,
-        setCurrentPage,
         lastPage,
         loading,
-        setLoading,
-        isError,
-        setIsError,
         error,
-        setError,
         itemsCount,
-        setItemsCount,
-        itemsPerPage,
-        setLastPage
-    } = useContext(CategoriesContext)
+        itemsPerPage
+    } = useSelector((state) => state.categories);
 
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                setLoading(true);
-                const categories = await getAllCategories({ page: currentPage, perPage: itemsPerPage });
-                setItems(categories?.categories)
-                setItemsCount(categories?.allCategoriesCount)
-                setLastPage(Math.ceil(categories?.allCategoriesCount / itemsPerPage))
-            } catch (error) {
-                setError(`Error fetching categories: ${error}`);
-                setIsError(true);
-            } finally {
-                setLoading(false);
-            }
-        };
-        fetchData();
-    }, [currentPage, itemsPerPage, setError, setIsError, setItems, setItemsCount, setLoading, getAllCategories, setLastPage]);
+        dispatch(getCategoriesFromServer(categories.currentPage, categories.itemsPerPage))
+    }, [currentPage, itemsPerPage, getAllCategories]);
 
 
     return (
@@ -87,7 +69,7 @@ export default function CategoriesTable() {
                     </>
                 }
             </div>
-            {isError ? (
+            {!!error ? (
                 <div>
                     مشکلی رخ داد! لطفا دوباره تلاش کنید ...
                     <br />
@@ -96,7 +78,7 @@ export default function CategoriesTable() {
             ) : loading ? (
                 <div>درحال دریافت اطلاعات ...</div>
             ) : (
-                items?.length !== 0 ?
+                categories?.items?.length !== 0 ?
                     <div>
                         <TableContainer component={Paper}>
                             <Table sx={{ minWidth: 500 }} aria-label="customized table">
