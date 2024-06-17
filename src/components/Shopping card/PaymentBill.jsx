@@ -22,6 +22,8 @@ import TXApi from "@/services/withAuthActivities/tx";
 import UserApi from "@/services/withAuthActivities/user";
 import { loadState } from "@/Storage/Storage";
 import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function PaymentBill() {
   const product = useAppSelector((state) => state.CartProducts);
@@ -52,7 +54,9 @@ export default function PaymentBill() {
         shouldBeSentAt: date,
         userId: userId,
       });
-      alert("سفارش شما با موفقیت ثبت شد");
+      toast.success("سفارش شما با موفقیت ثبت شد", {
+        position: toast.POSITION.TOP_RIGHT,
+      });
       router.push("/shopping-card/payment/bill");
     } catch (error) {
       console.log(error);

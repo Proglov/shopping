@@ -125,12 +125,11 @@ export default function SubCategory() {
 
           return acc;
         }, []);
-        console.log(groupedProducts);
         setProducts(groupedProducts);
       } catch (error) { }
     };
     getProduct();
-  }, [setProducts, getAllProductsOfACategory, id]);
+  }, [setProducts, getAllProductsOfACategory]);
 
   return (
     <>

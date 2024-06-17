@@ -8,6 +8,8 @@ import ProductApi from "@/services/withoutAuthActivities/product";
 import { usePathname } from "next/navigation";
 import { useAppSelector } from "@/store/Hook";
 import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function Item() {
   const router = usePathname();
@@ -33,7 +35,9 @@ export default function Item() {
         const p = await getOneProduct({ id: router.split("/")[4] });
         setProduct({ ...p.data.product });
       } catch (error) {
-        alert(error.response.data.message);
+        toast.error("دوباره تلاش کنید", {
+          position: toast.POSITION.TOP_RIGHT,
+        });
       }
     };
     getProduct();
@@ -43,7 +47,7 @@ export default function Item() {
     <>
       <GalleryItem images={product.imagesUrl} />
       <DetailItem detail={product} />
-      <SimilarProducts />
+      {/* <SimilarProducts /> */}
       <CommentItem />
     </>
   );

@@ -214,7 +214,7 @@ export default function ShoppingCard({ step }) {
       </Box>
       {step !== 0 ? (
         <>
-          <Offers />
+          {/* <Offers /> */}
           <Bill step={step} />
         </>
       ) : (

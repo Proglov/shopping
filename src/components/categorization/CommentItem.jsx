@@ -13,6 +13,8 @@ import UserApi from "@/services/withAuthActivities/user";
 import { usePathname } from "next/navigation";
 import DOMPurify from "dompurify";
 import { convertToFarsiNumbers } from "@/utils/funcs";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function CommentItem() {
   const router = usePathname();
@@ -62,7 +64,9 @@ export default function CommentItem() {
         );
       }
     } catch (error) {
-      alert(error.response.data.message);
+      toast.error("دوباره تلاش کنید", {
+        position: toast.POSITION.TOP_RIGHT,
+      });
     }
   };
 
@@ -98,7 +102,9 @@ export default function CommentItem() {
         );
       }
     } catch (error) {
-      alert(error.response.data.message);
+      toast.error("دوباره تلاش کنید", {
+        position: toast.POSITION.TOP_RIGHT,
+      });
     }
   };
 
@@ -115,7 +121,9 @@ export default function CommentItem() {
           id: userId,
         });
         setNewComment("");
-        alert("نظر شما برای بررسی ثبت شد.");
+        toast.success("نظر شما برای بررسی ثبت شد.", {
+          position: toast.POSITION.TOP_RIGHT,
+        });
       } else {
         const ownerType = "Seller";
         const response = await createComment({
@@ -126,16 +134,22 @@ export default function CommentItem() {
           id: userId,
         });
         setNewComment("");
-        alert("نظر شما برای بررسی ثبت شد.");
+        toast.success("نظر شما برای بررسی ثبت شد.", {
+          position: toast.POSITION.TOP_RIGHT,
+        });
       }
     } catch (error) {
-      alert(error.response.data.message);
+      toast.error("دوباره تلاش کنید", {
+        position: toast.POSITION.TOP_RIGHT,
+      });
     }
   };
 
   const answer = async (id) => {
     if (newReplay === "") {
-      alert("متنی وارد نکرده اید دوباره تلاش کنید");
+      toast.warning("متنی وارد نکرده اید دوباره تلاش کنید", {
+        position: toast.POSITION.TOP_RIGHT,
+      });
       return;
     }
     try {
@@ -150,7 +164,9 @@ export default function CommentItem() {
           id: userId,
         });
         setNewReplay("");
-        alert("پاسخ شما برای بررسی ثبت شد.");
+        toast.success("پاسخ شما برای بررسی ثبت شد.", {
+          position: toast.POSITION.TOP_RIGHT,
+        });
       } else {
         const ownerType = "Seller";
         const body = DOMPurify.sanitize(newReplay);
@@ -162,10 +178,14 @@ export default function CommentItem() {
           id: userId,
         });
         setNewReplay("");
-        alert("پاسخ شما برای بررسی ثبت شد.");
+        toast.success("پاسخ شما برای بررسی ثبت شد.", {
+          position: toast.POSITION.TOP_RIGHT,
+        });
       }
     } catch (error) {
-      alert(error.response.data.message);
+      toast.error("دوباره تلاش کنید", {
+        position: toast.POSITION.TOP_RIGHT,
+      });
     }
   };
 
@@ -186,7 +206,9 @@ export default function CommentItem() {
           comments.comments.filter((item) => item.parentCommentId === null)
         );
       } catch (error) {
-        alert(error.response.data.message);
+        toast.error("دوباره تلاش کنید", {
+          position: toast.POSITION.TOP_RIGHT,
+        });
       }
     };
     GetComments();
@@ -198,7 +220,8 @@ export default function CommentItem() {
         const user = await getMe();
         setUserId(user.user._id);
       } catch (error) {
-        alert(error.response.data.message);
+        localStorage.removeItem("UserLogin");
+        localStorage.removeItem("token");
       }
     };
     GetUser();
@@ -289,7 +312,7 @@ export default function CommentItem() {
         </Box>
       ) : (
         <Box className="text-center" component="div">
-          برای ثبت نظر باید ابتدا وارد شوید.
+          برای ثبت نظر و پاسخ باید ابتدا وارد شوید.
         </Box>
       )}
       <Box component="div">
@@ -366,34 +389,40 @@ export default function CommentItem() {
                       ""
                     )}
                     <Box className="md:col-span-5">
-                      {replay.length === 0 ? "" : "پاسخ ها :"}
+                      {replay.length == 0 ? "" : "پاسخ ها :"}
                     </Box>
                     {!show ? (
                       <>
-                        <Box className="md:block hidden justify-self-end">
-                          <Button
-                            variant="outlined"
-                            size="large"
-                            color="info"
-                            onClick={() => {
-                              setSHOW({ ...SHOW, [index]: true });
-                            }}
-                          >
-                            پاسخ دادن
-                          </Button>
-                        </Box>
-                        <Box className="mt-5 md:hidden block">
-                          <Button
-                            variant="outlined"
-                            color="info"
-                            fullWidth
-                            onClick={() => {
-                              setSHOW({ ...SHOW, [index]: true });
-                            }}
-                          >
-                            پاسخ دادن
-                          </Button>
-                        </Box>
+                        {login ? (
+                          <>
+                            <Box className="md:block hidden justify-self-end">
+                              <Button
+                                variant="outlined"
+                                size="large"
+                                color="info"
+                                onClick={() => {
+                                  setSHOW({ ...SHOW, [index]: true });
+                                }}
+                              >
+                                پاسخ دادن
+                              </Button>
+                            </Box>
+                            <Box className="mt-5 md:hidden block">
+                              <Button
+                                variant="outlined"
+                                color="info"
+                                fullWidth
+                                onClick={() => {
+                                  setSHOW({ ...SHOW, [index]: true });
+                                }}
+                              >
+                                پاسخ دادن
+                              </Button>
+                            </Box>
+                          </>
+                        ) : (
+                          ""
+                        )}
                       </>
                     ) : (
                       <>
