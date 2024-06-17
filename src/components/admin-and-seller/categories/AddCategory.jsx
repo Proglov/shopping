@@ -9,7 +9,7 @@ import "react-toastify/dist/ReactToastify.css";
 import Api2 from '@/services/withAuthActivities/image';
 import { SingleImageDropzone } from '../../single-image-dropzone';
 import { useDispatch } from 'react-redux';
-import { addCategoryToServer } from '../redux/reducers/categories';
+import { addCategoryToServer } from '../redux/globalAsyncThunks';
 
 
 export default function AddCategory() {
@@ -67,6 +67,7 @@ export default function AddCategory() {
             } catch (err) {
                 toast.error(err)
             } finally {
+                setFileState()
                 setAddNewData(prevProps => ({
                     ...prevProps,
                     isSubmitting: false,

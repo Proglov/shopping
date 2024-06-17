@@ -10,11 +10,10 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import Api from '@/services/withoutAuthActivities/categories';
 import Pagination from '../../Pagination';
 import Image from 'next/image';
-import { getCategoriesFromServer } from '../redux/reducers/categories';
-import { setCurrentPage } from '../redux/reducers/categories';
+import { getCategoriesFromServer } from '../redux/globalAsyncThunks';
+import { setCurrentPage } from '../redux/reducers/global';
 
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -37,9 +36,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 
 
 export default function CategoriesTable() {
-    const { getAllCategories } = Api
     const dispatch = useDispatch();
-    const categories = useSelector((state) => state.categories);
 
     const {
         items,
@@ -49,11 +46,11 @@ export default function CategoriesTable() {
         error,
         itemsCount,
         itemsPerPage
-    } = useSelector((state) => state.categories);
+    } = useSelector((state) => state.global);
 
     useEffect(() => {
-        dispatch(getCategoriesFromServer(categories.currentPage, categories.itemsPerPage))
-    }, [currentPage, itemsPerPage, getAllCategories]);
+        dispatch(getCategoriesFromServer({ currentPage, itemsPerPage }))
+    }, [currentPage, itemsPerPage]);
 
 
     return (
@@ -78,7 +75,7 @@ export default function CategoriesTable() {
             ) : loading ? (
                 <div>درحال دریافت اطلاعات ...</div>
             ) : (
-                categories?.items?.length !== 0 ?
+                items?.length !== 0 ?
                     <div>
                         <TableContainer component={Paper}>
                             <Table sx={{ minWidth: 500 }} aria-label="customized table">

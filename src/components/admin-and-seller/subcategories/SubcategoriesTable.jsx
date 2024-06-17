@@ -1,6 +1,7 @@
 "use client"
 import { Stack } from '@mui/material';
-import { useEffect, useContext } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useEffect } from 'react';
 import { styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -9,10 +10,10 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import Api from '@/services/withoutAuthActivities/subcategories';
-import Api2 from '@/services/withoutAuthActivities/categories';
 import Pagination from '../../Pagination';
-import { SubcategoriesContext } from './SubcategoriesMain';
+import { setCurrentPage } from '../redux/reducers/global';
+import { getSubcategoriesFromServer } from '../redux/globalAsyncThunks';
+import { getCategoriesFromServer } from '../redux/reducers/subcategories';
 
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -35,48 +36,22 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 
 
 export default function SubcategoriesTable() {
-    const { getAllSubcategories } = Api
-    const { getAllCategories } = Api2
+    const dispatch = useDispatch();
 
     const {
         items,
-        setItems,
-        setCategories,
         currentPage,
-        setCurrentPage,
         lastPage,
         loading,
-        setLoading,
-        isError,
-        setIsError,
         error,
-        setError,
         itemsCount,
-        setItemsCount,
         itemsPerPage,
-        setLastPage
-    } = useContext(SubcategoriesContext)
+    } = useSelector((state) => state.global);
 
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                setLoading(true);
-                const subcategories = await getAllSubcategories({ page: currentPage, perPage: itemsPerPage });
-                setItems(subcategories?.subcategories)
-                setItemsCount(subcategories?.allSubcategoriesCount)
-                setLastPage(Math.ceil(subcategories?.allSubcategoriesCount / itemsPerPage))
-
-                const getCategories = await getAllCategories()
-                setCategories(getCategories?.categories)
-            } catch (error) {
-                setError(`Error fetching subcategories: ${error}`);
-                setIsError(true);
-            } finally {
-                setLoading(false);
-            }
-        };
-        fetchData();
-    }, [currentPage, itemsPerPage, setError, setIsError, setItems, setItemsCount, setLoading, getAllSubcategories, setLastPage, setCategories, getAllCategories]);
+        dispatch(getSubcategoriesFromServer({ currentPage, itemsPerPage }))
+        dispatch(getCategoriesFromServer())
+    }, [currentPage, itemsPerPage]);
 
 
     return (
@@ -92,7 +67,7 @@ export default function SubcategoriesTable() {
                     </>
                 }
             </div>
-            {isError ? (
+            {!!error ? (
                 <div>
                     مشکلی رخ داد! لطفا دوباره تلاش کنید ...
                     <br />

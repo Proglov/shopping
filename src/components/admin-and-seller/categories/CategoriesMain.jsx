@@ -1,20 +1,14 @@
 'use client'
-import React, { useState, createContext } from 'react'
+import React, { useState } from 'react'
 import CategoriesTable from './CategoriesTable'
 import AddCategory from './AddCategory'
-import useCategories from "@/hooks/useCategories"
 import { Button } from '@mui/material'
 import { IoMdClose } from "react-icons/io";
-
-
-export const CategoriesContext = createContext()
 
 
 export default function CategoriesMain() {
     const [isHidden, setIsHidden] = useState(true)
 
-    const CategoriesObj = useCategories()
-    const itemsPerPage = 20
 
     return (
         <div>
@@ -37,9 +31,7 @@ export default function CategoriesMain() {
             <div className={`${isHidden ? 'hidden' : ''}`}>
                 <AddCategory />
             </div>
-            <CategoriesContext.Provider value={{ ...CategoriesObj, itemsPerPage }}>
-                <CategoriesTable />
-            </CategoriesContext.Provider>
+            <CategoriesTable />
         </div>
     )
 }

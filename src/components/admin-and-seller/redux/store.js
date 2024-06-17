@@ -1,13 +1,14 @@
 import { configureStore } from '@reduxjs/toolkit'
-import categoriesReducer from "./reducers/categories"
+import subcategoriesReducer from "./reducers/subcategories"
+import globalReducer from "./reducers/global"
 
 export const storeAdmin = configureStore({
     reducer: {
         // products: productsReducer,
         // users: usersReducer,
         // sellers: sellersReducer,
-        categories: categoriesReducer,
-        // subcategories: subcategoriesReducer,
+        subcategories: subcategoriesReducer,
+        global: globalReducer,
         // transactions: transactionsReducer,
         // comments: commentsReducer,
     }

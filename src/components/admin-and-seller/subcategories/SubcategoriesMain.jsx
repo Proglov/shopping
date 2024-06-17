@@ -2,7 +2,6 @@
 import React, { useState, createContext } from 'react'
 import CategoriesTable from './SubcategoriesTable'
 import AddSubcategory from './AddSubcategory'
-import useSubcategories from "@/hooks/useSubcategories"
 import { Button } from '@mui/material'
 import { IoMdClose } from "react-icons/io";
 
@@ -13,33 +12,28 @@ export const SubcategoriesContext = createContext()
 export default function SubcategoriesMain() {
     const [isHidden, setIsHidden] = useState(true)
 
-    const SubcategoriesObj = useSubcategories()
-    const itemsPerPage = 20
-
     return (
         <div>
-            <SubcategoriesContext.Provider value={{ ...SubcategoriesObj, itemsPerPage }}>
-                <div className='text-start text-sm mb-1'>
-                    {
-                        isHidden ?
-                            <Button variant='outlined' onClick={() => setIsHidden(prev => !prev)}>اضافه کردن زیر دسته بندی</Button>
-                            : <>
-                                <Button variant='outlined' color='error' onClick={() => setIsHidden(prev => !prev)}>
-                                    <IoMdClose className='text-lg' />
-                                </Button>
+            <div className='text-start text-sm mb-1'>
+                {
+                    isHidden ?
+                        <Button variant='outlined' onClick={() => setIsHidden(prev => !prev)}>اضافه کردن زیر دسته بندی</Button>
+                        : <>
+                            <Button variant='outlined' color='error' onClick={() => setIsHidden(prev => !prev)}>
+                                <IoMdClose className='text-lg' />
+                            </Button>
 
-                                <span className='mx-3'>
-                                    اضافه کردن زیر دسته بندی
-                                </span>
-                            </>
-                    }
+                            <span className='mx-3'>
+                                اضافه کردن زیر دسته بندی
+                            </span>
+                        </>
+                }
 
-                </div>
-                <div className={`${isHidden ? 'hidden' : ''}`}>
-                    <AddSubcategory />
-                </div>
-                <CategoriesTable />
-            </SubcategoriesContext.Provider>
+            </div>
+            <div className={`${isHidden ? 'hidden' : ''}`}>
+                <AddSubcategory />
+            </div>
+            <CategoriesTable />
         </div>
     )
 }

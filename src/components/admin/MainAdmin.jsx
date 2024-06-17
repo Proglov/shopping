@@ -10,8 +10,9 @@ import CategoriesMain from '../admin-and-seller/categories/CategoriesMain';
 import Link from 'next/link';
 import { TiArrowBackOutline } from "react-icons/ti";
 import SubcategoriesMain from '../admin-and-seller/subcategories/SubcategoriesMain';
-import { Provider } from "react-redux";
+import { Provider, useDispatch } from "react-redux";
 import { storeAdmin } from '@/components/admin-and-seller/redux/store';
+import { resetToInitialState } from '../admin-and-seller/redux/reducers/global';
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -40,9 +41,13 @@ function a11yProps(index) {
 
 export default function Main() {
     const [addSegmentsPage, setAddSegmentsPage] = useState(0)
+    const dispatch = useDispatch()
 
     const handleChange = (_event, newAddSegmentsPage) => {
         setAddSegmentsPage(newAddSegmentsPage);
+
+        // reset the global state
+        dispatch(resetToInitialState())
     };
 
     return (

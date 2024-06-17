@@ -1,17 +1,16 @@
 'use client'
-import { useContext, useEffect, useState } from 'react';
+import { useState } from 'react';
 import FormControl from '@mui/material/FormControl';
 import { Button, Grid } from '@mui/material';
 import 'react-quill/dist/quill.snow.css';
 import DOMPurify from 'dompurify';
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import Api from '@/services/withAuthActivities/subcategories';
-import { SubcategoriesContext } from './SubcategoriesMain';
+import { useDispatch, useSelector } from 'react-redux';
+import { addSubcategoryToServer } from '../redux/globalAsyncThunks';
 
 
 export default function AddSubcategory() {
-    const { createSubcategories } = Api
     const [AddNewData, setAddNewData] = useState({
         isSubmitting: false,
         formData: {
@@ -21,7 +20,8 @@ export default function AddSubcategory() {
     })
     const {
         categories,
-    } = useContext(SubcategoriesContext)
+    } = useSelector((state) => state.subcategories);
+    const dispatch = useDispatch();
 
     const handleChange = (event) => {
         const { name, value } = event.target;
@@ -48,7 +48,7 @@ export default function AddSubcategory() {
                 ...prevProps,
                 isSubmitting: false
             }))
-        } else if (!AddNewData.formData.category) {
+        } else if (!AddNewData.formData.category || AddNewData.formData.category === "دسته بندی را انتخاب کنید ⮟") {
             toast.error('دسته بندی محصول ضروری میباشد')
             setAddNewData(prevProps => ({
                 ...prevProps,
@@ -69,14 +69,7 @@ export default function AddSubcategory() {
                     }
                 }
                 obj.categoryId = catId
-                const res = await createSubcategories(obj)
-                setAddNewData(prevProps => ({
-                    ...prevProps,
-                    isSubmitting: false,
-                    formData: {
-                        name: ''
-                    }
-                }));
+                const res = dispatch(addSubcategoryToServer(obj))
                 if (res?.message === 'You are not authorized!')
                     throw ("توکن شما منقضی شده. لطفا خارج، و دوباره وارد شوید")
                 toast.success('با موفقیت ارسال شد!')
@@ -85,11 +78,11 @@ export default function AddSubcategory() {
             } finally {
                 setAddNewData(prevProps => ({
                     ...prevProps,
-                    isSubmitting: false
+                    isSubmitting: false,
+                    formData: {
+                        name: ''
+                    }
                 }));
-                setTimeout(() => {
-                    window.location.reload()
-                }, 1000)
             }
         }
 
@@ -110,7 +103,7 @@ export default function AddSubcategory() {
                             type="text"
                             name="name"
                             value={AddNewData.formData.name}
-                            placeholder={`عنوان دسته بندی را وارد کنید`}
+                            placeholder={`عنوان زیر دسته بندی را وارد کنید`}
                             onChange={handleChange}
                         />
                     </Grid>
@@ -120,7 +113,7 @@ export default function AddSubcategory() {
                             <label htmlFor="underline_select">دسته بندی</label>
                         </div>
                         <select id="underline_select" className="block py-2.5 px-3 w-full text-sm text-gray-500 bg-transparent my-2 rounded-md border-2 border-gray-200 appearance-none focus:outline-none focus:ring-0 focus:border-gray-200" onChange={handleChange} name='category'>
-                            <option defaultValue disabled>دسته بندی را انتخاب کنید &#11167;</option>
+                            <option defaultValue>دسته بندی را انتخاب کنید &#11167;</option>
                             {
                                 categories.map((category, index) => <option key={index} value={category?.name} className='text-black'>{category?.name}</option>)
                             }
