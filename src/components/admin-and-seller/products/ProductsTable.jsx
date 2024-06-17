@@ -1,6 +1,6 @@
 "use client"
 import { Button, Stack } from '@mui/material';
-import { useEffect, createContext, useContext } from 'react';
+import { useEffect } from 'react';
 import { styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -9,13 +9,14 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import Api from '@/services/withAuthActivities/product';
-import Api2 from '@/services/withoutAuthActivities/product';
 import Pagination from '../../Pagination';
 import { price2Farsi } from '@/utils/funcs';
 import ModalDelete from './ModalDelete';
 import ModalEdit from './ModalEdit';
-import { ProductsContext } from './ProductsMain';
+import { getAdminProductsFromServer, getSellerProductsFromServer } from '../redux/globalAsyncThunks';
+import { setCurrentPage } from '../redux/reducers/global';
+import { useDispatch, useSelector } from 'react-redux';
+import { setIsModalDeleteOpen, setIsModalEditOpen, setSelectedItem } from '../redux/reducers/products';
 
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -37,60 +38,30 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 
-export default function ProductsTable() {
-    const { getAllMyProducts } = Api
-    const { getAllProducts } = Api2
+export default function ProductsTable({ which }) {
+    const dispatch = useDispatch();
 
     const {
         items,
-        setItems,
         currentPage,
-        setCurrentPage,
         lastPage,
         loading,
-        setLoading,
-        isError,
-        setIsError,
         error,
-        setError,
-        operatingError,
         itemsCount,
-        setItemsCount,
-        setIsModalDeleteOpen,
-        setIsModalEditOpen,
-        selectedItem,
-        setSelectedItem,
         itemsPerPage,
-        which,
-        setLastPage
-    } = useContext(ProductsContext)
+    } = useSelector((state) => state.global);
+
+    const {
+        operatingError,
+        selectedItem,
+    } = useSelector((state) => state.products);
 
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                setLoading(true);
-                let products;
-                if (which === "Seller") {
-                    products = await getAllMyProducts({ page: currentPage, perPage: itemsPerPage });
-                    setItems(products?.products)
-                    setItemsCount(products?.allProductsCount)
-                    setLastPage(Math.ceil(products?.allProductsCount / itemsPerPage))
-                }
-                else if (which === "ADMIN") {
-                    products = await getAllProducts({ page: currentPage, perPage: itemsPerPage });
-                    setItems(products?.products)
-                    setItemsCount(products?.allProductsCount)
-                    setLastPage(Math.ceil(products?.allProductsCount / itemsPerPage))
-                }
-            } catch (error) {
-                setError(`Error fetching products: ${error}`);
-                setIsError(true);
-            } finally {
-                setLoading(false);
-            }
-        };
-        fetchData();
-    }, [currentPage, getAllMyProducts, itemsPerPage, setError, setIsError, setItems, setItemsCount, setLoading, getAllProducts, setLastPage, which]);
+
+        if (which === "Seller") dispatch(getSellerProductsFromServer({ currentPage, itemsPerPage }))
+        else if (which === "ADMIN") dispatch(getAdminProductsFromServer({ currentPage, itemsPerPage }))
+
+    }, [currentPage, itemsPerPage, which]);
 
 
     return (
@@ -106,7 +77,7 @@ export default function ProductsTable() {
                     </>
                 }
             </div>
-            {isError ? (
+            {!!error ? (
                 <div>
                     مشکلی رخ داد! لطفا دوباره تلاش کنید ...
                     <br />
@@ -139,7 +110,7 @@ export default function ProductsTable() {
                                             <StyledTableCell align='center'>{price2Farsi(item.price)} تومان</StyledTableCell>
                                             <StyledTableCell align='center'>{item.price}</StyledTableCell>
                                             <StyledTableCell align='center'>{item.subcategoryId?.categoryId.name}</StyledTableCell>
-                                            <StyledTableCell align='center'>{item.subcategoryId.name}</StyledTableCell>
+                                            <StyledTableCell align='center'>{item.subcategoryId?.name}</StyledTableCell>
                                             <StyledTableCell className='border-b-0'>
                                                 {selectedItem?._id === item._id ? (
                                                     <div className='text-center mt-2 text-xs'>درحال انجام عملیات</div>

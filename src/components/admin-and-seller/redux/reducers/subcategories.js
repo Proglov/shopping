@@ -28,5 +28,4 @@ const subcategoriesSlice = createSlice({
     }
 });
 
-export const { setCurrentPage } = subcategoriesSlice.actions;
 export default subcategoriesSlice.reducer;

@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { addCategoryToServer, addSubcategoryToServer, getCategoriesFromServer, getSubcategoriesFromServer } from "../globalAsyncThunks";
-import { getCategoryPending, getCategoryFulfilled, getCategoryReject, addCategoryFulfilled, addSubcategoriesFulfilled, getSubcategoriesFulfilled, getSubcategoriesPending, getSubcategoriesReject } from "../globalExtraReducers";
+import { addCategoryToServer, addProductToServer, addSubcategoryToServer, getCategoriesFromServer, getAdminProductsFromServer, getSellerProductsFromServer, getSubcategoriesFromServer } from "../globalAsyncThunks";
+import { getCategoryPending, getCategoryFulfilled, getCategoryReject, addCategoryFulfilled, addSubcategoriesFulfilled, getSubcategoriesFulfilled, getSubcategoriesPending, getSubcategoriesReject, getProductsFulfilled, getProductsPending, getProductsReject, addProductsFulfilled } from "../globalExtraReducers";
 
 
 const initialState = {
@@ -72,6 +72,15 @@ const globalSlice = createSlice({
         builder.addCase(getSubcategoriesFromServer.fulfilled, getSubcategoriesFulfilled);
         builder.addCase(getSubcategoriesFromServer.rejected, getSubcategoriesReject);
         builder.addCase(addSubcategoryToServer.fulfilled, addSubcategoriesFulfilled);
+
+        // products
+        builder.addCase(getAdminProductsFromServer.pending, getProductsPending);
+        builder.addCase(getAdminProductsFromServer.fulfilled, getProductsFulfilled);
+        builder.addCase(getAdminProductsFromServer.rejected, getProductsReject);
+        builder.addCase(getSellerProductsFromServer.pending, getProductsPending);
+        builder.addCase(getSellerProductsFromServer.fulfilled, getProductsFulfilled);
+        builder.addCase(getSellerProductsFromServer.rejected, getProductsReject);
+        builder.addCase(addProductToServer.fulfilled, addProductsFulfilled);
     }
 });
 

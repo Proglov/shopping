@@ -7,7 +7,7 @@ import Typography from '@mui/material/Typography';
 import { useContext } from 'react';
 import { Button } from '@mui/material';
 import { ProductsContext } from './ProductsMain';
-import Api from '@/services/withAuthActivities/product';
+import { useDispatch } from 'react-redux';
 
 const ModalStyle = {
     position: 'absolute',
@@ -22,7 +22,7 @@ const ModalStyle = {
 };
 
 export default function ModalDelete({ productName }) {
-    const { deleteProduct } = Api
+    const dispatch = useDispatch();
     const { isModalDeleteOpen, setIsModalDeleteOpen, setSelectedItem,
         setOperatingError, selectedItem } = useContext(ProductsContext)
     const handleClose = () => {

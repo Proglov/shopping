@@ -38,7 +38,7 @@ export default function ProductsMain({ which }) {
                 <AddProduct />
             </div>
             <ProductsContext.Provider value={{ ...productsObj, itemsPerPage, which }}>
-                <ProductsTable />
+                <ProductsTable which={which} />
             </ProductsContext.Provider>
         </div>
     )
