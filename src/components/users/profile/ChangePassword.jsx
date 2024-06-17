@@ -4,8 +4,6 @@ import { Box, Button, TextField } from "@mui/material";
 import { useEffect, useState } from "react";
 import UserApi from "@/services/withAuthActivities/user";
 import DOMPurify from "dompurify";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 
 export default function ChangePassword() {
   const [newPass, setNewPass] = useState("");
@@ -31,7 +29,7 @@ export default function ChangePassword() {
         id: userId,
       });
     } catch (error) {
-      toast.error("دوباره تلاش کنید", { position: toast.POSITION.TOP_RIGHT });
+      alert(error.response.data.message);
     }
   };
 

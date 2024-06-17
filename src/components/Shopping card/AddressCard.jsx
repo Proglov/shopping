@@ -16,9 +16,6 @@ import EditAddress from "./EditAddress";
 import { useAppDispatch } from "@/store/Hook";
 import { SetAddress } from "@/features/Address/AddressSlice";
 import UserApi from "@/services/withAuthActivities/user";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import { useRouter } from "next/navigation";
 
 export default function AddressCard() {
   const [selectAddress, setSelectAddress] = useState(-1);
@@ -26,7 +23,6 @@ export default function AddressCard() {
   const [address, setAddress] = useState([]);
   const [userId, setUserId] = useState("");
   const { getMe } = UserApi;
-  const router = useRouter();
 
   const dispatch = useAppDispatch();
 
@@ -44,10 +40,7 @@ export default function AddressCard() {
         setAddress([...user.user.address]);
         setUserId(user.user._id);
       } catch (error) {
-        toast.error("لطفا دوباره وارد شوید", {
-          position: toast.POSITION.TOP_RIGHT,
-        });
-        router.push("/users/login");
+        alert(error.response.data.message);
       }
     };
     GetUser();

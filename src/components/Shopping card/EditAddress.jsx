@@ -12,8 +12,6 @@ import {
 import { useState } from "react";
 import UserApi from "@/services/withAuthActivities/user";
 import DOMPurify from "dompurify";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 
 let newAddress = { address: "", index: 0 };
 
@@ -52,9 +50,7 @@ export default function EditAddress({
           setAddress(str);
           newAddress.address = "";
         } catch (error) {
-          toast.error("دوباره تلاش کنید", {
-            position: toast.POSITION.TOP_RIGHT,
-          });
+          alert(error.response.data.message);
         }
       } else {
         setEdit({ ...edit, [newAddress.index]: true });
@@ -76,9 +72,7 @@ export default function EditAddress({
       });
       setAddress(arr);
     } catch (error) {
-      toast.error("دوباره تلاش کنید", {
-        position: toast.POSITION.TOP_RIGHT,
-      });
+      alert(error.response.data.message);
     }
   };
 
