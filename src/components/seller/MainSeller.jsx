@@ -8,7 +8,7 @@ import MainSetting from './settings/MainSetting';
 import Link from 'next/link';
 import { IoMdHome } from 'react-icons/io';
 import { Provider } from "react-redux";
-import { storeSeller } from '@/components/admin-and-seller/redux/store';
+import { storeAdmin } from '@/components/admin-and-seller/redux/store';
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -43,7 +43,7 @@ export default function Main() {
     };
 
     return (
-        <Provider store={storeSeller}>
+        <Provider store={storeAdmin}>
             <Grid container direction={'row-reverse'}
                 className='mt-5 p-3 text-black'
             // sx={{ flexGrow: 1 }}
