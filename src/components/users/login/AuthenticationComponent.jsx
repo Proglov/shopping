@@ -52,14 +52,6 @@ export default function AuthenticationComponent() {
                 const filteredInput = input.replace(/\D/g, "");
                 setCode(filteredInput);
               }}
-              sx={{
-                " & .MuiInputLabel-root": {
-                  left: "inherit !important",
-                  right: "1.75rem !important",
-                  transformOrigin: "right !important",
-                },
-                "& legend": { textAlign: "right" },
-              }}
             />
           </Box>
           {show[0] ? (

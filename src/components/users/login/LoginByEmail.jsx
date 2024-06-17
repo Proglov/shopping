@@ -106,14 +106,6 @@ export default function LoginByEmail() {
                     emailOrUsername: event.target.value,
                   });
                 }}
-                sx={{
-                  " & .MuiInputLabel-root": {
-                    left: "inherit !important",
-                    right: "1.75rem !important",
-                    transformOrigin: "right !important",
-                  },
-                  "& legend": { textAlign: "right" },
-                }}
               />
               <TextField
                 value={information.password}
@@ -130,14 +122,6 @@ export default function LoginByEmail() {
                     ...information,
                     password: event.target.value,
                   });
-                }}
-                sx={{
-                  " & .MuiInputLabel-root": {
-                    left: "inherit !important",
-                    right: "1.75rem !important",
-                    transformOrigin: "right !important",
-                  },
-                  "& legend": { textAlign: "right" },
                 }}
               />
             </Box>
