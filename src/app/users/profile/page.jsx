@@ -1,10 +1,9 @@
-// import Profile from "@/components/users/profile/Profile";
+import Profile from "@/components/users/profile/Profile";
 
 export default function ProfilePage() {
   return (
     <>
-      {/* <Profile /> */}
-      sa
+      <Profile />
     </>
   );
 }
