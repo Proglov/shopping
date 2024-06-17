@@ -8,6 +8,8 @@ import ProductApi from "@/services/withoutAuthActivities/product";
 import { usePathname } from "next/navigation";
 import { useAppSelector } from "@/store/Hook";
 import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function Item() {
   const router = usePathname();
@@ -26,7 +28,7 @@ export default function Item() {
     __v: 0,
     _id: "",
   });
-  const [isLoading, setIsLoading] = useState(true)
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const getProduct = async () => {
@@ -34,23 +36,23 @@ export default function Item() {
         const p = await getOneProduct({ id: router.split("/")[4] });
         setProduct({ ...p.data.product });
       } catch (error) {
-        alert(error.response.data.message);
+        toast.error("دوباره تلاش کنید", {
+          position: toast.POSITION.TOP_RIGHT,
+        });
       } finally {
-        setIsLoading(false)
+        setIsLoading(false);
       }
     };
     getProduct();
   }, [getOneProduct, setProduct, router]);
   if (isLoading) {
-    return (<div className="mt-5">
-      درحال دریافت اطلاعات
-    </div>)
+    return <div className="mt-5">درحال دریافت اطلاعات</div>;
   }
   return (
     <>
       <GalleryItem images={product.imagesUrl} />
       <DetailItem detail={product} />
-      <SimilarProducts />
+      {/* <SimilarProducts /> */}
       <CommentItem />
     </>
   );
