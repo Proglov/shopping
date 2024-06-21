@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { addCategoryToServer, addProductToServer, addSubcategoryToServer, getCategoriesFromServer, getAdminProductsFromServer, getSellerProductsFromServer, getSubcategoriesFromServer, deleteProductFromServer, updateProductFromServer } from "../globalAsyncThunks";
-import { getCategoryFulfilled, addCategoryFulfilled, addSubcategoriesFulfilled, getSubcategoriesFulfilled, getProductsFulfilled, addProductsFulfilled, deleteProductFulfilled, pending, reject, updateProductFulfilled } from "../globalExtraReducers";
+import { addCategoryToServer, addProductToServer, addSubcategoryToServer, getCategoriesFromServer, getAdminProductsFromServer, getSellerProductsFromServer, getSubcategoriesFromServer, deleteProductFromServer, updateProductFromServer, getUsersFromServer, deleteUserFromServer } from "../globalAsyncThunks";
+import { getCategoryFulfilled, addCategoryFulfilled, addSubcategoriesFulfilled, getSubcategoriesFulfilled, getProductsFulfilled, addProductsFulfilled, deleteProductFulfilled, pending, reject, updateProductFulfilled, getUsersFulfilled, deleteUserFulfilled } from "../globalExtraReducers";
 
 
 const initialState = {
@@ -87,6 +87,13 @@ const globalSlice = createSlice({
         builder.addCase(addProductToServer.fulfilled, addProductsFulfilled);
         builder.addCase(deleteProductFromServer.fulfilled, deleteProductFulfilled);
         builder.addCase(updateProductFromServer.fulfilled, updateProductFulfilled);
+
+        //users
+        builder.addCase(getUsersFromServer.pending, pending);
+        builder.addCase(getUsersFromServer.fulfilled, getUsersFulfilled);
+        builder.addCase(getUsersFromServer.rejected, reject);
+        builder.addCase(deleteUserFromServer.fulfilled, deleteUserFulfilled);
+
     }
 });
 

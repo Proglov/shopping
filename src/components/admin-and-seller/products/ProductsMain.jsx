@@ -2,7 +2,6 @@
 import React, { useState, createContext } from 'react'
 import ProductsTable from './ProductsTable'
 import AddProduct from './AddProduct'
-import useProducts from "@/hooks/useProducts"
 import { Button } from '@mui/material'
 import { IoMdClose } from "react-icons/io";
 
@@ -12,9 +11,6 @@ export const ProductsContext = createContext()
 
 export default function ProductsMain({ which }) {
     const [isHidden, setIsHidden] = useState(true)
-
-    const productsObj = useProducts()
-    const itemsPerPage = 20
 
     return (
         <div>
@@ -37,9 +33,9 @@ export default function ProductsMain({ which }) {
             <div className={`${isHidden ? 'hidden' : ''}`}>
                 <AddProduct />
             </div>
-            <ProductsContext.Provider value={{ ...productsObj, itemsPerPage, which }}>
-                <ProductsTable which={which} />
-            </ProductsContext.Provider>
+
+            <ProductsTable which={which} />
+
         </div>
     )
 }

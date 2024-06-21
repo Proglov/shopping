@@ -9,10 +9,13 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import Api from '@/services/withAuthActivities/user';
 import Pagination from '../../Pagination';
 import ModalDelete from './ModalDelete';
 import { UsersContext } from './UsersMain';
+import { useDispatch, useSelector } from 'react-redux';
+import { setCurrentPage, setLastPage, setLoading, setError } from '../redux/reducers/global';
+import { setIsModalDeleteOpen, setSelectedItem } from '../redux/reducers/users';
+import { getUsersFromServer } from '../redux/globalAsyncThunks';
 
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -36,47 +39,27 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 
 
 export default function UsersTable() {
-    const { getAllUsers } = Api
+    const dispatch = useDispatch();
 
     const {
-        currentPage,
-        setCurrentPage,
-        lastPage,
-        setLastPage,
-        loading,
-        setLoading,
-        isError,
-        setIsError,
-        error,
-        setError,
-        operatingError,
         items,
-        setItems,
+        currentPage,
+        lastPage,
+        loading,
+        error,
         itemsCount,
-        setItemsCount,
-        setIsModalDeleteOpen,
-        setSelectedItem,
+        itemsPerPage,
+    } = useSelector((state) => state.global);
+
+    const {
+        operatingError,
         selectedItem,
-        itemsPerPage
-    } = useContext(UsersContext)
+    } = useSelector((state) => state.users);
 
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const users = await getAllUsers({ page: currentPage, perPage: itemsPerPage });
-                setItems(users.users)
-                setItemsCount(users?.usersCount)
-                setLastPage(Math.ceil(users?.usersCount / itemsPerPage))
-            } catch (error) {
-                setError(`Error fetching users: ${error}`);
-                setIsError(true);
-            } finally {
-                setLoading(false);
-            }
-        };
+        dispatch(getUsersFromServer({ currentPage, itemsPerPage }))
+    }, [dispatch]);
 
-        fetchData();
-    }, [currentPage, getAllUsers, itemsPerPage, setError, setIsError, setItems, setItemsCount, setLoading, setLastPage]);
     return (
         <Stack spacing={2}>
             <div className='w-full text-start'>
@@ -90,7 +73,7 @@ export default function UsersTable() {
                     </>
                 }
             </div>
-            {isError ? (
+            {!!error ? (
                 <div>
                     مشکلی رخ داد! لطفا دوباره تلاش کنید ...
                     <br />
@@ -141,10 +124,8 @@ export default function UsersTable() {
                                                             sx={{ color: 'red', borderColor: 'red' }}
                                                             className='p-0 m-1'
                                                             onClick={() => {
-                                                                setIsModalDeleteOpen(true);
-                                                                setSelectedItem({
-                                                                    ...item
-                                                                })
+                                                                dispatch(setIsModalDeleteOpen(true));
+                                                                dispatch(setSelectedItem({ ...item }))
                                                             }}
                                                         >
                                                             حذف

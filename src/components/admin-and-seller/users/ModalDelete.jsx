@@ -4,10 +4,10 @@ import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import Fade from '@mui/material/Fade';
 import Typography from '@mui/material/Typography';
-import { useContext } from 'react';
 import { Button } from '@mui/material';
-import { UsersContext } from './UsersMain';
-import Api from '@/services/withAuthActivities/user';
+import { useDispatch, useSelector } from 'react-redux';
+import { setIsModalDeleteOpen, setSelectedItem, setOperatingError } from '../redux/reducers/users';
+import { deleteUserFromServer } from '../redux/globalAsyncThunks';
 
 const ModalStyle = {
     position: 'absolute',
@@ -22,26 +22,27 @@ const ModalStyle = {
 };
 
 export default function ModalDelete() {
-    const { deleteUser } = Api
-    const { isModalDeleteOpen, setIsModalDeleteOpen, selectedItem, setSelectedItem, setOperatingError } = useContext(UsersContext)
+    const dispatch = useDispatch();
+    const {
+        isModalDeleteOpen,
+        selectedItem
+    } = useSelector((state) => state.users);
+
     const handleClose = () => {
-        setIsModalDeleteOpen(false);
-        setSelectedItem({});
+        dispatch(setIsModalDeleteOpen(false));
+        dispatch(setSelectedItem({}));
     }
 
 
     const deleteItem = async () => {
         try {
-            await deleteUser({ id: selectedItem?._id })
-            setSelectedItem({});
-            setTimeout(() => {
-                window.location.reload()
-            }, 1000)
+            dispatch(deleteUserFromServer(selectedItem?._id))
+            dispatch(setSelectedItem({}));
         } catch (error) {
-            setOperatingError(error.message)
+            dispatch(setOperatingError(error.message))
         } finally {
             setTimeout(() => {
-                setOperatingError(null)
+                dispatch(setOperatingError(''))
             }, 5000);
         }
     }

@@ -56,3 +56,16 @@ export const updateProductFulfilled = (state, action) => {
         return item
     })
 }
+
+
+//users
+export const getUsersFulfilled = (state, action) => {
+    state.items = action.payload.users
+    state.itemsCount = action.payload.usersCount
+    state.lastPage = Math.ceil(action.payload?.usersCount / state.itemsPerPage)
+    state.loading = false
+}
+export const deleteUserFulfilled = (state, action) => {
+    state.items = state.items.filter(item => item._id !== action.payload._id)
+    state.itemsCount--;
+}
