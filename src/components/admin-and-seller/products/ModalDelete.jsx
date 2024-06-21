@@ -4,10 +4,10 @@ import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import Fade from '@mui/material/Fade';
 import Typography from '@mui/material/Typography';
-import { useContext } from 'react';
 import { Button } from '@mui/material';
-import { ProductsContext } from './ProductsMain';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { setIsModalDeleteOpen, setSelectedItem, setOperatingError } from '../redux/reducers/products';
+import { deleteProductFromServer } from '../redux/globalAsyncThunks';
 
 const ModalStyle = {
     position: 'absolute',
@@ -23,25 +23,25 @@ const ModalStyle = {
 
 export default function ModalDelete({ productName }) {
     const dispatch = useDispatch();
-    const { isModalDeleteOpen, setIsModalDeleteOpen, setSelectedItem,
-        setOperatingError, selectedItem } = useContext(ProductsContext)
+    const {
+        isModalDeleteOpen,
+        selectedItem
+    } = useSelector((state) => state.products);
+
     const handleClose = () => {
-        setIsModalDeleteOpen(false);
-        setSelectedItem({});
+        dispatch(setIsModalDeleteOpen(false));
+        dispatch(setSelectedItem({}));
     }
 
     const deleteItem = async () => {
         try {
-            await deleteProduct({ id: selectedItem?._id })
-            setSelectedItem({});
-            setTimeout(() => {
-                window.location.reload()
-            }, 1000)
+            dispatch(deleteProductFromServer(selectedItem?._id))
+            dispatch(setSelectedItem({}));
         } catch (error) {
-            setOperatingError(error.message)
+            dispatch(setOperatingError(error.message))
         } finally {
             setTimeout(() => {
-                setOperatingError(null)
+                dispatch(setOperatingError(''))
             }, 5000);
         }
     }
@@ -68,7 +68,7 @@ export default function ModalDelete({ productName }) {
                         </Typography>
 
                         <div className='mt-2 flex justify-between'>
-                            <Button onClick={() => { deleteItem(selectedItem?._id); handleClose() }} variant='outlined'
+                            <Button onClick={() => { deleteItem(); handleClose() }} variant='outlined'
                                 className='p-0 m-1'
                                 sx={{ color: 'green', borderColor: 'green' }}>
                                 تایید

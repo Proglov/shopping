@@ -60,3 +60,17 @@ export const addProductToServer = createAsyncThunk(
         return await createProduct(obj)
     }
 )
+export const deleteProductFromServer = createAsyncThunk(
+    "Global/deleteProductFromServer",
+    async (id) => {
+        const { deleteProduct } = Api5
+        return await deleteProduct({ id })
+    }
+)
+export const updateProductFromServer = createAsyncThunk(
+    "Global/updateProductFromServer",
+    async (obj) => {
+        const { updateProduct } = Api5
+        return await updateProduct(obj)
+    }
+)

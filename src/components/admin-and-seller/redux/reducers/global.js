@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { addCategoryToServer, addProductToServer, addSubcategoryToServer, getCategoriesFromServer, getAdminProductsFromServer, getSellerProductsFromServer, getSubcategoriesFromServer } from "../globalAsyncThunks";
-import { getCategoryPending, getCategoryFulfilled, getCategoryReject, addCategoryFulfilled, addSubcategoriesFulfilled, getSubcategoriesFulfilled, getSubcategoriesPending, getSubcategoriesReject, getProductsFulfilled, getProductsPending, getProductsReject, addProductsFulfilled } from "../globalExtraReducers";
+import { addCategoryToServer, addProductToServer, addSubcategoryToServer, getCategoriesFromServer, getAdminProductsFromServer, getSellerProductsFromServer, getSubcategoriesFromServer, deleteProductFromServer, updateProductFromServer } from "../globalAsyncThunks";
+import { getCategoryFulfilled, addCategoryFulfilled, addSubcategoriesFulfilled, getSubcategoriesFulfilled, getProductsFulfilled, addProductsFulfilled, deleteProductFulfilled, pending, reject, updateProductFulfilled } from "../globalExtraReducers";
 
 
 const initialState = {
@@ -24,6 +24,10 @@ const globalSlice = createSlice({
         addItem(state, action) {
             state.items.push(action.payload)
             state.itemsCount++;
+        },
+        removeItem(state, action) {
+            state.items = state.items.filter(item => item[action.payload.key] !== action.payload.value)
+            state.itemsCount--;
         },
         removeItem(state, action) {
             state.items.filter(item => item[action.payload.key] !== action.payload.value)
@@ -62,25 +66,27 @@ const globalSlice = createSlice({
     extraReducers: builder => {
 
         // categories
-        builder.addCase(getCategoriesFromServer.pending, getCategoryPending);
+        builder.addCase(getCategoriesFromServer.pending, pending);
         builder.addCase(getCategoriesFromServer.fulfilled, getCategoryFulfilled);
-        builder.addCase(getCategoriesFromServer.rejected, getCategoryReject);
+        builder.addCase(getCategoriesFromServer.rejected, reject);
         builder.addCase(addCategoryToServer.fulfilled, addCategoryFulfilled);
 
         // subcategories
-        builder.addCase(getSubcategoriesFromServer.pending, getSubcategoriesPending);
+        builder.addCase(getSubcategoriesFromServer.pending, pending);
         builder.addCase(getSubcategoriesFromServer.fulfilled, getSubcategoriesFulfilled);
-        builder.addCase(getSubcategoriesFromServer.rejected, getSubcategoriesReject);
+        builder.addCase(getSubcategoriesFromServer.rejected, reject);
         builder.addCase(addSubcategoryToServer.fulfilled, addSubcategoriesFulfilled);
 
         // products
-        builder.addCase(getAdminProductsFromServer.pending, getProductsPending);
+        builder.addCase(getAdminProductsFromServer.pending, pending);
         builder.addCase(getAdminProductsFromServer.fulfilled, getProductsFulfilled);
-        builder.addCase(getAdminProductsFromServer.rejected, getProductsReject);
-        builder.addCase(getSellerProductsFromServer.pending, getProductsPending);
+        builder.addCase(getAdminProductsFromServer.rejected, reject);
+        builder.addCase(getSellerProductsFromServer.pending, pending);
         builder.addCase(getSellerProductsFromServer.fulfilled, getProductsFulfilled);
-        builder.addCase(getSellerProductsFromServer.rejected, getProductsReject);
+        builder.addCase(getSellerProductsFromServer.rejected, reject);
         builder.addCase(addProductToServer.fulfilled, addProductsFulfilled);
+        builder.addCase(deleteProductFromServer.fulfilled, deleteProductFulfilled);
+        builder.addCase(updateProductFromServer.fulfilled, updateProductFulfilled);
     }
 });
 

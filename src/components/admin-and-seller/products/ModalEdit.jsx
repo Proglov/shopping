@@ -3,21 +3,21 @@ import Backdrop from '@mui/material/Backdrop';
 import Modal from '@mui/material/Modal';
 import Fade from '@mui/material/Fade';
 import Typography from '@mui/material/Typography';
-import { useContext, useEffect, useState } from 'react';
+import { lazy, useState } from 'react';
 import { Button } from '@mui/material';
 import Box from '@mui/material/Box';
 import FormControl from '@mui/material/FormControl';
 import { Grid } from '@mui/material';
 import Image from 'next/image';
 import 'react-quill/dist/quill.snow.css';
-import CustomQuill from '../../CustomQuil';
+const CustomQuill = lazy(() => import('../../CustomQuil'))
 import { price2Farsi } from '@/utils/funcs';
 import { MultiFileDropzone } from '../../multi-image-dropzone';
-import Api1 from '@/services/withAuthActivities/product';
 import Api2 from '@/services/withAuthActivities/image';
-import Api3 from '@/services/withoutAuthActivities/subcategories';
-import { ProductsContext } from "./ProductsMain";
 import DOMPurify from 'dompurify';
+import { useDispatch, useSelector } from 'react-redux';
+import { setIsModalEditOpen, setSelectedItem, setOperatingError } from '../redux/reducers/products';
+import { updateProductFromServer } from '../redux/globalAsyncThunks';
 
 
 const ModalStyle = {
@@ -35,105 +35,71 @@ const ModalStyle = {
 };
 
 export default function ModalEdit() {
-    const { updateProduct } = Api1
+    const dispatch = useDispatch();
+    const {
+        isModalEditOpen,
+        selectedItem,
+        categories
+    } = useSelector((state) => state.products);
     const { uploadImage, deleteImages } = Api2
-    const { getAllSubcategories } = Api3
-    const { isModalEditOpen, setIsModalEditOpen, selectedItem, setSelectedItem, setOperatingError } = useContext(ProductsContext)
 
-    const [fileStates, setFileStates] = useState([]);
+    const [fileStates
+        , setFileStates] = useState([]);
     const [uploadRes, setUploadRes] = useState([]);
     const [imagesToDelete, setImagesToDelete] = useState([]);
-    const [categories, setCategories] = useState([]);
 
-    useEffect(() => {
-        const fetchCategories = async () => {
-            try {
-                const res = await getAllSubcategories()
-                const allSubcategories = res.subcategories;
-                const allCategories = allSubcategories.reduce((acc, curr) => {
-                    const existingCategory = acc.find(item => item.categoryId === curr.categoryId._id);
-
-                    if (existingCategory) {
-                        existingCategory.subcategories.push({
-                            subcategoryId: curr._id,
-                            subcategoryName: curr.name
-                        });
-                    } else {
-                        acc.push({
-                            categoryId: curr.categoryId._id,
-                            categoryName: curr.categoryId.name,
-                            subcategories: [{
-                                subcategoryId: curr._id,
-                                subcategoryName: curr.name
-                            }]
-                        });
-                    }
-
-                    return acc;
-                }, []);
-                setCategories(allCategories);
-
-            } catch (error) {
-                toast.error("مشکلی در گرفتن دسته بندی ها رخ داد!")
-            }
-        }
-        fetchCategories();
-    }, [getAllSubcategories])
 
     const handleClose = () => {
-        setIsModalEditOpen(false);
-        setSelectedItem({});
+        dispatch(setIsModalEditOpen(false));
+        dispatch(setSelectedItem({}));
     };
 
     const handleChange = (event) => {
         const { name, value } = event.target;
         if (name === 'price') {
             const newValue = parseInt(value) || 0
-            setSelectedItem(prevProps => {
-                if (newValue == value && name === 'price')
-                    return {
-                        ...prevProps,
-                        price: newValue,
-                    }
-                return {
-                    ...prevProps
-                }
-            })
+            if (newValue == value && name === 'price')
+                dispatch(setSelectedItem({
+                    ...selectedItem,
+                    price: newValue,
+                }))
         } else {
-            setSelectedItem(prevProps => {
-                return {
-                    ...prevProps,
+            if (name !== "desc")
+                dispatch(setSelectedItem({
+                    ...selectedItem,
                     [name]: DOMPurify.sanitize(value),
-                }
-            })
+                }))
+            else {
+                if (value !== "<p><br></p>")
+                    dispatch(setSelectedItem({
+                        ...selectedItem,
+                        desc: DOMPurify.sanitize(value),
+                    }))
+            }
         }
     };
 
     const handleChange2 = (event) => {
         const { name, value } = event.target;
         if (name === 'category') {
-            setSelectedItem(prevProps => {
-                return {
-                    ...prevProps,
-                    subcategoryId: {
-                        ...prevProps.subcategoryId,
-                        categoryId: {
-                            ...prevProps.subcategoryId.categoryId,
-                            name: DOMPurify.sanitize(value),
-                        }
-                    }
-                }
-            })
-        } else if (name === 'subcategory') {
-            setSelectedItem(prevProps => {
-                return {
-                    ...prevProps,
-                    subcategoryId: {
-                        ...prevProps.subcategoryId,
+            dispatch(setSelectedItem({
+                ...selectedItem,
+                subcategoryId: {
+                    ...selectedItem.subcategoryId,
+                    categoryId: {
+                        ...selectedItem.subcategoryId.categoryId,
                         name: DOMPurify.sanitize(value),
                     }
                 }
-            })
+            }))
+        } else if (name === 'subcategory') {
+            dispatch(setSelectedItem({
+                ...selectedItem,
+                subcategoryId: {
+                    ...selectedItem.subcategoryId,
+                    name: DOMPurify.sanitize(value),
+                }
+            }))
         }
     };
 
@@ -150,8 +116,8 @@ export default function ModalEdit() {
         });
     }
 
-    const editItem = async (obj) => {
-        setIsModalEditOpen(false);
+    const editItem = async () => {
+        dispatch(setIsModalEditOpen(false));
 
         try {
 
@@ -183,30 +149,28 @@ export default function ModalEdit() {
             }
 
             const augmentedObj = {
-                ...obj,
-                id: obj._id,
+                ...selectedItem,
+                id: selectedItem._id,
                 subcategoryId,
                 imagesUrl: newImagesName
             }
             delete augmentedObj.__v;
             delete augmentedObj._id;
             delete augmentedObj.imagesName;
-            const res = await updateProduct(augmentedObj)
 
-            setSelectedItem({});
+            const res = dispatch(updateProductFromServer(augmentedObj))
+
+            dispatch(setSelectedItem({}));
             if (res?.message === 'You are not authorized!')
                 throw ("توکن شما منقضی شده. لطفا خارج، و دوباره وارد شوید")
-            setTimeout(() => {
-                window.location.reload()
-            }, 1000)
         } catch (error) {
-            setOperatingError(error?.message);
+            dispatch(setOperatingError(error?.message));
         } finally {
             setFileStates([]);
             setImagesToDelete([]);
             setUploadRes([]);
             setTimeout(() => {
-                setOperatingError(null)
+                dispatch(setOperatingError(''))
             }, 5000);
         }
 
@@ -410,8 +374,8 @@ export default function ModalEdit() {
 
                                 <Grid item xs={12}>
                                     <CustomQuill
-                                        onChange={(value) => handleChange({ target: { name: 'desc', value } })}
                                         value={selectedItem.desc}
+                                        onChange={(value) => handleChange({ target: { name: 'desc', value } })}
                                     />
                                 </Grid>
 
@@ -422,7 +386,7 @@ export default function ModalEdit() {
 
                     <div className='mt-2 flex justify-between'>
                         <Button
-                            onClick={() => { editItem(selectedItem) }}
+                            onClick={editItem}
                             variant='outlined'
                             className='p-0 m-1'
                             sx={{ color: 'green', borderColor: 'green' }}>

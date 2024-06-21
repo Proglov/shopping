@@ -113,7 +113,8 @@ export default function ProductsTable({ which }) {
                                             <StyledTableCell align='center'>{item.subcategoryId?.name}</StyledTableCell>
                                             <StyledTableCell className='border-b-0'>
                                                 {selectedItem?._id === item._id ? (
-                                                    <div className='text-center mt-2 text-xs'>درحال انجام عملیات</div>
+                                                    <div className='text-center mt-2 text-xs'>درحال انجام عملیات
+                                                    </div>
                                                 ) : (
                                                     <div className='flex flex-col gap-2'>
                                                         <Button
@@ -121,10 +122,8 @@ export default function ProductsTable({ which }) {
                                                             className='p-0 m-1'
                                                             sx={{ color: 'primary', borderColor: 'primary' }}
                                                             onClick={() => {
-                                                                setIsModalEditOpen(true);
-                                                                setSelectedItem({
-                                                                    ...item,
-                                                                })
+                                                                dispatch(setIsModalEditOpen(true));
+                                                                dispatch(setSelectedItem({ ...item }));
                                                             }}
                                                         >
                                                             ویرایش
@@ -134,10 +133,8 @@ export default function ProductsTable({ which }) {
                                                             sx={{ color: 'red', borderColor: 'red' }}
                                                             className='p-0 m-1'
                                                             onClick={() => {
-                                                                setIsModalDeleteOpen(true);
-                                                                setSelectedItem({
-                                                                    ...item
-                                                                })
+                                                                dispatch(setIsModalDeleteOpen(true));
+                                                                dispatch(setSelectedItem({ ...item }));
                                                             }}
                                                         >
                                                             حذف

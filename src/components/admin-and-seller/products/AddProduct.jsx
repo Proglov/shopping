@@ -8,18 +8,20 @@ import DOMPurify from 'dompurify';
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { price2Farsi } from '@/utils/funcs';
-import Api1 from '@/services/withAuthActivities/product';
 import Api2 from '@/services/withAuthActivities/image';
-import Api3 from '@/services/withoutAuthActivities/subcategories';
+import { getCategoriesFromServer } from '../redux/reducers/products';
+import { useDispatch, useSelector } from 'react-redux';
 import { MultiFileDropzone } from '../../multi-image-dropzone';
+import { addProductToServer } from '../redux/globalAsyncThunks';
 
 
 export default function AddProduct() {
-    const { createProduct } = Api1
+    const dispatch = useDispatch();
     const { uploadImage } = Api2
-    const { getAllSubcategories } = Api3
     const [fileStates, setFileStates] = useState([]);
-    const [categories, setCategories] = useState([]);
+    const {
+        categories
+    } = useSelector((state) => state.products);
     const [uploadRes, setUploadRes] = useState([]);
     const [AddNewData, setAddNewData] = useState({
         isSubmitting: false,
@@ -34,39 +36,8 @@ export default function AddProduct() {
     })
 
     useEffect(() => {
-        const fetchCategories = async () => {
-            try {
-                const res = await getAllSubcategories()
-                const allSubcategories = res.subcategories;
-                const allCategories = allSubcategories.reduce((acc, curr) => {
-                    const existingCategory = acc.find(item => item.categoryId === curr.categoryId._id);
-
-                    if (existingCategory) {
-                        existingCategory.subcategories.push({
-                            subcategoryId: curr._id,
-                            subcategoryName: curr.name
-                        });
-                    } else {
-                        acc.push({
-                            categoryId: curr.categoryId._id,
-                            categoryName: curr.categoryId.name,
-                            subcategories: [{
-                                subcategoryId: curr._id,
-                                subcategoryName: curr.name
-                            }]
-                        });
-                    }
-
-                    return acc;
-                }, []);
-                setCategories(allCategories);
-
-            } catch (error) {
-                toast.error("مشکلی در گرفتن دسته بندی ها رخ داد!")
-            }
-        }
-        fetchCategories();
-    }, [getAllSubcategories])
+        dispatch(getCategoriesFromServer())
+    }, [dispatch])
 
     function updateFileProgress(key, progress) {
         setFileStates((fileStates) => {
@@ -168,7 +139,8 @@ export default function AddProduct() {
                 };
 
                 //make a request
-                const res = await createProduct(obj)
+                const res = dispatch(addProductToServer(obj))
+
                 setAddNewData(prevProps => ({
                     ...prevProps,
                     formData: {
@@ -192,10 +164,6 @@ export default function AddProduct() {
                     isSubmitting: false
                 }));
                 toast.error(err)
-            } finally {
-                setTimeout(() => {
-                    window.location.reload()
-                }, 1000)
             }
         }
 
