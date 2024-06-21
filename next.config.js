@@ -8,7 +8,7 @@ const nextConfig = {
                 port: '3000',
             },
             {
-                hostname: 'shop-storage.storage.iran.liara.space'
+                hostname: 'shop-image.storage.c2.liara.space'
             }
         ],
     },
