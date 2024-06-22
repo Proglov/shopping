@@ -62,10 +62,10 @@ const commentSlice = createSlice({
             state.operatingError = action.payload
         },
         setLoading(state, action) {
-            state.loading = action.payload
+            state.loadingConfirmedComments = action.payload
         },
         setError(state, action) {
-            state.error = action.payload
+            state.errorConfirmedComments = action.payload
         },
         setCurrentPageConfirmedComments(state, action) {
             const { payload } = action

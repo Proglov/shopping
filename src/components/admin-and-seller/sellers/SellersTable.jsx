@@ -38,7 +38,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
     },
 }));
 
-const CommonTable = ({ validated, itemsCount, error, loading, items, currentPage, itemsPerPage, selectedId, setCurrentPage, lastPage, dispatch, setIsModalConfirmOpen, setIsModalDeleteOpen, operatingError }) => (
+const CommonTable = ({ validated, itemsCount, error, loading, items, currentPage, itemsPerPage, selectedId, setCurrentPage, lastPage, dispatch, operatingError }) => (
     <Stack spacing={2} className={`${!!validated && 'mt-16'}`}>
         <div className='w-full text-start'>
             جدول فروشندگان های تایید {!!validated ? <></> : <>ن</>}شده

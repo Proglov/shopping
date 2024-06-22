@@ -1,6 +1,6 @@
 "use client"
 import { Button, Stack } from '@mui/material';
-import { useEffect, useContext } from 'react';
+import { useEffect } from 'react';
 import { styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -37,7 +37,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
     },
 }));
 
-const Component = ({ validated, itemsCount, error, loading, items, currentPage, itemsPerPage, selectedId, setCurrentPage, lastPage, dispatch, setIsModalConfirmOpen, setIsModalDeleteOpen, operatingError }) => (
+const Component = ({ validated, itemsCount, error, loading, items, currentPage, itemsPerPage, selectedId, setCurrentPage, lastPage, dispatch, operatingError }) => (
     <Stack spacing={2} className={`${!!validated ? 'mt-10' : ''}`}>
         <div className='w-full text-start'>
             جدول کامنت های تایید {!!validated ? <></> : <>ن</>}شده

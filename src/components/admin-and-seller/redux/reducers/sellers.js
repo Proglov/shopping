@@ -61,10 +61,10 @@ const sellersSlice = createSlice({
             state.operatingError = action.payload
         },
         setLoading(state, action) {
-            state.loading = action.payload
+            state.loadingConfirmedSellers = action.payload
         },
         setError(state, action) {
-            state.error = action.payload
+            state.errorConfirmedSellers = action.payload
         },
         setCurrentPageConfirmedSellers(state, action) {
             const { payload } = action

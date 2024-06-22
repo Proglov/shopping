@@ -4,10 +4,10 @@ import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import Fade from '@mui/material/Fade';
 import Typography from '@mui/material/Typography';
-import { useContext } from 'react';
 import { Button } from '@mui/material';
-import { ItemsContext } from './TXMain';
-import Api from '@/services/withAuthActivities/tx';
+import { useDispatch, useSelector } from 'react-redux';
+import { setIsModalDoneOpen, setSelectedItem, setOperatingError, updateRecentTXDoneToServer } from '../redux/reducers/transactions';
+import { updateTXDoneToServer } from '../redux/globalAsyncThunks';
 
 const ModalStyle = {
     position: 'absolute',
@@ -22,33 +22,32 @@ const ModalStyle = {
 };
 
 export default function ModalDone() {
-    const { TXDone } = Api
+    const dispatch = useDispatch();
     const {
-        setOperatingError,
         isModalDoneOpen,
-        setIsModalDoneOpen,
         selectedItem,
-        setSelectedItem
-    } = useContext(ItemsContext)
+        isRecentTableOperating
+    } = useSelector((state) => state.transactions);
+
     const handleClose = () => {
-        setIsModalDoneOpen(false);
-        setSelectedItem({});
+        dispatch(setIsModalDoneOpen(false));
+        dispatch(setSelectedItem({}));
     }
 
     const doneItem = async () => {
         try {
-
-            await TXDone({ id: selectedItem?._id })
-            setTimeout(() => {
-                setOperatingError(null)
-                setSelectedItem({})
-            }, 5000);
+            if (!isRecentTableOperating) {
+                dispatch(updateTXDoneToServer(selectedItem._id))
+            }
+            else {
+                dispatch(updateRecentTXDoneToServer(selectedItem._id))
+            }
         } catch (error) {
-            setOperatingError(error.message)
+            dispatch(setOperatingError(error.message))
         } finally {
             setTimeout(() => {
-                window.location.reload()
-            }, 1000)
+                dispatch(setOperatingError(''))
+            }, 5000);
         }
     }
 

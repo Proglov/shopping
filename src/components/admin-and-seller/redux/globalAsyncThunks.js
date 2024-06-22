@@ -8,6 +8,7 @@ import Api6 from "@/services/withAuthActivities/user";
 import Api7 from "@/services/withAuthActivities/seller";
 import Api8 from "@/services/withAuthActivities/comment";
 import Api9 from "@/services/withoutAuthActivities/comment";
+import Api10 from "@/services/withAuthActivities/tx";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
 //categories
@@ -140,5 +141,24 @@ export const validateCommentToServer = createAsyncThunk(
     async (id) => {
         const { toggleValidateComment } = Api8
         return await toggleValidateComment({ id })
+    }
+)
+
+
+//TX
+export const getFutureTXsFromServer = createAsyncThunk(
+    "Global/getFutureTXsFromServer",
+    async ({ page, perPage, which }) => {
+        const { getAllTXs, getAllMyTXs } = Api10
+        if (which === "Seller")
+            return await getAllMyTXs({ page, perPage, isFutureOrder: true })
+        return await getAllTXs({ page, perPage, isFutureOrder: true })
+    }
+)
+export const updateTXDoneToServer = createAsyncThunk(
+    "Global/updateTXDoneToServer",
+    async (id) => {
+        const { TXDone } = Api10
+        return await TXDone({ id })
     }
 )
