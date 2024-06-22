@@ -1,12 +1,10 @@
 'use client'
-import React, { useState, createContext } from 'react'
+import React, { useState } from 'react'
 import CategoriesTable from './SubcategoriesTable'
 import AddSubcategory from './AddSubcategory'
 import { Button } from '@mui/material'
 import { IoMdClose } from "react-icons/io";
 
-
-export const SubcategoriesContext = createContext()
 
 
 export default function SubcategoriesMain() {

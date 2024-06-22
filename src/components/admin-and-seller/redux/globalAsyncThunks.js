@@ -5,6 +5,7 @@ import Api3 from "@/services/withoutAuthActivities/categories";
 import Api4 from "@/services/withoutAuthActivities/product";
 import Api5 from "@/services/withAuthActivities/product";
 import Api6 from "@/services/withAuthActivities/user";
+import Api7 from "@/services/withAuthActivities/seller";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
 //categories
@@ -89,5 +90,29 @@ export const deleteUserFromServer = createAsyncThunk(
     async (id) => {
         const { deleteUser } = Api6
         return await deleteUser({ id })
+    }
+)
+
+
+//sellers
+export const getInvalidatedSellersFromServer = createAsyncThunk(
+    "Global/getInvalidatedSellersFromServer",
+    async ({ page, perPage }) => {
+        const { getAllSellers } = Api7
+        return await getAllSellers({ page, perPage, validated: false })
+    }
+)
+export const deleteSellerFromServer = createAsyncThunk(
+    "Global/deleteSellerFromServer",
+    async (id) => {
+        const { deleteSeller } = Api7
+        return await deleteSeller({ id })
+    }
+)
+export const validateSellerToServer = createAsyncThunk(
+    "Global/validateSellerToServer",
+    async (id) => {
+        const { sellerValidate } = Api7
+        return await sellerValidate({ id })
     }
 )

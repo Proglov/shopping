@@ -1,6 +1,6 @@
 "use client"
 import { Button, Stack } from '@mui/material';
-import { useEffect, useContext } from 'react';
+import { useEffect } from 'react';
 import { styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -11,10 +11,13 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { convertToFarsiNumbers } from '@/utils/funcs';
 import Pagination from '../../Pagination'
-import Api from '@/services/withAuthActivities/seller';
 import ModalDelete from './ModalDelete';
 import ModalConfirm from './ModalConfirm';
-import { ItemsContext } from './SellersMain';
+import { useDispatch, useSelector } from 'react-redux';
+import { setCurrentPage } from '../redux/reducers/global';
+import { getInvalidatedSellersFromServer } from '../redux/globalAsyncThunks';
+import { getConfirmedSellersFromServer, setSelectedId, setIsModalConfirmOpen, setIsModalDeleteOpen, setCurrentPageConfirmedSellers, setIsConfirmedTableOperating } from '../redux/reducers/sellers';
+
 
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -35,93 +38,46 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
     },
 }));
 
-
-
-export default function SellersTable() {
-    const { getAllSellers } = Api
-
-    const {
-        items,
-        setItems,
-        currentPage,
-        setCurrentPage,
-        lastPage,
-        setLastPage,
-        loading,
-        setLoading,
-        isError,
-        setIsError,
-        error,
-        setError,
-        operatingError,
-        itemsCount,
-        setItemsCount,
-        selectedId,
-        setSelectedId,
-        setIsModalConfirmOpen,
-        setIsModalDeleteOpen,
-        itemsPerPage,
-        validated,
-    } = useContext(ItemsContext)
-
-
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                setLoading(true);
-                const sellers = await getAllSellers({ page: currentPage, perPage: itemsPerPage, validated });
-                setItems(sellers?.sellers)
-                setItemsCount(sellers?.allSellersCount)
-                setLastPage(Math.ceil(sellers?.allSellersCount / itemsPerPage))
-            } catch (error) {
-                setError(`Error fetching users: ${error}`);
-                setIsError(true);
-            } finally {
-                setLoading(false);
+const CommonTable = ({ validated, itemsCount, error, loading, items, currentPage, itemsPerPage, selectedId, setCurrentPage, lastPage, dispatch, setIsModalConfirmOpen, setIsModalDeleteOpen, operatingError }) => (
+    <Stack spacing={2} className={`${!!validated && 'mt-16'}`}>
+        <div className='w-full text-start'>
+            جدول فروشندگان های تایید {!!validated ? <></> : <>ن</>}شده
+        </div>
+        <div className='text-start'>
+            {
+                itemsCount !== 0 &&
+                <>
+                    تعداد : {itemsCount}
+                </>
             }
-        };
-
-        fetchData();
-    }, [currentPage, getAllSellers, itemsPerPage, setError, setIsError, setItems, setItemsCount, setLoading, validated, setLastPage]);
-    return (
-        <Stack spacing={2} className={`${!!validated && 'mt-16'}`}>
-            <div className='w-full text-start'>
-                جدول فروشندگان های تایید {!!validated ? <></> : <>ن</>}شده
+        </div>
+        {!!error ? (
+            <div>
+                مشکلی رخ داد! لطفا دوباره تلاش کنید ...
+                <br />
+                {error.toString()}
             </div>
-            <div className='text-start'>
-                {
-                    itemsCount !== 0 &&
-                    <>
-                        تعداد : {itemsCount}
-                    </>
-                }
-            </div>
-            {isError ? (
+        ) : loading ? (
+            <div>درحال دریافت اطلاعات ...</div>
+        ) : (
+            items?.length !== 0 ?
                 <div>
-                    مشکلی رخ داد! لطفا دوباره تلاش کنید ...
-                    <br />
-                    {error.toString()}
-                </div>
-            ) : loading ? (
-                <div>درحال دریافت اطلاعات ...</div>
-            ) : (
-                items?.length !== 0 ?
-                    <div>
-                        <TableContainer component={Paper}>
-                            <Table sx={{ minWidth: 1000 }} aria-label="customized table">
-                                <TableHead>
-                                    <TableRow>
-                                        <StyledTableCell align='center'>ردیف</StyledTableCell>
-                                        <StyledTableCell align='center'>نام</StyledTableCell>
-                                        <StyledTableCell align='center'>نام فروشگاه</StyledTableCell>
-                                        <StyledTableCell align='center'>شماره همراه</StyledTableCell>
-                                        <StyledTableCell align='center'>شماره فروشگاه</StyledTableCell>
-                                        <StyledTableCell align='center'>عملیات</StyledTableCell>
-                                    </TableRow>
-                                </TableHead>
-                                <TableBody>
-                                    {items.map((item, index) => (
-                                        <StyledTableRow key={item._id}
+                    <TableContainer component={Paper}>
+                        <Table sx={{ minWidth: 1000 }} aria-label="customized table">
+                            <TableHead>
+                                <TableRow>
+                                    <StyledTableCell align='center'>ردیف</StyledTableCell>
+                                    <StyledTableCell align='center'>نام</StyledTableCell>
+                                    <StyledTableCell align='center'>نام فروشگاه</StyledTableCell>
+                                    <StyledTableCell align='center'>شماره همراه</StyledTableCell>
+                                    <StyledTableCell align='center'>شماره فروشگاه</StyledTableCell>
+                                    <StyledTableCell align='center'>عملیات</StyledTableCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {items.map((item, index) => {
+                                    if (item.validated === validated)
+                                        return <StyledTableRow key={item._id}
                                             className='align-middle'>
                                             <StyledTableCell align='center'>{convertToFarsiNumbers(index + 1 + itemsPerPage * (currentPage - 1))}</StyledTableCell>
                                             <StyledTableCell align='center'>{item.name}</StyledTableCell>
@@ -139,8 +95,8 @@ export default function SellersTable() {
                                                                 className='p-0 m-1'
                                                                 sx={{ color: 'green', borderColor: 'green' }}
                                                                 onClick={() => {
-                                                                    setIsModalConfirmOpen(true);
-                                                                    setSelectedId(item._id)
+                                                                    dispatch(setIsModalConfirmOpen(true));
+                                                                    dispatch(setSelectedId(item._id));
                                                                 }}
                                                             >
                                                                 تایید
@@ -152,8 +108,9 @@ export default function SellersTable() {
                                                             sx={{ color: 'red', borderColor: 'red' }}
                                                             className='p-0 m-1'
                                                             onClick={() => {
-                                                                setIsModalDeleteOpen(true);
-                                                                setSelectedId(item._id)
+                                                                dispatch(setIsConfirmedTableOperating(!!validated));
+                                                                dispatch(setIsModalDeleteOpen(true));
+                                                                dispatch(setSelectedId(item._id));
                                                             }}
                                                         >
                                                             حذف
@@ -163,33 +120,79 @@ export default function SellersTable() {
                                                 {selectedId === item._id && operatingError !== '' ? (
                                                     <>
                                                         <div>
-                                                            {error}
+                                                            {operatingError}
                                                         </div>
                                                         <div>مشکلی پیش امده است. لطفا اتصال اینترنت را بررسی کنید</div>
                                                     </>
                                                 ) : ''}
                                             </StyledTableCell>
                                         </StyledTableRow>
-                                    ))}
-                                </TableBody>
-                            </Table>
-                        </TableContainer>
-                        {
-                            itemsCount > itemsPerPage &&
-                            <div className='flex justify-center' style={{ marginTop: '25px' }}>
-                                <Pagination currentPage={currentPage} setCurrentPage={setCurrentPage} lastPage={lastPage} />
-                            </div>
-                        }
+                                })}
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
+                    {
+                        itemsCount > itemsPerPage &&
+                        <div className='flex justify-center' style={{ marginTop: '25px' }}>
+                            <Pagination currentPage={currentPage} setCurrentPage={setCurrentPage} lastPage={lastPage} />
+                        </div>
+                    }
 
-                    </div>
-                    : <div>
-                        اطلاعاتی جهت نمایش وجود ندارد
-                    </div>
-            )}
+                </div>
+                : <div>
+                    اطلاعاتی جهت نمایش وجود ندارد
+                </div>
+        )}
 
+    </Stack>
+)
+
+export default function SellersTable({ validated }) {
+    const dispatch = useDispatch();
+    const {
+        items,
+        currentPage,
+        lastPage,
+        loading,
+        error,
+        itemsPerPage,
+        itemsCount
+    } = useSelector((state) => state.global);
+    const {
+        confirmedSellers,
+        currentPageConfirmedSellers,
+        lastPageConfirmedSellers,
+        loadingConfirmedSellers,
+        errorConfirmedSellers,
+        itemsPerPageConfirmedSellers,
+        itemsCountConfirmedSellers,
+        operatingError,
+        selectedId
+    } = useSelector((state) => state.sellers);
+
+
+    useEffect(() => {
+        if (!validated)
+            dispatch(getInvalidatedSellersFromServer({ page: currentPage, perPage: itemsPerPage }))
+        else
+            dispatch(getConfirmedSellersFromServer({ page: currentPageConfirmedSellers, perPage: itemsPerPageConfirmedSellers }))
+    }, [dispatch]);
+
+
+    return (
+        <>
+            {
+                !validated &&
+                <>
+                    <CommonTable currentPage={currentPage} dispatch={dispatch} error={error} items={items} itemsCount={itemsCount} itemsPerPage={itemsPerPage} lastPage={lastPage} loading={loading} selectedId={selectedId} setCurrentPage={setCurrentPage} setIsModalConfirmOpen={setIsModalConfirmOpen} setIsModalDeleteOpen={setIsModalDeleteOpen} validated={false} operatingError={operatingError} />
+                    <ModalConfirm />
+                </>
+            }
+            {
+                validated &&
+                <CommonTable currentPage={currentPageConfirmedSellers} dispatch={dispatch} error={errorConfirmedSellers} items={confirmedSellers} itemsCount={itemsCountConfirmedSellers} itemsPerPage={itemsPerPageConfirmedSellers} lastPage={lastPageConfirmedSellers} loading={loadingConfirmedSellers} selectedId={selectedId} setCurrentPage={setCurrentPageConfirmedSellers} setIsModalConfirmOpen={setIsModalConfirmOpen} setIsModalDeleteOpen={setIsModalDeleteOpen} validated={true} operatingError={operatingError} />
+            }
             <ModalDelete />
-            <ModalConfirm />
-
-        </Stack>
-    );
+        </>
+    )
 }

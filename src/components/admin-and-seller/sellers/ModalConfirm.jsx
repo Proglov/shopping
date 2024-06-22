@@ -4,10 +4,11 @@ import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import Fade from '@mui/material/Fade';
 import Typography from '@mui/material/Typography';
-import { useContext } from 'react';
 import { Button } from '@mui/material';
-import { ItemsContext } from './SellersMain';
-import Api from '@/services/withAuthActivities/seller';
+import { useDispatch, useSelector } from 'react-redux';
+import { setIsModalConfirmOpen, setSelectedId, setOperatingError } from '../redux/reducers/sellers';
+import { validateSellerToServer } from '../redux/globalAsyncThunks';
+import { addSeller } from '../redux/reducers/sellers';
 
 const ModalStyle = {
     position: 'absolute',
@@ -22,26 +23,27 @@ const ModalStyle = {
 };
 
 export default function ModalConfirm() {
-    const { sellerValidate } = Api
-    const { isModalConfirmOpen, setIsModalConfirmOpen, selectedId, setSelectedId, setOperatingError } = useContext(ItemsContext)
-    const handleClose = () => {
-        setIsModalConfirmOpen(false);
-        setSelectedId('');
-    }
+    const dispatch = useDispatch();
+    const {
+        isModalConfirmOpen,
+        selectedId
+    } = useSelector((state) => state.sellers);
 
+    const handleClose = () => {
+        dispatch(setIsModalConfirmOpen(false));
+        dispatch(setSelectedId(''));
+    }
 
     const ConfirmItem = async () => {
         try {
-            await sellerValidate({ id: selectedId })
-            setSelectedId('');
-            setTimeout(() => {
-                window.location.reload()
-            }, 1000)
+            const res = dispatch(validateSellerToServer(selectedId))
+            res.then(result => dispatch(addSeller(result.payload?.seller)))
+            dispatch(setSelectedId(''));
         } catch (error) {
-            setOperatingError(error.message)
+            dispatch(setOperatingError(error.message))
         } finally {
             setTimeout(() => {
-                setOperatingError(null)
+                dispatch(setOperatingError(''))
             }, 5000);
         }
     }

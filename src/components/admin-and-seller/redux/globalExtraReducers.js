@@ -69,3 +69,21 @@ export const deleteUserFulfilled = (state, action) => {
     state.items = state.items.filter(item => item._id !== action.payload._id)
     state.itemsCount--;
 }
+
+
+//sellers
+export const getInvalidatedSellersFulfilled = (state, action) => {
+    state.items = action.payload.sellers
+    state.itemsCount = action.payload.allSellersCount
+    state.lastPage = Math.ceil(action.payload?.allSellersCount / state.itemsPerPage)
+    state.loading = false
+}
+export const deleteSellerFulfilled = (state, action) => {
+    state.items = state.items.filter(item => item._id !== action.payload.id)
+    state.itemsCount--;
+}
+export const validateSellerFulfilled = (state, action) => {
+    state.items = state.items.filter(item => item._id !== action.payload.seller._id)
+    state.itemsCount--;
+}
+

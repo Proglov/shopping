@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { addCategoryToServer, addProductToServer, addSubcategoryToServer, getCategoriesFromServer, getAdminProductsFromServer, getSellerProductsFromServer, getSubcategoriesFromServer, deleteProductFromServer, updateProductFromServer, getUsersFromServer, deleteUserFromServer } from "../globalAsyncThunks";
-import { getCategoryFulfilled, addCategoryFulfilled, addSubcategoriesFulfilled, getSubcategoriesFulfilled, getProductsFulfilled, addProductsFulfilled, deleteProductFulfilled, pending, reject, updateProductFulfilled, getUsersFulfilled, deleteUserFulfilled } from "../globalExtraReducers";
+import { addCategoryToServer, addProductToServer, addSubcategoryToServer, getCategoriesFromServer, getAdminProductsFromServer, getSellerProductsFromServer, getSubcategoriesFromServer, deleteProductFromServer, updateProductFromServer, getUsersFromServer, deleteUserFromServer, getInvalidatedSellersFromServer, deleteSellerFromServer, validateSellerToServer } from "../globalAsyncThunks";
+import { getCategoryFulfilled, addCategoryFulfilled, addSubcategoriesFulfilled, getSubcategoriesFulfilled, getProductsFulfilled, addProductsFulfilled, deleteProductFulfilled, pending, reject, updateProductFulfilled, getUsersFulfilled, deleteUserFulfilled, getInvalidatedSellersFulfilled, deleteSellerFulfilled, validateSellerFulfilled } from "../globalExtraReducers";
 
 
 const initialState = {
@@ -22,7 +22,7 @@ const globalSlice = createSlice({
             state.items = action.payload
         },
         addItem(state, action) {
-            state.items.push(action.payload)
+            state.items.unshift(action.payload)
             state.itemsCount++;
         },
         removeItem(state, action) {
@@ -93,6 +93,13 @@ const globalSlice = createSlice({
         builder.addCase(getUsersFromServer.fulfilled, getUsersFulfilled);
         builder.addCase(getUsersFromServer.rejected, reject);
         builder.addCase(deleteUserFromServer.fulfilled, deleteUserFulfilled);
+
+        //sellers
+        builder.addCase(getInvalidatedSellersFromServer.pending, pending);
+        builder.addCase(getInvalidatedSellersFromServer.fulfilled, getInvalidatedSellersFulfilled);
+        builder.addCase(getInvalidatedSellersFromServer.rejected, reject);
+        builder.addCase(deleteSellerFromServer.fulfilled, deleteSellerFulfilled);
+        builder.addCase(validateSellerToServer.fulfilled, validateSellerFulfilled);
 
     }
 });

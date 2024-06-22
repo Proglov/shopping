@@ -4,10 +4,11 @@ import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import Fade from '@mui/material/Fade';
 import Typography from '@mui/material/Typography';
-import { useContext } from 'react';
 import { Button } from '@mui/material';
-import { ItemsContext } from './SellersMain';
-import Api from '@/services/withAuthActivities/seller';
+import { useDispatch, useSelector } from 'react-redux';
+import { setIsModalDeleteOpen, setSelectedId, setOperatingError, deleteConfirmedSellerFromServer } from '../redux/reducers/sellers';
+import { deleteSellerFromServer } from '../redux/globalAsyncThunks';
+
 
 const ModalStyle = {
     position: 'absolute',
@@ -22,26 +23,32 @@ const ModalStyle = {
 };
 
 export default function ModalDelete() {
-    const { deleteSeller } = Api
-    const { isModalDeleteOpen, setIsModalDeleteOpen, selectedId, setSelectedId, setOperatingError } = useContext(ItemsContext)
-    const handleClose = () => {
-        setIsModalDeleteOpen(false);
-        setSelectedId('');
-    }
+    const dispatch = useDispatch();
+    const {
+        isModalDeleteOpen,
+        selectedId,
+        isConfirmedTableOperating
+    } = useSelector((state) => state.sellers);
 
+    const handleClose = () => {
+        dispatch(setIsModalDeleteOpen(false));
+        dispatch(setSelectedId(''));
+    }
 
     const deleteItem = async () => {
         try {
-            await deleteSeller({ id: selectedId })
-            setSelectedId('');
-            setTimeout(() => {
-                window.location.reload()
-            }, 1000)
+            if (!isConfirmedTableOperating) {
+                dispatch(deleteSellerFromServer(selectedId))
+            }
+            else {
+                dispatch(deleteConfirmedSellerFromServer(selectedId))
+            }
+            dispatch(setSelectedId(''));
         } catch (error) {
-            setOperatingError(error.message)
+            dispatch(setOperatingError(error.message))
         } finally {
             setTimeout(() => {
-                setOperatingError(null)
+                dispatch(setOperatingError(''))
             }, 5000);
         }
     }
@@ -66,7 +73,6 @@ export default function ModalDelete() {
                         <Typography id="transition-modal-title" variant="h6" component="h2">
                             آیا از حذف این فروشنده مطمئن هستید؟
                         </Typography>
-
                         <div className='mt-2 flex justify-between'>
                             <Button onClick={() => { deleteItem(); handleClose() }} variant='outlined'
                                 className='p-0 m-1'

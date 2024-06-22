@@ -1,12 +1,10 @@
 'use client'
-import React, { useState, createContext } from 'react'
+import React, { useState } from 'react'
 import ProductsTable from './ProductsTable'
 import AddProduct from './AddProduct'
 import { Button } from '@mui/material'
 import { IoMdClose } from "react-icons/io";
 
-
-export const ProductsContext = createContext()
 
 
 export default function ProductsMain({ which }) {
