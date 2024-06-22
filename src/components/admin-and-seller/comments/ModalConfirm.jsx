@@ -4,10 +4,11 @@ import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import Fade from '@mui/material/Fade';
 import Typography from '@mui/material/Typography';
-import { useContext } from 'react';
 import { Button } from '@mui/material';
-import { ItemsContext } from './CommentsMain';
-import Api from '@/services/withAuthActivities/comment';
+import { useDispatch, useSelector } from 'react-redux';
+import { setIsModalConfirmOpen, setSelectedId, setOperatingError } from '../redux/reducers/comments';
+import { validateCommentToServer } from '../redux/globalAsyncThunks';
+import { addComment } from '../redux/reducers/comments';
 
 const ModalStyle = {
     position: 'absolute',
@@ -22,26 +23,28 @@ const ModalStyle = {
 };
 
 export default function ModalConfirm() {
-    const { toggleValidateComment } = Api
-    const { isModalConfirmOpen, setIsModalConfirmOpen, selectedId, setSelectedId, setOperatingError } = useContext(ItemsContext)
+    const dispatch = useDispatch();
+    const {
+        isModalConfirmOpen,
+        selectedId
+    } = useSelector((state) => state.comments);
+
     const handleClose = () => {
-        setIsModalConfirmOpen(false);
-        setSelectedId('');
+        dispatch(setIsModalConfirmOpen(false));
+        dispatch(setSelectedId(''));
     }
 
 
     const ConfirmItem = async () => {
         try {
-            await toggleValidateComment({ id: selectedId })
-            setSelectedId('');
-            setTimeout(() => {
-                window.location.reload()
-            }, 1000)
+            const res = dispatch(validateCommentToServer(selectedId))
+            res.then(result => dispatch(addComment(result.payload?.comment)))
+            dispatch(setSelectedId(''));
         } catch (error) {
-            setOperatingError(error.message)
+            dispatch(setOperatingError(error.message))
         } finally {
             setTimeout(() => {
-                setOperatingError(null)
+                dispatch(setOperatingError(''))
             }, 5000);
         }
     }

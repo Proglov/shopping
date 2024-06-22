@@ -87,3 +87,19 @@ export const validateSellerFulfilled = (state, action) => {
     state.itemsCount--;
 }
 
+
+//comments
+export const getInvalidatedCommentsFulfilled = (state, action) => {
+    state.items = action.payload.comments
+    state.itemsCount = action.payload.allCommentsCount
+    state.lastPage = Math.ceil(action.payload?.allCommentsCount / state.itemsPerPage)
+    state.loading = false
+}
+export const deleteCommentFulfilled = (state, action) => {
+    state.items = state.items.filter(item => item._id !== action.payload.id)
+    state.itemsCount--;
+}
+export const validateCommentFulfilled = (state, action) => {
+    state.items = state.items.filter(item => item._id !== action.payload.comment._id)
+    state.itemsCount--;
+}

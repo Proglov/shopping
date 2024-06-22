@@ -6,6 +6,8 @@ import Api4 from "@/services/withoutAuthActivities/product";
 import Api5 from "@/services/withAuthActivities/product";
 import Api6 from "@/services/withAuthActivities/user";
 import Api7 from "@/services/withAuthActivities/seller";
+import Api8 from "@/services/withAuthActivities/comment";
+import Api9 from "@/services/withoutAuthActivities/comment";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
 //categories
@@ -114,5 +116,29 @@ export const validateSellerToServer = createAsyncThunk(
     async (id) => {
         const { sellerValidate } = Api7
         return await sellerValidate({ id })
+    }
+)
+
+
+//comments
+export const getInvalidatedCommentsFromServer = createAsyncThunk(
+    "Global/getInvalidatedCommentsFromServer",
+    async ({ page, perPage }) => {
+        const { getAllComments } = Api9
+        return await getAllComments({ page, perPage, validated: false })
+    }
+)
+export const deleteCommentFromServer = createAsyncThunk(
+    "Global/deleteCommentFromServer",
+    async (id) => {
+        const { deleteComment } = Api8
+        return await deleteComment({ id })
+    }
+)
+export const validateCommentToServer = createAsyncThunk(
+    "Global/validateCommentToServer",
+    async (id) => {
+        const { toggleValidateComment } = Api8
+        return await toggleValidateComment({ id })
     }
 )
