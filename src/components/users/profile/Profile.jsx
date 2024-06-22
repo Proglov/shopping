@@ -57,7 +57,7 @@ export default function Profile() {
       }
       setNumber(0);
     }
-  }, [setLogin, router, login, number]);
+  }, [setLogin, router]);
 
   return (
     <>

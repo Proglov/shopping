@@ -49,6 +49,9 @@ export default function EditAddress({
             address: obj,
             id: userID,
           });
+          toast.success("با موفقیت ثبت شد", {
+            position: toast.POSITION.TOP_RIGHT,
+          });
           setAddress(str);
           newAddress.address = "";
         } catch (error) {
@@ -73,6 +76,9 @@ export default function EditAddress({
       const response = await updateUser({
         address: arr,
         id: userID,
+      });
+      toast.success("با موفقیت حذف شد", {
+        position: toast.POSITION.TOP_RIGHT,
       });
       setAddress(arr);
     } catch (error) {

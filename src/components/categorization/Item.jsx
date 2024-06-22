@@ -46,7 +46,11 @@ export default function Item() {
     getProduct();
   }, [getOneProduct, setProduct, router]);
   if (isLoading) {
-    return <div className="mt-5">درحال دریافت اطلاعات</div>;
+    return (
+      <div className="mt-5 grid justify-center h-[400px] place-items-center">
+        <span>درحال دریافت اطلاعات ... </span>
+      </div>
+    );
   }
   return (
     <>

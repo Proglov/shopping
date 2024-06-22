@@ -109,6 +109,12 @@ export default function CommentItem() {
   };
 
   const handleSubmit = async () => {
+    if (newComment === "") {
+      toast.warning("متنی وارد نکرده اید دوباره تلاش کنید", {
+        position: toast.POSITION.TOP_RIGHT,
+      });
+      return;
+    }
     try {
       const body = DOMPurify.sanitize(newComment);
       if (localStorage.getItem("UserLogin") == "true") {
@@ -121,7 +127,7 @@ export default function CommentItem() {
           id: userId,
         });
         setNewComment("");
-        toast.success("نظر شما برای بررسی ثبت شد.", {
+        toast.success("نظر شما برای بررسی ثبت شد", {
           position: toast.POSITION.TOP_RIGHT,
         });
       } else {
@@ -134,7 +140,7 @@ export default function CommentItem() {
           id: userId,
         });
         setNewComment("");
-        toast.success("نظر شما برای بررسی ثبت شد.", {
+        toast.success("نظر شما برای بررسی ثبت شد", {
           position: toast.POSITION.TOP_RIGHT,
         });
       }
@@ -164,7 +170,7 @@ export default function CommentItem() {
           id: userId,
         });
         setNewReplay("");
-        toast.success("پاسخ شما برای بررسی ثبت شد.", {
+        toast.success("پاسخ شما برای بررسی ثبت شد", {
           position: toast.POSITION.TOP_RIGHT,
         });
       } else {
@@ -178,7 +184,7 @@ export default function CommentItem() {
           id: userId,
         });
         setNewReplay("");
-        toast.success("پاسخ شما برای بررسی ثبت شد.", {
+        toast.success("پاسخ شما برای بررسی ثبت شد", {
           position: toast.POSITION.TOP_RIGHT,
         });
       }

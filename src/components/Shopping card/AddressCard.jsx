@@ -47,7 +47,7 @@ export default function AddressCard() {
         toast.error("لطفا دوباره وارد شوید", {
           position: toast.POSITION.TOP_RIGHT,
         });
-        router.push("/users/login");
+        // router.push("/users/login");
       }
     };
     GetUser();

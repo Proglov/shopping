@@ -24,7 +24,7 @@ export default function LoginByEmail() {
   const router = useRouter();
 
   const submit = async () => {
-    if ((information.emailOrUsername === "") || (information.password === "")) {
+    if (information.emailOrUsername === "" || information.password === "") {
       setShow([true, false, false]);
       return;
     }
@@ -106,6 +106,14 @@ export default function LoginByEmail() {
                     emailOrUsername: event.target.value,
                   });
                 }}
+                sx={{
+                  " & .MuiInputLabel-root": {
+                    left: "inherit !important",
+                    right: "1.75rem !important",
+                    transformOrigin: "right !important",
+                  },
+                  "& legend": { textAlign: "right" },
+                }}
               />
               <TextField
                 value={information.password}
@@ -122,6 +130,14 @@ export default function LoginByEmail() {
                     ...information,
                     password: event.target.value,
                   });
+                }}
+                sx={{
+                  " & .MuiInputLabel-root": {
+                    left: "inherit !important",
+                    right: "1.75rem !important",
+                    transformOrigin: "right !important",
+                  },
+                  "& legend": { textAlign: "right" },
                 }}
               />
             </Box>
@@ -176,9 +192,7 @@ export default function LoginByEmail() {
             </Box>
             <Box component="div" className="mt-4">
               اگر &nbsp;
-              <span className="text-red-400 text-lg">
-                فروشنده
-              </span>
+              <span className="text-red-400 text-lg">فروشنده</span>
               &nbsp; هستید از
               <Link href="/Seller/login">
                 <span className="text-blue-600"> این قسمت </span>

@@ -120,6 +120,14 @@ export default function SignUpComponent() {
                 const filteredInput = input.replace(/\D/g, "");
                 setInformation({ ...information, phone: filteredInput });
               }}
+              sx={{
+                " & .MuiInputLabel-root": {
+                  left: "inherit !important",
+                  right: "1.75rem !important",
+                  transformOrigin: "right !important",
+                },
+                "& legend": { textAlign: "right" },
+              }}
             />
             <TextField
               value={information.username}
@@ -135,6 +143,14 @@ export default function SignUpComponent() {
                   ...information,
                   username: event.target.value,
                 });
+              }}
+              sx={{
+                " & .MuiInputLabel-root": {
+                  left: "inherit !important",
+                  right: "1.75rem !important",
+                  transformOrigin: "right !important",
+                },
+                "& legend": { textAlign: "right" },
               }}
             />
             <TextField

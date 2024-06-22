@@ -4,10 +4,13 @@ import { Box, Button, TextField } from "@mui/material";
 import { useEffect, useState } from "react";
 import UserApi from "@/services/withAuthActivities/user";
 import DOMPurify from "dompurify";
+import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
 
 export default function Specifications() {
   const [isEdit, setIsEdit] = useState(false);
   const { getMe, updateUser } = UserApi;
+  const router = useRouter();
   const [information, setInformation] = useState({
     name: "",
     phoneNumber: "",
@@ -44,8 +47,12 @@ export default function Specifications() {
         ...changedFields,
         id: userId,
       });
+
+      toast.success("با موفقیت ثبت شد", {
+        position: toast.POSITION.TOP_RIGHT,
+      });
     } catch (error) {
-      alert(error.response.data.message);
+      toast.error("دوباره تلاش کنید", { position: toast.POSITION.TOP_RIGHT });
     }
   };
 
@@ -61,9 +68,7 @@ export default function Specifications() {
           userName: user.user.username,
         });
         setUserId(user.user._id);
-      } catch (error) {
-        alert(error.response.data.message);
-      }
+      } catch (error) {}
     };
     GetUser();
   }, [getMe, setInformation]);

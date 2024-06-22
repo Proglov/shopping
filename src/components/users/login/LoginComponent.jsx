@@ -88,6 +88,14 @@ export default function LoginComponent() {
                   const filteredInput = input.replace(/\D/g, "");
                   setPhoneNumber(filteredInput);
                 }}
+                sx={{
+                  " & .MuiInputLabel-root": {
+                    left: "inherit !important",
+                    right: "1.75rem !important",
+                    transformOrigin: "right !important",
+                  },
+                  "& legend": { textAlign: "right" },
+                }}
               />
             </Box>
             {show[0] ? (

@@ -126,7 +126,7 @@ export default function SubCategory() {
           return acc;
         }, []);
         setProducts(groupedProducts);
-      } catch (error) { }
+      } catch (error) {}
     };
     getProduct();
   }, [setProducts, getAllProductsOfACategory, id]);
@@ -161,12 +161,6 @@ export default function SubCategory() {
                 dir="rtl"
                 modules={[Navigation, Pagination]}
                 navigation
-                loop
-                autoplay={{
-                  delay: 2500,
-                  disableOnInteraction: true,
-                }}
-                lazy="true"
                 pagination={{ type: "progressbar" }}
                 breakpoints={swiperBreaks}
                 className="w-full rounded-lg"
