@@ -1,6 +1,6 @@
 "use client"
 import { Button, Stack } from '@mui/material';
-import { useEffect, useContext } from 'react';
+import { useEffect } from 'react';
 import { styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -9,12 +9,14 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import Api from '@/services/withAuthActivities/tx';
 import { convertToFarsiNumbers, formatPrice, price2Farsi } from '@/utils/funcs';
 import Pagination from '../../Pagination';
-import { ItemsContext } from './TXMain';
 import ModalShowMore from './ModalShowMore';
 import ModalDone from './ModalDone';
+import { useDispatch, useSelector } from 'react-redux';
+import { setCurrentPage } from '../redux/reducers/global';
+import { getFutureTXsFromServer } from '../redux/globalAsyncThunks';
+import { getRecentTXFromServer, setSelectedItem, setIsModalDoneOpen, setIsModalShowMoreOpen, setIsRecentTableOperating, setCurrentPageRecentTX } from '../redux/reducers/transactions';
 
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -35,194 +37,182 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
     },
 }));
 
+const Component = ({ itemsCount, error, loading, items, currentPage, itemsPerPage, selectedItem, setCurrentPage, lastPage, dispatch, operatingError, isFutureOrder }) => (
+    <Stack spacing={2} className={`${!isFutureOrder && 'mt-16'}`}>
+        <div className='w-full text-start'>
+            جدول تراکنش های سفارشات &nbsp;
+            {!!isFutureOrder ? <>آتی</> : <>اخیر</>}
+        </div>
+        <div className='text-start'>
+            {
+                itemsCount !== 0 &&
+                <>
+                    تعداد : {itemsCount}
+                </>
+            }
+        </div>
+        {!!error ? (
+            <div>
+                مشکلی رخ داد! لطفا دوباره تلاش کنید ...
+                <br />
+                {error.toString()}
+            </div>
+        ) : loading ? (
+            <div>درحال دریافت اطلاعات ...</div>
+        ) : (
+            items?.length !== 0 ?
+                <div>
+                    <TableContainer component={Paper}>
+                        <Table sx={{ minWidth: 1000 }} aria-label="customized table">
+                            <TableHead>
+                                <TableRow>
+                                    <StyledTableCell align='center'>ردیف</StyledTableCell>
+                                    <StyledTableCell align='center'>نام خریدار</StyledTableCell>
+                                    <StyledTableCell align='center'>شماره خریدار</StyledTableCell>
+                                    <StyledTableCell align='center'>زمان ارسال</StyledTableCell>
+                                    <StyledTableCell align='center'>ارسال شده</StyledTableCell>
+                                    <StyledTableCell align='center'>قیمت نهایی</StyledTableCell>
+                                    <StyledTableCell align='center'>عملیات</StyledTableCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {items.map((item, index) => (
+                                    <StyledTableRow key={item._id}
+                                        className='align-middle'>
+                                        <StyledTableCell align='center'>{convertToFarsiNumbers(index + 1 + itemsPerPage * (currentPage - 1))}</StyledTableCell>
+                                        <StyledTableCell align='center'>
+                                            {item.userId?.name}
+                                            {!item.userId?.name && <>فاقد نام</>}
+                                        </StyledTableCell>
+                                        <StyledTableCell align='center'>{convertToFarsiNumbers(item.userId?.phone)}</StyledTableCell>
+                                        <StyledTableCell align='center'>
+                                            {
+                                                !!item?.shouldBeSentAt &&
+                                                <>
+                                                    {new Intl.DateTimeFormat('fa-IR').format(parseInt(item?.shouldBeSentAt))}
+                                                    <br />
+                                                    {convertToFarsiNumbers((new Date(parseInt(item.shouldBeSentAt)).getHours()))}
+                                                    :{convertToFarsiNumbers(("0" + (new Date((parseInt(item?.shouldBeSentAt))).getMinutes())).slice(-2))}
+                                                </>
+                                            }
+                                        </StyledTableCell>
+                                        <StyledTableCell align='center'>
+                                            {!!item?.done ?
+                                                <span className='text-green-500'>
+                                                    بله
+                                                </span> : <span className='text-orange-500'>
+                                                    خیر
+                                                </span>}
+                                        </StyledTableCell>
+                                        <StyledTableCell align='center'>
+                                            {formatPrice(item.totalPrice)}
+                                            <br />
+                                            {price2Farsi(item.totalPrice)}
+                                            <br />
+                                            تومان
+                                        </StyledTableCell>
+                                        <StyledTableCell className='gap-2' sx={{
+                                            flexDirection: 'column',
+                                            display: 'flex'
+                                        }}>
+                                            <Button
+                                                variant='outlined'
+                                                color='success'
+                                                className='p-0 m-1'
+                                                sx={{ color: 'green', borderColor: 'green' }}
+                                                onClick={() => {
+                                                    dispatch(setIsModalShowMoreOpen(true));
+                                                    dispatch(setSelectedItem(item));
+                                                }}
+                                            >
+                                                مشاهده بیشتر
+                                            </Button>
+                                            {
+                                                !item.done &&
+                                                <Button
+                                                    variant='outlined'
+                                                    className='p-0 m-1'
+                                                    sx={{ color: 'blue', borderColor: '' }}
+                                                    onClick={async () => {
+                                                        dispatch(setIsRecentTableOperating(!isFutureOrder))
+                                                        dispatch(setIsModalDoneOpen(true));
+                                                        dispatch(setSelectedItem(item));
+                                                    }}
+                                                >
+                                                    ارسال شد
+                                                </Button>
+                                            }
+                                            {selectedItem?._id === item._id && operatingError != '' ? (
+                                                <>
+                                                    <div>
+                                                        {operatingError}
+                                                    </div>
+                                                    <div>مشکلی پیش امده است. لطفا اتصال اینترنت را بررسی کنید</div>
+                                                </>
+                                            ) : ''}
+                                        </StyledTableCell>
+                                    </StyledTableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
+                    {
+                        itemsCount > itemsPerPage &&
+                        <div className='flex justify-center' style={{ marginTop: '25px' }}>
+                            <Pagination currentPage={currentPage} setCurrentPage={setCurrentPage} lastPage={lastPage} />
+                        </div>
+                    }
 
+                </div>
+                : <div>
+                    اطلاعاتی جهت نمایش وجود ندارد
+                </div>
+        )}
+    </Stack>
+)
 
-export default function TXTable() {
-    const { getAllMyTXs, getAllTXs } = Api
-
+export default function TXTable({ which, isFutureOrder }) {
+    const dispatch = useDispatch();
     const {
-        currentPage,
-        setCurrentPage,
-        lastPage,
-        setLastPage,
-        loading,
-        setLoading,
-        isError,
-        setIsError,
-        error,
-        setError,
-        operatingError,
         items,
-        setItems,
-        itemsCount,
-        setItemsCount,
-        setIsModalShowMoreOpen,
-        setIsModalDoneOpen,
-        setSelectedItem,
-        selectedItem,
+        currentPage,
+        lastPage,
+        loading,
+        error,
         itemsPerPage,
-        isFutureOrder,
-        which
-    } = useContext(ItemsContext)
+        itemsCount
+    } = useSelector((state) => state.global);
+    const {
+        selectedItem,
+        operatingError,
+        recentTX,
+        loadingRecentTX,
+        errorRecentTX,
+        currentPageRecentTX,
+        lastPageRecentTX,
+        itemsCountRecentTX,
+        itemsPerPageRecentTX
+    } = useSelector((state) => state.transactions);
 
 
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                setLoading(true);
-                let TX = {};
-                if (which === "Seller") {
-                    TX = await getAllMyTXs({ page: currentPage, perPage: itemsPerPage, isFutureOrder });
-                    setItems(TX.transactions)
-                    setItemsCount(TX.transactionsCount)
-                    setLastPage(Math.ceil(TX.transactionsCount / itemsPerPage))
-                }
-                else if (which === "ADMIN") {
-                    TX = await getAllTXs({ page: currentPage, perPage: itemsPerPage, isFutureOrder });
-                    setItems(TX.transactions)
-                    setItemsCount(TX.transactionsCount)
-                    setLastPage(Math.ceil(TX.transactionsCount / itemsPerPage))
-                }
-            } catch (error) {
-                setError(`Error fetching transactions: ${error}`);
-                setIsError(true);
-            } finally {
-                setLoading(false);
-            }
-        };
+        if (!!isFutureOrder)
+            dispatch(getFutureTXsFromServer({ page: currentPage, perPage: itemsPerPage, which }));
+        else
+            dispatch(getRecentTXFromServer({ page: currentPage, perPage: itemsPerPage, which }));
+    }, []);
 
-        fetchData();
-    }, [currentPage, getAllMyTXs, itemsPerPage, setError, setIsError, setItems, setItemsCount, setLoading, isFutureOrder, setLastPage, getAllTXs, which]);
-    return (
-        <Stack spacing={2} className={`${!isFutureOrder && 'mt-16'}`}>
-            <div className='w-full text-start'>
-                جدول تراکنش های سفارشات &nbsp;
-                {!!isFutureOrder ? <>آتی</> : <>اخیر</>}
-            </div>
-            <div className='text-start'>
-                {
-                    itemsCount !== 0 &&
-                    <>
-                        تعداد : {itemsCount}
-                    </>
-                }
-            </div>
-            {isError ? (
-                <div>
-                    مشکلی رخ داد! لطفا دوباره تلاش کنید ...
-                    <br />
-                    {error.toString()}
-                </div>
-            ) : loading ? (
-                <div>درحال دریافت اطلاعات ...</div>
-            ) : (
-                items?.length !== 0 ?
-                    <div>
-                        <TableContainer component={Paper}>
-                            <Table sx={{ minWidth: 1000 }} aria-label="customized table">
-                                <TableHead>
-                                    <TableRow>
-                                        <StyledTableCell align='center'>ردیف</StyledTableCell>
-                                        <StyledTableCell align='center'>نام خریدار</StyledTableCell>
-                                        <StyledTableCell align='center'>شماره خریدار</StyledTableCell>
-                                        <StyledTableCell align='center'>زمان ارسال</StyledTableCell>
-                                        <StyledTableCell align='center'>ارسال شده</StyledTableCell>
-                                        <StyledTableCell align='center'>قیمت نهایی</StyledTableCell>
-                                        <StyledTableCell align='center'>عملیات</StyledTableCell>
-                                    </TableRow>
-                                </TableHead>
-                                <TableBody>
-                                    {items.map((item, index) => (
-                                        <StyledTableRow key={item._id}
-                                            className='align-middle'>
-                                            <StyledTableCell align='center'>{convertToFarsiNumbers(index + 1 + itemsPerPage * (currentPage - 1))}</StyledTableCell>
-                                            <StyledTableCell align='center'>
-                                                {item.userId?.name}
-                                                {!item.userId?.name && <>فاقد نام</>}
-                                            </StyledTableCell>
-                                            <StyledTableCell align='center'>{convertToFarsiNumbers(item.userId.phone)}</StyledTableCell>
-                                            <StyledTableCell align='center'>
-                                                {new Intl.DateTimeFormat('fa-IR').format(parseInt(item.shouldBeSentAt))}
-                                                <br />
-                                                {convertToFarsiNumbers((new Date(parseInt(item.shouldBeSentAt)).getHours()))}
-                                                :{convertToFarsiNumbers(("0" + (new Date((parseInt(item.shouldBeSentAt))).getMinutes())).slice(-2))}
-                                            </StyledTableCell>
-                                            <StyledTableCell align='center'>
-                                                {!!item?.done ?
-                                                    <span className='text-green-500'>
-                                                        بله
-                                                    </span> : <span className='text-orange-500'>
-                                                        خیر
-                                                    </span>}
-                                            </StyledTableCell>
-                                            <StyledTableCell align='center'>
-                                                {formatPrice(item.totalPrice)}
-                                                <br />
-                                                {price2Farsi(item.totalPrice)}
-                                                <br />
-                                                تومان
-                                            </StyledTableCell>
-                                            <StyledTableCell className='flex flex-col justify-center border-b-0 align-middle gap-2'>
-                                                <Button
-                                                    variant='outlined'
-                                                    color='success'
-                                                    className='p-0 m-1'
-                                                    sx={{ color: 'green', borderColor: 'green' }}
-                                                    onClick={() => {
-                                                        setIsModalShowMoreOpen(true);
-                                                        setSelectedItem({
-                                                            ...item
-                                                        })
-                                                    }}
-                                                >
-                                                    مشاهده بیشتر
-                                                </Button>
-                                                {
-                                                    !item?.done && which === "Seller" &&
-                                                    <Button
-                                                        variant='outlined'
-                                                        className='p-0 m-1'
-                                                        sx={{ color: 'blue', borderColor: '' }}
-                                                        onClick={async () => {
-                                                            setIsModalDoneOpen(true);
-                                                            setSelectedItem({
-                                                                ...item
-                                                            })
-                                                        }}
-                                                    >
-                                                        ارسال شد
-                                                    </Button>
-                                                }
-                                                {selectedItem?._id === item._id && operatingError != '' ? (
-                                                    <>
-                                                        <div>
-                                                            {operatingError}
-                                                        </div>
-                                                        <div>مشکلی پیش امده است. لطفا اتصال اینترنت را بررسی کنید</div>
-                                                    </>
-                                                ) : ''}
-                                            </StyledTableCell>
-                                        </StyledTableRow>
-                                    ))}
-                                </TableBody>
-                            </Table>
-                        </TableContainer>
-                        {
-                            itemsCount > itemsPerPage &&
-                            <div className='flex justify-center' style={{ marginTop: '25px' }}>
-                                <Pagination currentPage={currentPage} setCurrentPage={setCurrentPage} lastPage={lastPage} />
-                            </div>
-                        }
 
-                    </div>
-                    : <div>
-                        اطلاعاتی جهت نمایش وجود ندارد
-                    </div>
-            )}
-
-            <ModalShowMore />
-            <ModalDone />
-
-        </Stack>
-    );
+    return (<>
+        {
+            !!isFutureOrder &&
+            <Component currentPage={currentPage} dispatch={dispatch} error={error} items={items} itemsCount={itemsCount} itemsPerPage={itemsPerPage} lastPage={lastPage} loading={loading} selectedItem={selectedItem} setCurrentPage={setCurrentPage} operatingError={operatingError} isFutureOrder={isFutureOrder} which={which} />
+        }
+        {
+            !isFutureOrder &&
+            <Component currentPage={currentPageRecentTX} dispatch={dispatch} error={errorRecentTX} items={recentTX} itemsCount={itemsCountRecentTX} itemsPerPage={itemsPerPageRecentTX} lastPage={lastPageRecentTX} loading={loadingRecentTX} selectedItem={selectedItem} setCurrentPage={setCurrentPageRecentTX} operatingError={operatingError} isFutureOrder={isFutureOrder} which={which} />
+        }
+        <ModalShowMore />
+        <ModalDone />
+    </>);
 }

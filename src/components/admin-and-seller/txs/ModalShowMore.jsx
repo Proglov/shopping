@@ -3,11 +3,11 @@ import Backdrop from '@mui/material/Backdrop';
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import Fade from '@mui/material/Fade';
-import { useContext } from 'react';
 import { Button } from '@mui/material';
-import { ItemsContext } from './TXMain'
 import { MdKeyboardDoubleArrowLeft, MdKeyboardDoubleArrowRight } from "react-icons/md";
 import { convertToFarsiNumbers } from '@/utils/funcs';
+import { useDispatch, useSelector } from 'react-redux';
+import { setIsModalShowMoreOpen } from '../redux/reducers/transactions';
 
 const ModalStyle = {
     position: 'absolute',
@@ -22,8 +22,15 @@ const ModalStyle = {
 };
 
 export default function ModalShowMore() {
-    const { isModalShowMoreOpen, setIsModalShowMoreOpen, selectedItem } = useContext(ItemsContext)
-    const handleClose = () => setIsModalShowMoreOpen(false);
+    const dispatch = useDispatch();
+    const {
+        isModalShowMoreOpen,
+        selectedItem
+    } = useSelector((state) => state.transactions);
+
+    const handleClose = () => {
+        dispatch(setIsModalShowMoreOpen(false));
+    }
 
     return (
         <>

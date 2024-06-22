@@ -4,6 +4,8 @@ import subcategoriesReducer from "./reducers/subcategories"
 import productsReducer from "./reducers/products"
 import usersReducer from "./reducers/users"
 import sellersReducer from "./reducers/sellers"
+import commentsReducer from "./reducers/comments"
+import transactionsReducer from "./reducers/transactions"
 
 export const storeAdmin = configureStore({
     reducer: {
@@ -12,7 +14,7 @@ export const storeAdmin = configureStore({
         sellers: sellersReducer,
         subcategories: subcategoriesReducer,
         global: globalReducer,
-        // transactions: transactionsReducer,
-        // comments: commentsReducer,
+        transactions: transactionsReducer,
+        comments: commentsReducer,
     }
 })

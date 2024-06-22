@@ -4,10 +4,10 @@ import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import Fade from '@mui/material/Fade';
 import Typography from '@mui/material/Typography';
-import { useContext } from 'react';
 import { Button } from '@mui/material';
-import { ItemsContext } from './CommentsMain';
-import Api from '@/services/withAuthActivities/comment';
+import { useDispatch, useSelector } from 'react-redux';
+import { setIsModalDeleteOpen, setSelectedId, setOperatingError, deleteConfirmedCommentFromServer } from '../redux/reducers/comments';
+import { deleteCommentFromServer } from '../redux/globalAsyncThunks';
 
 const ModalStyle = {
     position: 'absolute',
@@ -22,26 +22,33 @@ const ModalStyle = {
 };
 
 export default function ModalDelete() {
-    const { deleteComment } = Api
-    const { isModalDeleteOpen, setIsModalDeleteOpen, selectedId, setSelectedId, setOperatingError } = useContext(ItemsContext)
+    const dispatch = useDispatch();
+    const {
+        isModalDeleteOpen,
+        selectedId,
+        isConfirmedTableOperating
+    } = useSelector((state) => state.comments);
+
     const handleClose = () => {
-        setIsModalDeleteOpen(false);
-        setSelectedId('');
+        dispatch(setIsModalDeleteOpen(false));
+        dispatch(setSelectedId(''));
     }
 
 
     const deleteItem = async () => {
         try {
-            await deleteComment({ id: selectedId })
-            setSelectedId('');
-            setTimeout(() => {
-                window.location.reload()
-            }, 1000)
+            if (!isConfirmedTableOperating) {
+                dispatch(deleteCommentFromServer(selectedId))
+            }
+            else {
+                dispatch(deleteConfirmedCommentFromServer(selectedId))
+            }
+            dispatch(setSelectedId(''));
         } catch (error) {
-            setOperatingError(error.message)
+            dispatch(setOperatingError(error.message))
         } finally {
             setTimeout(() => {
-                setOperatingError(null)
+                dispatch(setOperatingError(''))
             }, 5000);
         }
     }

@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { addCategoryToServer, addProductToServer, addSubcategoryToServer, getCategoriesFromServer, getAdminProductsFromServer, getSellerProductsFromServer, getSubcategoriesFromServer, deleteProductFromServer, updateProductFromServer, getUsersFromServer, deleteUserFromServer, getInvalidatedSellersFromServer, deleteSellerFromServer, validateSellerToServer } from "../globalAsyncThunks";
-import { getCategoryFulfilled, addCategoryFulfilled, addSubcategoriesFulfilled, getSubcategoriesFulfilled, getProductsFulfilled, addProductsFulfilled, deleteProductFulfilled, pending, reject, updateProductFulfilled, getUsersFulfilled, deleteUserFulfilled, getInvalidatedSellersFulfilled, deleteSellerFulfilled, validateSellerFulfilled } from "../globalExtraReducers";
+import { addCategoryToServer, addProductToServer, addSubcategoryToServer, getCategoriesFromServer, getAdminProductsFromServer, getSellerProductsFromServer, getSubcategoriesFromServer, deleteProductFromServer, updateProductFromServer, getUsersFromServer, deleteUserFromServer, getInvalidatedSellersFromServer, deleteSellerFromServer, validateSellerToServer, getInvalidatedCommentsFromServer, deleteCommentFromServer, validateCommentToServer, getFutureTXsFromServer, updateTXDoneToServer } from "../globalAsyncThunks";
+import { getCategoryFulfilled, addCategoryFulfilled, addSubcategoriesFulfilled, getSubcategoriesFulfilled, getProductsFulfilled, addProductsFulfilled, deleteProductFulfilled, pending, reject, updateProductFulfilled, getUsersFulfilled, deleteUserFulfilled, getInvalidatedSellersFulfilled, deleteSellerFulfilled, validateSellerFulfilled, getInvalidatedCommentsFulfilled, validateCommentFulfilled, deleteCommentFulfilled, getFutureTXsFulfilled, updateTXDoneFulfilled } from "../globalExtraReducers";
 
 
 const initialState = {
@@ -100,6 +100,19 @@ const globalSlice = createSlice({
         builder.addCase(getInvalidatedSellersFromServer.rejected, reject);
         builder.addCase(deleteSellerFromServer.fulfilled, deleteSellerFulfilled);
         builder.addCase(validateSellerToServer.fulfilled, validateSellerFulfilled);
+
+        //comments
+        builder.addCase(getInvalidatedCommentsFromServer.pending, pending);
+        builder.addCase(getInvalidatedCommentsFromServer.fulfilled, getInvalidatedCommentsFulfilled);
+        builder.addCase(getInvalidatedCommentsFromServer.rejected, reject);
+        builder.addCase(deleteCommentFromServer.fulfilled, deleteCommentFulfilled);
+        builder.addCase(validateCommentToServer.fulfilled, validateCommentFulfilled);
+
+        //tx
+        builder.addCase(getFutureTXsFromServer.pending, pending);
+        builder.addCase(getFutureTXsFromServer.fulfilled, getFutureTXsFulfilled);
+        builder.addCase(getFutureTXsFromServer.rejected, reject);
+        builder.addCase(updateTXDoneToServer.fulfilled, updateTXDoneFulfilled);
 
     }
 });

@@ -87,3 +87,35 @@ export const validateSellerFulfilled = (state, action) => {
     state.itemsCount--;
 }
 
+
+//comments
+export const getInvalidatedCommentsFulfilled = (state, action) => {
+    state.items = action.payload.comments
+    state.itemsCount = action.payload.allCommentsCount
+    state.lastPage = Math.ceil(action.payload?.allCommentsCount / state.itemsPerPage)
+    state.loading = false
+}
+export const deleteCommentFulfilled = (state, action) => {
+    state.items = state.items.filter(item => item._id !== action.payload.id)
+    state.itemsCount--;
+}
+export const validateCommentFulfilled = (state, action) => {
+    state.items = state.items.filter(item => item._id !== action.payload.comment._id)
+    state.itemsCount--;
+}
+
+
+//TXs
+export const getFutureTXsFulfilled = (state, action) => {
+    state.items = action.payload.transactions
+    state.itemsCount = action.payload.transactionsCount
+    state.lastPage = Math.ceil(action.payload?.transactionsCount / state.itemsPerPage)
+    state.loading = false
+}
+export const updateTXDoneFulfilled = (state, action) => {
+    state.items = state.items.map(item => {
+        if (item._id === action.payload.transaction._id)
+            item.done = !item.done
+        return item
+    })
+}
