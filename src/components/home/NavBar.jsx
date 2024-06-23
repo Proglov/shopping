@@ -159,6 +159,7 @@ export default function NavBar() {
               height: "50px",
               paddingTop: "10px",
             }}
+            onDoubleClick={() => router.push('/ADMIN')}
           >
             <IconButton onClick={handleClickOpen}>
               <Badge
@@ -193,13 +194,13 @@ export default function NavBar() {
             ) : (
               <span className="text-red-500 flex" onClick={handleOpen}>
                 <LiaSignOutAltSolid />
-                <span style={{ lineHeight: "20px" }}>خروج</span>
+                <span style={{ lineHeight: "20px" }} onDoubleClick={{ React }}>خروج</span>
               </span>
             )}
           </IconButton>
 
           {/* ادمین */}
-          <AdminProtector
+          {/* <AdminProtector
             Wait={<></>}
             shouldRouterPush={false}
             showNotFound={<></>}
@@ -219,10 +220,9 @@ export default function NavBar() {
                 </span>
               </Link>
             </IconButton>
-
-            {/* فاصله */}
+            فاصله
             <Box sx={{ flexGrow: 1 }} />
-          </AdminProtector>
+          </AdminProtector> */}
 
           {/* فروشنده */}
           {LoginSeller ? (
