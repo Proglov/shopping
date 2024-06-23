@@ -58,7 +58,7 @@ export default function UsersTable() {
 
     useEffect(() => {
         dispatch(getUsersFromServer({ currentPage, itemsPerPage }))
-    }, [dispatch]);
+    }, [dispatch, currentPage, itemsPerPage]);
 
     return (
         <Stack spacing={2}>

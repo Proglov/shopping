@@ -63,7 +63,7 @@ export default function BillComponent() {
           name: user.user.name,
           phoneNumber: user.user.phone,
         });
-      } catch (error) {}
+      } catch (error) { }
     };
     GetUser();
     const add = localStorage.getItem("address");
@@ -83,7 +83,7 @@ export default function BillComponent() {
     return () => {
       window.onbeforeunload = null;
     };
-  }, [setLogin, setAddress, getMe, setInformation, setTime, router]);
+  }, [setLogin, setAddress, getMe, setInformation, setTime, router, cartProducts.length, login, number]);
 
   return (
     <Card className="p-5 m-5 rounded-md">
@@ -127,8 +127,8 @@ export default function BillComponent() {
             {time === undefined
               ? "انتخاب نشده"
               : convertToFarsiNumbers(
-                  time?.split(" ")[1]?.split(":")[0]
-                )}{" "}
+                time?.split(" ")[1]?.split(":")[0]
+              )}{" "}
             - روز:{" "}
             {time === undefined
               ? "انتخاب نشده"
@@ -157,60 +157,60 @@ export default function BillComponent() {
             {cartProducts.length == 0
               ? ""
               : cartProducts.map((item, index) => {
-                  return (
-                    <div key={index}>
-                      <div className="w-full" />
-                      <div className="m-4 h-auto w-full grid grid-cols-1 gap-4 lg:w-3/4 sm:grid-cols-4">
-                        <div className="p-1 mx-auto">
-                          <Image
-                            height={250}
-                            width={250}
-                            src={item.src[0]}
-                            alt="Product"
-                          />
+                return (
+                  <div key={index}>
+                    <div className="w-full" />
+                    <div className="m-4 h-auto w-full grid grid-cols-1 gap-4 lg:w-3/4 sm:grid-cols-4">
+                      <div className="p-1 mx-auto">
+                        <Image
+                          height={250}
+                          width={250}
+                          src={item.src[0]}
+                          alt="Product"
+                        />
+                      </div>
+                      <div className="p-2 text-gray-900 sm:col-span-3 grid grid-rows-3 grid-cols-1 justify-items-center items-center sm:grid-rows-2 sm:grid-cols-2 sm:justify-items-start">
+                        <div className="sm:col-span-2 mb-2 sm:mb-0">
+                          {item.name}
                         </div>
-                        <div className="p-2 text-gray-900 sm:col-span-3 grid grid-rows-3 grid-cols-1 justify-items-center items-center sm:grid-rows-2 sm:grid-cols-2 sm:justify-items-start">
-                          <div className="sm:col-span-2 mb-2 sm:mb-0">
-                            {item.name}
+                        <div className="mb-2 sm:mb-0">
+                          <div className="w-auto inline-block">
+                            <span>تعداد کالا: </span>
+                            <span>
+                              {convertToFarsiNumbers(item.number)} عدد
+                            </span>
                           </div>
-                          <div className="mb-2 sm:mb-0">
-                            <div className="w-auto inline-block">
-                              <span>تعداد کالا: </span>
-                              <span>
-                                {convertToFarsiNumbers(item.number)} عدد
-                              </span>
-                            </div>
+                        </div>
+                        <div className="grid gap-6">
+                          <div>
+                            قیمت هر عدد :
+                            {convertToFarsiNumbers(
+                              formatPrice(item.price.toString())
+                            )}{" "}
+                            تومان
                           </div>
-                          <div className="grid gap-6">
-                            <div>
-                              قیمت هر عدد :
-                              {convertToFarsiNumbers(
-                                formatPrice(item.price.toString())
-                              )}{" "}
-                              تومان
-                            </div>
-                            <div>
-                              قیمت کل :
-                              {convertToFarsiNumbers(
-                                formatPrice(
-                                  Math.ceil(
-                                    item.number * parseInt(item.price)
-                                  ).toString()
-                                )
-                              )}{" "}
-                              تومان
-                            </div>
+                          <div>
+                            قیمت کل :
+                            {convertToFarsiNumbers(
+                              formatPrice(
+                                Math.ceil(
+                                  item.number * parseInt(item.price)
+                                ).toString()
+                              )
+                            )}{" "}
+                            تومان
                           </div>
                         </div>
                       </div>
-                      {cartProducts.length == index + 1 ? (
-                        ""
-                      ) : (
-                        <div className="border-[1px] border-gray-200 w-full h-[2px]"></div>
-                      )}
                     </div>
-                  );
-                })}
+                    {cartProducts.length == index + 1 ? (
+                      ""
+                    ) : (
+                      <div className="border-[1px] border-gray-200 w-full h-[2px]"></div>
+                    )}
+                  </div>
+                );
+              })}
           </div>
         </Box>
       </Box>

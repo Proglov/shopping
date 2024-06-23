@@ -171,7 +171,7 @@ export default function CommentsTable({ validated }) {
             dispatch(getInvalidatedCommentsFromServer({ page: currentPage, perPage: itemsPerPage }))
         else
             dispatch(getConfirmedCommentsFromServer({ page: currentPageConfirmedComments, perPage: itemsPerPageConfirmedComments }))
-    }, [dispatch]);
+    }, [dispatch, currentPage, currentPageConfirmedComments, itemsPerPage, itemsPerPageConfirmedComments, validated]);
 
     return (
         <>

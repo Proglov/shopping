@@ -61,7 +61,7 @@ export default function ProductsTable({ which }) {
         if (which === "Seller") dispatch(getSellerProductsFromServer({ currentPage, itemsPerPage }))
         else if (which === "ADMIN") dispatch(getAdminProductsFromServer({ currentPage, itemsPerPage }))
 
-    }, [currentPage, itemsPerPage, which]);
+    }, [currentPage, itemsPerPage, which, dispatch]);
 
 
     return (

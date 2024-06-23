@@ -176,7 +176,7 @@ export default function SellersTable({ validated }) {
             dispatch(getInvalidatedSellersFromServer({ page: currentPage, perPage: itemsPerPage }))
         else
             dispatch(getConfirmedSellersFromServer({ page: currentPageConfirmedSellers, perPage: itemsPerPageConfirmedSellers }))
-    }, [dispatch]);
+    }, [dispatch, currentPage, currentPageConfirmedSellers, itemsPerPage, itemsPerPageConfirmedSellers, validated]);
 
 
     return (

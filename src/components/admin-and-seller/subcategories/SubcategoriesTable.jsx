@@ -51,7 +51,7 @@ export default function SubcategoriesTable() {
     useEffect(() => {
         dispatch(getSubcategoriesFromServer({ currentPage, itemsPerPage }))
         dispatch(getCategoriesFromServer())
-    }, [currentPage, itemsPerPage]);
+    }, [currentPage, itemsPerPage, dispatch]);
 
 
     return (

@@ -27,7 +27,7 @@ export default function CardItem({ product, subID }) {
   useEffect(() => {
     const item = cartProducts.filter((item) => item.code === product._id)[0];
     setNumber(item?.number?.toString());
-  }, [setNumber, cartProducts]);
+  }, [setNumber, cartProducts, product._id]);
 
   return (
     <Card className="ml-6 max-w-[200px] md:h-[330px] h-[300px]">

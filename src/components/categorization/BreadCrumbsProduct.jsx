@@ -26,24 +26,24 @@ export default function BreadCrumbsProduct() {
       try {
         const response = await getOneCategory({ id: id });
         setName(response.category.name);
-      } catch (error) {}
+      } catch (error) { }
     };
     getCategory();
     const getSubCategory = async () => {
       try {
         const response = await getOneSubcategory({ id: subId });
         setNameSub(response.subcategory.name);
-      } catch (error) {}
+      } catch (error) { }
     };
     getSubCategory();
     const getProduct = async () => {
       try {
         const p = await getOneProduct({ id: productId });
         setProductName(p.data.product.name);
-      } catch (error) {}
+      } catch (error) { }
     };
     getProduct();
-  }, [getOneCategory, getOneSubcategory, getOneProduct]);
+  }, [getOneCategory, getOneSubcategory, getOneProduct, id, productId, subId]);
 
   return (
     <Breadcrumbs

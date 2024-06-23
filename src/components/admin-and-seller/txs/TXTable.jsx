@@ -200,7 +200,7 @@ export default function TXTable({ which, isFutureOrder }) {
             dispatch(getFutureTXsFromServer({ page: currentPage, perPage: itemsPerPage, which }));
         else
             dispatch(getRecentTXFromServer({ page: currentPage, perPage: itemsPerPage, which }));
-    }, []);
+    }, [currentPage, dispatch, isFutureOrder, itemsPerPage, which]);
 
 
     return (<>

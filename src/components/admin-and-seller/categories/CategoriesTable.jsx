@@ -50,7 +50,7 @@ export default function CategoriesTable() {
 
     useEffect(() => {
         dispatch(getCategoriesFromServer({ currentPage, itemsPerPage }))
-    }, [currentPage, itemsPerPage]);
+    }, [currentPage, itemsPerPage, dispatch]);
 
 
     return (

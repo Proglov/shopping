@@ -22,7 +22,7 @@ export default function DetailItem({ detail }) {
   useEffect(() => {
     const item = cartProducts.filter((item) => item.code === detail._id)[0];
     setNumber(item?.number?.toString());
-  }, [setNumber, cartProducts]);
+  }, [setNumber, cartProducts, detail._id]);
 
   return (
     <>
