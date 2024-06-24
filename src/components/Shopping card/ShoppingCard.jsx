@@ -56,7 +56,7 @@ export default function ShoppingCard({ step }) {
       }
       setNumber(0);
     }
-  }, [setLogin, router, login, number, step]);
+  }, [setLogin, router]);
 
   return (
     <>
