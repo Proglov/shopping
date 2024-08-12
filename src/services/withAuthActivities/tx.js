@@ -4,25 +4,25 @@ import { clientWithAuth } from "@/lib/axios"
 const Api = {
     getAllTXs: async (payload) => {
         const response = await clientWithAuth.get(
-            `/transactionGet/getAllTransActions?page=${payload?.page}&perPage=${payload?.perPage}&isFutureOrder=${payload?.isFutureOrder}`
+            `transactionGet/getAllTransActions?page=${payload?.page}&perPage=${payload?.perPage}&isFutureOrder=${payload?.isFutureOrder}`
         );
         return response?.data;
     },
     getAllMyTXs: async (payload) => {
         const response = await clientWithAuth.get(
-            `/transactionGet/getAllMyTransActions?page=${payload?.page}&perPage=${payload?.perPage}&isFutureOrder=${payload?.isFutureOrder}`
+            `transactionGet/getAllMyTransActions?page=${payload?.page}&perPage=${payload?.perPage}&isFutureOrder=${payload?.isFutureOrder}`
         );
         return response?.data;
     },
     getAllMyTXsUser: async (payload) => {
         const response = await clientWithAuth.get(
-            `/transactionGet/getAllMyTransActionsUser?page=${payload?.page}&perPage=${payload?.perPage}`
+            `transactionGet/getAllMyTransActionsUser?page=${payload?.page}&perPage=${payload?.perPage}`
         );
         return response?.data;
     },
     TXStatus: async (payload) => {
         const response = await clientWithAuth.post(
-            `/transactionUpdate/TransActionStatus`,
+            `transactionUpdate/TransActionStatus`,
             {
                 id: payload?.id,
                 newStatus: payload?.newStatus,
@@ -32,7 +32,7 @@ const Api = {
     },
     createTX: async (payload) => {
         const response = await clientWithAuth.post(
-            `/transactionPost/TransActionCreate`,
+            `transactionPost/TransActionCreate`,
             {
                 input: payload
             }
@@ -41,7 +41,7 @@ const Api = {
     },
     getOneTX: async (payload) => {
         const response = await clientWithAuth.get(
-            `/transactionGet/getOneTransAction?id=${payload?.id}`
+            `transactionGet/getOneTransAction?id=${payload?.id}`
         );
         return response?.data;
     }

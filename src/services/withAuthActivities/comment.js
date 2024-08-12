@@ -4,7 +4,7 @@ import { clientWithAuth } from "@/lib/axios"
 const Api = {
     updateComment: async (payload) => {
         const response = await clientWithAuth.patch(
-            `/commentUpdate/CommentUpdate`,
+            `commentUpdate/CommentUpdate`,
             {
                 input: {
                     id: payload?.input?.id,
@@ -16,7 +16,7 @@ const Api = {
     },
     deleteComment: async (payload) => {
         const response = await clientWithAuth.delete(
-            `/commentDelete/CommentDelete`,
+            `commentDelete/CommentDelete`,
             {
                 data: {
                     id: payload?.id
@@ -27,7 +27,7 @@ const Api = {
     },
     toggleValidateComment: async (payload) => {
         const response = await clientWithAuth.patch(
-            `/commentUpdate/CommentToggleValidate`,
+            `commentUpdate/CommentToggleValidate`,
             {
                 input: {
                     id: payload?.id
@@ -38,7 +38,7 @@ const Api = {
     },
     createComment: async (payload) => {
         const response = await clientWithAuth.post(
-            `/commentPost/CommentAdd`,
+            `commentPost/CommentAdd`,
             {
                 input: payload
             }
@@ -47,7 +47,7 @@ const Api = {
     },
     toggleLikeComment: async (payload) => {
         const response = await clientWithAuth.patch(
-            `/commentUpdate/CommentToggleLike`,
+            `commentUpdate/CommentToggleLike`,
             {
                 input: {
                     id: payload?.id,
@@ -59,7 +59,7 @@ const Api = {
     },
     toggleDisLikeComment: async (payload) => {
         const response = await clientWithAuth.patch(
-            `/commentUpdate/CommentToggleDisLike`,
+            `commentUpdate/CommentToggleDisLike`,
             {
                 input: {
                     id: payload?.id,

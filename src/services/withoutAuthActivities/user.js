@@ -4,7 +4,7 @@ import { clientWithoutAuth } from "@/lib/axios"
 const Api = {
     signUp: async (payload) => {
         const response = await clientWithoutAuth.post(
-            `/userPost/UserSignUp`,
+            `userPost/UserSignUp`,
             {
                 input: payload
             }
@@ -13,7 +13,7 @@ const Api = {
     },
     signInWithPhone: async (payload) => {
         const response = await clientWithoutAuth.post(
-            `/userPost/UserSignInWithPhone`,
+            `userPost/UserSignInWithPhone`,
             {
                 phone: payload?.phone,
                 password: payload?.password
@@ -23,7 +23,7 @@ const Api = {
     },
     signInWithEmailOrUsername: async (payload) => {
         const response = await clientWithoutAuth.post(
-            `/userPost/UserSignInWithEmailOrUsername`,
+            `userPost/UserSignInWithEmailOrUsername`,
             {
                 emailOrUsername: payload?.emailOrUsername,
                 password: payload?.password

@@ -4,31 +4,31 @@ import { clientWithoutAuth } from "@/lib/axios"
 const Api = {
     getAllProducts: async (payload) => {
         const response = await clientWithoutAuth.get(
-            `/productGet/getAllProducts?page=${payload?.page}&perPage=${payload?.perPage}`
+            `productGet/getAllProducts?page=${payload?.page}&perPage=${payload?.perPage}`
         );
         return response?.data;
     },
     getOneProduct: async (payload) => {
         const response = await clientWithoutAuth.get(
-            `/productGet/getOneProduct?id=${payload?.id}`
+            `productGet/getOneProduct?id=${payload?.id}`
         );
         return response;
     },
     getOneProductParams: async (payload) => {
         const response = await clientWithoutAuth.get(
-            `/productGet/getOneProductParams?id=${payload?.id}`
+            `productGet/getOneProductParams?id=${payload?.id}`
         );
         return response?.data;
     },
     getSomeProducts: async (payload) => {
         const response = await clientWithoutAuth.get(
-            `/productGet/getSomeProducts`, { params: payload }
+            `productGet/getSomeProducts`, { params: payload }
         );
         return response?.data;
     },
     getAllProductsOfACategory: async (payload) => {
         const response = await clientWithoutAuth.get(
-            `/productGet/getAllProductsOfACategory?categoryId=${payload?.id}`
+            `productGet/getAllProductsOfACategory?categoryId=${payload?.id}`
         );
         return response?.data;
     },

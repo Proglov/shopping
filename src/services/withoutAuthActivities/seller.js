@@ -4,13 +4,13 @@ import { clientWithoutAuth } from "@/lib/axios"
 const Api = {
     isUserSeller: async () => {
         const response = await clientWithoutAuth.get(
-            `/sellerGet/isUserSeller`
+            `sellerGet/isUserSeller`
         );
         return response?.data;
     },
     sellerSignUp: async (payload) => {
         const response = await clientWithoutAuth.post(
-            `/sellerPost/SellerSignUp`,
+            `sellerPost/SellerSignUp`,
             {
                 input: payload
             }
@@ -19,7 +19,7 @@ const Api = {
     },
     sellerSignInWithPhone: async (payload) => {
         const response = await clientWithoutAuth.post(
-            `/sellerPost/SellerSignInWithPhone`,
+            `sellerPost/SellerSignInWithPhone`,
             {
                 phone: payload?.phone,
                 password: payload?.password
@@ -29,7 +29,7 @@ const Api = {
     },
     sellerSignInWithEmailOrUsername: async (payload) => {
         const response = await clientWithoutAuth.post(
-            `/sellerPost/SellerSignInWithEmailOrUsername`,
+            `sellerPost/SellerSignInWithEmailOrUsername`,
             {
                 emailOrUsername: payload?.emailOrUsername,
                 password: payload?.password

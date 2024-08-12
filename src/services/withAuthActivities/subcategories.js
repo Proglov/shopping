@@ -4,7 +4,7 @@ import { clientWithAuth } from "@/lib/axios"
 const Api = {
     createSubcategories: async (payload) => {
         const response = await clientWithAuth.post(
-            `/subcategoryPost/subcategoryCreate`,
+            `subcategoryPost/subcategoryCreate`,
             {
                 input: payload
             }

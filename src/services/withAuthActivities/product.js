@@ -19,7 +19,7 @@ const Api = {
     },
     updateProduct: async (payload) => {
         const response = await clientWithAuth.patch(
-            `/productUpdate/ProductUpdate`,
+            `productUpdate/ProductUpdate`,
             {
                 input: payload
             }
@@ -28,7 +28,7 @@ const Api = {
     },
     toggleAvailabilityProduct: async (payload) => {
         const response = await clientWithAuth.patch(
-            `/productUpdate/ProductAvailability`,
+            `productUpdate/ProductAvailability`,
             {
                 input: payload
             }
@@ -37,7 +37,7 @@ const Api = {
     },
     // deleteProduct: async (payload) => {
     //     const response = await clientWithAuth.delete(
-    //         `/productDelete/ProductDelete`,
+    //         `productDelete/ProductDelete`,
     //         {
     //             data: {
     //                 id: payload?.id

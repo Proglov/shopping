@@ -6,14 +6,14 @@ const Api = {
         const data = new FormData();
         data.append("images", payload)
         const response = await clientWithAuth.post(
-            `/imagePost/uploadImage`,
+            `imagePost/uploadImage`,
             data
         );
         return response?.data;
     },
     deleteImages: async (payload) => {
         const response = await clientWithAuth.delete(
-            `/imageDelete/deleteImages`,
+            `imageDelete/deleteImages`,
             {
                 data: {
                     filenames: payload?.filenames
