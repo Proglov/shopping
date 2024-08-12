@@ -4,5 +4,5 @@ export const metadata = {
 };
 
 export default function ShoppingLayout({ children }) {
-  return <div className="bg-gray-50">{children}</div>;
+  return <div className="bg-slate-50">{children}</div>;
 }

@@ -1,12 +1,9 @@
 "use client";
-
 import GalleryItem from "./GalleryItem";
 import DetailItem from "./DetailItem";
 import CommentItem from "./CommentItem";
-import SimilarProducts from "./SimilarProducts";
 import ProductApi from "@/services/withoutAuthActivities/product";
 import { usePathname } from "next/navigation";
-import { useAppSelector } from "@/store/Hook";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -19,14 +16,11 @@ export default function Item() {
     imagesUrl: [],
     name: "",
     price: 0,
-    sellerId: "",
     subcategoryId: {
       categoryId: {
         name: "",
       },
-    },
-    __v: 0,
-    _id: "",
+    }
   });
   const [isLoading, setIsLoading] = useState(true);
 
@@ -52,12 +46,13 @@ export default function Item() {
       </div>
     );
   }
+
   return (
     <>
       <GalleryItem images={product.imagesUrl} />
-      <DetailItem detail={product} />
+      <DetailItem product={product} />
+      <CommentItem productID={router.split("/")[3]} />
       {/* <SimilarProducts /> */}
-      <CommentItem />
     </>
   );
 }

@@ -1,5 +1,4 @@
 "use client";
-
 import { Grid, Skeleton, Typography } from "@mui/material";
 import CategoryComponent from "./CategoryComponent";
 import { TbCategory } from "react-icons/tb";
@@ -28,7 +27,7 @@ export default function Categories() {
 
   return (
     <div className="m-4" id="categorization">
-      <div
+      <Typography
         className="border border-gray-300 top-3 relative"
         style={{
           transform: "translateY(15px)",
@@ -36,7 +35,7 @@ export default function Categories() {
           borderTopRightRadius: "50%",
           borderTopLeftRadius: "50%",
         }}
-      ></div>
+      />
 
       <div>
         <Typography
@@ -59,7 +58,7 @@ export default function Categories() {
             marginLeft: 'auto',
             marginRight: 'auto'
           }}
-          className="bg-white m-2 flex justify-center"
+          className="bg-white m-2 flex justify-center mx-auto"
         >
           <TbCategory className="mt-1 text-cyan-500" />
           <span className="mx-2">دسته بندی</span>

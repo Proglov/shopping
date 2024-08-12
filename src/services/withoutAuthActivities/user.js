@@ -15,7 +15,8 @@ const Api = {
         const response = await clientWithoutAuth.post(
             `/userPost/UserSignInWithPhone`,
             {
-                phone: payload?.phone
+                phone: payload?.phone,
+                password: payload?.password
             }
         );
         return response?.data;

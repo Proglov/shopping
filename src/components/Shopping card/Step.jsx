@@ -1,79 +1,48 @@
 import { farsiNumCharacter } from "@/utils/funcs";
-import { Box, Grid } from "@mui/material";
+import { Box } from "@mui/material";
 
 export default function Step({ active }) {
-  const enable =
-    "rounded-full bg-green-500 text-center text-white text-2xl shadow-2xl absolute";
-  const disable =
-    "rounded-full bg-white text-center text-gray-500 text-2xl shadow-2xl absolute";
-  const textEnable = "text-green-500 ";
-  const textDisable = "text-gray-500 ";
 
   const stepper = [1, 2, 3];
-  const detail = ["اطلاعات ارسال", "پرداخت آنلاین", "فاکتور نهایی"];
+  const detail = ["اطلاعات ارسال", "نحوه پرداخت", "اطلاعات نهایی"];
+
+  const makeBall = (active, index) => <div className={`mt-[-3px] w-3 h-3 rounded-full bg-${active == index || active == index - 1 ? 'green-500' : 'gray-300'}`} />
 
   return (
-    <>
-      <Box className="mt-10 mb-10">
-        <Grid>
-          <Grid
-            item
-            xs={12}
-            container
-            direction="row"
-            justifyContent="space-around"
-            alignItems="center"
-            className="mb-12"
+    <Box className="mb-20 mt-14 flex justify-around w-[320px] sm:w-[360px] mx-auto">
+
+      {
+        stepper.map((item, index) =>
+          <div
+            key={index}
+            className={
+              active == index
+                ? "relative bg-green-500 h-1 w-28 sm:w-32"
+                : "relative bg-gray-300 h-1 w-28 sm:w-32"
+            }
           >
-            {stepper.map((item, index) => {
-              return (
-                <div
-                  key={index}
-                  className={
-                    active == index
-                      ? "relative bg-green-500 h-1 w-28"
-                      : "relative bg-white h-1 w-28"
-                  }
-                >
-                  <div
-                    className={active == index ? `${enable}` : `${disable}`}
-                    style={{
-                      width: "50px",
-                      height: "50px",
-                      lineHeight: "50px",
-                      top: "-22px",
-                      right: "27%",
-                    }}
-                  >
-                    {farsiNumCharacter(item.toString())}
-                  </div>
-                </div>
-              );
-            })}
-          </Grid>
-          <Grid
-            item
-            xs={12}
-            container
-            direction="row"
-            justifyContent="space-around"
-            alignItems="center"
-          >
-            {detail.map((item, index) => {
-              return (
-                <div
-                  key={index}
-                  className={
-                    active == index ? `${textEnable}` : `${textDisable}`
-                  }
-                >
-                  {item}
-                </div>
-              );
-            })}
-          </Grid>
-        </Grid>
-      </Box>
-    </>
+            {makeBall(active, index)}
+            <div
+              className={`rounded-full text-center text-2xl shadow-2xl absolute ${active == index ? ' bg-green-500 text-white' : ' bg-gray-300 text-gray-500'}`}
+              style={{
+                width: "50px",
+                height: "50px",
+                lineHeight: "50px",
+                top: "-22px",
+                right: "27%",
+              }}
+            >
+              {farsiNumCharacter(item.toString())}
+            </div>
+            <br />
+            <div className={`text-center sm:text-base text-sm mr-3 mt-2 ${active == index ? 'text-green-500' : "text-gray-500"}`}>
+              {detail[index]}
+            </div>
+          </div>
+        )
+      }
+
+      {makeBall(active, 3)}
+    </Box>
   );
 }

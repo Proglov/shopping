@@ -1,9 +1,7 @@
 import Profile from "@/components/users/profile/Profile";
 
-export default function ProfilePage() {
+export default function ProfilePage({ searchParams }) {
   return (
-    <>
-      <Profile />
-    </>
+    <Profile tab={searchParams?.tab || 'specifications'} />
   );
 }

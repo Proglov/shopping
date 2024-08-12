@@ -9,11 +9,9 @@ export const metadata = {
 export default function ProfileLayout({ children }) {
   return (
     <>
-      <div className="bg-gray-100">
-        <NavBar />
-        {children}
-        <FooterMenu />
-      </div>
+      <NavBar />
+      {children}
+      <FooterMenu />
     </>
   );
 }

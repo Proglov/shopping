@@ -11,12 +11,11 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Pagination from '../../Pagination';
 import { price2Farsi } from '@/utils/funcs';
-import ModalDelete from './ModalDelete';
 import ModalEdit from './ModalEdit';
-import { getAdminProductsFromServer, getSellerProductsFromServer } from '../redux/globalAsyncThunks';
+import { getAdminProductsFromServer, getSellerProductsFromServer, toggleAvailabilityProduct } from '../redux/globalAsyncThunks';
 import { setCurrentPage } from '../redux/reducers/global';
 import { useDispatch, useSelector } from 'react-redux';
-import { setIsModalDeleteOpen, setIsModalEditOpen, setSelectedItem } from '../redux/reducers/products';
+import { setIsModalEditOpen, setSelectedItem } from '../redux/reducers/products';
 
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -98,6 +97,7 @@ export default function ProductsTable({ which }) {
                                         <StyledTableCell align='center'>قیمت به عدد</StyledTableCell>
                                         <StyledTableCell align='center'>دسته بندی</StyledTableCell>
                                         <StyledTableCell align='center'>زیر دسته بندی</StyledTableCell>
+                                        <StyledTableCell align='center'>موجود</StyledTableCell>
                                         <StyledTableCell align='center'>عملیات</StyledTableCell>
                                     </TableRow>
                                 </TableHead>
@@ -111,6 +111,9 @@ export default function ProductsTable({ which }) {
                                             <StyledTableCell align='center'>{item.price}</StyledTableCell>
                                             <StyledTableCell align='center'>{item.subcategoryId?.categoryId.name}</StyledTableCell>
                                             <StyledTableCell align='center'>{item.subcategoryId?.name}</StyledTableCell>
+                                            <StyledTableCell align='center'>
+                                                <div style={{ width: '20px', height: '20px' }} className={`${item?.available ? 'bg-green-400' : 'bg-red-400'} rounded-full mx-auto`} />
+                                            </StyledTableCell>
                                             <StyledTableCell className='border-b-0'>
                                                 {selectedItem?._id === item._id ? (
                                                     <div className='text-center mt-2 text-xs'>درحال انجام عملیات
@@ -130,14 +133,17 @@ export default function ProductsTable({ which }) {
                                                         </Button>
                                                         <Button
                                                             variant='outlined'
-                                                            sx={{ color: 'red', borderColor: 'red' }}
+                                                            sx={{ color: `${!item?.available ? 'green' : 'red'}`, borderColor: `${!item?.available ? 'green' : 'red'}` }}
                                                             className='p-0 m-1'
                                                             onClick={() => {
-                                                                dispatch(setIsModalDeleteOpen(true));
-                                                                dispatch(setSelectedItem({ ...item }));
+                                                                dispatch(toggleAvailabilityProduct(item._id));
                                                             }}
                                                         >
-                                                            حذف
+                                                            {
+                                                                item.available &&
+                                                                "نا"
+                                                            }
+                                                            موجود شد
                                                         </Button>
                                                     </div>
                                                 )}
@@ -167,7 +173,6 @@ export default function ProductsTable({ which }) {
                     </div>
             )}
 
-            <ModalDelete productName={selectedItem?.name} />
             <ModalEdit />
 
         </Stack>

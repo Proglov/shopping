@@ -26,17 +26,26 @@ const Api = {
         );
         return response?.data;
     },
-    deleteProduct: async (payload) => {
-        const response = await clientWithAuth.delete(
-            `/productDelete/ProductDelete`,
+    toggleAvailabilityProduct: async (payload) => {
+        const response = await clientWithAuth.patch(
+            `/productUpdate/ProductAvailability`,
             {
-                data: {
-                    id: payload?.id
-                }
+                input: payload
             }
         );
         return response?.data;
-    }
+    },
+    // deleteProduct: async (payload) => {
+    //     const response = await clientWithAuth.delete(
+    //         `/productDelete/ProductDelete`,
+    //         {
+    //             data: {
+    //                 id: payload?.id
+    //             }
+    //         }
+    //     );
+    //     return response?.data;
+    // }
 };
 
 export default Api;

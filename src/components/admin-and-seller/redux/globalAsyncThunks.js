@@ -65,11 +65,12 @@ export const addProductToServer = createAsyncThunk(
         return await createProduct(obj)
     }
 )
-export const deleteProductFromServer = createAsyncThunk(
-    "Global/deleteProductFromServer",
+export const toggleAvailabilityProduct = createAsyncThunk(
+    "Global/toggleAvailabilityProduct",
     async (id) => {
-        const { deleteProduct } = Api5
-        return await deleteProduct({ id })
+        const { toggleAvailabilityProduct } = Api5
+        await toggleAvailabilityProduct({ id })
+        return id
     }
 )
 export const updateProductFromServer = createAsyncThunk(
@@ -155,10 +156,11 @@ export const getFutureTXsFromServer = createAsyncThunk(
         return await getAllTXs({ page, perPage, isFutureOrder: true })
     }
 )
-export const updateTXDoneToServer = createAsyncThunk(
-    "Global/updateTXDoneToServer",
-    async (id) => {
-        const { TXDone } = Api10
-        return await TXDone({ id })
+export const updateTXStatusToServer = createAsyncThunk(
+    "Global/updateTXStatusToServer",
+    async ({ id, newStatus }) => {
+        const { TXStatus } = Api10
+        await TXStatus({ id, newStatus })
+        return { id, newStatus }
     }
 )

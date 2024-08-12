@@ -14,11 +14,18 @@ const Api = {
         );
         return response?.data;
     },
-    TXDone: async (payload) => {
+    getAllMyTXsUser: async (payload) => {
+        const response = await clientWithAuth.get(
+            `/transactionGet/getAllMyTransActionsUser?page=${payload?.page}&perPage=${payload?.perPage}`
+        );
+        return response?.data;
+    },
+    TXStatus: async (payload) => {
         const response = await clientWithAuth.post(
-            `/transactionUpdate/TransActionDone`,
+            `/transactionUpdate/TransActionStatus`,
             {
-                id: payload?.id
+                id: payload?.id,
+                newStatus: payload?.newStatus,
             }
         );
         return response?.data;

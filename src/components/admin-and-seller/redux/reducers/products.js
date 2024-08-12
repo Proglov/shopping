@@ -3,7 +3,6 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
     selectedItem: {},
-    isModalDeleteOpen: false,
     isModalEditOpen: false,
     operatingError: '',
     categories: []
@@ -23,10 +22,10 @@ const productsSlice = createSlice({
     initialState,
     reducers: {
         setSelectedItem(state, action) {
-            state.selectedItem = action.payload
-        },
-        setIsModalDeleteOpen(state, action) {
-            state.isModalDeleteOpen = action.payload
+            if (typeof action.payload === "function")
+                state.selectedItem = action.payload(state.selectedItem)
+            else
+                state.selectedItem = action.payload
         },
         setIsModalEditOpen(state, action) {
             state.isModalEditOpen = action.payload
@@ -67,5 +66,5 @@ const productsSlice = createSlice({
     }
 });
 
-export const { setIsModalDeleteOpen, setIsModalEditOpen, setOperatingError, setSelectedItem, setCategories } = productsSlice.actions;
+export const { setIsModalEditOpen, setOperatingError, setSelectedItem, setCategories } = productsSlice.actions;
 export default productsSlice.reducer;

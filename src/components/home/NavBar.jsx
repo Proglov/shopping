@@ -1,5 +1,5 @@
 "use client";
-import * as React from "react";
+import { useEffect, useState } from "react";
 import { styled, alpha } from "@mui/material/styles";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
@@ -8,8 +8,6 @@ import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import InputBase from "@mui/material/InputBase";
 import Badge from "@mui/material/Badge";
-import MenuItem from "@mui/material/MenuItem";
-import Menu from "@mui/material/Menu";
 import SearchIcon from "@mui/icons-material/Search";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import { LiaSignInAltSolid, LiaSignOutAltSolid } from "react-icons/lia";
@@ -18,14 +16,11 @@ import Link from "next/link";
 import Cart from "../Shopping card/Cart";
 import { convertToFarsiNumbers } from "@/utils/funcs";
 import { Button, Dialog, DialogActions, DialogContent } from "@mui/material";
-import { GrUserAdmin } from "react-icons/gr";
-import { useAppDispatch, useAppSelector } from "@/store/Hook";
 import StorefrontIcon from "@mui/icons-material/Storefront";
-import AdminProtector from "@/app/ADMIN/AdminProtector";
-import SellerProtector from "@/app/Seller/SellerProtector";
 import { useRouter } from "next/navigation";
-import { SetCart } from "@/features/CartProducts/CartProductsSlice";
-import { loadState } from "@/Storage/Storage";
+import { SetCart } from "@/store/CartProductsSlice";
+import { checkSellerLoggedIn, checkUserLoggedIn, getCounterProductsWithoutLS, loadCartState } from "@/Storage/Storage";
+import { useDispatch, useSelector } from "react-redux";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -68,15 +63,35 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 export default function NavBar() {
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const [open, setOpen] = React.useState(false);
-  const cartProducts = useAppSelector((state) => state.CartProducts);
-  const [openDialog, setOpenDialog] = React.useState(false);
-  const [bga, setBga] = React.useState(false);
   const router = useRouter();
-  const dispatch = useAppDispatch();
-  const [LoginUser, setLoginUser] = React.useState(false);
-  const [LoginSeller, setLoginSeller] = React.useState(false);
+  const dispatch = useDispatch();
+  const products = useSelector((state) => state.CartProducts);
+
+  const [open, setOpen] = useState(false);
+  const [openDialog, setOpenDialog] = useState(false);
+  const [bga, setBga] = useState(false);
+  const [LoginUser, setLoginUser] = useState(false);
+  const [LoginSeller, setLoginSeller] = useState(false);
+  const [counter, setCounter] = useState(0)
+
+  useEffect(() => {
+    setCounter(getCounterProductsWithoutLS(products))
+  }, [products])
+
+  useEffect(() => {
+    const checkLoginStatus = async () => {
+      const userLogin = await checkUserLoggedIn()
+      if (!userLogin) {
+        const sellerLogin = await checkSellerLoggedIn()
+        setLoginSeller(sellerLogin)
+      }
+      setLoginUser(userLogin);
+    }
+    checkLoginStatus()
+    const state = loadCartState();
+    dispatch(SetCart(state));
+  }, [setLoginSeller, setLoginUser, dispatch]);
+
 
   const handleOpen = () => {
     setOpenDialog(true);
@@ -85,29 +100,12 @@ export default function NavBar() {
     setOpenDialog(false);
   };
 
-  let counter =
-    cartProducts
-      ?.reduce((accumulator, currentObject) => {
-        return accumulator + currentObject.number;
-      }, 0)
-      .toString() | "0";
-
   const handleClickOpen = () => {
     setOpen(true);
   };
 
   const handleClose = () => {
     setOpen(false);
-  };
-
-  const isMenuOpen = Boolean(anchorEl);
-
-  const handleProfileMenuOpen = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleMenuClose = () => {
-    setAnchorEl(null);
   };
 
   const logOut = () => {
@@ -120,23 +118,109 @@ export default function NavBar() {
     router.refresh();
   };
 
-  React.useEffect(() => {
-    if (localStorage.getItem("UserLogin") == "true") {
-      setLoginUser(true);
-    } else {
-      setLoginUser(false);
-    }
-    if (localStorage.getItem("SellerLogin") == "true") {
-      setLoginSeller(true);
-    } else {
-      setLoginSeller(false);
-    }
-    const state = loadState();
-    dispatch(SetCart(state));
-  }, [setLoginSeller, setLoginUser, dispatch]);
+
+  const shoppingCardComponent = (
+    <Typography
+      className="mr-4 z-50 w-16 pt-[10px] pr-[22px]"
+      variant="h6"
+      noWrap
+      component="div"
+    >
+      <IconButton onClick={handleClickOpen}>
+        <Badge
+          badgeContent={convertToFarsiNumbers(counter)}
+          color="error"
+          sx={{ zIndex: "300", "& .MuiBadge-badge": { fontSize: { xs: '9px', sm: '15px' }, height: { xs: '15px', sm: '22px' }, width: { xs: '15px', sm: '22px' } } }}
+        >
+          <GiShoppingCart
+            className="sm:text-2xl text-[18px]"
+            style={{ zIndex: "300" }}
+          />
+        </Badge>
+      </IconButton>
+      <Cart Close={handleClose} Open={open} />
+    </Typography>
+  )
+
+  const signInAndSignOutComponent = (
+    <IconButton
+      edge="start"
+      color="inherit"
+      aria-label="open drawer"
+      className="mr-2"
+    >
+      {!(LoginUser | LoginSeller) ? (
+        <Link href="/users/login">
+          <span className="text-white flex">
+            <LiaSignInAltSolid className="sm:text-[25px] text-[22px] " />
+            <span style={{ lineHeight: "24px" }} className="sm:text-2xl text-[16px]">ورود</span>
+          </span>
+        </Link>
+      ) : (
+        <span className="text-red-500 flex" onClick={handleOpen}>
+          <LiaSignOutAltSolid />
+          <span style={{ lineHeight: "20px" }}>خروج</span>
+        </span>
+      )}
+    </IconButton>
+  )
+
+  const sellerComponent = (
+    <IconButton
+      className="sm:text-sm sm:w-32 sm:h-16 w-20 h-12 text-xs"
+      edge="start"
+      color="inherit"
+      aria-label="open drawer"
+    >
+      <Link href="/Seller">
+        <span className="flex flex-col">
+          <StorefrontIcon className="mx-auto pt-2" />
+          <span>پنل مدیریت</span>
+        </span>
+      </Link>
+    </IconButton>
+  )
+
+  const spaceComponent = (
+    <Box className='lg:flex-1 xl:hidden' />
+  )
+
+  const searchComponent = (
+    <Search
+      dir="rtl"
+      onClick={() => setBga(true)}
+      onDoubleClick={() => router.push('/ADMIN')}
+    >
+      <SearchIconWrapper>
+        <SearchIcon className="sm:text-lg text-xs" />
+      </SearchIconWrapper>
+      <StyledInputBase
+        className="sm:text-lg text-[10px]"
+        placeholder="جستجو ..."
+        inputProps={{ "aria-label": "search" }}
+      />
+    </Search>
+  )
+
+  const profileComponent = (
+    <Box>
+      <IconButton
+        edge="end"
+        aria-label="account of current user"
+        aria-controls="primary-search-account-menu"
+        aria-haspopup="true"
+        color="inherit"
+      >
+        <span className="text-white text-[16px] flex">
+          <Link href="/users/profile" className="mr-1"> پروفایل</Link>
+          <AccountCircle />
+        </span>
+      </IconButton>
+    </Box>
+  )
 
   return (
-    <Box sx={{ flexGrow: 1 }}>
+    <Box>
       <div style={{ width: "100%", height: "56px" }}></div>
       <AppBar
         sx={{
@@ -145,187 +229,50 @@ export default function NavBar() {
           backgroundColor: `rgba(62, 81, 114, ${bga ? ".9" : ".8"})`,
         }}
       >
-        <Toolbar>
-          {/* سبد خرید */}
-          <Typography
-            className="mr-1 z-50"
-            variant="h6"
-            noWrap
-            component="div"
-            sx={{
-              flexGrow: 1,
-              maxWidth: "48px",
-              flexBasis: "48px",
-              height: "50px",
-              paddingTop: "10px",
-            }}
-            onDoubleClick={() => router.push('/ADMIN')}
-          >
-            <IconButton onClick={handleClickOpen}>
-              <Badge
-                badgeContent={convertToFarsiNumbers(counter)}
-                color="error"
-                sx={{ zIndex: "300" }}
-              >
-                <GiShoppingCart
-                  className="text-2xl"
-                  style={{ zIndex: "300" }}
-                />
-              </Badge>
-            </IconButton>
-            <Cart Close={handleClose} Open={open} />
-          </Typography>
-
-          {/* ورود و خروج */}
-          <IconButton
-            size="large"
-            edge="start"
-            color="inherit"
-            aria-label="open drawer"
-            className="mr-2"
-          >
-            {!(LoginUser | LoginSeller) ? (
-              <Link href="/users/login">
-                <span className="text-white flex">
-                  <LiaSignInAltSolid />
-                  <span style={{ lineHeight: "24px" }}>ورود</span>
-                </span>
-              </Link>
-            ) : (
-              <span className="text-red-500 flex" onClick={handleOpen}>
-                <LiaSignOutAltSolid />
-                <span style={{ lineHeight: "20px" }} onDoubleClick={{ React }}>خروج</span>
-              </span>
-            )}
-          </IconButton>
-
-          {/* ادمین */}
-          {/* <AdminProtector
-            Wait={<></>}
-            shouldRouterPush={false}
-            showNotFound={<></>}
-          >
-            <IconButton
-              size="large"
-              edge="start"
-              color="inherit"
-              aria-label="open drawer"
-            >
-              <Link href="/ADMIN">
-                <span
-                  className="text-red-500 flex"
-                  style={{ lineHeight: "24px" }}
-                >
-                  <GrUserAdmin />
-                </span>
-              </Link>
-            </IconButton>
-            فاصله
-            <Box sx={{ flexGrow: 1 }} />
-          </AdminProtector> */}
-
-          {/* فروشنده */}
-          {LoginSeller ? (
-            <>
-              <IconButton
-                size="large"
-                edge="start"
-                color="inherit"
-                aria-label="open drawer"
-              >
-                <Link href="/Seller">
-                  <span className="flex flex-col">
-                    <StorefrontIcon className="mx-auto pt-2" />
-                    <span className="text-sm">پنل مدیریت</span>
-                  </span>
-                </Link>
-              </IconButton>
-
-              {/* فاصله */}
-              <Box sx={{ flexGrow: 1 }} />
-            </>
-          ) : (
-            ""
-          )}
-
-          {/* جست و جو */}
-          <Search
-            dir="rtl"
-            sx={{
-              flexGrow: 1,
-              flexBasis: "auto",
-              maxWidth: { xs: "200px", sm: "100px", md: "500px" },
-            }}
-            onClick={() => setBga(true)}
-            className="sm:max-w-md"
-          >
-            <SearchIconWrapper>
-              <SearchIcon />
-            </SearchIconWrapper>
-            <StyledInputBase
-              placeholder="جستجو ..."
-              inputProps={{ "aria-label": "search" }}
-            />
-          </Search>
-
-          {/* پروفایل */}
-          {LoginUser ? (
-            <Box>
-              <IconButton
-                size="large"
-                edge="end"
-                aria-label="account of current user"
-                aria-controls="primary-search-account-menu"
-                aria-haspopup="true"
-                onClick={handleProfileMenuOpen}
-                color="inherit"
-              >
-                <AccountCircle />
-              </IconButton>
-            </Box>
-          ) : (
-            ""
-          )}
+        <Toolbar className="sm:max-w-[2000px] lg:max-w-full lg:w-[1200px] mx-auto flex justify-center">
+          {
+            !!LoginUser ?
+              <>
+                {shoppingCardComponent}
+                {signInAndSignOutComponent}
+                {spaceComponent}
+                {searchComponent}
+                {profileComponent}
+              </>
+              :
+              !!LoginSeller ?
+                <>
+                  {signInAndSignOutComponent}
+                  {sellerComponent}
+                  {spaceComponent}
+                  {searchComponent}
+                  {profileComponent}
+                </>
+                :
+                <>
+                  {shoppingCardComponent}
+                  {signInAndSignOutComponent}
+                  {spaceComponent}
+                  {searchComponent}
+                </>
+          }
         </Toolbar>
       </AppBar>
-
-      {/* منوی پروفایل */}
-      <Menu
-        anchorEl={anchorEl}
-        anchorOrigin={{
-          vertical: "top",
-          horizontal: "right",
-        }}
-        id="primary-search-account-menu"
-        keepMounted
-        transformOrigin={{
-          vertical: "top",
-          horizontal: "right",
-        }}
-        open={isMenuOpen}
-        onClose={handleMenuClose}
-        sx={{ marginTop: "35px" }}
-      >
-        <MenuItem sx={{ padding: "10px" }} onClick={handleMenuClose}>
-          <Link href="/users/profile"> پروفایل من</Link>
-        </MenuItem>
-      </Menu>
 
       <Dialog
         onClose={Close}
         open={openDialog}
         sx={{
           "& .MuiDialog-paper": {
-            lg: { width: "50%", maxWidth: "none" },
-            md: { width: "70%", maxWidth: "none" },
-            sm: { width: "100%", maxWidth: "none" },
             xs: { width: "100%", maxWidth: "none" },
+            md: { width: "70%" },
+            lg: { width: "50%" },
           },
         }}
       >
         <DialogContent dividers>
           <Box component="div" className="text-xl mt-3">
-            آیا واقعا می خواهید خارج شوید؟
+            آیا می خواهید خارج شوید؟
           </Box>
         </DialogContent>
         <DialogActions>

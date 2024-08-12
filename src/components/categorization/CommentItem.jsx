@@ -1,8 +1,6 @@
 "use client";
-
 import { Box, Button, Checkbox, TextField } from "@mui/material";
 import { useEffect, useState } from "react";
-import AccountCircle from "@mui/icons-material/AccountCircle";
 import ThumbUpAltOutlinedIcon from "@mui/icons-material/ThumbUpAltOutlined";
 import ThumbUpAltIcon from "@mui/icons-material/ThumbUpAlt";
 import ThumbDownAltOutlinedIcon from "@mui/icons-material/ThumbDownAltOutlined";
@@ -10,99 +8,74 @@ import ThumbDownAltIcon from "@mui/icons-material/ThumbDownAlt";
 import CommentsApi from "@/services/withoutAuthActivities/comment";
 import Api from "@/services/withAuthActivities/comment";
 import UserApi from "@/services/withAuthActivities/user";
-import { usePathname } from "next/navigation";
 import DOMPurify from "dompurify";
 import { convertToFarsiNumbers } from "@/utils/funcs";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { isUserLoggedIn } from "@/Storage/Storage";
 
-export default function CommentItem() {
-  const router = usePathname();
-  const productID = router.split("/")[3];
-  const [commentsList, setCommentsList] = useState([]);
-  const [replay, setReply] = useState([]);
-  const [newComment, setNewComment] = useState("");
-  const [newReplay, setNewReplay] = useState("");
+export default function CommentItem({ productID }) {
   const { getCommentsOfAProduct } = CommentsApi;
   const { createComment, toggleLikeComment, toggleDisLikeComment } = Api;
   const { getMe } = UserApi;
-  const [login, setLogin] = useState(true);
+
+  const [comments, setComments] = useState([]);
+  const [newComment, setNewComment] = useState("");
+  const [newReplay, setNewReplay] = useState("");
+  const [login, setLogin] = useState(false);
   const [userId, setUserId] = useState("");
-  const [SHOW, setSHOW] = useState({});
-  const [likes, setLikes] = useState({});
-  const [disLikes, setDisLikes] = useState({});
+  const [replyId, setReplyId] = useState("");
 
-  const liked = async (id) => {
-    try {
-      if (localStorage.getItem("UserLogin") == "true") {
-        const ownerType = "User";
-        const response = await toggleLikeComment({
-          id: id,
-          ownerType: ownerType,
-        });
-        const comments = await getCommentsOfAProduct({ id: productID });
-        const r = comments.comments.filter(
-          (item) => item.parentCommentId !== null
-        );
-        setReply(r);
-        setCommentsList(
-          comments.comments.filter((item) => item.parentCommentId === null)
-        );
-      } else {
-        const ownerType = "Seller";
-        const response = await toggleLikeComment({
-          id: id,
-          ownerType: ownerType,
-        });
-        const comments = await getCommentsOfAProduct({ id: productID });
-        const r = comments.comments.filter(
-          (item) => item.parentCommentId !== null
-        );
-        setReply(r);
-        setCommentsList(
-          comments.comments.filter((item) => item.parentCommentId === null)
-        );
-      }
-    } catch (error) {
-      toast.error("دوباره تلاش کنید", {
-        position: toast.POSITION.TOP_RIGHT,
-      });
-    }
-  };
+  // -1 -> 1, 0 -> 1 , 1 -> 0
+  const likeStatusArr = [1, 0, 1]
+  // -1 -> 0, 0 -> -1 , 1 -> -1
+  const disLikeStatusArr = [-1, -1, 0]
 
-  const disLiked = async (id) => {
+  const createOwnerType = () => {
+    return isUserLoggedIn() ? "User" : "Seller";
+  }
+
+  const toggleLikeAndDisLike = async (isLike, comment, commentIndex, parentCommentIndex) => {
     try {
-      if (localStorage.getItem("UserLogin") == "true") {
-        const ownerType = "User";
-        const response = await toggleDisLikeComment({
-          id: id,
-          ownerType: ownerType,
+      let res, newStatus
+      if (isLike) {
+        res = await toggleLikeComment({
+          id: comment._id,
+          ownerType: createOwnerType()
         });
-        const comments = await getCommentsOfAProduct({ id: productID });
-        const r = comments.comments.filter(
-          (item) => item.parentCommentId !== null
-        );
-        setReply(r);
-        setCommentsList(
-          comments.comments.filter((item) => item.parentCommentId === null)
-        );
+        newStatus = likeStatusArr.at(comment?.status)
       } else {
-        const ownerType = "Seller";
-        const response = await toggleDisLikeComment({
-          id: id,
-          ownerType: ownerType,
+        res = await toggleDisLikeComment({
+          id: comment._id,
+          ownerType: createOwnerType()
         });
-        const comments = await getCommentsOfAProduct({ id: productID });
-        const r = comments.comments.filter(
-          (item) => item.parentCommentId !== null
-        );
-        setReply(r);
-        setCommentsList(
-          comments.comments.filter((item) => item.parentCommentId === null)
-        );
+        newStatus = disLikeStatusArr.at(comment?.status)
       }
+
+      const newComment = {
+        ...comment,
+        likes: res?.comment?.likes,
+        disLikes: res?.comment?.disLikes,
+        status: newStatus,
+      }
+
+      if (parentCommentIndex === -1) {
+        setComments(prev => {
+          let newArr = [...prev]
+          newArr[commentIndex] = newComment
+          return newArr
+        })
+      } else {
+        setComments(prev => {
+          let newArr = [...prev]
+          newArr[parentCommentIndex].childrenComments[commentIndex] = newComment
+          return newArr
+        })
+      }
+
+
     } catch (error) {
-      toast.error("دوباره تلاش کنید", {
+      toast.error("ابتدا وارد شوید", {
         position: toast.POSITION.TOP_RIGHT,
       });
     }
@@ -110,42 +83,26 @@ export default function CommentItem() {
 
   const handleSubmit = async () => {
     if (newComment === "") {
-      toast.warning("متنی وارد نکرده اید دوباره تلاش کنید", {
+      toast.warning("! متن نظر الزامیست", {
         position: toast.POSITION.TOP_RIGHT,
       });
       return;
     }
     try {
       const body = DOMPurify.sanitize(newComment);
-      if (localStorage.getItem("UserLogin") == "true") {
-        const ownerType = "User";
-        const response = await createComment({
-          body: body,
-          parentCommentId: null,
-          productId: productID,
-          ownerType: ownerType,
-          id: userId,
-        });
-        setNewComment("");
-        toast.success("نظر شما برای بررسی ثبت شد", {
-          position: toast.POSITION.TOP_RIGHT,
-        });
-      } else {
-        const ownerType = "Seller";
-        const response = await createComment({
-          body: body,
-          parentCommentId: null,
-          productId: productID,
-          ownerType: ownerType,
-          id: userId,
-        });
-        setNewComment("");
-        toast.success("نظر شما برای بررسی ثبت شد", {
-          position: toast.POSITION.TOP_RIGHT,
-        });
-      }
+      await createComment({
+        body: body,
+        parentCommentId: null,
+        productId: productID,
+        ownerType: createOwnerType(),
+        id: userId,
+      });
+      setNewComment("");
+      toast.success("نظر شما ثبت شد", {
+        position: toast.POSITION.TOP_RIGHT,
+      });
     } catch (error) {
-      toast.error("دوباره تلاش کنید", {
+      toast.error("ابتدا وارد شوید", {
         position: toast.POSITION.TOP_RIGHT,
       });
     }
@@ -153,129 +110,145 @@ export default function CommentItem() {
 
   const answer = async (id) => {
     if (newReplay === "") {
-      toast.warning("متنی وارد نکرده اید دوباره تلاش کنید", {
+      toast.warning("! متن پاسخ الزامیست", {
         position: toast.POSITION.TOP_RIGHT,
       });
       return;
     }
     try {
-      if (localStorage.getItem("UserLogin") == "true") {
-        const ownerType = "User";
-        const body = DOMPurify.sanitize(newReplay);
-        const response = await createComment({
-          body: body,
-          parentCommentId: id,
-          productId: productID,
-          ownerType: ownerType,
-          id: userId,
-        });
-        setNewReplay("");
-        toast.success("پاسخ شما برای بررسی ثبت شد", {
-          position: toast.POSITION.TOP_RIGHT,
-        });
-      } else {
-        const ownerType = "Seller";
-        const body = DOMPurify.sanitize(newReplay);
-        const response = await createComment({
-          body: body,
-          parentCommentId: id,
-          productId: productID,
-          ownerType: ownerType,
-          id: userId,
-        });
-        setNewReplay("");
-        toast.success("پاسخ شما برای بررسی ثبت شد", {
-          position: toast.POSITION.TOP_RIGHT,
-        });
-      }
+      const body = DOMPurify.sanitize(newReplay);
+      await createComment({
+        body: body,
+        parentCommentId: id,
+        productId: productID,
+        ownerType: createOwnerType(),
+        id: userId,
+      });
+      setNewReplay("");
+      toast.success("پاسخ شما ثبت شد", {
+        position: toast.POSITION.TOP_RIGHT,
+      });
     } catch (error) {
-      toast.error("دوباره تلاش کنید", {
+      toast.error("ابتدا وارد شوید", {
         position: toast.POSITION.TOP_RIGHT,
       });
     }
   };
 
   useEffect(() => {
-    if (localStorage.getItem("UserLogin") === "true") {
-      setLogin(true);
-    } else {
-      setLogin(false);
-    }
+    const GetUser = async () => {
+      try {
+        const user = await getMe();
+        setUserId(user.user._id);
+        return user.user._id
+      } catch (error) {
+        return ""
+      }
+    };
     const GetComments = async () => {
       try {
-        const comments = await getCommentsOfAProduct({ id: productID });
-        const r = comments.comments.filter(
-          (item) => item.parentCommentId !== null
-        );
-        setReply(r);
-        setCommentsList(
-          comments.comments.filter((item) => item.parentCommentId === null)
-        );
+        const userID = await GetUser();
+        const response = await getCommentsOfAProduct({ id: productID });
+
+        const arr = response?.comments.reduce((accumulator, currentComment) => {
+          const res = [...accumulator];
+          let status = 0;
+          let userIndex = currentComment.likes.findIndex(item => item.id === userID)
+          // user liked the comment
+          if (userIndex > -1)
+            status = 1
+          else {
+            userIndex = currentComment.disLikes.findIndex(item => item.id === userID)
+            // user disliked the comment
+            if (userIndex > -1)
+              status = -1
+          }
+
+          if (currentComment.parentCommentId == null) {
+            const thisCommentIndex = res.findIndex(obj => obj._id === currentComment._id)
+
+            if (thisCommentIndex > -1)
+              res[thisCommentIndex] = {
+                ...res[thisCommentIndex],
+                body: currentComment.body,
+                likes: currentComment.likes,
+                disLikes: currentComment.disLikes,
+                ownerId: currentComment.ownerId,
+                status
+              }
+            else
+              res.push({
+                _id: currentComment._id,
+                body: currentComment.body,
+                likes: currentComment.likes,
+                disLikes: currentComment.disLikes,
+                ownerId: currentComment.ownerId,
+                childrenComments: [],
+                status
+              })
+
+
+          } else {
+            const parentCommentIndex = res.findIndex(obj => obj._id === currentComment.parentCommentId)
+            if (parentCommentIndex > -1)
+              res[parentCommentIndex] = {
+                ...res[parentCommentIndex],
+                childrenComments: [
+                  ...res[parentCommentIndex].childrenComments,
+                  {
+                    _id: currentComment._id,
+                    body: currentComment.body,
+                    likes: currentComment.likes,
+                    disLikes: currentComment.disLikes,
+                    ownerId: currentComment.ownerId,
+                    status
+                  }
+                ]
+              }
+            else
+              res.push({
+                _id: currentComment.parentCommentId,
+                childrenComments: [
+                  {
+                    _id: currentComment._id,
+                    body: currentComment.body,
+                    likes: currentComment.likes,
+                    disLikes: currentComment.disLikes,
+                    ownerId: currentComment.ownerId,
+                    status
+                  }
+                ]
+              })
+
+          }
+
+          return res
+
+        }, [])
+
+        setComments(arr)
       } catch (error) {
-        toast.error("دوباره تلاش کنید", {
+        toast.error("اشکال در دریافت کامنت ها", {
+          position: toast.POSITION.TOP_RIGHT,
+        });
+        toast.error(error.toString(), {
           position: toast.POSITION.TOP_RIGHT,
         });
       }
     };
+    setLogin(isUserLoggedIn())
     GetComments();
-    const GetUser = async () => {
-      if (!login) {
-        return;
-      }
-      try {
-        const user = await getMe();
-        setUserId(user.user._id);
-      } catch (error) {
-        localStorage.removeItem("UserLogin");
-        localStorage.removeItem("token");
-      }
-    };
-    GetUser();
 
-    // commentsList.map((item) => {
-    //   item.likes.map((likeId) => {
-    //     if (likeId === userId) {
-    //       setLikes({ ...likes, [item._id]: true });
-    //     }
-    //   });
-    //   item.disLikes.map((disLikeId) => {
-    //     if (disLikeId === userId) {
-    //       setDisLikes({ ...disLikes, [item._id]: true });
-    //     }
-    //   });
-    // });
-
-    // replay.map((item) => {
-    //   item.likes.map((likeId) => {
-    //     if (likeId === userId) {
-    //       setLikes({ ...likes, [item._id]: true });
-    //     }
-    //   });
-    //   item.disLikes.map((disLikeId) => {
-    //     if (disLikeId === userId) {
-    //       setDisLikes({ ...disLikes, [item._id]: true });
-    //     }
-    //   });
-    // });
   }, [
     getCommentsOfAProduct,
-    // productID,
-    setReply,
-    setCommentsList,
+    productID,
     getMe,
     setUserId,
-    // setLikes,
-    // setDisLikes,
-    // disLikes,
-    // likes,
-    // commentsList,
-    // replay,
-    login,
-    productID,
   ]);
 
+
   return (
-    <Box className="p-5 m-5 border-2 rounded-lg">
+    <Box className="p-5 m-5 border-2 rounded-lg mx-auto max-w-3xl">
       <Box
         component="div"
         className="mb-5 h-12 border-b-2 text-center text-gray-950 text-bold text-lg"
@@ -290,10 +263,10 @@ export default function CommentItem() {
                 rows={3}
                 fullWidth
                 multiline
-                label="نظر"
-                placeholder="نظر خود را وارد کنید."
+                label="نظر شما"
+                placeholder="نظر خود را وارد کنید ..."
                 variant="outlined"
-                color="primary"
+                color="info"
                 value={newComment}
                 onChange={(e) => setNewComment(e.target.value)}
                 sx={{
@@ -309,7 +282,7 @@ export default function CommentItem() {
             <Box className="grid grid-cols-1 p-5 my-auto space-y-5">
               <Button
                 variant="contained"
-                className="bg-green-600 hover:bg-green-700 text-base"
+                className="bg-green-500 hover:bg-green-600 text-base"
                 onClick={handleSubmit}
               >
                 ثبت نظر
@@ -323,11 +296,9 @@ export default function CommentItem() {
         </Box>
       )}
       <Box component="div">
-        {commentsList.length !== 0 ? (
-          commentsList.map((item, index) => {
-            const show = SHOW[index];
-            const commentLike = likes[item._id] || false;
-            const commentDisLike = disLikes[item._id] || false;
+        {comments.length !== 0 ? (
+          comments.map((item, index) => {
+            const show = replyId === item._id;
             return (
               <Box
                 key={index}
@@ -335,20 +306,24 @@ export default function CommentItem() {
               >
                 <Box className="row-span-2">
                   <Box className="sm:text-lg text-sm bold">
-                    {item?.userId?.username == ""
-                      ? "فاقد نام"
-                      : item?.ownerId?.name}{" "}
+                    {!item?.userId?.username
+                      ? "کاربر بدون نام"
+                      : item?.ownerId?.name
+                    }
+                    {" "}
                     :
                   </Box>
+
                   <Box className="sm:text-base text-xs p-5">{item?.body}</Box>
+
                   <Box className="mt-3 grid grid-cols-2">
                     <Box className="p-3">
                       <Checkbox
                         icon={<ThumbDownAltOutlinedIcon />}
                         checkedIcon={<ThumbDownAltIcon />}
-                        color="error"
-                        checked={commentDisLike}
-                        onChange={() => disLiked(item._id)}
+                        color="warning"
+                        checked={item.status === -1}
+                        onChange={() => toggleLikeAndDisLike(false, item, index, -1)}
                       />
                       <span>
                         {convertToFarsiNumbers(
@@ -360,162 +335,189 @@ export default function CommentItem() {
                       <Checkbox
                         icon={<ThumbUpAltOutlinedIcon />}
                         checkedIcon={<ThumbUpAltIcon />}
-                        color="error"
-                        checked={commentLike}
-                        onChange={() => liked(item._id)}
+                        color="success"
+                        checked={item.status === 1}
+                        onChange={() => toggleLikeAndDisLike(true, item, index, -1)}
                       />
                       <span>
                         {convertToFarsiNumbers(item?.likes?.length?.toString())}
                       </span>
                     </Box>
                   </Box>
-                  <Box className="md:grid p-3 border-t-2 md:grid-cols-6">
-                    {show ? (
-                      <Box className="p-5 md:col-span-6">
-                        <TextField
-                          rows={3}
-                          fullWidth
-                          multiline
-                          label="پاسخ"
-                          placeholder="پاسخ خود را وارد کنید."
-                          variant="outlined"
-                          color="primary"
-                          value={newReplay}
-                          onChange={(e) => setNewReplay(e.target.value)}
-                          sx={{
-                            " & .MuiInputLabel-root": {
-                              left: "inherit !important",
-                              right: "1.75rem !important",
-                              transformOrigin: "right !important",
-                            },
-                            "& legend": { textAlign: "right" },
-                          }}
-                        />
-                      </Box>
-                    ) : (
-                      ""
-                    )}
-                    <Box className="md:col-span-5">
-                      {replay.length === 0 ? "" : "پاسخ ها :"}
-                    </Box>
-                    {!show ? (
-                      <>
-                        {login ? (
-                          <>
-                            <Box className="md:block hidden justify-self-end">
+
+                  <Box className="p-3 border-t-2">
+
+                    {
+                      show && (
+                        <>
+                          <Box className="p-5">
+                            <TextField
+                              rows={3}
+                              fullWidth
+                              multiline
+                              label="پاسخ"
+                              placeholder="پاسخ خود را وارد کنید."
+                              variant="outlined"
+                              color="primary"
+                              value={newReplay}
+                              onChange={(e) => setNewReplay(e.target.value)}
+                              sx={{
+                                " & .MuiInputLabel-root": {
+                                  left: "inherit !important",
+                                  right: "1.75rem !important",
+                                  transformOrigin: "right !important",
+                                },
+                                "& legend": { textAlign: "right" },
+                                borderBottom: "1px solid gray",
+                                borderBottomLeftRadius: '4px',
+                                borderBottomRightRadius: '4px'
+                              }}
+                            />
+                          </Box>
+
+                          <Box className="md:flex justify-around hidden">
+                            <Box>
                               <Button
                                 variant="outlined"
                                 size="large"
-                                color="info"
+                                color="success"
                                 onClick={() => {
-                                  setSHOW({ ...SHOW, [index]: true });
+                                  answer(item._id);
+                                  setReplyId("");
                                 }}
                               >
-                                پاسخ دادن
+                                ثبت پاسخ
                               </Button>
                             </Box>
-                            <Box className="mt-5 md:hidden block">
+                            <Box>
                               <Button
                                 variant="outlined"
-                                color="info"
-                                fullWidth
+                                size="large"
+                                color="error"
                                 onClick={() => {
-                                  setSHOW({ ...SHOW, [index]: true });
+                                  setReplyId("");
+                                  setNewReplay("")
                                 }}
                               >
-                                پاسخ دادن
+                                انصراف
                               </Button>
                             </Box>
-                          </>
-                        ) : (
-                          ""
-                        )}
-                      </>
-                    ) : (
-                      <>
-                        <Box className="md:block hidden justify-self-end">
-                          <Button
-                            variant="outlined"
-                            size="large"
-                            color="success"
-                            onClick={() => {
-                              answer(item._id);
-                              setSHOW({ ...SHOW, [index]: false });
-                            }}
-                          >
-                            ثبت پاسخ
-                          </Button>
-                        </Box>
-                        <Box className="mt-5 md:hidden block">
-                          <Button
-                            variant="outlined"
-                            color="success"
-                            fullWidth
-                            onClick={() => {
-                              answer(item._id);
-                              setSHOW({ ...SHOW, [index]: false });
-                            }}
-                          >
-                            ثبت پاسخ
-                          </Button>
-                        </Box>
-                      </>
-                    )}
+                          </Box>
+
+                          <Box className="md:hidden flex justify-around">
+                            <Box>
+                              <Button
+                                variant="outlined"
+                                size="small"
+                                color="success"
+                                onClick={() => {
+                                  answer(item._id);
+                                  setReplyId("");
+                                }}
+                              >
+                                ثبت پاسخ
+                              </Button>
+                            </Box>
+                            <Box>
+                              <Button
+                                variant="outlined"
+                                size="small"
+                                color="error"
+                                onClick={() => {
+                                  setReplyId("");
+                                  setNewReplay("")
+                                }}
+                              >
+                                انصراف
+                              </Button>
+                            </Box>
+                          </Box>
+
+                        </>
+                      )
+                    }
+
+                    {
+                      !show && login && (
+                        <>
+                          <Box className="md:block hidden">
+                            <Button
+                              variant="outlined"
+                              size="large"
+                              color="info"
+                              onClick={() => { setReplyId(item._id) }}
+                              className="w-48"
+                            >
+                              پاسخ به این کامنت
+                            </Button>
+                          </Box>
+                          <Box className="mt-5 md:hidden block">
+                            <Button
+                              variant="outlined"
+                              color="info"
+                              size="small"
+                              fullWidth
+                              onClick={() => { setReplyId(item._id) }}
+                            >
+                              پاسخ به این کامنت
+                            </Button>
+                          </Box>
+                        </>
+                      )
+                    }
+
                   </Box>
-                  {replay.map((comment, id) => {
-                    if (comment.parentCommentId === item._id) {
-                      const replayLike = likes[comment._id] || false;
-                      const replayDisLike = disLikes[comment._id] || false;
-                      return (
-                        <Box
-                          key={id}
-                          className="border-2 shadow-lg rounded-lg md:mr-28 p-5 mt-5 grid"
-                          component="div"
-                        >
-                          <Box>
-                            <Box className="sm:text-lg text-sm bold">
-                              {comment?.userId?.username == ""
-                                ? "فاقد نام"
-                                : comment?.ownerId?.name}{" "}
-                              :
+                  {item.childrenComments.map((comment, childrenIndex) => {
+                    return (
+                      <Box
+                        key={childrenIndex}
+                        className="border-2 shadow-lg rounded-lg md:mr-28 p-5 mt-5 grid"
+                        component="div"
+                      >
+                        <Box>
+                          <Box className="sm:text-lg text-sm bold">
+                            {!comment?.userId?.username
+                              ? "کاربر بدون نام"
+                              : comment?.ownerId?.name}{" "}
+                            :
+                          </Box>
+                          <Box className="sm:text-base text-xs p-5">
+                            {comment.body}
+                          </Box>
+                          <Box className="mt-3 grid grid-cols-2">
+                            <Box className="p-3">
+                              <Checkbox
+                                icon={<ThumbDownAltOutlinedIcon />}
+                                checkedIcon={<ThumbDownAltIcon />}
+                                color="warning"
+                                checked={comment.status === -1}
+                                onChange={() => toggleLikeAndDisLike(false, comment, childrenIndex, index)}
+                              />
+                              <span>
+                                {convertToFarsiNumbers(
+                                  comment?.disLikes?.length?.toString()
+                                )}
+                              </span>
                             </Box>
-                            <Box className="sm:text-base text-xs p-5">
-                              {comment.body}
-                            </Box>
-                            <Box className="mt-3 grid grid-cols-2">
-                              <Box className="p-3">
-                                <Checkbox
-                                  icon={<ThumbDownAltOutlinedIcon />}
-                                  checkedIcon={<ThumbDownAltIcon />}
-                                  color="error"
-                                  checked={replayDisLike}
-                                  onChange={() => disLiked(comment._id)}
-                                />
-                                <span>
-                                  {convertToFarsiNumbers(
-                                    comment?.disLikes?.length?.toString()
-                                  )}
-                                </span>
-                              </Box>
-                              <Box className="p-3">
-                                <Checkbox
-                                  icon={<ThumbUpAltOutlinedIcon />}
-                                  checkedIcon={<ThumbUpAltIcon />}
-                                  color="error"
-                                  checked={replayLike}
-                                  onChange={() => liked(comment._id)}
-                                />
-                                <span>
-                                  {convertToFarsiNumbers(
-                                    comment?.likes?.length?.toString()
-                                  )}
-                                </span>
-                              </Box>
+                            <Box className="p-3">
+                              <Checkbox
+                                icon={<ThumbUpAltOutlinedIcon />}
+                                checkedIcon={<ThumbUpAltIcon />}
+                                color="success"
+                                checked={comment.status === 1}
+                                onChange={() => toggleLikeAndDisLike(true, comment, childrenIndex, index)}
+                              />
+                              <span>
+                                {convertToFarsiNumbers(
+                                  comment?.likes?.length?.toString()
+                                )}
+                              </span>
                             </Box>
                           </Box>
                         </Box>
-                      );
-                    }
+                      </Box>
+                    );
+
                   })}
                 </Box>
               </Box>

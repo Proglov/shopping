@@ -1,24 +1,26 @@
 "use client";
-
 import { convertToFarsiNumbers, formatPrice } from "@/utils/funcs";
 import { Box, Card, Typography } from "@mui/material";
 import Image from "next/image";
-import { useAppSelector } from "@/store/Hook";
 import { toast } from "react-toastify";
 import { useEffect, useState } from "react";
 import UserApi from "@/services/withAuthActivities/user";
 import moment from "jalali-moment";
 import { undefined } from "zod";
 import { useRouter } from "next/navigation";
+import { useSelector } from "react-redux";
 
 export default function BillComponent() {
-  const cartProducts = useAppSelector((state) => state.CartProducts);
-  const Time = useAppSelector((state) => state.Time);
+  const cartProducts = useSelector((state) => state.CartProducts);
+  const Time = useSelector((state) => state.Time);
   let serviceFee = 1479;
   const [address, setAddress] = useState("");
   const [time, setTime] = useState("");
   const [login, setLogin] = useState();
   const [number, setNumber] = useState(0);
+  // const [products, setProducts] = useState([])
+  // const [loading, setLoading] = useState(true)
+  // const [totalPrice, setTotalPrice] = useState(0)
   const { getMe } = UserApi;
   const [information, setInformation] = useState({
     name: "",
@@ -37,10 +39,33 @@ export default function BillComponent() {
       return sum + obj.number * parseInt(obj.price);
     }, 0);
 
+
+  // useEffect(() => {
+  //   const getProds = async () => {
+  //     try {
+  //       await checkUserLoggedIn()
+  //       setLoading(true)
+  //       setProducts(await getCartProductsFromServer())
+  //     } catch (error) {
+  //       console.log(error);
+  //     } finally {
+  //       setLoading(false)
+  //     }
+  //   }
+
+  //   getProds()
+
+  // }, [router, setProducts]);
+
+  // useEffect(() => {
+  //   const price = getTotalPrice(products)
+  //   setTotalPrice(price)
+  // }, [products])
+
   useEffect(() => {
-    if (cartProducts.length == 0) {
-      router.push("/");
-    }
+    // if (cartProducts.length == 0) {
+    //   router.push("/");
+    // }
     if (localStorage.getItem("UserLogin") == "true") {
       setLogin(true);
       setNumber(1);
@@ -64,7 +89,7 @@ export default function BillComponent() {
           name: user.user.name,
           phoneNumber: user.user.phone,
         });
-      } catch (error) {}
+      } catch (error) { }
     };
     GetUser();
     const add = localStorage.getItem("address");
@@ -146,10 +171,10 @@ export default function BillComponent() {
             {price == undefined
               ? ""
               : convertToFarsiNumbers(
-                  formatPrice(
-                    (price + serviceFee + parseInt(Time.price)).toString()
-                  )
-                )}{" "}
+                formatPrice(
+                  (price + serviceFee + parseInt(Time.price)).toString()
+                )
+              )}{" "}
             تومان
           </span>
         </Box>
@@ -160,60 +185,60 @@ export default function BillComponent() {
             {cartProducts.length == 0
               ? ""
               : cartProducts.map((item, index) => {
-                  return (
-                    <div key={index}>
-                      <div className="w-full" />
-                      <div className="m-4 h-auto w-full grid grid-cols-1 gap-4 lg:w-3/4 sm:grid-cols-4">
-                        <div className="p-1 mx-auto">
-                          <Image
+                return (
+                  <div key={index}>
+                    <div className="w-full" />
+                    <div className="m-4 h-auto w-full grid grid-cols-1 gap-4 lg:w-3/4 sm:grid-cols-4">
+                      <div className="p-1 mx-auto">
+                        {/* <Image
                             height={250}
                             width={250}
                             src={item.src[0]}
                             alt="Product"
-                          />
+                          /> */}
+                      </div>
+                      <div className="p-2 text-gray-900 sm:col-span-3 grid grid-rows-3 grid-cols-1 justify-items-center items-center sm:grid-rows-2 sm:grid-cols-2 sm:justify-items-start">
+                        <div className="sm:col-span-2 mb-2 sm:mb-0">
+                          {item.name}
                         </div>
-                        <div className="p-2 text-gray-900 sm:col-span-3 grid grid-rows-3 grid-cols-1 justify-items-center items-center sm:grid-rows-2 sm:grid-cols-2 sm:justify-items-start">
-                          <div className="sm:col-span-2 mb-2 sm:mb-0">
-                            {item.name}
+                        <div className="mb-2 sm:mb-0">
+                          <div className="w-auto inline-block">
+                            <span>تعداد کالا: </span>
+                            <span>
+                              {convertToFarsiNumbers(item.number)} عدد
+                            </span>
                           </div>
-                          <div className="mb-2 sm:mb-0">
-                            <div className="w-auto inline-block">
-                              <span>تعداد کالا: </span>
-                              <span>
-                                {convertToFarsiNumbers(item.number)} عدد
-                              </span>
-                            </div>
+                        </div>
+                        <div className="grid gap-6">
+                          <div>
+                            قیمت هر عدد :
+                            {convertToFarsiNumbers(
+                              formatPrice(item.price.toString())
+                            )}{" "}
+                            تومان
                           </div>
-                          <div className="grid gap-6">
-                            <div>
-                              قیمت هر عدد :
-                              {convertToFarsiNumbers(
-                                formatPrice(item.price.toString())
-                              )}{" "}
-                              تومان
-                            </div>
-                            <div>
-                              قیمت کل :
-                              {convertToFarsiNumbers(
-                                formatPrice(
-                                  Math.ceil(
-                                    item.number * parseInt(item.price)
-                                  ).toString()
-                                )
-                              )}{" "}
-                              تومان
-                            </div>
+                          <div>
+                            قیمت کل :
+                            {convertToFarsiNumbers(
+                              formatPrice(
+                                Math.ceil(
+                                  item.number * parseInt(item.price)
+                                ).toString()
+                              )
+                            )}{" "}
+                            تومان
                           </div>
                         </div>
                       </div>
-                      {cartProducts.length == index + 1 ? (
-                        ""
-                      ) : (
-                        <div className="border-[1px] border-gray-200 w-full h-[2px]"></div>
-                      )}
                     </div>
-                  );
-                })}
+                    {cartProducts.length == index + 1 ? (
+                      ""
+                    ) : (
+                      <div className="border-[1px] border-gray-200 w-full h-[2px]"></div>
+                    )}
+                  </div>
+                );
+              })}
           </div>
         </Box>
       </Box>

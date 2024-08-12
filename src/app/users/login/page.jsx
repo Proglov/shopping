@@ -1,9 +1,7 @@
 import LoginComponent from "@/components/users/login/LoginComponent";
 
-export default function Login() {
+export default function Login({ searchParams }) {
   return (
-    <>
-      <LoginComponent />
-    </>
+    <LoginComponent isUsernameParam={searchParams?.username === 'true'} type='user' />
   );
 }

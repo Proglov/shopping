@@ -1,117 +1,110 @@
 "use client";
-
 import { Box, Button } from "@mui/material";
 import CardItem from "./CardItem";
-import { usePathname } from "next/navigation";
 import ProductApi from "@/services/withoutAuthActivities/product";
 import { useEffect, useState } from "react";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation, Pagination } from "swiper/modules";
-
-import "swiper/css";
-import "swiper/css/navigation";
-import "swiper/css/pagination";
 import Link from "next/link";
+import { useKeenSlider } from 'keen-slider/react'
+import 'keen-slider/keen-slider.min.css'
+import { useSelector } from "react-redux";
+import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 
-const swiperBreaks = {
-  200: {
-    slidesPerView: 1,
-    width: 240,
-  },
-  400: {
-    slidesPerView: 1,
-    width: 240,
-  },
-  500: {
-    slidesPerView: 1,
-    width: 240,
-  },
-  540: {
-    slidesPerView: 2,
-    spaceBetween: 0,
-  },
-  580: {
-    slidesPerView: 2,
-    spaceBetween: 0,
-  },
-  598: {
-    slidesPerView: 2,
-    spaceBetween: 0,
-  },
-  600: {
-    slidesPerView: 2,
-    spaceBetween: 0,
-  },
-  640: {
-    slidesPerView: 2,
-    spaceBetween: 0,
-  },
-  700: {
-    slidesPerView: 2,
-    spaceBetween: 0,
-  },
-  750: {
-    slidesPerView: 2,
-    spaceBetween: 0,
-  },
-  800: {
-    slidesPerView: 2,
-    spaceBetween: 0,
-  },
-  900: {
-    slidesPerView: 3,
-    spaceBetween: 0,
-  },
-  1000: {
-    slidesPerView: 3,
-    spaceBetween: 0,
-  },
-  1050: {
-    slidesPerView: 3,
-    spaceBetween: 0,
-  },
-  1100: {
-    slidesPerView: 4,
-    spaceBetween: 0,
-  },
-  1200: {
-    slidesPerView: 4,
-    spaceBetween: 0,
-  },
-  1250: {
-    slidesPerView: 4,
-    spaceBetween: 0,
-  },
-  1400: {
-    slidesPerView: 5,
-    spaceBetween: 0,
-  },
-  1800: {
-    slidesPerView: 6,
-    spaceBetween: 0,
-  },
-  2000: {
-    slidesPerView: 7,
-    spaceBetween: 0,
-  },
-};
 
-export default function SubCategory() {
-  const [products, setProducts] = useState([]);
-  const router = usePathname();
-  const id = router.split("/")[2];
+const CustomBtn = ({ onClick, Icon, length }) => (
+  <>
+    {
+      length > 2 &&
+      <Button
+        className="md:block lg:hidden hidden h-5 place-self-center rounded-2xl"
+        onClick={onClick}
+      >
+        {Icon}
+      </Button>
+    }
+    {
+      length > 4 &&
+      <Button
+        className="lg:block hidden h-5 place-self-center rounded-2xl"
+        onClick={onClick}
+      >
+        {Icon}
+      </Button>
+    }
+  </>
+)
+
+const Slider = ({ item, cartProducts, id }) => {
+  const [currentSlide, setCurrentSlide] = useState(0)
+  const [loaded, setLoaded] = useState(false)
+  const [sliderRef, instanceRef] = useKeenSlider({
+    loop: true,
+    slides: { perView: "auto", spacing: '-22' },
+    slideChanged(slider) {
+      setCurrentSlide(slider.track.details.rel)
+    },
+    created() {
+      setLoaded(true)
+    },
+  })
+
+
+  return (
+    <Box
+      className="rounded-xl mt-5 mb-10 min-h-[100px] shadow-lg shadow-gray-300 max-w-5xl mx-auto"
+    >
+      <Box
+        component="div"
+        className="min-h-12 border-b-2 border-gray-200 p-5 items-center"
+      >
+        <span className="flex-1 text-right text-gray-950 text-bold text-xl">
+          {item?.subcategoryName}
+        </span>
+        <Link href={`/categories/${id}/${item.subcategoryId}`}>
+          <Button
+            variant="outlined"
+            className="float-left"
+            color="info"
+          >
+            مشاهده بیشتر
+          </Button>
+        </Link>
+      </Box>
+      <div className="navigation-wrapper flex justify-center sm:mx-2 mx-auto ">
+        {loaded && instanceRef.current && (
+          <CustomBtn onClick={(e) => e.stopPropagation() || instanceRef.current?.next()} Icon={<FaArrowRight className="mx-auto" />} length={instanceRef.current.track.details.slides.length - 1} />
+        )}
+        <div ref={sliderRef} className="keen-slider">
+          {item?.products.map((product, i) => {
+            return (
+              <div className="keen-slider__slide sm:min-w-60 min-w-52 mt-2" key={i}>
+                <CardItem product={product} subID={item.subcategoryId} id={id} cartProducts={cartProducts} />
+              </div>
+            );
+          })}
+        </div>
+        {loaded && instanceRef.current && (
+          <CustomBtn onClick={(e) => e.stopPropagation() || instanceRef.current?.prev()} Icon={<FaArrowLeft className="mx-auto" />} length={instanceRef.current.track.details.slides.length - 1} />
+        )}
+      </div>
+    </Box>
+  )
+}
+
+export default function SubCategory({ id }) {
+  const [subcategories, setSubcategories] = useState([]);
   const { getAllProductsOfACategory } = ProductApi;
+  const cartProducts = useSelector((state) => state.CartProducts);
 
   useEffect(() => {
     const getProduct = async () => {
       try {
-        const response = await getAllProductsOfACategory({ id: id });
+        const response = await getAllProductsOfACategory({ id });
+
+        //differentiate products based on the subcategories
         const groupedProducts = response.products.reduce((acc, product) => {
           const { subcategoryId, subcategoryName, ...rest } = product;
 
-          const existingSubcategory = acc.find(
-            (item) => item.subcategoryId === subcategoryId
-          );
+          const existingSubcategory = acc.find((item) => item.subcategoryId === subcategoryId);
 
           if (existingSubcategory) {
             existingSubcategory.products.push(rest);
@@ -122,61 +115,21 @@ export default function SubCategory() {
               products: [rest],
             });
           }
-
           return acc;
         }, []);
-        setProducts(groupedProducts);
-      } catch (error) {}
+
+        setSubcategories(groupedProducts);
+      } catch (error) { }
     };
     getProduct();
-  }, [setProducts, getAllProductsOfACategory, id]);
+  }, [setSubcategories, getAllProductsOfACategory, id]);
+
 
   return (
-    <>
-      <Box className="mt-6">
-        {products.map((item, index) => {
-          return (
-            <Box
-              className="rounded-xl mt-5 mb-10 min-h-[100px] border-2 border-violet-100 shadow-lg shadow-violet-300"
-              key={index}
-            >
-              <Box
-                component="div"
-                className="min-h-12 border-b-2 p-5 items-center"
-              >
-                <span className="flex-1 text-right text-gray-950 text-bold text-xl">
-                  {item?.subcategoryName}
-                </span>
-                <Link href={`/categories/${id}/${item.subcategoryId}`}>
-                  <Button
-                    variant="outlined"
-                    className="float-left text-gray-950 text-bold text-base"
-                    color="info"
-                  >
-                    مشاهده بیشتر
-                  </Button>
-                </Link>
-              </Box>
-              <Swiper
-                dir="rtl"
-                modules={[Navigation, Pagination]}
-                navigation
-                pagination={{ type: "progressbar" }}
-                breakpoints={swiperBreaks}
-                className="w-full rounded-lg"
-              >
-                {item?.products.map((product, itemIndex) => {
-                  return (
-                    <SwiperSlide key={itemIndex} className="p-5">
-                      <CardItem product={product} subID={item.subcategoryId} />
-                    </SwiperSlide>
-                  );
-                })}
-              </Swiper>
-            </Box>
-          );
-        })}
-      </Box>
-    </>
+    <Box className="mt-6">
+      {subcategories.map((item, index) =>
+        <Slider item={item} key={index} cartProducts={cartProducts} id={id} />
+      )}
+    </Box>
   );
 }

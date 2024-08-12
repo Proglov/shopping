@@ -1,59 +1,85 @@
 "use client";
-
 import { Box, Button, TextField } from "@mui/material";
 import { useEffect, useState } from "react";
 import UserApi from "@/services/withAuthActivities/user";
 import DOMPurify from "dompurify";
-import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 
 export default function Specifications() {
-  const [isEdit, setIsEdit] = useState(false);
   const { getMe, updateUser } = UserApi;
-  const router = useRouter();
   const [information, setInformation] = useState({
     name: "",
-    phoneNumber: "",
-    // phone: "55005798",
+    phone: "",
     email: "",
     userName: "",
   });
-  const [preInformation, setPreInformation] = useState({
+  const [newInformation, setNewInformation] = useState({
     name: "",
-    phoneNumber: "",
-    // phone: "",
+    phone: "",
     email: "",
     userName: "",
   });
   const [userId, setUserId] = useState("");
+  const [isEdit, setIsEdit] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const submit = async () => {
-    setIsEdit(false);
+    setIsSubmitting(true)
     try {
-      const obj = information;
+      const obj = newInformation;
       obj.name = DOMPurify.sanitize(obj.name);
       obj.email = DOMPurify.sanitize(obj.email);
-      obj.phoneNumber = DOMPurify.sanitize(obj.phoneNumber);
+      obj.phone = DOMPurify.sanitize(obj.phone);
       obj.userName = DOMPurify.sanitize(obj.userName);
 
       const changedFields = {};
       Object.keys(obj).forEach((key) => {
-        if (obj[key] !== preInformation[key]) {
+        if (obj[key] !== information[key]) {
           changedFields[key] = obj[key];
         }
       });
 
-      const response = await updateUser({
+      await updateUser({
         ...changedFields,
         id: userId,
       });
 
+      setInformation(prev => ({
+        ...prev,
+        ...changedFields
+      }))
+      setIsEdit(false);
       toast.success("با موفقیت ثبت شد", {
         position: toast.POSITION.TOP_RIGHT,
       });
     } catch (error) {
-      toast.error("دوباره تلاش کنید", { position: toast.POSITION.TOP_RIGHT });
-    }
+      const { message } = error.response.data
+      let newMassage;
+
+      switch (message) {
+        case "Phone is not valid":
+          newMassage = 'شماره همراه صحیح نمی باشد'
+          break;
+        case "Phone Already Exists":
+        case "Phone Already Exists in the Sellers":
+          newMassage = 'با این شماره قبلا ثبت نام شده است'
+          break;
+        case "Email is not valid":
+          newMassage = 'ایمیل صحیح نمیباشد'
+          break;
+        case "Email Already Exists":
+          newMassage = 'با این ایمیل قبلا ثبت نام شده است'
+          break;
+        case "Username Already Exists":
+          newMassage = 'با این نام کاربری قبلا ثبت نام شده است'
+          break;
+        default:
+          newMassage = 'مشکلی رخ داد'
+          break;
+      }
+      toast.error(newMassage, { position: toast.POSITION.TOP_RIGHT });
+    } finally { setIsSubmitting(false) }
   };
 
   useEffect(() => {
@@ -62,244 +88,219 @@ export default function Specifications() {
         const user = await getMe();
         setInformation({
           name: user.user.name,
-          phoneNumber: user.user.phone,
-          // phone: "",
+          phone: user.user.phone,
+          email: user.user.email,
+          userName: user.user.username,
+        });
+        setNewInformation({
+          name: user.user.name,
+          phone: user.user.phone,
           email: user.user.email,
           userName: user.user.username,
         });
         setUserId(user.user._id);
-      } catch (error) {}
+      } catch (error) { } finally { setLoading(false) }
     };
     GetUser();
   }, [getMe, setInformation]);
 
   return (
-    <>
-      <Box className="flex justify-center me-4">
-        <Box className="border-2 border-violet-200 h-full w-full p-5">
-          {!isEdit ? (
+    <Box className="shadow-lg shadow-slate-400 w-full max-w-lg mx-auto md:mt-2 p-5" sx={{ border: 'unset' }}>
+      {loading ? <>لطفا منتظر بمانید ...</>
+        :
+        !isEdit ? (
+          <Box className='flex flex-col gap-3 pr-5 relative'>
             <Box>
-              <Box className="p-3 mb-3">
-                <span className="font-bold">نام : </span>
-                <span>
-                  {(information.name === "") | (information.name == undefined)
-                    ? "فاقد نام"
-                    : information.name}
-                </span>
-              </Box>
-              {/* <Box className="p-3 mb-3">
-                <span className="font-bold">نام خانوادگی : </span>
-                <span>{information.family}</span>
-              </Box> */}
-              <Box className="p-3 mb-3">
-                <span className="font-bold">شماره موبایل : </span>
-                <span>
-                  {(information.phoneNumber === "") |
-                  (information.phoneNumber == undefined)
-                    ? "فاقد شماره موبایل"
-                    : information.phoneNumber}
-                </span>
-              </Box>
-              {/* <Box className="p-3 mb-3">
-                <span className="font-bold">شماره تلفن : </span>
-                <span>{information.phone}</span>
-              </Box> */}
-              <Box className="p-3 mb-3">
-                <span className="font-bold">ایمیل : </span>
-                <span>
-                  {(information.email === "") | (information.email == undefined)
-                    ? "فاقد ایمیل"
-                    : information.email}
-                </span>
-              </Box>
-              <Box className="p-3 mb-3">
-                <span className="font-bold">نام کاربری : </span>
-                <span>
-                  {(information.userName === "") |
+              <span>نام و نام خانوادگی : </span>
+              <span>
+                {(information.name === "") | (information.name == undefined)
+                  ? "فاقد نام"
+                  : information.name}
+              </span>
+            </Box>
+
+            <Box>
+              <span>شماره موبایل : </span>
+              <span>
+                {(information.phone === "") |
+                  (information.phone == undefined)
+                  ? "فاقد شماره موبایل"
+                  : information.phone}
+              </span>
+            </Box>
+
+            <Box>
+              <span>ایمیل : </span>
+              <span>
+                {(information.email === "") | (information.email == undefined)
+                  ? "فاقد ایمیل"
+                  : information.email}
+              </span>
+            </Box>
+
+            <Box>
+              <span>نام کاربری : </span>
+              <span>
+                {(information.userName === "") |
                   (information.userName == undefined)
-                    ? "فاقد نام کاربری"
-                    : information.userName}
-                </span>
-              </Box>
-              <Box className="md:float-left">
-                <Button
-                  variant="contained"
-                  color="info"
-                  className="bg-blue-500 md:hidden"
-                  fullWidth
-                  onClick={() => {
-                    setIsEdit(true);
-                    setPreInformation(information);
-                  }}
-                >
-                  ویرایش اطلاعات
-                </Button>
-                <Button
-                  variant="contained"
-                  color="info"
-                  className="bg-blue-500 md:block hidden"
-                  onClick={() => {
-                    setIsEdit(true);
-                    setPreInformation(information);
-                  }}
-                >
-                  ویرایش اطلاعات
-                </Button>
-              </Box>
+                  ? "فاقد نام کاربری"
+                  : information.userName}
+              </span>
             </Box>
-          ) : (
-            <Box>
-              <Box className="grid lg:grid-cols-2 grid-cols-1 gap-5">
-                <TextField
-                  value={information.name}
-                  label="نام"
-                  onChange={(event) => {
-                    const input = event.target.value;
-                    const filteredInput = input.replace(/[^آ-یa-zA-Z]+/g, "");
-                    setInformation({ ...information, name: filteredInput });
-                  }}
-                  sx={{
-                    "& .MuiInputLabel-root": {
-                      left: "inherit !important",
-                      right: "1.75rem !important",
-                      transformOrigin: "right !important",
-                    },
-                    "& legend": { textAlign: "right" },
-                    "& .MuiInputBase-input": {
-                      width: "300px",
-                    },
-                  }}
-                />
-                {/* <TextField
-                  value={information.family}
-                  label="نام خانوادگی"
-                  onChange={(event) => {
-                    const input = event.target.value;
-                    const filteredInput = input.replace(/[^آ-یa-zA-Z]+/g, "");
-                    setInformation({ ...information, family: filteredInput });
-                  }}
-                  sx={{
-                    " & .MuiInputLabel-root": {
-                      left: "inherit !important",
-                      right: "1.75rem !important",
-                      transformOrigin: "right !important",
-                    },
-                    "& legend": { textAlign: "right" },
-                    "& .MuiInputBase-input": {
-                      width: "300px",
-                    },
-                  }}
-                /> */}
-                <TextField
-                  value={information.phoneNumber}
-                  label="شماره موبایل"
-                  onChange={(event) => {
-                    const input = event.target.value;
-                    const filteredInput = input.replace(/\D/g, "");
-                    setInformation({
-                      ...information,
-                      phoneNumber: filteredInput,
-                    });
-                  }}
-                  sx={{
-                    " & .MuiInputLabel-root": {
-                      left: "inherit !important",
-                      right: "1.75rem !important",
-                      transformOrigin: "right !important",
-                    },
-                    "& legend": { textAlign: "right" },
-                    "& .MuiInputBase-input": {
-                      width: "300px",
-                    },
-                  }}
-                />
-                {/* <TextField
-                  value={information.phone}
-                  label="شماره تلفن"
-                  onChange={(event) => {
-                    const input = event.target.value;
-                    const filteredInput = input.replace(/\D/g, "");
-                    setInformation({ ...information, phone: filteredInput });
-                  }}
-                  sx={{
-                    " & .MuiInputLabel-root": {
-                      left: "inherit !important",
-                      right: "1.75rem !important",
-                      transformOrigin: "right !important",
-                    },
-                    "& legend": { textAlign: "right" },
-                    "& .MuiInputBase-input": {
-                      width: "300px",
-                    },
-                  }}
-                /> */}
-                <TextField
-                  value={information.email}
-                  label="ایمیل"
-                  type="email"
-                  onChange={(event) => {
-                    setInformation({
-                      ...information,
-                      email: event.target.value,
-                    });
-                  }}
-                  sx={{
-                    " & .MuiInputLabel-root": {
-                      left: "inherit !important",
-                      right: "1.75rem !important",
-                      transformOrigin: "right !important",
-                    },
-                    "& legend": { textAlign: "right" },
-                    "& .MuiInputBase-input": {
-                      width: "300px",
-                    },
-                  }}
-                />
-                <TextField
-                  value={information.userName}
-                  label="نام کاربری"
-                  onChange={(event) => {
-                    setInformation({
-                      ...information,
-                      userName: event.target.value,
-                    });
-                  }}
-                  sx={{
-                    " & .MuiInputLabel-root": {
-                      left: "inherit !important",
-                      right: "1.75rem !important",
-                      transformOrigin: "right !important",
-                    },
-                    "& legend": { textAlign: "right" },
-                    "& .MuiInputBase-input": {
-                      width: "300px",
-                    },
-                  }}
-                />
-              </Box>
-              <Box>
-                <Button
-                  variant="contained"
-                  className="bg-red-500 hover:bg-red-600 text-xl rounded-lg mt-10 float-left"
-                  onClick={() => {
-                    setInformation(preInformation);
-                    setIsEdit(false);
-                  }}
-                >
-                  انصراف
-                </Button>
-                <Button
-                  variant="contained"
-                  className="bg-green-500 hover:bg-green-600 text-xl rounded-lg mt-10 float-right"
-                  onClick={submit}
-                >
-                  تایید
-                </Button>
-              </Box>
+
+            <Box className="md:absolute left-0">
+              <Button
+                variant="contained"
+                color="info"
+                className="bg-blue-500 md:hidden"
+                fullWidth
+                onClick={() => {
+                  setIsEdit(true);
+                  setNewInformation(information);
+                }}
+              >
+                ویرایش اطلاعات
+              </Button>
+              <Button
+                variant="contained"
+                color="info"
+                className="bg-blue-500 md:block hidden"
+                onClick={() => {
+                  setIsEdit(true);
+                  setNewInformation(information);
+                }}
+              >
+                ویرایش اطلاعات
+              </Button>
             </Box>
-          )}
-        </Box>
-      </Box>
-    </>
+          </Box>
+        ) : (
+          <Box>
+
+            <Box className="grid lg:grid-cols-2 grid-cols-1 gap-5">
+              <TextField
+                disabled={isSubmitting}
+                value={newInformation.name}
+                label="نام"
+                onChange={(event) => {
+                  const input = event.target.value;
+                  const filteredInput = input.replace(/[^آ-یa-zA-Z]+/g, "");
+                  setNewInformation({ ...newInformation, name: filteredInput });
+                }}
+                sx={{
+                  "& .MuiInputLabel-root": {
+                    left: "inherit !important",
+                    right: "1.75rem !important",
+                    transformOrigin: "right !important",
+                  },
+                  "& legend": { textAlign: "right" },
+                  "& .MuiInputBase-input": {
+                    width: "300px",
+                  },
+                }}
+              />
+              <TextField
+                disabled={isSubmitting}
+                value={newInformation.phone}
+                label="شماره موبایل"
+                onChange={(event) => {
+                  const input = event.target.value;
+                  const filteredInput = input.replace(/\D/g, "");
+                  setNewInformation({
+                    ...newInformation,
+                    phone: filteredInput,
+                  });
+                }}
+                sx={{
+                  " & .MuiInputLabel-root": {
+                    left: "inherit !important",
+                    right: "1.75rem !important",
+                    transformOrigin: "right !important",
+                  },
+                  "& legend": { textAlign: "right" },
+                  "& .MuiInputBase-input": {
+                    width: "300px",
+                  },
+                }}
+              />
+              <TextField
+                disabled={isSubmitting}
+                value={newInformation.email}
+                label="ایمیل"
+                type="email"
+                onChange={(event) => {
+                  setNewInformation({
+                    ...newInformation,
+                    email: event.target.value,
+                  });
+                }}
+                sx={{
+                  " & .MuiInputLabel-root": {
+                    left: "inherit !important",
+                    right: "1.75rem !important",
+                    transformOrigin: "right !important",
+                  },
+                  "& legend": { textAlign: "right" },
+                  "& .MuiInputBase-input": {
+                    width: "300px",
+                  },
+                }}
+              />
+              <TextField
+                disabled={isSubmitting}
+                value={newInformation.userName}
+                label="نام کاربری"
+                onChange={(event) => {
+                  setNewInformation({
+                    ...newInformation,
+                    userName: event.target.value,
+                  });
+                }}
+                sx={{
+                  " & .MuiInputLabel-root": {
+                    left: "inherit !important",
+                    right: "1.75rem !important",
+                    transformOrigin: "right !important",
+                  },
+                  "& legend": { textAlign: "right" },
+                  "& .MuiInputBase-input": {
+                    width: "300px",
+                  },
+                }}
+              />
+            </Box>
+
+            {
+              isSubmitting &&
+              <Box className='mt-2 w-full text-center' color='gray'>
+                در حال ارسال ...
+              </Box>
+            }
+
+            <Box className='flex justify-between'>
+              <Button
+                disabled={isSubmitting}
+                variant="contained"
+                className="bg-red-500 hover:bg-red-600 text-lg rounded-lg mt-10 w-18"
+                onClick={() => {
+                  setNewInformation(information);
+                  setIsEdit(false);
+                }}
+              >
+                انصراف
+              </Button>
+              <Button
+                disabled={isSubmitting}
+                variant="contained"
+                className="bg-green-500 hover:bg-green-600 text-lg rounded-lg mt-10 w-18"
+                onClick={submit}
+              >
+                تایید
+              </Button>
+            </Box>
+
+          </Box>
+        )}
+    </Box>
   );
 }

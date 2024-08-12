@@ -14,6 +14,18 @@ const Api = {
         );
         return response;
     },
+    getOneProductParams: async (payload) => {
+        const response = await clientWithoutAuth.get(
+            `/productGet/getOneProductParams?id=${payload?.id}`
+        );
+        return response?.data;
+    },
+    getSomeProducts: async (payload) => {
+        const response = await clientWithoutAuth.get(
+            `/productGet/getSomeProducts`, { params: payload }
+        );
+        return response?.data;
+    },
     getAllProductsOfACategory: async (payload) => {
         const response = await clientWithoutAuth.get(
             `/productGet/getAllProductsOfACategory?categoryId=${payload?.id}`

@@ -298,15 +298,18 @@ export default function ModalEdit() {
 
                                                                     <Button variant='outlined' color='error' className='mt-1 mb-4 w-full'
                                                                         onClick={() => {
-                                                                            setImagesToDelete(prev => [
-                                                                                ...prev,
-                                                                                selectedItem?.imagesName[i]
-                                                                            ]);
-                                                                            setSelectedItem(prev => ({
+                                                                            const idx = imagesToDelete.findIndex((item) => item === selectedItem?.imagesName[i])
+                                                                            if (idx === -1) {
+                                                                                setImagesToDelete(prev => [
+                                                                                    ...prev,
+                                                                                    selectedItem?.imagesName[i]
+                                                                                ]);
+                                                                            }
+                                                                            dispatch(setSelectedItem(prev => ({
                                                                                 ...prev,
                                                                                 imagesUrl: prev?.imagesUrl?.filter(theUrl => theUrl !== url),
                                                                                 imagesName: prev?.imagesName?.filter(theUrl => theUrl !== selectedItem?.imagesName[i]),
-                                                                            }))
+                                                                            })))
                                                                         }}
                                                                     >
                                                                         حذف عکس بالا

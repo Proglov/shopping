@@ -44,9 +44,11 @@ export const addProductsFulfilled = (state, action) => {
     state.items.push(action.payload.product)
     state.itemsCount++;
 }
-export const deleteProductFulfilled = (state, action) => {
-    state.items = state.items.filter(item => item._id !== action.payload._id)
-    state.itemsCount--;
+export const toggleAvailabilityProductFulfilled = (state, action) => {
+    state.items.forEach(item => {
+        if (item._id === action.payload) item.available = !item.available
+        return item
+    });
 }
 export const updateProductFulfilled = (state, action) => {
     state.items = state.items.map(item => {
@@ -112,10 +114,10 @@ export const getFutureTXsFulfilled = (state, action) => {
     state.lastPage = Math.ceil(action.payload?.transactionsCount / state.itemsPerPage)
     state.loading = false
 }
-export const updateTXDoneFulfilled = (state, action) => {
-    state.items = state.items.map(item => {
-        if (item._id === action.payload.transaction._id)
-            item.done = !item.done
+export const updateTXStatusFulfilled = (state, action) => {
+    state.items.forEach(item => {
+        if (item._id === action.payload.id) item.status = action.payload.newStatus
+        console.log(item);
         return item
-    })
+    });
 }

@@ -1,315 +1,265 @@
 "use client";
-
-import { convertToFarsiNumbers, formatPrice } from "@/utils/funcs";
-import { Box, Button, Card } from "@mui/material";
+import { useContext } from "react";
+import { convertToFarsiNumbers, formatPrice, iranianCalendar } from "@/utils/funcs";
+import { Box, Button, Card, Typography } from "@mui/material";
 import { GrFormPrevious } from "react-icons/gr";
-import Link from "next/link";
-import { useAppSelector } from "@/store/Hook";
 import { useRouter } from "next/navigation";
+import { LiaFileInvoiceDollarSolid } from "react-icons/lia";
+import { TotalPriceContext } from "./ShoppingCard"
+import { useSelector } from "react-redux";
+import { calculateDate } from "@/Storage/Storage";
 
-export default function Bill({ step = 1 }) {
-  const product = useAppSelector((state) => state.CartProducts);
-  const Time = useAppSelector((state) => state.Time);
-  const address = useAppSelector((state) => state.Address.address);
-  const minPrice = 150000;
+export default function Bill({ counter, step }) {
   const router = useRouter();
+  const { totalPrice } = useContext(TotalPriceContext)
+  const AddressAndTime = useSelector((state) => state.AddressAndTime);
 
-  let serviceFee = 1479;
-
-  function Number(arr) {
-    let number =
-      arr?.reduce((sum, obj) => {
-        return sum + obj.number;
-      }, 0) || "0";
-    return number.toString();
-  }
-
-  function totalPrice(arr) {
-    let price =
-      arr?.reduce((sum, obj) => {
-        return sum + obj.number * parseInt(obj.price);
-      }, 0) || "0";
-    return price.toString();
-  }
-
-  // function profit(arr) {
-  //   let price = arr.reduce((sum, obj) => {
-  //     return sum + (obj.number * parseInt(obj.price) * obj.off) / 100;
-  //   }, 0);
-  //   return price.toString();
-  // }
+  const theTime = calculateDate(AddressAndTime.day, AddressAndTime.time)
+  const theHour = theTime.getHours()
 
   return (
     <>
-      <Box className="p-5 mb-1 grid grid-cols-1 sm:grid-cols-3" component="div">
-        <Card className="border-2 p-3 border-gray-200 rounded-xl col-span-2">
-          <Box className="grid grid-cols-5 grid-rows-7" component="div">
-            <Box
-              className="col-span-3 lg:text-2xl mb-2"
-              sx={{
-                fontSize: {
-                  xs: "18px",
-                  sm: "16px",
-                  md: "20px",
-                },
-              }}
-            >
-              تعداد اقلام
-            </Box>
-            <Box
-              className="lg:text-2xl col-span-2 mb-2"
-              sx={{
-                fontSize: {
-                  xs: "18px",
-                  sm: "16px",
-                  md: "20px",
-                },
-              }}
-            >
-              {convertToFarsiNumbers(Number(product))}{" "}
-              <span className="text-lg text-gray-600">کالا</span>{" "}
-            </Box>
-            <Box
-              className="col-span-3 lg:text-2xl mb-2"
-              sx={{
-                fontSize: {
-                  xs: "18px",
-                  sm: "16px",
-                  md: "20px",
-                },
-              }}
-            >
-              مبلغ کل اقلام
-            </Box>
-            <Box
-              className="lg:text-2xl col-span-2 mb-2"
-              sx={{
-                fontSize: {
-                  xs: "18px",
-                  sm: "16px",
-                  md: "20px",
-                },
-              }}
-            >
-              {convertToFarsiNumbers(formatPrice(totalPrice(product)))}{" "}
-              <span className="text-lg text-gray-600">تومان</span>
-            </Box>
-            {step !== 0 ? (
-              <>
-                <Box
-                  className="col-span-3 lg:text-2xl mb-2"
-                  sx={{
-                    fontSize: {
-                      xs: "18px",
-                      sm: "16px",
-                      md: "20px",
-                    },
-                  }}
-                >
-                  هزینه بسته بندی
-                </Box>
-                <Box
-                  className="lg:text-2xl col-span-2 mb-2"
-                  sx={{
-                    fontSize: {
-                      xs: "18px",
-                      sm: "16px",
-                      md: "20px",
-                    },
-                  }}
-                >
-                  {convertToFarsiNumbers(formatPrice(serviceFee.toString()))}{" "}
-                  <span className="text-lg text-gray-600">تومان</span>
-                </Box>
-                <Box
-                  className="col-span-3 lg:text-2xl mb-2"
-                  sx={{
-                    fontSize: {
-                      xs: "18px",
-                      sm: "16px",
-                      md: "20px",
-                    },
-                  }}
-                >
-                  هزینه ارسال
-                </Box>
-                <Box
-                  className="lg:text-2xl col-span-2 mb-2"
-                  sx={{
-                    fontSize: {
-                      xs: "18px",
-                      sm: "16px",
-                      md: "20px",
-                    },
-                  }}
-                >
-                  {Time.select ? (
-                    <>
-                      {convertToFarsiNumbers(formatPrice(Time.price))}
-                      <span className="text-lg text-gray-600">تومان</span>
-                    </>
-                  ) : (
-                    <span className="text-lg text-gray-600">
-                      وابسته به زمان ارسالی
-                    </span>
-                  )}{" "}
-                </Box>
-              </>
-            ) : (
-              ""
-            )}
-            {/* <Box
-              className="col-span-3 lg:text-2xl text-green-500 mb-2"
-              sx={{
-                fontSize: {
-                  xs: "18px",
-                  sm: "16px",
-                  md: "20px",
-                },
-              }}
-            >
-              سود شما از این خرید
-            </Box>
-            <Box
-              className="text-green-500 lg:text-xl col-span-2 mb-2"
-              sx={{
-                fontSize: {
-                  xs: "18px",
-                  sm: "16px",
-                  md: "20px",
-                },
-              }}
-            >
-              {convertToFarsiNumbers(formatPrice(profit(product)))}{" "}
-              <span className="text-lg text-green-400">تومان</span>
-            </Box> */}
-            {step !== 0 ? (
-              <>
-                <Box
-                  className="col-span-3 lg:text-2xl mb-2"
-                  sx={{
-                    fontSize: {
-                      xs: "18px",
-                      sm: "16px",
-                      md: "20px",
-                    },
-                  }}
-                >
-                  مبلغ قابل پرداخت
-                </Box>
-                <Box
-                  className="lg:text-2xl col-span-2 mb-2"
-                  sx={{
-                    fontSize: {
-                      xs: "18px",
-                      sm: "16px",
-                      md: "20px",
-                    },
-                  }}
-                >
-                  {Time.select
-                    ? convertToFarsiNumbers(
-                        formatPrice(
-                          (
-                            parseInt(totalPrice(product)) +
-                            serviceFee +
-                            parseInt(Time.price)
-                          ).toString()
-                        )
-                      )
-                    : convertToFarsiNumbers(
-                        formatPrice(
-                          (
-                            parseInt(totalPrice(product)) + serviceFee
-                          ).toString()
-                        )
-                      )}{" "}
-                  <span className="text-lg text-gray-600">تومان</span>
-                </Box>
-              </>
-            ) : (
-              ""
-            )}
-          </Box>
-        </Card>
-      </Box>
-      {step !== 0 ? (
+      {
+        totalPrice > 0 &&
         <>
-          <Box
-            className="p-5 mb-1 grid grid-cols-2 justify-between mx-5"
-            component="div"
-          >
-            {minPrice < totalPrice(product) ? (
-              !Time.select || address === "" ? (
-                <div className="text-red-600 mb-2 text-right text-xl">
-                  لطفا آدرس یا زمان ارسال را انتخاب کنید!
-                </div>
-              ) : (
-                <div></div>
-              )
-            ) : (
-              <Box
-                className="text-red-600  mb-2 text-right text-lg"
-                component="div"
-              >
-                حداقل سفارش{" "}
-                {convertToFarsiNumbers(formatPrice(minPrice.toString()))} تومان
+
+          <Box className="p-5 mb-1 max-w-xl mx-auto" component="div">
+            <Card className="shadow-2xl" sx={{
+              boxShadow: 'unset',
+              borderRadius: '20px',
+              borderTopRightRadius: '0%',
+              borderTopLeftRadius: '0%'
+            }}>
+
+              <Box sx={{
+                marginBottom: {
+                  xs: "-15px",
+                  sm: "-14px",
+                  md: "-19px",
+                  lg: "-24px",
+                  xl: "-27px",
+                }
+              }}>
+                <Typography
+                  className="top-3 relative"
+                  sx={{
+                    border: '1px solid rgb(209,213,219)',
+                    transform: "translateY(15px)",
+                    borderTopWidth: "2px",
+                    borderTopRightRadius: "50%",
+                    borderTopLeftRadius: "50%",
+                  }}
+                />
+                <Typography
+                  sx={{
+                    zIndex: "100",
+                    position: "relative",
+                    width: {
+                      xs: "30%",
+                      sm: "25%",
+                      md: "28%",
+                      lg: "30%",
+                      xl: "35%",
+                    },
+                    fontSize: {
+                      xs: "15px",
+                      sm: "16px",
+                      md: "20px",
+                      lg: "22px",
+                      xl: "24px",
+                    },
+                    marginLeft: 'auto',
+                    marginRight: 'auto'
+                  }}
+                  className="bg-white m-2 flex justify-center mx-auto"
+                >
+                  <LiaFileInvoiceDollarSolid className="mt-1 text-cyan-500 ml-1" />
+                  <span className="mr-1">فاکتور
+                    {" "}
+                    {
+                      step === 0 ?
+                        <>اولیه</>
+                        :
+                        <>نهایی</>
+                    }
+                  </span>
+                </Typography>
               </Box>
-            )}
-            {minPrice < totalPrice(product) ? (
-              Time.select && address !== "" ? (
-                <div className="text-left">
-                  {/* <Link href="/shopping-card/payment"> */}
-                    <Button
-                      variant="contained"
-                      className="bg-blue-500 text-bold text-base hover:bg-blue-600 rounded-lg w-fit"
-                      onClick={() => {
-                        router.push("/shopping-card/payment");
-                      }}
-                    >
-                      مرحله بعد
-                      <GrFormPrevious
-                        className="text-white"
-                        style={{ fontSize: "35px" }}
-                      />
-                    </Button>
-                  {/* </Link> */}
+
+              <Box className="p-3 lg:pt-5 pt-4 rounded-b-lg">
+                <Box className='flex items-baseline mb-2'>
+                  <Typography className="lg:text-xl" >
+                    تعداد اقلام
+                  </Typography>
+
+                  <span className="text-red-500 mx-1">:</span>
+
+                  <Typography className="lg:text-xl">
+                    {convertToFarsiNumbers(counter)}{" "}
+                    <span className="text-lg text-gray-600">کالا</span>
+                  </Typography>
+                </Box>
+
+                <Box className='flex items-baseline mb-2'>
+                  <Typography className="lg:text-xl mb-2" >
+                    مبلغ کل اقلام
+                  </Typography>
+
+                  <span className="text-red-500 mx-1">:</span>
+
+                  <Typography className="lg:text-xl mb-2" >
+                    {convertToFarsiNumbers(formatPrice(totalPrice))}
+                    {" "}
+                    <span className="text-lg text-gray-600">تومان</span>
+                  </Typography>
+                </Box>
+
+                {step !== 0 && (
+                  <>
+                    <Box className='flex items-baseline mb-2'>
+
+                      <Typography className="lg:text-xl mb-2" >
+                        هزینه ارسال
+                      </Typography>
+
+                      <span className="text-red-500 mx-1">:</span>
+
+                      <Typography className="lg:text-xl mb-2" >
+                        {convertToFarsiNumbers(formatPrice(50000))}
+                        {" "}
+                        <span className="text-lg text-gray-600">تومان</span>
+                      </Typography>
+                    </Box>
+
+                    <Box className='flex items-baseline mb-2'>
+
+                      <Typography className="lg:text-xl mb-2" >
+                        مبلغ قابل پرداخت
+                      </Typography>
+
+                      <span className="text-red-500 mx-1">:</span>
+
+                      <Typography className="lg:text-xl mb-2" >
+                        {convertToFarsiNumbers(formatPrice((totalPrice + 50000).toString()))}
+                        {" "}
+                        <span className="text-lg text-gray-600">تومان</span>
+                      </Typography>
+
+                    </Box>
+
+                    {AddressAndTime.address !== '' && (
+                      <Box className='flex items-baseline mb-2'>
+
+                        <Typography className="lg:text-xl mb-2" >
+                          آدرس
+                        </Typography>
+
+                        <span className="text-red-500 mx-1">:</span>
+
+                        <Typography className="lg:text-xl mb-2" >
+                          {AddressAndTime.address}
+                        </Typography>
+
+                      </Box>
+                    )}
+
+                    <Box className='flex items-baseline mb-2'>
+
+                      <Typography className="lg:text-xl mb-2" >
+                        تاریخ ارسال
+                      </Typography>
+
+                      <span className="text-red-500 mx-1">:</span>
+
+                      <Typography className="lg:text-xl mb-2 flex justify-start gap-3" >
+                        <span>
+                          {iranianCalendar(theTime)}
+                        </span>
+
+                        {
+                          theHour < 12 ?
+                            <span>
+                              {convertToFarsiNumbers(theHour)}
+                              {" "}
+                              صبح
+                            </span>
+                            :
+                            theHour == 12 ?
+                              <span>
+                                {convertToFarsiNumbers(12)}
+                                {" "}
+                                ظهر
+                              </span>
+                              :
+                              theHour < 14 ?
+                                <span>
+                                  {convertToFarsiNumbers(theHour - 12)}
+                                  {" "}
+                                  ظهر
+                                </span>
+                                :
+                                theHour < 17 ?
+                                  <span>
+                                    {convertToFarsiNumbers(theHour - 12)}
+                                    {" "}
+                                    بعد از ظهر
+                                  </span>
+                                  :
+                                  theHour < 19 ?
+                                    <span>
+                                      {convertToFarsiNumbers(theHour - 12)}
+                                      {" "}
+                                      عصر
+                                    </span>
+                                    :
+                                    <span>
+                                      {convertToFarsiNumbers(theHour - 12)}
+                                      {" "}
+                                      شب
+                                    </span>
+                        }
+
+                      </Typography>
+
+                    </Box>
+                  </>
+                )}
+
+
+              </Box>
+
+            </Card>
+          </Box>
+
+
+          {step !== 0 && (
+            <Box
+              className={`max-w-xl mx-auto p-5 mb-1 ${!AddressAndTime.address && 'flex justify-between items-baseline'}`}
+              component="div"
+            >
+              {
+                !AddressAndTime.address &&
+                <div className="text-red-500">
+                  آدرس خود را انتخاب نمایید
                 </div>
-              ) : (
-                <div className="text-left">
-                  <Button
-                    variant="contained"
-                    className="text-bold text-base rounded-lg disabled:bg-blue-300 disabled:text-white w-fit"
-                    disabled
-                  >
-                    مرحله بعد
-                    <GrFormPrevious
-                      className="text-white"
-                      style={{ fontSize: "35px" }}
-                    />
-                  </Button>
-                </div>
-              )
-            ) : (
+              }
               <div className="text-left">
                 <Button
                   variant="contained"
-                  className="text-bold text-base rounded-lg disabled:bg-blue-300 disabled:text-white w-fit"
-                  disabled
+                  className="bg-blue-500 text-bold text-base hover:bg-blue-600 rounded-lg w-fit disabled:text-white"
+                  onClick={() => {
+                    router.push("/shopping-card/payment");
+                  }}
+                  disabled={!AddressAndTime.address}
                 >
                   مرحله بعد
-                  <GrFormPrevious
-                    className="text-white"
-                    style={{ fontSize: "35px" }}
-                  />
+                  <GrFormPrevious className="text-white text-[35px]" />
                 </Button>
               </div>
-            )}
-          </Box>
+            </Box>
+          )}
         </>
-      ) : (
-        ""
-      )}
+      }
     </>
   );
 }

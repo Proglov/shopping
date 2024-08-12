@@ -9,7 +9,6 @@ const initialState = {
     selectedItem: {},
     isModalShowMoreOpen: false,
     operatingError: '',
-    isRecentTableOperating: false,
 
     isModalDoneOpen: false,
 
@@ -32,11 +31,12 @@ export const getRecentTXFromServer = createAsyncThunk(
         return await getAllTXs({ page, perPage, isFutureOrder: false })
     }
 )
-export const updateRecentTXDoneToServer = createAsyncThunk(
-    "Transactions/updateRecentTXDoneToServer",
-    async (id) => {
-        const { TXDone } = Api
-        return await TXDone({ id })
+export const updateRecentTXStatusToServer = createAsyncThunk(
+    "Transactions/updateRecentTXStatusToServer",
+    async ({ newStatus, id }) => {
+        const { TXStatus } = Api
+        await TXStatus({ id, newStatus })
+        return { newStatus, id }
     }
 )
 
@@ -81,10 +81,7 @@ const transactionSlice = createSlice({
         },
         setItemsCountRecentTX(state, action) {
             state.itemsCountRecentTX = action.payload
-        },
-        setIsRecentTableOperating(state, action) {
-            state.isRecentTableOperating = action.payload
-        },
+        }
     },
     extraReducers: builder => {
         builder.addCase(getRecentTXFromServer.pending, pending);
@@ -95,16 +92,16 @@ const transactionSlice = createSlice({
             state.loadingRecentTX = false
         });
         builder.addCase(getRecentTXFromServer.rejected, reject);
-        builder.addCase(updateRecentTXDoneToServer.fulfilled, (state, action) => {
-            state.recentTX = state.recentTX.map(item => {
-                if (item._id === action.payload.transaction._id)
-                    item.done = !item.done
+        builder.addCase(updateRecentTXStatusToServer.fulfilled, (state, action) => {
+            state.recentTX.forEach(item => {
+                if (item._id === action.payload.id) item.status = action.payload.newStatus
+                console.log(item);
                 return item
             })
         });
     }
 });
 
-export const { setIsModalShowMoreOpen, setIsModalDoneOpen, setOperatingError, setSelectedItem, setCurrentPageRecentTX, setError, setItemsCountRecentTX, setLastPageRecentTX, setLoading, setIsRecentTableOperating } = transactionSlice.actions;
+export const { setIsModalShowMoreOpen, setIsModalDoneOpen, setOperatingError, setSelectedItem, setCurrentPageRecentTX, setError, setItemsCountRecentTX, setLastPageRecentTX, setLoading } = transactionSlice.actions;
 
 export default transactionSlice.reducer;

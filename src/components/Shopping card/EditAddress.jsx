@@ -1,5 +1,4 @@
 "use client";
-
 import {
   Button,
   Dialog,
@@ -15,44 +14,39 @@ import DOMPurify from "dompurify";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-let newAddress = { address: "", index: 0 };
 
-export default function EditAddress({
-  open,
-  close,
-  address,
-  setAddress,
-  userID,
-  user = false,
-}) {
-  const [edit, setEdit] = useState({});
+export default function EditAddress({ open, close, address, setAddress, userID, user = false }) {
+
+  let newAddress = { address: "", index: 0 };
+  const [editIndex, setEditIndex] = useState(-1);
   const { updateUser } = UserApi;
 
   const Changed = (str, index) => {
-    newAddress = { address: str, index: index };
+    newAddress = { address: str, index };
   };
 
   const onSet = async (flag) => {
+    // flag 1 : add new address
+    // flag 2 : edit
+    // flag 3 : cancel edit
     if (flag === 1) {
-      let str = ["", ...address];
-      setAddress(str);
-      setEdit({ ...edit, [0]: true });
+      let newAddresses = ["", ...address];
+      setAddress(newAddresses);
+      setEditIndex(0);
     } else if (flag === 2) {
-      let str = [...address];
-      str[newAddress.index] = newAddress.address;
-      if (str[newAddress.index] !== "" && str[newAddress.index] !== " ") {
+      let newAddresses = [...address];
+      newAddresses[newAddress.index] = newAddress.address;
+      if (newAddresses[newAddress.index] !== "" && newAddresses[newAddress.index] !== " ") {
         try {
-          const obj = str.map((item) => {
-            return DOMPurify.sanitize(item);
-          });
-          const response = await updateUser({
+          const obj = newAddresses.map((item) => DOMPurify.sanitize(item));
+          await updateUser({
             address: obj,
             id: userID,
           });
           toast.success("با موفقیت ثبت شد", {
             position: toast.POSITION.TOP_RIGHT,
           });
-          setAddress(str);
+          setAddress(newAddresses);
           newAddress.address = "";
         } catch (error) {
           toast.error("دوباره تلاش کنید", {
@@ -60,12 +54,12 @@ export default function EditAddress({
           });
         }
       } else {
-        setEdit({ ...edit, [newAddress.index]: true });
+        setEditIndex(newAddress.index);
       }
     } else if (flag === 3) {
-      let str = [...address];
-      str = str.filter(Boolean);
-      setAddress(str);
+      let newAddresses = [...address];
+      newAddresses = newAddresses.filter(Boolean); // removes null and undefined and "" in the array
+      setAddress(newAddresses);
     }
   };
 
@@ -73,7 +67,7 @@ export default function EditAddress({
     let arr = [...address];
     arr.splice(index, 1);
     try {
-      const response = await updateUser({
+      await updateUser({
         address: arr,
         id: userID,
       });
@@ -93,39 +87,43 @@ export default function EditAddress({
       open={open}
       sx={{
         "& .MuiDialog-paper": {
-          lg: { width: "80%", maxWidth: "none" },
-          md: { width: "90%", maxWidth: "none" },
-          sm: { width: "100%", maxWidth: "none" },
-          xs: { width: "100%", maxWidth: "none" },
+          xs: { width: "100%", maxWidth: "672px" },
+          sm: { width: "85%" },
+          md: { width: "90%" },
+          lg: { width: "80%" }
         },
       }}
     >
+
       <DialogTitle>
-        <Box className="grid md:grid-cols-2 justify-center">
+        <Box className="flex justify-between items-baseline">
+
           {user ? (
-            <span className="md:text-3xl text-lg">آدرس ها</span>
+            <div className="sm:text-lg lg:text-xl text-base">آدرس ها</div>
           ) : (
-            <span className="md:text-3xl text-lg">آدرس تحویل سفارش</span>
+            <div className="sm:text-lg lg:text-xl text-base">آدرس تحویل سفارش</div>
           )}
-          <Box component="div" className="mt-2 md:mt-0 md:flex md:justify-end">
-            <Button
-              variant="contained"
-              className="bg-green-500 text-white hover:bg-green-600"
-              onClick={() => onSet(1)}
-            >
-              اضافه کردن آدرس
-            </Button>
-          </Box>
+
+          <Button
+            variant="contained"
+            className="bg-green-500 text-white hover:bg-green-600"
+            disabled={editIndex > -1}
+            onClick={() => onSet(1)}
+          >
+            افزودن آدرس
+          </Button>
+
         </Box>
       </DialogTitle>
-      <DialogContent dividers>
+
+      <DialogContent dividers={address.length > 0}>
         {address.map((item, index) => {
-          const isEditing = edit[index];
+          const isEditing = editIndex === index;
           return (
             <Box
               key={index}
               component="div"
-              className="text-lg m-2 grid md:grid-cols-2"
+              className="text-lg m-2"
             >
               {!isEditing ? (
                 <>
@@ -137,7 +135,7 @@ export default function EditAddress({
                     <Button
                       variant="outlined"
                       className="border-0 hover:border-0 text-blue-800"
-                      onClick={() => setEdit({ ...edit, [index]: true })}
+                      onClick={() => setEditIndex(index)}
                     >
                       ویرایش
                     </Button>
@@ -157,9 +155,7 @@ export default function EditAddress({
                     label="آدرس"
                     focused="true"
                     defaultValue={item}
-                    onChange={(event) => {
-                      Changed(event.target.value, index);
-                    }}
+                    onChange={(event) => Changed(event.target.value, index)}
                     sx={{
                       " & .MuiInputLabel-root": {
                         left: "inherit !important",
@@ -169,6 +165,7 @@ export default function EditAddress({
                       "& legend": { textAlign: "right" },
                     }}
                   />
+
                   <Box
                     component="div"
                     className="mt-2 md:mt-0 md:flex md:justify-end"
@@ -177,17 +174,18 @@ export default function EditAddress({
                       variant="outlined"
                       className="border-0 hover:border-0 text-green-800"
                       onClick={() => {
-                        setEdit({ ...edit, [index]: false });
+                        setEditIndex(-1);
                         onSet(2);
                       }}
                     >
                       ذخیره
                     </Button>
+
                     <Button
                       variant="outlined"
                       className="border-0 hover:border-0 text-red-800"
                       onClick={() => {
-                        setEdit({ ...edit, [index]: false });
+                        setEditIndex(-1);
                         onSet(3);
                       }}
                     >
@@ -200,6 +198,7 @@ export default function EditAddress({
           );
         })}
       </DialogContent>
+
       <DialogActions className="flex md:justify-start justify-center m-1">
         <Button
           variant="contained"
@@ -207,12 +206,13 @@ export default function EditAddress({
           onClick={() => {
             close();
             onSet(3);
-            setEdit({ ...edit, [0]: false });
+            setEditIndex(-1);
           }}
         >
           بستن
         </Button>
       </DialogActions>
+
     </Dialog>
   );
 }

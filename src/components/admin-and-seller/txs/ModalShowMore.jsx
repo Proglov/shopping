@@ -88,22 +88,27 @@ export default function ModalShowMore() {
                                     <div className='mr-4'>{selectedItem.address}</div>
                                 </div>
 
-                                {/* the field below doesn't work properly, even though the createdAt property is correct*/}
-                                {/* <div>
+                                <div>
                                     <div>زمان خریداری شده :</div>
                                     <div className='mr-4'>
                                         {
                                             selectedItem?.createdAt !== '' && selectedItem?.createdAt != null &&
-                                            <>
-                                                {new Intl.DateTimeFormat('fa-IR').format(parseInt(selectedItem?.createdAt))}
-                                                <br />
-                                                {convertToFarsiNumbers((new Date(parseInt(selectedItem?.createdAt)).getHours()))}
-                                                :{convertToFarsiNumbers(("0" + (new Date((parseInt(selectedItem?.createdAt))).getMinutes())).slice(-2))}
-                                            </>
+                                            <div className='flex gap-3'>
+                                                <span>
+                                                    {new Intl.DateTimeFormat('fa-IR').format(new Date(selectedItem?.createdAt).getTime())}
+                                                </span>
+
+                                                <span dir='ltr'>
+                                                    ساعت &nbsp;
+                                                    {convertToFarsiNumbers((new Date(selectedItem?.createdAt)).getHours())}
+                                                    :{convertToFarsiNumbers(("0" + (new Date((selectedItem?.createdAt))).getMinutes())).slice(-2)}
+                                                </span>
+
+                                            </div>
                                         }
 
                                     </div>
-                                </div> */}
+                                </div>
 
                             </div>
 

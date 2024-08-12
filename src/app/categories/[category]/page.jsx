@@ -1,11 +1,8 @@
-import BreadCrumbs from "@/components/categorization/BreadCrumbs";
 import SubCategory from "@/components/categorization/SubCategory";
 
-export default function Category() {
+export default function Category({ params }) {
+
   return (
-    <>
-      <BreadCrumbs />
-      <SubCategory />
-    </>
+    <SubCategory id={params.category} />
   );
 }

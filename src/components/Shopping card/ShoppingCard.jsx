@@ -1,222 +1,210 @@
 "use client";
-
 import {
   convertToFarsiNumbers,
   farsiNumCharacter,
   formatPrice,
 } from "@/utils/funcs";
-import { Box, Button, Card, CardContent, Typography } from "@mui/material";
-import Link from "next/link";
+import { Accordion, AccordionDetails, AccordionSummary, Box, Button, Card, CardContent, Typography } from "@mui/material";
 import ShoppingBasketOutlinedIcon from "@mui/icons-material/ShoppingBasketOutlined";
-import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import RemoveOutlinedIcon from "@mui/icons-material/RemoveOutlined";
 import AddIcon from "@mui/icons-material/Add";
 import { red } from "@mui/material/colors";
-import Offers from "./Offers";
 import Bill from "./Bill";
 import Image from "next/image";
-import { useAppDispatch, useAppSelector } from "@/store/Hook";
+import { useAppDispatch } from "@/store/Hook";
 import {
   IncrementCart,
   DecrementCart,
-} from "@/features/CartProducts/CartProductsSlice";
+} from "@/store/CartProductsSlice";
 import { useRouter } from "next/navigation";
-import { toast } from "react-toastify";
-import { useEffect, useState } from "react";
+import { createContext, useEffect, useState } from "react";
+import { checkUserLoggedIn, getCartProductsFromServer, getCounterProducts, getTotalPrice } from "@/Storage/Storage";
+import { MdArrowBackIosNew } from "react-icons/md";
+
+
+export const TotalPriceContext = createContext()
 
 export default function ShoppingCard({ step }) {
-  const cartProducts = useAppSelector((state) => state.CartProducts);
   const dispatch = useAppDispatch();
   const router = useRouter();
-  const [login, setLogin] = useState();
-  const [number, setNumber] = useState(0);
+  const [products, setProducts] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [expanded, setExpanded] = useState(true)
+  const [totalPrice, setTotalPrice] = useState(0)
+  let counter = getCounterProducts()
 
-  let counter =
-    cartProducts
-      ?.reduce((accumulator, currentObject) => {
-        return accumulator + currentObject.number;
-      }, 0)
-      .toString() | "0";
+  const addProduct = id => {
+    dispatch(IncrementCart(id));
+    setProducts(prev => {
+      const newState = []
+      prev.map(product => {
+        const newProd = { ...product }
+        if (product._id === id)
+          newProd.number++
+        newState.push(newProd)
+      })
+      return newState
+    })
+  }
+
+  const removeProduct = id => {
+    dispatch(DecrementCart(id));
+    setProducts(prev => {
+      const newState = []
+      prev.map(product => {
+        const newProd = { ...product }
+        if (product._id === id)
+          newProd.number--
+        if (newProd.number !== 0)
+          newState.push(newProd)
+      })
+      return newState
+    })
+  }
+
 
   useEffect(() => {
-    if (localStorage.getItem("UserLogin") == "true") {
-      setLogin(true);
-      setNumber(1);
-    } else {
-      setLogin(false);
-      setNumber(1);
-    }
-    if (number === 1 && step !== 0) {
-      if (!login) {
-        toast.warning("شما وارد نشده اید", {
-          position: toast.POSITION.TOP_RIGHT,
-        });
-        router.push("/users/login");
+    const getProds = async () => {
+      try {
+        await checkUserLoggedIn()
+        setLoading(true)
+        setProducts(await getCartProductsFromServer())
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setLoading(false)
       }
-      setNumber(0);
     }
-  }, [setLogin, router]);
+
+    getProds()
+
+  }, [router, setProducts]);
+
+  useEffect(() => {
+    const price = getTotalPrice(products)
+    setTotalPrice(price)
+  }, [products])
+
 
   return (
-    <>
-      <Box className="p-5 mb-1" component="div">
-        <Card className="border-2 border-gray-200 rounded-xl">
-          <CardContent>
+    <div>
+      <Box className="mb-1 mx-auto max-w-xl shadow-lg rounded-xl" style={{ border: '1px solid #ededed' }} component="div">
+        <Accordion expanded={expanded} onChange={() => setExpanded(prev => !prev)}>
+
+          <AccordionSummary aria-controls="panel1d-content">
             <Typography
               variant="h5"
               component="div"
-              className="font-bold mb-4"
-              sx={{
-                fontSize: {
-                  xs: "18px",
-                  sm: "16px",
-                  md: "24px",
-                  lg: "24px",
-                  xl: "24px",
-                },
-              }}
+              className="flex flex-col justify-between"
             >
-              <ShoppingBasketOutlinedIcon
-                sx={{
-                  marginLeft: "3px",
-                  fontSize: {
-                    xs: "20px",
-                    sm: "20px",
-                    md: "25px",
-                    lg: "30px",
-                    xl: "30px",
-                  },
-                }}
-              />{" "}
-              سبد خرید شما
-              {step !== 0 ? (
-                <Link href="/">
-                  <Button
-                    variant="outlined"
-                    className="bg-green-500 border-green-600 hover:border-green-700 hover:bg-green-600 text-white font-medium float-left rounded-lg"
-                    sx={{
-                      fontSize: {
-                        xs: "10px",
-                        sm: "10px",
-                        md: "14px",
-                        lg: "18px",
-                        xl: "18px",
-                      },
-                    }}
-                  >
-                    اضافه کردن به سبد
-                    <AddShoppingCartIcon
-                      sx={{
-                        marginRight: "3px",
-                        fontSize: {
-                          xs: "14px",
-                          sm: "16px",
-                          md: "18px",
-                        },
-                      }}
-                    />
-                  </Button>
-                </Link>
-              ) : (
-                ""
-              )}
+              <Typography className="sm:text-base md:text-lg lg:text-[22px] text-sm flex">
+                <ShoppingBasketOutlinedIcon className="text-lime-500 ml-1" />
+                سبد خرید
+                <MdArrowBackIosNew className={`mt-1 mr-2 text-gray-400 transition-all ${expanded && '-rotate-90'}`} />
+              </Typography>
+              {
+                counter !== 0 &&
+                <Typography
+                  variant="h5"
+                  component="div"
+                  className="my-2 mr-1.5 text-gray-600 sm:text-base md:text-lg lg:text-[22px] text-sm">
+                  {convertToFarsiNumbers(counter)} کالا
+                </Typography>
+              }
             </Typography>
-            <Typography
-              variant="h5"
-              component="div"
-              className="mb-2 mr-1.5 text-gray-600"
-              sx={{
-                fontSize: {
-                  xs: "16px",
-                  sm: "16px",
-                  md: "20px",
-                  lg: "20px",
-                  xl: "20px",
-                },
-              }}
-            >
-              {convertToFarsiNumbers(counter)} کالا
-            </Typography>
-            <div className="grid justify-items-center">
-              {counter == 0
-                ? "سبد خرید شما خالی است!"
-                : cartProducts.map((item, index) => {
-                  return (
-                    <div key={index}>
-                      <div className="w-full border border-gray-200" />
-                      <div className="m-4 h-auto w-full grid grid-cols-1 gap-4 lg:w-3/4 sm:grid-cols-4">
-                        <div className="p-1 mx-auto">
-                          <Image
-                            height={200}
-                            width={200}
-                            src={item.src[0]}
-                            alt="Product"
-                          />
-                        </div>
-                        <div className="p-2 text-gray-900 sm:col-span-3 grid grid-rows-3 grid-cols-1 justify-items-center items-center sm:grid-rows-2 sm:grid-cols-2 sm:justify-items-start">
-                          <div className="sm:col-span-2 mb-2 sm:mb-0">
-                            {item.name}
-                          </div>
-                          <div className="mb-2 sm:mb-0">
-                            <div className="border border-gray-400 rounded-lg w-auto inline-block">
-                              <Button
-                                className="hover:bg-white active:bg-white rounded-lg w-auto"
-                                sx={{ color: red[400] }}
-                                onClick={() =>
-                                  dispatch(IncrementCart(item.code))
-                                }
-                              >
-                                <AddIcon />
-                              </Button>
-                              <span className="text-red-500">
-                                {farsiNumCharacter(item.number)}
-                              </span>
-                              <Button
-                                className="hover:bg-white active:bg-white rounded-lg w-auto"
-                                sx={{ color: red[400] }}
-                                onClick={() =>
-                                  dispatch(DecrementCart(item.code))
-                                }
-                              >
-                                {item.number === 1 ? (
-                                  <DeleteOutlineOutlinedIcon />
-                                ) : (
-                                  <RemoveOutlinedIcon />
-                                )}
-                              </Button>
+          </AccordionSummary>
+
+          <AccordionDetails>
+            <Card className="shadow-none">
+              <CardContent>
+                {
+                  loading ? <>لطفا صبر کنید ...</>
+                    :
+                    <div>
+                      {counter == 0
+                        ? "سبد خرید شما خالی است!"
+                        : products.map((item, index) => {
+                          return (
+                            <div key={index}>
+                              <div className="w-full border border-gray-200" />
+                              <div className="m-4 h-auto w-full lg:w-3/4 flex sm:flex-row flex-col items-center">
+                                <div className="p-1 sm:mx-0">
+                                  <Image
+                                    height={200}
+                                    width={200}
+                                    src={item.imagesUrl[0] || "/img/no-pic.png"}
+                                    alt="Product"
+                                  />
+                                </div>
+                                <div className="p-2 text-gray-900 sm:mx-0">
+
+                                  <div className=" mb-1 sm:mb-3">
+                                    {item.name}
+                                  </div>
+
+                                  <div className="mb-1 sm:mb-3">
+                                    فی
+                                    <span className="text-red-500 mx-1">:</span>
+                                    {convertToFarsiNumbers(formatPrice(parseInt(item.price).toString()))}
+                                    {" "}
+                                    تومان
+                                  </div>
+
+                                  <div className="mb-1 sm:mb-3">
+                                    مجموع
+                                    <span className="text-red-500 mx-1">:</span>
+                                    {convertToFarsiNumbers(formatPrice(item.number * parseInt(item.price).toString()))}
+                                    {" "}
+                                    تومان
+                                  </div>
+
+                                  <div>
+                                    <div className="border border-gray-400 rounded-lg w-auto inline-block">
+                                      <Button
+                                        className="hover:bg-white active:bg-white rounded-lg w-auto"
+                                        sx={{ color: red[400] }}
+                                        onClick={() => addProduct(item._id)}
+                                      >
+                                        <AddIcon />
+                                      </Button>
+                                      <span className="text-red-500">
+                                        {farsiNumCharacter(item.number)}
+                                      </span>
+                                      <Button
+                                        className="hover:bg-white active:bg-white rounded-lg w-auto"
+                                        sx={{ color: red[400] }}
+                                        onClick={() => removeProduct(item._id)}
+                                      >
+                                        {item.number === 1 ? (
+                                          <DeleteOutlineOutlinedIcon />
+                                        ) : (
+                                          <RemoveOutlinedIcon />
+                                        )}
+                                      </Button>
+                                    </div>
+                                  </div>
+
+                                </div>
+                              </div>
                             </div>
-                          </div>
-                          <div className="grid">
-                            <div>
-                              قیمت :
-                              {convertToFarsiNumbers(
-                                formatPrice(
-                                  Math.ceil(
-                                    item.number * parseInt(item.price)
-                                  ).toString()
-                                )
-                              )}{" "}
-                              تومان
-                            </div>
-                          </div>
-                        </div>
-                      </div>
+                          );
+                        })}
                     </div>
-                  );
-                })}
-            </div>
-          </CardContent>
-        </Card>
+                }
+              </CardContent>
+            </Card>
+          </AccordionDetails>
+        </Accordion>
       </Box>
-      {step !== 0 ? (
-        <>
-          {/* <Offers /> */}
-          <Bill step={step} />
-        </>
-      ) : (
-        <Bill step={step} />
-      )}
-    </>
+
+      {/* {step !== 0 && 
+          <Offers />
+        } */}
+
+      <TotalPriceContext.Provider value={{ totalPrice }}>
+        <Bill step={step} counter={counter} />
+      </TotalPriceContext.Provider>
+    </div>
   );
 }

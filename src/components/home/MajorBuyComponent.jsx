@@ -11,7 +11,7 @@ export default function MajorBuyComponent({ src, name, realPrice, off, number })
     const priceOffedString = (realPrice * (100 - off) / 100).toString()
 
     return (
-        <div className='rounded-md sm:w-64 w-48 p-1 m-1 bg-white' dir='rtl'>
+        <div className='rounded-md p-1 m-1 bg-white' dir='rtl'>
 
             <div className='sm:w-56 w-44 mx-auto'>
                 <Image src={src} alt={name} width={200} height={150} style={{ borderRadius: '20px', marginRight: 'auto', marginLeft: 'auto' }} loading='lazy' />
@@ -33,7 +33,7 @@ export default function MajorBuyComponent({ src, name, realPrice, off, number })
                 </div>
             </div>
 
-            <div className='flex'>
+            <div className='flex mr-5'>
                 <div className='sm:text-lg'>
                     {convertToFarsiNumbers(formatPrice(priceOffedString))}
                 </div>
@@ -56,13 +56,13 @@ export default function MajorBuyComponent({ src, name, realPrice, off, number })
                     </svg>
                 </div>
             </div>
-            <div className='mx-auto w-fit'>
-                <Button variant='outlined' className='rounded-lg p-1 mt-3' sx={{
-                    marginRight: '30px', fontSize: {
+            <div className='flex justify-end mx-auto w-full'>
+                <Button variant='outlined' className='rounded-lg p-1 mt-3 ml-2 w-fit' sx={{
+                    fontSize: {
                         xs: '12px',
                         sm: '15px',
                         md: '17px'
-                    }
+                    },
                 }}>
                     افزودن به سبد
                     <GiShoppingCart />

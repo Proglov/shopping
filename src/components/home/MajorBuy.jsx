@@ -1,93 +1,9 @@
 'use client'
 import MajorBuyComponent from './MajorBuyComponent'
-import { Swiper, SwiperSlide } from 'swiper/react'
-import { Navigation, Pagination } from 'swiper/modules'
-import 'swiper/css';
-import 'swiper/css/navigation';
-import 'swiper/css/pagination';
 
-const swiperBreaks = {
-    200: {
-        slidesPerView: 3,
-        spaceBetween: 190
-    },
-    400: {
-        slidesPerView: 3,
-        spaceBetween: 170
-    },
-    500: {
-        slidesPerView: 3,
-        spaceBetween: 130
-    },
-    540: {
-        slidesPerView: 3,
-        spaceBetween: 100
-    },
-    580: {
-        slidesPerView: 3,
-        spaceBetween: 50
-    },
-    598: {
-        slidesPerView: 4,
-        spaceBetween: 180
-    },
-    600: {
-        slidesPerView: 4,
-        spaceBetween: 200
-    },
-    640: {
-        slidesPerView: 3,
-        spaceBetween: 140
-    },
-    700: {
-        slidesPerView: 3,
-        spaceBetween: 100
-    },
-    750: {
-        slidesPerView: 3,
-        spaceBetween: 50
-    },
-    800: {
-        slidesPerView: 4,
-        spaceBetween: 170
-    },
-    900: {
-        slidesPerView: 4,
-        spaceBetween: 80
-    },
-    1000: {
-        slidesPerView: 4,
-        spaceBetween: 50
-    },
-    1050: {
-        slidesPerView: 4,
-        spaceBetween: 0
-    },
-    1100: {
-        slidesPerView: 5,
-        spaceBetween: 30
-    },
-    1200: {
-        slidesPerView: 5,
-        spaceBetween: 100
-    },
-    1250: {
-        slidesPerView: 5,
-        spaceBetween: 0
-    },
-    1400: {
-        slidesPerView: 6,
-        spaceBetween: 0
-    },
-    1800: {
-        slidesPerView: 7,
-        spaceBetween: 0
-    },
-    2000: {
-        slidesPerView: 8,
-        spaceBetween: 0
-    },
-}
+import { useKeenSlider } from 'keen-slider/react'
+import 'keen-slider/keen-slider.min.css'
+
 
 
 const arr = [
@@ -151,33 +67,25 @@ const arr = [
 ]
 
 export default function MajorBuy() {
+    const [sliderRef] = useKeenSlider({
+        loop: true,
+        slides: { perView: "auto", spacing: '-5' },
+        rtl: true
+    })
+
     return (
         <div className="m-4 rounded-xl" style={{ background: 'linear-gradient(to left top, #f9b49b 20%, #9fb6c3)', boxShadow: '0 7px 6px rgba(0, 0, 0, 0.12), 0 1px 4px rgba(0, 0, 0, 0.24)' }}>
             <div className="text-center p-2 text-slate-50" style={{ textShadow: '0px 0px 10px #000000' }}>خرید عمده</div>
 
 
-            <Swiper
-                dir="rtl"
-                modules={[Navigation, Pagination]}
-                navigation
-                loop
-                autoplay={{
-                    delay: 2500,
-                    disableOnInteraction: true,
-                }}
-                lazy="true"
-                pagination={{ type: 'progressbar' }}
-                breakpoints={swiperBreaks}
-                className="w-full rounded-lg"
-            >
+            <div ref={sliderRef} className="keen-slider">
                 {arr.map((slide, i) => (
-                    <SwiperSlide key={i}>
-                        <MajorBuyComponent {...slide} isSelected={false} />
-                    </SwiperSlide>
+                    <div className="keen-slider__slide sm:min-w-64 min-w-52" key={i}>
+                        <MajorBuyComponent {...slide} />
+                    </div>
                 ))}
-            </Swiper>
+            </div>
 
-
-        </div>
+        </div >
     )
 }

@@ -9,7 +9,7 @@ export default function FestivalCropsComponent({ src, name, realPrice, off }) {
     const priceOffedString = (realPrice * (100 - off) / 100).toString()
 
     return (
-        <div className='rounded-md sm:w-60 w-48 p-1 m-2 bg-white'>
+        <div className='rounded-md p-1 m-2 bg-white'>
 
             <div className='text-red-600 mx-3 py-2 sm:text-base text-xs'>پیشنهاد شگفت انگیز</div>
 

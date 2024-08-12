@@ -1,4 +1,4 @@
-export const jalaliMonth = (x) => {
+export const jalaliMonth = x => {
     switch (x) {
         case '١':
             return "فروردین";
@@ -40,6 +40,17 @@ export const jalaliMonth = (x) => {
             throw new Error("month should be between 1 and 12")
     }
 }
+
+export const dayOfWeek = x => {
+    const weekday = ["یکشنبه", "دوشنبه", "سه شنبه", "چهارشنبه", "پنجشنبه", "جمعه", "شنبه"];
+
+    return weekday[x] || "روز نامشخض"
+}
+
+export const iranianCalendar = time => {
+    return (new Date(time)).toLocaleDateString('fa-IR');
+}
+
 export const farsiNumCharacter = (x) => {
     switch (x) {
         case '0':

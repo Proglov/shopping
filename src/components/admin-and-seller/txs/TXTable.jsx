@@ -12,11 +12,10 @@ import Paper from '@mui/material/Paper';
 import { convertToFarsiNumbers, formatPrice, price2Farsi } from '@/utils/funcs';
 import Pagination from '../../Pagination';
 import ModalShowMore from './ModalShowMore';
-import ModalDone from './ModalDone';
 import { useDispatch, useSelector } from 'react-redux';
 import { setCurrentPage } from '../redux/reducers/global';
-import { getFutureTXsFromServer } from '../redux/globalAsyncThunks';
-import { getRecentTXFromServer, setSelectedItem, setIsModalDoneOpen, setIsModalShowMoreOpen, setIsRecentTableOperating, setCurrentPageRecentTX } from '../redux/reducers/transactions';
+import { getFutureTXsFromServer, updateTXStatusToServer } from '../redux/globalAsyncThunks';
+import { getRecentTXFromServer, setSelectedItem, setIsModalShowMoreOpen, setCurrentPageRecentTX, updateRecentTXStatusToServer } from '../redux/reducers/transactions';
 
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -37,7 +36,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
     },
 }));
 
-const Component = ({ itemsCount, error, loading, items, currentPage, itemsPerPage, selectedItem, setCurrentPage, lastPage, dispatch, operatingError, isFutureOrder }) => (
+const Component = ({ txStatuses, itemsCount, error, loading, items, currentPage, itemsPerPage, selectedItem, setCurrentPage, lastPage, dispatch, operatingError, isFutureOrder }) => (
     <Stack spacing={2} className={`${!isFutureOrder && 'mt-16'}`}>
         <div className='w-full text-start'>
             جدول تراکنش های سفارشات &nbsp;
@@ -70,8 +69,8 @@ const Component = ({ itemsCount, error, loading, items, currentPage, itemsPerPag
                                     <StyledTableCell align='center'>نام خریدار</StyledTableCell>
                                     <StyledTableCell align='center'>شماره خریدار</StyledTableCell>
                                     <StyledTableCell align='center'>زمان ارسال</StyledTableCell>
-                                    <StyledTableCell align='center'>ارسال شده</StyledTableCell>
                                     <StyledTableCell align='center'>قیمت نهایی</StyledTableCell>
+                                    <StyledTableCell align='center'>وضعیت ارسال</StyledTableCell>
                                     <StyledTableCell align='center'>عملیات</StyledTableCell>
                                 </TableRow>
                             </TableHead>
@@ -91,18 +90,10 @@ const Component = ({ itemsCount, error, loading, items, currentPage, itemsPerPag
                                                 <>
                                                     {new Intl.DateTimeFormat('fa-IR').format(parseInt(item?.shouldBeSentAt))}
                                                     <br />
+                                                    ساعت &nbsp;
                                                     {convertToFarsiNumbers((new Date(parseInt(item.shouldBeSentAt)).getHours()))}
-                                                    :{convertToFarsiNumbers(("0" + (new Date((parseInt(item?.shouldBeSentAt))).getMinutes())).slice(-2))}
                                                 </>
                                             }
-                                        </StyledTableCell>
-                                        <StyledTableCell align='center'>
-                                            {!!item?.done ?
-                                                <span className='text-green-500'>
-                                                    بله
-                                                </span> : <span className='text-orange-500'>
-                                                    خیر
-                                                </span>}
                                         </StyledTableCell>
                                         <StyledTableCell align='center'>
                                             {formatPrice(item.totalPrice)}
@@ -110,6 +101,11 @@ const Component = ({ itemsCount, error, loading, items, currentPage, itemsPerPag
                                             {price2Farsi(item.totalPrice)}
                                             <br />
                                             تومان
+                                        </StyledTableCell>
+                                        <StyledTableCell align='center'>
+                                            <span className={txStatuses[item.status]?.color || ''}>
+                                                {txStatuses[item.status]?.name}
+                                            </span>
                                         </StyledTableCell>
                                         <StyledTableCell className='gap-2' sx={{
                                             flexDirection: 'column',
@@ -128,20 +124,22 @@ const Component = ({ itemsCount, error, loading, items, currentPage, itemsPerPag
                                                 مشاهده بیشتر
                                             </Button>
                                             {
-                                                !item.done &&
+                                                (item?.status !== 'Canceled' && item?.status !== 'Received' && !!item?.status) &&
                                                 <Button
                                                     variant='outlined'
                                                     className='p-0 m-1'
-                                                    sx={{ color: 'blue', borderColor: '' }}
+                                                    color='primary'
                                                     onClick={async () => {
-                                                        dispatch(setIsRecentTableOperating(!isFutureOrder))
-                                                        dispatch(setIsModalDoneOpen(true));
-                                                        dispatch(setSelectedItem(item));
+                                                        if (isFutureOrder) dispatch(updateTXStatusToServer({ id: item?._id, newStatus: txStatuses[item?.status].nextStep }));
+                                                        else dispatch(updateRecentTXStatusToServer({ id: item?._id, newStatus: txStatuses[item?.status].nextStep }))
                                                     }}
                                                 >
-                                                    ارسال شد
+                                                    {
+                                                        txStatuses[item?.status].nextStepFarsi
+                                                    }
                                                 </Button>
                                             }
+
                                             {selectedItem?._id === item._id && operatingError != '' ? (
                                                 <>
                                                     <div>
@@ -202,17 +200,38 @@ export default function TXTable({ which, isFutureOrder }) {
             dispatch(getRecentTXFromServer({ page: currentPage, perPage: itemsPerPage, which }));
     }, [currentPage, dispatch, isFutureOrder, itemsPerPage, which]);
 
+    const txStatuses = {
+        Requested: {
+            name: 'در انتظار ارسال',
+            color: 'text-yellow-600',
+            nextStep: 'Sent',
+            nextStepFarsi: 'ارسال شد',
+        },
+        Sent: {
+            name: 'ارسال شده',
+            color: 'text-blue-500',
+            nextStep: 'Received',
+            nextStepFarsi: 'مشتری دریافت کرد',
+        },
+        Received: {
+            name: 'دریافت شده',
+            color: 'text-green-500'
+        },
+        Canceled: {
+            name: 'کنسل شده',
+            color: 'text-red-500'
+        }
+    }
 
     return (<>
         {
             !!isFutureOrder &&
-            <Component currentPage={currentPage} dispatch={dispatch} error={error} items={items} itemsCount={itemsCount} itemsPerPage={itemsPerPage} lastPage={lastPage} loading={loading} selectedItem={selectedItem} setCurrentPage={setCurrentPage} operatingError={operatingError} isFutureOrder={isFutureOrder} which={which} />
+            <Component txStatuses={txStatuses} currentPage={currentPage} dispatch={dispatch} error={error} items={items} itemsCount={itemsCount} itemsPerPage={itemsPerPage} lastPage={lastPage} loading={loading} selectedItem={selectedItem} setCurrentPage={setCurrentPage} operatingError={operatingError} isFutureOrder={isFutureOrder} which={which} />
         }
         {
             !isFutureOrder &&
-            <Component currentPage={currentPageRecentTX} dispatch={dispatch} error={errorRecentTX} items={recentTX} itemsCount={itemsCountRecentTX} itemsPerPage={itemsPerPageRecentTX} lastPage={lastPageRecentTX} loading={loadingRecentTX} selectedItem={selectedItem} setCurrentPage={setCurrentPageRecentTX} operatingError={operatingError} isFutureOrder={isFutureOrder} which={which} />
+            <Component txStatuses={txStatuses} currentPage={currentPageRecentTX} dispatch={dispatch} error={errorRecentTX} items={recentTX} itemsCount={itemsCountRecentTX} itemsPerPage={itemsPerPageRecentTX} lastPage={lastPageRecentTX} loading={loadingRecentTX} selectedItem={selectedItem} setCurrentPage={setCurrentPageRecentTX} operatingError={operatingError} isFutureOrder={isFutureOrder} which={which} />
         }
         <ModalShowMore />
-        <ModalDone />
     </>);
 }

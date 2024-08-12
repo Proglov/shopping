@@ -1,5 +1,4 @@
 "use client";
-
 import {
   Box,
   Button,
@@ -13,41 +12,42 @@ import RadioButtonUncheckedIcon from "@mui/icons-material/RadioButtonUnchecked";
 import { blue } from "@mui/material/colors";
 import { useEffect, useState } from "react";
 import EditAddress from "./EditAddress";
-import { useAppDispatch } from "@/store/Hook";
-import { SetAddress } from "@/features/Address/AddressSlice";
+import { ResetAddressAndTime, SetAddress } from "@/store/AddressAndTime";
 import UserApi from "@/services/withAuthActivities/user";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { useRouter } from "next/navigation";
+import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 
 export default function AddressCard() {
-  const [selectAddress, setSelectAddress] = useState(-1);
+  const { getMe } = UserApi;
+
   const [open, setOpen] = useState(false);
   const [address, setAddress] = useState([]);
   const [userId, setUserId] = useState("");
-  const { getMe } = UserApi;
-  const router = useRouter();
+  const [loading, setLoading] = useState(true)
 
-  const dispatch = useAppDispatch();
+  const dispatch = useDispatch();
+  const AddressAndTime = useSelector((state) => state.AddressAndTime);
 
-  const handleOpen = () => {
-    setOpen(true);
-  };
-  const handleClose = () => {
-    setOpen(false);
-  };
 
   useEffect(() => {
     const GetUser = async () => {
       try {
-        const user = await getMe();
-        setAddress([...user.user.address]);
-        setUserId(user.user._id);
+        setLoading(true)
+        const response = await getMe();
+        setAddress([...response?.user?.address]);
+        setUserId(response?.user?._id);
+
+        const addressIndex = response?.user?.address.findIndex(currentAddress => AddressAndTime.address === currentAddress)
+        if (addressIndex < 0) dispatch(ResetAddressAndTime())
+
       } catch (error) {
         toast.error("لطفا دوباره وارد شوید", {
           position: toast.POSITION.TOP_RIGHT,
         });
-        // router.push("/users/login");
+      } finally {
+        setLoading(false)
       }
     };
     GetUser();
@@ -55,102 +55,81 @@ export default function AddressCard() {
 
   return (
     <>
-      <Box className="p-5 mb-1" component="div">
-        <Card className="border-2 border-gray-200 rounded-xl">
+      <Box className="p-5 mb-1 max-w-2xl mx-auto" component="div">
+        <Card className="rounded-xl">
           <CardContent>
-            <Typography
-              variant="h5"
-              component="div"
-              className="font-bold mb-4"
-              sx={{
-                fontSize: {
-                  xs: "18px",
-                  sm: "20px",
-                  md: "23px",
-                  lg: "23px",
-                  xl: "23px",
-                },
-              }}
-            >
-              آدرس تحویل سفارش
-              {address.length == 0 ? (
-                ""
-              ) : (
-                <Button
-                  variant="outlined"
-                  className="bg-gray-200 border-gray-300 hover:border-gray-400 hover:bg-gray-300 text-gray-950 font-medium float-left rounded-lg"
-                  sx={{
-                    fontSize: {
-                      xs: "10px",
-                      sm: "10px",
-                      md: "14px",
-                      lg: "18px",
-                      xl: "18px",
-                    },
-                  }}
-                  onClick={handleOpen}
-                >
-                  ویرایش آدرس تحویل
-                </Button>
-              )}
-            </Typography>
-            {address.length == 0 ? (
-              <Button
-                variant="outlined"
-                className="bg-green-500 border-green-600 hover:border-green-700 hover:bg-green-600 text-white font-medium float-left rounded-lg m-5"
-                sx={{
-                  fontSize: {
-                    xs: "10px",
-                    sm: "10px",
-                    md: "14px",
-                    lg: "18px",
-                    xl: "18px",
-                  },
-                }}
-                onClick={handleOpen}
-              >
-                اضافه کردن آدرس تحویل
-              </Button>
-            ) : (
-              address.map((item, index) => {
-                return (
+
+            {
+              loading ? <>کمی صبر کنید ...</>
+                :
+                <>
                   <Box
+                    variant="div"
                     component="div"
-                    className="break-words"
-                    key={index}
-                    sx={{
-                      fontSize: {
-                        xs: "17px",
-                        sm: "20px",
-                        md: "26px",
-                        lg: "26px",
-                        xl: "26px",
-                      },
-                    }}
-                  >
-                    <Checkbox
-                      icon={<RadioButtonUncheckedIcon />}
-                      checkedIcon={
-                        <CheckCircleIcon sx={{ color: blue[700] }} />
-                      }
-                      onClick={() => {
-                        setSelectAddress(index);
-                        dispatch(SetAddress(address[index]));
-                      }}
-                      className="ml-2"
-                      checked={selectAddress === index}
-                    />
-                    {item}
+                    className={`mb-4 ${address.length !== 0 && 'flex justify-between'}`}>
+
+                    <Typography variant="h2" fontSize={{ xs: '20px', sm: '22px', lg: '25px' }}>
+                      آدرس تحویل سفارش
+                    </Typography>
+
+                    {address.length == 0 ? (
+                      <Typography className="mx-auto text-center mt-2 text-sm sm:text-base md:text-lg">
+                        آدرسی برای شما به ثبت نرسیده است
+                      </Typography>
+                    ) : (
+                      <Button
+                        className="bg-gray-200 hover:bg-gray-300 text-gray-950 rounded-lg text-xs sm:text-base md:text-lg"
+                        onClick={() => setOpen(true)}
+                      >
+                        ویرایش آدرس ها
+                      </Button>
+                    )}
+
                   </Box>
-                );
-              })
-            )}
+
+                  {address.length == 0 ? (
+                    <Typography className="flex ">
+                      <Button
+                        className="bg-green-500 hover:bg-green-600 text-white rounded-lg mx-auto text-sm sm:text-base md:text-lg"
+                        onClick={() => setOpen(true)}
+                      >
+                        افزودن آدرس تحویل
+                      </Button>
+                    </Typography>
+                  ) : (
+                    address.map((item, index) => {
+                      return (
+                        <Box
+                          component="div"
+                          className="flex"
+                          key={index}>
+                          <Checkbox
+                            onClick={() => dispatch(SetAddress(address[index]))}
+                            checked={item === AddressAndTime.address}
+                            icon={<RadioButtonUncheckedIcon />}
+                            checkedIcon={
+                              <CheckCircleIcon sx={{ color: blue[700] }} />
+                            }
+                          />
+                          <Typography className="text-sm sm:text-base md:text-lg mt-3 sm:mt-1 md:mt-2">
+                            {item}
+                          </Typography>
+                        </Box>
+                      );
+                    })
+                  )}
+
+                </>
+            }
+
+
+
           </CardContent>
         </Card>
       </Box>
       <EditAddress
         open={open}
-        close={handleClose}
+        close={() => setOpen(false)}
         address={address}
         setAddress={setAddress}
         userID={userId}
