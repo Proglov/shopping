@@ -108,10 +108,10 @@ export default function SignUpComponent({ type }) {
   const { signUp } = UserApi;
   const { sellerSignUp } = SellerApi;
   const router = useRouter();
-  const refs = []
-  const inputCount = type === 'seller' ? 10 : 4;
+  const refs = [useRef(), useRef(), useRef(), useRef(), useRef(), useRef(), useRef(), useRef(), useRef(), useRef()]
+  // const inputCount = type === 'seller' ? 10 : 4;
 
-  for (let i = 0; i < inputCount; i++) refs.push(useRef())
+  // for (let i = 0; i < inputCount; i++) refs.push(useRef())
 
   let initialState = {
     phone: "",
