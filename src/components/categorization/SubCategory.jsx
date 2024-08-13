@@ -5,53 +5,90 @@ import ProductApi from "@/services/withoutAuthActivities/product";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useKeenSlider } from 'keen-slider/react'
-import 'keen-slider/keen-slider.min.css'
+import { MdOutlineKeyboardArrowLeft, MdOutlineKeyboardArrowRight } from "react-icons/md";
 import { useSelector } from "react-redux";
-import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
+import 'keen-slider/keen-slider.min.css'
+import '@/styles/Swiper.css'
 
 
-const CustomBtn = ({ onClick, Icon, length }) => (
-  <>
-    {
-      length > 2 &&
-      <Button
-        className="md:block lg:hidden hidden h-5 place-self-center rounded-2xl"
-        onClick={onClick}
-      >
-        {Icon}
-      </Button>
-    }
-    {
-      length > 4 &&
-      <Button
-        className="lg:block hidden h-5 place-self-center rounded-2xl"
-        onClick={onClick}
-      >
-        {Icon}
-      </Button>
-    }
-  </>
-)
+
+function Arrow(props) {
+  return (
+    <Button
+      sx={{ zIndex: 1000 }}
+      onClick={props.onClick}
+      className={`arrow ${props.left ? "arrow--left" : "arrow--right"}`}
+    >
+      {!!props.left && (
+        <MdOutlineKeyboardArrowLeft className='text-6xl text-blue-500' />
+      )}
+      {!!props.right && (
+        <MdOutlineKeyboardArrowRight className='text-6xl text-blue-500' />
+      )}
+    </Button>
+  )
+}
 
 const Slider = ({ item, cartProducts, id }) => {
-  const [currentSlide, setCurrentSlide] = useState(0)
+  const [_currentSlider, setCurrentSlide] = useState(0)
   const [loaded, setLoaded] = useState(false)
-  const [sliderRef, instanceRef] = useKeenSlider({
-    loop: true,
-    slides: { perView: "auto", spacing: '-22' },
-    slideChanged(slider) {
-      setCurrentSlide(slider.track.details.rel)
-    },
-    created() {
-      setLoaded(true)
-    },
-  })
 
+  const [sliderRef, instanceRef] = useKeenSlider(
+    {
+      initial: 0,
+      slideChanged(slider) {
+        setCurrentSlide(slider.track.details.rel)
+      },
+      created() {
+        setLoaded(true)
+      },
+      loop: true,
+      breakpoints: {
+        "(min-width: 0px)": {
+          slides: { perView: "auto", spacing: '-22' },
+        },
+        "(min-width: 640px)": {
+          slides: { perView: "auto", spacing: '-37' },
+        },
+      },
+    },
+    [
+      (slider) => {
+        let timeout
+        let mouseOver = false
+        function clearNextTimeout() {
+          clearTimeout(timeout)
+        }
+        function nextTimeout() {
+          clearTimeout(timeout)
+          if (mouseOver) return
+          timeout = setTimeout(() => {
+            slider.next()
+          }, 2000)
+        }
+        slider.on("created", () => {
+          slider.container.addEventListener("mouseover", () => {
+            mouseOver = true
+            clearNextTimeout()
+          })
+          slider.container.addEventListener("mouseout", () => {
+            mouseOver = false
+            nextTimeout()
+          })
+          nextTimeout()
+        })
+        slider.on("dragStarted", clearNextTimeout)
+        slider.on("animationEnded", nextTimeout)
+        slider.on("updated", nextTimeout)
+      },
+    ]
+  )
 
   return (
     <Box
       className="rounded-xl mt-5 mb-10 min-h-[100px] shadow-lg shadow-gray-300 max-w-5xl mx-auto"
     >
+
       <Box
         component="div"
         className="min-h-12 border-b-2 border-gray-200 p-5 items-center"
@@ -69,9 +106,15 @@ const Slider = ({ item, cartProducts, id }) => {
           </Button>
         </Link>
       </Box>
-      <div className="navigation-wrapper flex justify-center sm:mx-2 mx-auto ">
+
+      <div className="navigation-wrapper">
         {loaded && instanceRef.current && (
-          <CustomBtn onClick={(e) => e.stopPropagation() || instanceRef.current?.next()} Icon={<FaArrowRight className="mx-auto" />} length={instanceRef.current.track.details.slides.length - 1} />
+          <Arrow
+            right={true}
+            onClick={(e) =>
+              e.stopPropagation() || instanceRef.current?.next()
+            }
+          />
         )}
         <div ref={sliderRef} className="keen-slider">
           {item?.products.map((product, i) => {
@@ -83,9 +126,15 @@ const Slider = ({ item, cartProducts, id }) => {
           })}
         </div>
         {loaded && instanceRef.current && (
-          <CustomBtn onClick={(e) => e.stopPropagation() || instanceRef.current?.prev()} Icon={<FaArrowLeft className="mx-auto" />} length={instanceRef.current.track.details.slides.length - 1} />
+          <Arrow
+            left={true}
+            onClick={(e) =>
+              e.stopPropagation() || instanceRef.current?.prev()
+            }
+          />
         )}
       </div>
+
     </Box>
   )
 }

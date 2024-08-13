@@ -138,7 +138,7 @@ export default function LastFactor({ id }) {
                             <Box className='mt-5 text-center'>
                                 کاربر گرامی! سفارشات خود را از صفحه ی
                                 {" "}
-                                <Link href='/users/profile?tab=myTX' className='text-purple-500'>
+                                <Link href='/users/profile?tab=myTX' className='text-purple-500 underline underline-offset-8'>
                                     پروفایل
                                 </Link>
                                 {" "}

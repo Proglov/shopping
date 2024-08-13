@@ -36,11 +36,16 @@ export default function PaymentBill() {
   const [pay, setPay] = useState(true);
   const [products, setProducts] = useState([])
   const [loading, setLoading] = useState(true)
+  const [isSubmitting, setIsSubmitting] = useState(false)
   const [totalPrice, setTotalPrice] = useState(0)
 
   const CreateTX = async () => {
     try {
+      setIsSubmitting(true)
       const newArray = products.map((item) => ({ productId: item._id, quantity: item.number }));
+      if (newArray.length === 0) {
+        throw new Error('sabad khalist !')
+      }
       const res = await createTX({
         boughtProducts: newArray,
         address: AddressAndTime.address,
@@ -53,11 +58,10 @@ export default function PaymentBill() {
       dispatch(ResetCartProducts())
       router.push("/shopping-card/payment/" + res?.transactionId);
     } catch (error) {
-      console.log(error);
       toast.error("اشکال در اتصال به اینترنت! لطفا دوباره وارد شوید", {
         position: toast.POSITION.TOP_RIGHT,
       });
-    }
+    } finally { setIsSubmitting(false) }
   };
 
   useEffect(() => {
@@ -88,86 +92,88 @@ export default function PaymentBill() {
           />
 
           {
-            !loading &&
-            <>
-              <CardContent>
-                <Box component="div">
+            loading ?
+              <div className="text-center">کمی صبر منید ...</div>
+              :
+              <>
+                <CardContent>
+                  <Box component="div">
 
-                  <Box className='flex gap-2 items-baseline'>
-                    <Typography className="lg:text-xl mb-2">
-                      مبلغ قابل پرداخت
-                      <span className="text-red-500 mx-1">:</span>
-                    </Typography>
-                    <Typography className="lg:text-xl mb-2">
-                      {convertToFarsiNumbers(
-                        formatPrice(
-                          (totalPrice + 50000).toString()
-                        )
-                      )}{" "}
-                      <span className="text-lg text-gray-600">تومان</span>
-                    </Typography>
+                    <Box className='flex gap-2 items-baseline'>
+                      <Typography className="lg:text-xl mb-2">
+                        مبلغ قابل پرداخت
+                        <span className="text-red-500 mx-1">:</span>
+                      </Typography>
+                      <Typography className="lg:text-xl mb-2">
+                        {convertToFarsiNumbers(
+                          formatPrice(
+                            (totalPrice + 50000).toString()
+                          )
+                        )}{" "}
+                        <span className="text-lg text-gray-600">تومان</span>
+                      </Typography>
+                    </Box>
+
+                    <Box className="mt-2 sm:flex sm:gap-2 sm:items-baseline">
+                      <Typography>
+                        <ConfirmationNumberOutlinedIcon className="ml-1 text-emerald-500" />
+                        <span>افزودن کد تخفیف</span>
+                      </Typography>
+
+                      <TextField
+                        className="mt-2"
+                        size="small"
+                        label="کد تخفیف"
+                        variant="outlined"
+                        color="success"
+                        sx={{
+                          " & .MuiInputLabel-root": {
+                            left: "inherit !important",
+                            right: "1.75rem !important",
+                            transformOrigin: "right !important",
+                          }
+                        }}
+                      />
+                    </Box>
+
                   </Box>
+                </CardContent>
 
-                  <Box className="mt-2 sm:flex sm:gap-2 sm:items-baseline">
-                    <Typography>
-                      <ConfirmationNumberOutlinedIcon className="ml-1 text-emerald-500" />
-                      <span>افزودن کد تخفیف</span>
-                    </Typography>
+                <Box component="div" className="flex p-5">
 
-                    <TextField
-                      className="mt-2"
-                      size="small"
-                      label="کد تخفیف"
-                      variant="outlined"
-                      color="success"
-                      sx={{
-                        " & .MuiInputLabel-root": {
-                          left: "inherit !important",
-                          right: "1.75rem !important",
-                          transformOrigin: "right !important",
-                        }
-                      }}
-                    />
-                  </Box>
+                  <FormControl className="flex">
+                    <Box id="payment" className="text-lg">
+                      نحوه پرداخت:
+                    </Box>
+
+                    <RadioGroup
+                      aria-labelledby="payment"
+                      name="row-radio-buttons-group"
+                    >
+                      <FormControlLabel
+                        value="offline"
+                        control={<Radio color="error" />}
+                        label="پرداخت درب منزل"
+                        checked
+                      />
+                      <FormControlLabel
+                        value="online"
+                        control={<Radio />}
+                        label={<div>
+                          پرداخت آنلاین
+                          <span className="text-sm text-gray-400 mr-1">
+                            به زودی ...
+                          </span>
+                        </div>}
+                        disabled
+                      />
+
+                    </RadioGroup>
+                  </FormControl>
+
 
                 </Box>
-              </CardContent>
-
-              <Box component="div" className="flex p-5">
-
-                <FormControl className="flex">
-                  <Box id="payment" className="text-lg">
-                    نحوه پرداخت:
-                  </Box>
-
-                  <RadioGroup
-                    aria-labelledby="payment"
-                    name="row-radio-buttons-group"
-                  >
-                    <FormControlLabel
-                      value="offline"
-                      control={<Radio color="error" />}
-                      label="پرداخت درب منزل"
-                      checked
-                    />
-                    <FormControlLabel
-                      value="online"
-                      control={<Radio />}
-                      label={<div>
-                        پرداخت آنلاین
-                        <span className="text-sm text-gray-400 mr-1">
-                          به زودی ...
-                        </span>
-                      </div>}
-                      disabled
-                    />
-
-                  </RadioGroup>
-                </FormControl>
-
-
-              </Box>
-            </>
+              </>
           }
 
         </Card>
@@ -179,6 +185,7 @@ export default function PaymentBill() {
       >
         <Link href="/shopping-card">
           <Button
+            disabled={loading || isSubmitting}
             variant="contained"
             className="bg-blue-500 text-bold text-base hover:bg-blue-600 rounded-lg w-fit"
           >
@@ -187,16 +194,22 @@ export default function PaymentBill() {
           </Button>
         </Link>
 
+        {
+          isSubmitting &&
+          <div className="text-gray-700">درحال ارسال ...</div>
+        }
+
         {pay && (
           <Button
+            disabled={loading || isSubmitting}
             variant="contained"
             className="bg-green-500 text-bold text-base hover:bg-green-600 rounded-lg w-fit"
             onClick={CreateTX}
-            disabled={loading}
           >
             ثبت نهایی
           </Button>
         )}
+
       </Box>
     </>
   );
