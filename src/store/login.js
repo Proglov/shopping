@@ -5,8 +5,9 @@ import Api2 from "@/services/withAuthActivities/seller"
 
 // if the last time the user logged in is longer than one day, they need to get in again!
 export const checkIfCheckLoginIsRequired = () => {
-    const nowTime = (new Date()).getTime()
     const lastLogin = parseInt(localStorage.getItem("lastLogin"))
+    if (!lastLogin) return true
+    const nowTime = (new Date()).getTime()
     return (nowTime - lastLogin) > 86400000
 }
 
