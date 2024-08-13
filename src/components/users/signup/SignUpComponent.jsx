@@ -10,6 +10,8 @@ import "react-toastify/dist/ReactToastify.css";
 import DOMPurify from "dompurify";
 import { isEmailValid, isPhoneValid, isWorkingPhoneValid } from "@/utils/funcs";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
+import { SetLogin } from "@/store/login";
+import { useDispatch } from "react-redux";
 
 const CustomTextField = ({ localVars, inputName, label, inputRef, focusNum, isLastElement }) => {
   const { formData, submit, showPassword, setShowPassword, showRepeatPassword, setShowRepeatPassword, handleChange, setFocus, whichFocused } = localVars
@@ -108,6 +110,8 @@ export default function SignUpComponent({ type }) {
   const { signUp } = UserApi;
   const { sellerSignUp } = SellerApi;
   const router = useRouter();
+  const dispatch = useDispatch()
+
   const refs = [useRef(), useRef(), useRef(), useRef(), useRef(), useRef(), useRef(), useRef(), useRef(), useRef()]
   // const inputCount = type === 'seller' ? 10 : 4;
 
@@ -266,18 +270,19 @@ export default function SignUpComponent({ type }) {
 
         if (type === 'seller') {
           response = await sellerSignUp(obj);
-          localStorage.setItem("SellerLogin", "true");
+          dispatch(SetLogin({ status: 'seller', token: response.token }))
         } else {
           response = await signUp(obj);
-          localStorage.setItem("UserLogin", "true");
+          dispatch(SetLogin({ status: 'user', token: response.token }))
         }
 
-        localStorage.setItem("token", response.token);
         toast.success("ثبت نام شما موفقیت آمیز بود", {
           position: toast.POSITION.TOP_RIGHT,
         });
         router.push("/");
       } catch (error) {
+        dispatch(SetLogin({ status: '', token: null }))
+
         const setError = name => {
           setFormData(prev => ({
             ...prev,
@@ -424,9 +429,7 @@ export default function SignUpComponent({ type }) {
               "کاربران"
           }
         </Box>
-        <Box className="text-base mb-6" component="div">
-          سلام!
-          <br />
+        <Box className="mb-6 text-sm sm:text-base" component="div">
           لطفا اطلاعات خواسته شده را وارد کنید
         </Box>
 

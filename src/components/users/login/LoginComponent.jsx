@@ -11,12 +11,15 @@ import "react-toastify/dist/ReactToastify.css";
 import { useRouter } from "next/navigation";
 import { isEmailValid, isPhoneValid } from "@/utils/funcs";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
+import { useDispatch } from "react-redux";
+import { SetLogin } from "@/store/login";
 
 export default function LoginComponent({ isUsernameParam, type }) { // isUsernameParam === true -> user wants to login with username or email
   const { signInWithPhone, signInWithEmailOrUsername } = UserApi;
   const { sellerSignInWithPhone, sellerSignInWithEmailOrUsername } = SellerApi;
   const router = useRouter();
   const secondInputRef = useRef();
+  const dispatch = useDispatch()
 
   const [formData, setFormData] = useState({
     firstCredential: '',
@@ -79,16 +82,14 @@ export default function LoginComponent({ isUsernameParam, type }) { // isUsernam
           if (isUsernameParam) response = await sellerSignInWithEmailOrUsername({ emailOrUsername: firstData, password: cleanPassword });
           else response = await sellerSignInWithPhone({ phone: firstData, password: cleanPassword });
 
-          localStorage.setItem("SellerLogin", "true");
+          dispatch(SetLogin({ status: 'seller', token: response.token }))
         } else {
           if (isUsernameParam) response = await signInWithEmailOrUsername({ emailOrUsername: firstData, password: cleanPassword });
           else response = await signInWithPhone({ phone: firstData, password: cleanPassword });
 
-          localStorage.setItem("UserLogin", "true");
+          dispatch(SetLogin({ status: 'user', token: response.token }))
         }
 
-
-        localStorage.setItem("token", response.token);
         toast.success("ورود شما موفقیت آمیز بود", {
           position: toast.POSITION.TOP_RIGHT,
         });
@@ -96,13 +97,15 @@ export default function LoginComponent({ isUsernameParam, type }) { // isUsernam
         router.push("/");
         // setNextStep(true);
       } catch (error) {
+        dispatch(SetLogin({ status: '', token: null }))
+
         const mes = error?.response?.data?.message;
         if (mes === "no user found" || mes === "no seller found") {
-          toast.error("شماره تلفن شما ثبت نشده است", {
+          toast.error(`${!isUsernameParam ? 'شماره' : 'نام کاربری یا ایمیل'} شما ثبت نشده است`, {
             position: toast.POSITION.TOP_RIGHT,
           });
         } else if (mes === "Invalid Credentials") {
-          toast.error("شماره یا رمز عبور صحیح نیست!", {
+          toast.error(`${!isUsernameParam ? 'شماره' : 'نام کاربری یا ایمیل'} یا رمز عبور صحیح نیست!`, {
             position: toast.POSITION.TOP_RIGHT,
           });
         } else if (mes === "no seller found") {
@@ -127,7 +130,8 @@ export default function LoginComponent({ isUsernameParam, type }) { // isUsernam
             <Box className="mb-6 text-2xl text-center" component="div">
               فروشگاه آنلاین
             </Box>
-            <Box className="mb-6 text-xl" component="div">
+
+            <Box className="mb-1 text-xl" component="div">
               ورود
               {" "}
               {
@@ -137,9 +141,28 @@ export default function LoginComponent({ isUsernameParam, type }) { // isUsernam
                   'کاربران'
               }
             </Box>
-            <Box className="text-base mb-6 font-thin" component="div">
-              سلام!
-              <br />
+
+            <Box component="div" className="mb-1 text-sm sm:text-base">
+              اگر
+              {" "}
+              <span className="text-red-400 text-lg">
+                {
+                  type === 'seller' ?
+                    'مشتری'
+                    :
+                    'فروشنده'
+                }
+              </span>
+              {" "}
+              هستید از
+              {" "}
+              <Link href={`/${type !== 'seller' ? 'Seller' : 'users'}/login`} className="text-blue-600">
+                این قسمت
+              </Link>
+              {" "}
+              وارد شوید
+            </Box>
+            <Box className="my-6 text-sm sm:text-base" component="div">
               {
                 isUsernameParam ?
                   <span> لطفا ایمیل یا نام کاربری و رمز عبور خود را وارد کنید</span>
@@ -275,24 +298,6 @@ export default function LoginComponent({ isUsernameParam, type }) { // isUsernam
                 <span className="text-blue-600"> ثبت نام </span>
               </Link>
               کنید
-            </Box>
-            <Box component="div" className="mt-4">
-              اگر &nbsp;
-              <span className="text-red-400 text-lg">
-                {
-                  type === 'seller' ?
-                    'مشتری'
-                    :
-                    'فروشنده'
-                }
-              </span>
-              &nbsp; هستید از
-              &nbsp;
-              <Link href={`/${type !== 'seller' ? 'Seller' : 'users'}/login`} className="text-blue-600">
-                این قسمت
-              </Link>
-              &nbsp;
-              وارد شوید
             </Box>
           </Box>
         </Box>

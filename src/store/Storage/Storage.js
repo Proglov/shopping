@@ -1,5 +1,4 @@
 import Api from "@/services/withoutAuthActivities/product"
-import Api2 from "@/services/withAuthActivities/user"
 
 export const loadCartState = () => {
   try {
@@ -22,41 +21,6 @@ export const loadAddressAndTimeState = () => {
   }
 };
 
-export const isUserLoggedIn = () => {
-  try {
-    const bool = localStorage.getItem("UserLogin") === "true" || false
-    return bool
-  } catch (error) {
-    console.log(error);
-    return false
-  }
-}
-
-export const checkUserLoggedIn = async () => {
-  const { getMe } = Api2
-  try {
-    await getMe()
-    localStorage.setItem("UserLogin", "true")
-    return true
-  } catch (error) {
-    console.log(error);
-    localStorage.setItem("UserLogin", "false")
-    return false
-  }
-}
-
-export const checkSellerLoggedIn = async () => {
-  const { getMe } = Api2
-  try {
-    await getMe()
-    localStorage.setItem("SellerLogin", "true")
-    return true
-  } catch (error) {
-    console.log(error);
-    localStorage.setItem("SellerLogin", "false")
-    return false
-  }
-}
 
 export const getCounterProducts = () => loadCartState()?.reduce((accumulator, currentObject) => accumulator + currentObject.number, 0).toString() | "0";
 

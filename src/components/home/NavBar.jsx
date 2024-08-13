@@ -16,11 +16,11 @@ import Link from "next/link";
 import Cart from "../Shopping card/Cart";
 import { convertToFarsiNumbers } from "@/utils/funcs";
 import { Button, Dialog, DialogActions, DialogContent } from "@mui/material";
-import StorefrontIcon from "@mui/icons-material/Storefront";
 import { useRouter } from "next/navigation";
 import { SetCart } from "@/store/CartProductsSlice";
-import { checkSellerLoggedIn, checkUserLoggedIn, getCounterProductsWithoutLS, loadCartState } from "@/Storage/Storage";
+import { getCounterProductsWithoutLS, loadCartState } from "@/store/Storage/Storage";
 import { useDispatch, useSelector } from "react-redux";
+import { checkAndSetLoginStatus, checkIfCheckLoginIsRequired, CheckLogin, SetLogin } from "@/store/login";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -66,12 +66,11 @@ export default function NavBar() {
   const router = useRouter();
   const dispatch = useDispatch();
   const products = useSelector((state) => state.CartProducts);
+  const login = useSelector((state) => state.Login);
 
   const [open, setOpen] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
   const [bga, setBga] = useState(false);
-  const [LoginUser, setLoginUser] = useState(false);
-  const [LoginSeller, setLoginSeller] = useState(false);
   const [counter, setCounter] = useState(0)
 
   useEffect(() => {
@@ -79,18 +78,12 @@ export default function NavBar() {
   }, [products])
 
   useEffect(() => {
-    const checkLoginStatus = async () => {
-      const userLogin = await checkUserLoggedIn()
-      if (!userLogin) {
-        const sellerLogin = await checkSellerLoggedIn()
-        setLoginSeller(sellerLogin)
-      }
-      setLoginUser(userLogin);
-    }
-    checkLoginStatus()
+    const bool = checkIfCheckLoginIsRequired()
+    if (bool) dispatch(checkAndSetLoginStatus())
+    else dispatch(CheckLogin())
     const state = loadCartState();
     dispatch(SetCart(state));
-  }, [setLoginSeller, setLoginUser, dispatch]);
+  }, [login]);
 
 
   const handleOpen = () => {
@@ -110,11 +103,7 @@ export default function NavBar() {
 
   const logOut = () => {
     setOpenDialog(false);
-    localStorage.removeItem("UserLogin");
-    localStorage.removeItem("SellerLogin");
-    localStorage.removeItem("token");
-    setLoginUser(false);
-    setLoginSeller(false);
+    dispatch(SetLogin({ status: '', token: null }))
     router.refresh();
   };
 
@@ -149,7 +138,7 @@ export default function NavBar() {
       aria-label="open drawer"
       className="mr-2"
     >
-      {!(LoginUser | LoginSeller) ? (
+      {!(login === 'user' || login === 'seller') ? (
         <Link href="/users/login">
           <span className="text-white flex">
             <LiaSignInAltSolid className="sm:text-[25px] text-[22px] " />
@@ -162,22 +151,6 @@ export default function NavBar() {
           <span style={{ lineHeight: "20px" }}>خروج</span>
         </span>
       )}
-    </IconButton>
-  )
-
-  const sellerComponent = (
-    <IconButton
-      className="sm:text-sm sm:w-32 sm:h-16 w-20 h-12 text-xs"
-      edge="start"
-      color="inherit"
-      aria-label="open drawer"
-    >
-      <Link href="/Seller">
-        <span className="flex flex-col">
-          <StorefrontIcon className="mx-auto pt-2" />
-          <span>پنل مدیریت</span>
-        </span>
-      </Link>
     </IconButton>
   )
 
@@ -231,30 +204,31 @@ export default function NavBar() {
       >
         <Toolbar className="sm:max-w-[2000px] lg:max-w-full lg:w-[1200px] mx-auto flex justify-center">
           {
-            !!LoginUser ?
-              <>
-                {shoppingCardComponent}
-                {signInAndSignOutComponent}
-                {spaceComponent}
-                {searchComponent}
-                {profileComponent}
-              </>
-              :
-              !!LoginSeller ?
-                <>
-                  {signInAndSignOutComponent}
-                  {sellerComponent}
-                  {spaceComponent}
-                  {searchComponent}
-                  {profileComponent}
-                </>
-                :
-                <>
-                  {shoppingCardComponent}
-                  {signInAndSignOutComponent}
-                  {spaceComponent}
-                  {searchComponent}
-                </>
+            login === 'user' &&
+            <>
+              {shoppingCardComponent}
+              {signInAndSignOutComponent}
+              {spaceComponent}
+              {searchComponent}
+              {profileComponent}
+            </>
+          }
+          {
+            login === 'seller' &&
+            <>
+              {signInAndSignOutComponent}
+              {spaceComponent}
+              {searchComponent}
+            </>
+          }
+          {
+            login === '' &&
+            <>
+              {shoppingCardComponent}
+              {signInAndSignOutComponent}
+              {spaceComponent}
+              {searchComponent}
+            </>
           }
         </Toolbar>
       </AppBar>

@@ -18,7 +18,7 @@ import Link from "next/link";
 import { GrFormNext } from "react-icons/gr";
 import { useEffect, useState } from "react";
 import TXApi from "@/services/withAuthActivities/tx";
-import { calculateDate, getCartProductsFromServer, getTotalPrice } from "@/Storage/Storage";
+import { calculateDate, getCartProductsFromServer, getTotalPrice } from "@/store/Storage/Storage";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";

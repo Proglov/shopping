@@ -7,10 +7,10 @@ import { convertToFarsiNumbers, formatPrice } from "@/utils/funcs";
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import { AddCart } from "@/features/CartProducts/CartProductsSlice";
 import Image from "next/image";
-import { useAppDispatch } from "@/store/Hook";
+import { useDispatch } from "react-redux";
 
 export default function SimilarProducts() {
-  const dispatch = useAppDispatch();
+  const dispatch = useDispatch();
   const similar = [
     {
       name: "خامه صباح - 200 میلی لیتر",

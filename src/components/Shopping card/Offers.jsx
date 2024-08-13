@@ -7,11 +7,11 @@ import { convertToFarsiNumbers, formatPrice } from "@/utils/funcs";
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import { useState } from "react";
 import Image from "next/image";
-import { useAppDispatch } from "@/store/Hook";
 import { AddCart } from "@/features/CartProducts/CartProductsSlice";
+import { useDispatch } from "react-redux";
 
 export default function Offers() {
-  const dispatch = useAppDispatch();
+  const dispatch = useDispatch();
   const off = [
     {
       name: "خامه صباح - 200 میلی لیتر",

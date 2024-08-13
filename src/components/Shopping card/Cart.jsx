@@ -1,23 +1,20 @@
 "use client";
 import { Box, Button, Dialog, IconButton, Slide } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import { forwardRef, useEffect, useState } from "react";
+import { forwardRef } from "react";
 import { convertToFarsiNumbers } from "@/utils/funcs";
 import ShoppingCard from "./ShoppingCard";
 import Link from "next/link";
-import { getCounterProducts, isUserLoggedIn } from "@/Storage/Storage";
+import { getCounterProducts } from "@/store/Storage/Storage";
+import { useSelector } from "react-redux";
 
 const Transition = forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
 export default function Cart({ Close, Open }) {
-  const [LoginUser, setLoginUser] = useState(false);
   let counter = getCounterProducts()
-
-  useEffect(() => {
-    setLoginUser(isUserLoggedIn());
-  }, [setLoginUser]);
+  const LoginUser = useSelector((state) => state.Login) === 'user';
 
 
   return (

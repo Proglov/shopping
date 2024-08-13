@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import { LiaFileInvoiceDollarSolid } from "react-icons/lia";
 import { TotalPriceContext } from "./ShoppingCard"
 import { useSelector } from "react-redux";
-import { calculateDate } from "@/Storage/Storage";
+import { calculateDate } from "@/store/Storage/Storage";
 
 export default function Bill({ counter, step }) {
   const router = useRouter();

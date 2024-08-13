@@ -4,16 +4,18 @@ import React, { useEffect, useState } from "react";
 import { GiShoppingCart } from "react-icons/gi";
 import { AiOutlineHome } from "react-icons/ai";
 import { TbCategory } from "react-icons/tb";
-import { Badge, Button, Typography } from "@mui/material";
+import { Badge, Button, IconButton, Typography } from "@mui/material";
 import Cart from "../Shopping card/Cart";
 import { convertToFarsiNumbers } from "@/utils/funcs";
-import { getCounterProductsWithoutLS } from "@/Storage/Storage";
+import { getCounterProductsWithoutLS } from "@/store/Storage/Storage";
 import { useSelector } from "react-redux";
+import StorefrontIcon from "@mui/icons-material/Storefront";
 
 export default function FooterMenu({ active }) {
   const [open, setOpen] = React.useState(false);
   const [counter, setCounter] = useState(0)
   const products = useSelector((state) => state.CartProducts);
+  const login = useSelector((state) => state.Login);
 
   useEffect(() => {
     setCounter(getCounterProductsWithoutLS(products))
@@ -41,7 +43,7 @@ export default function FooterMenu({ active }) {
           },
         }}
       >
-        <div className="m-5 flex justify-center">
+        <div className="m-5 flex justify-around gap-3 items-center">
           <Link href="/">
             <Button
               className={`sm:mx-10 mx-5 flex flex-col ${active === 0 ? "text-blue-700" : "text-black"
@@ -54,44 +56,68 @@ export default function FooterMenu({ active }) {
             </Button>
           </Link>
 
-          <Link href="/#categorization">
-            <Button
-              className={`sm:mx-10 mx-5 flex flex-col ${active === 1 ? "text-blue-700" : "text-black"
-                }`}
-            >
-              <div className="mx-auto">
-                <TbCategory className="text-2xl" />
-              </div>
-              <div className="text-center sm:text-sm text-xs md:text-base">
-                دسته بندی ها
-              </div>
-            </Button>
-          </Link>
 
-          <Button
-            className={`sm:mx-10 mx-5 flex flex-col ${active === 2 ? "text-blue-700" : "text-black"
-              }`}
-            onClick={handleClickOpen}
-          >
-            <div className="mx-auto">
-              <Badge
-                badgeContent={convertToFarsiNumbers(counter)}
-                color="error"
-                sx={{ zIndex: "300" }}
+          {
+            login !== 'seller' ?
+              <>
+                <Link href="/#categorization">
+                  <Button
+                    className={`sm:mx-10 mx-5 flex flex-col ${active === 1 ? "text-blue-700" : "text-black"
+                      }`}
+                  >
+                    <div className="mx-auto">
+                      <TbCategory className="text-2xl" />
+                    </div>
+                    <div className="text-center sm:text-sm text-xs md:text-base">
+                      دسته بندی ها
+                    </div>
+                  </Button>
+                </Link>
+                <Button
+                  className={`sm:mx-10 mx-5 flex flex-col ${active === 2 ? "text-blue-700" : "text-black"
+                    }`}
+                  onClick={handleClickOpen}
+                >
+                  <div className="mx-auto">
+                    <Badge
+                      badgeContent={convertToFarsiNumbers(counter)}
+                      color="error"
+                      sx={{ zIndex: "300" }}
+                    >
+                      <GiShoppingCart
+                        className="text-2xl"
+                        style={{ zIndex: "300" }}
+                      />
+                    </Badge>
+                  </div>
+                  <div className="text-center sm:text-sm text-xs md:text-base">
+                    سبد خرید
+                  </div>
+                </Button>
+              </>
+              :
+              <IconButton
+                className="text-base"
+                edge="start"
+                color="inherit"
+                aria-label="open drawer"
               >
-                <GiShoppingCart
-                  className="text-2xl"
-                  style={{ zIndex: "300" }}
-                />
-              </Badge>
-            </div>
-            <div className="text-center sm:text-sm text-xs md:text-base">
-              سبد خرید
-            </div>
-          </Button>
+                <Link href="/Seller">
+                  <span className="flex flex-col">
+                    <StorefrontIcon className="mx-auto" />
+                    <span className="text-base">پنل مدیریت</span>
+                  </span>
+                </Link>
+              </IconButton>
+
+          }
         </div>
       </Typography>
-      <Cart Close={handleClose} Open={open} />
+
+      {
+        login !== 'seller' &&
+        <Cart Close={handleClose} Open={open} />
+      }
     </>
   );
 }

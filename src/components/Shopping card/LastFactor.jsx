@@ -5,9 +5,11 @@ import { Box, Card, Typography } from '@mui/material'
 import { convertToFarsiNumbers, formatPrice, iranianCalendar } from '@/utils/funcs'
 import { LiaFileInvoiceDollarSolid } from 'react-icons/lia'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 
 export default function LastFactor({ id }) {
     const { getOneTX } = Api
+    const router = useRouter()
 
     const [loading, setLoading] = useState(true)
     const [transaction, setTransaction] = useState(true)
@@ -18,10 +20,9 @@ export default function LastFactor({ id }) {
                 setLoading(true)
                 const response = await getOneTX({ id })
                 setTransaction(response?.transaction)
-            } catch (error) {
-                console.log(error);
-            } finally {
                 setLoading(false)
+            } catch (error) {
+                router.push("/not-found")
             }
         }
 

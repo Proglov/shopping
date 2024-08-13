@@ -12,17 +12,17 @@ import DOMPurify from "dompurify";
 import { convertToFarsiNumbers } from "@/utils/funcs";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { isUserLoggedIn } from "@/Storage/Storage";
+import { useSelector } from "react-redux";
 
 export default function CommentItem({ productID }) {
   const { getCommentsOfAProduct } = CommentsApi;
   const { createComment, toggleLikeComment, toggleDisLikeComment } = Api;
   const { getMe } = UserApi;
+  const login = useSelector((state) => state.Login) === 'user';
 
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState("");
   const [newReplay, setNewReplay] = useState("");
-  const [login, setLogin] = useState(false);
   const [userId, setUserId] = useState("");
   const [replyId, setReplyId] = useState("");
 
@@ -32,7 +32,7 @@ export default function CommentItem({ productID }) {
   const disLikeStatusArr = [-1, -1, 0]
 
   const createOwnerType = () => {
-    return isUserLoggedIn() ? "User" : "Seller";
+    return login ? "User" : "Seller";
   }
 
   const toggleLikeAndDisLike = async (isLike, comment, commentIndex, parentCommentIndex) => {
@@ -236,7 +236,6 @@ export default function CommentItem({ productID }) {
         });
       }
     };
-    setLogin(isUserLoggedIn())
     GetComments();
 
   }, [

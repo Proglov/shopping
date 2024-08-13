@@ -12,21 +12,21 @@ import AddIcon from "@mui/icons-material/Add";
 import { red } from "@mui/material/colors";
 import Bill from "./Bill";
 import Image from "next/image";
-import { useAppDispatch } from "@/store/Hook";
 import {
   IncrementCart,
   DecrementCart,
 } from "@/store/CartProductsSlice";
 import { useRouter } from "next/navigation";
 import { createContext, useEffect, useState } from "react";
-import { checkUserLoggedIn, getCartProductsFromServer, getCounterProducts, getTotalPrice } from "@/Storage/Storage";
+import { getCartProductsFromServer, getCounterProducts, getTotalPrice } from "@/store/Storage/Storage";
 import { MdArrowBackIosNew } from "react-icons/md";
+import { useDispatch } from "react-redux";
 
 
 export const TotalPriceContext = createContext()
 
 export default function ShoppingCard({ step }) {
-  const dispatch = useAppDispatch();
+  const dispatch = useDispatch();
   const router = useRouter();
   const [products, setProducts] = useState([])
   const [loading, setLoading] = useState(true)
@@ -67,7 +67,6 @@ export default function ShoppingCard({ step }) {
   useEffect(() => {
     const getProds = async () => {
       try {
-        await checkUserLoggedIn()
         setLoading(true)
         setProducts(await getCartProductsFromServer())
       } catch (error) {

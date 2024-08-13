@@ -1,4 +1,4 @@
-import { loadCartState } from "@/Storage/Storage";
+import { loadCartState } from "@/store/Storage/Storage";
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = loadCartState();

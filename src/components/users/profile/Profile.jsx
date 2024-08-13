@@ -1,17 +1,11 @@
 "use client";
-import {
-  Box,
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-} from "@mui/material";
+import { Box, Button } from "@mui/material";
 import PersonIcon from "@mui/icons-material/Person";
 import AccountBoxIcon from "@mui/icons-material/AccountBox";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import VpnKeyRoundedIcon from "@mui/icons-material/VpnKeyRounded";
 import { LiaFileInvoiceDollarSolid } from 'react-icons/lia'
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Location from "./Location";
 import ChangePassword from "./ChangePassword";
@@ -19,8 +13,12 @@ import Specifications from "./Specifications";
 import { toast } from "react-toastify";
 import MyTX from "./MyTX";
 import Link from "next/link";
+import { useSelector } from "react-redux";
 
 export default function Profile({ tab }) {
+  const router = useRouter();
+  const login = useSelector((state) => state.Login);
+
   const menu = [
     {
       tab: 'specifications',
@@ -40,35 +38,14 @@ export default function Profile({ tab }) {
     }
   ]
 
-  const [openDialog, setOpenDialog] = useState(false);
-  const router = useRouter();
-  const [login, setLogin] = useState();
-
-  const handleOpen = () => {
-    setOpenDialog(true);
-  };
-  const Close = () => {
-    setOpenDialog(false);
-  };
-
-  const logOut = () => {
-    setOpenDialog(false);
-    localStorage.removeItem("UserLogin");
-    localStorage.removeItem("token");
-    router.push("/");
-  };
-
   useEffect(() => {
-    if (localStorage.getItem("UserLogin") == "true") {
-      setLogin(true);
-    } else {
-      setLogin(false);
+    if (login !== 'user') {
       toast.warning("شما وارد نشده اید", {
         position: toast.POSITION.TOP_RIGHT,
       });
       router.push("/users/login");
     }
-  }, [setLogin, router, login]);
+  }, [router, login]);
 
   return (
     <Box className="w-full max-w-3xl mt-3 mx-auto grid md:grid-cols-4 grid-cols-1">
@@ -104,14 +81,6 @@ export default function Profile({ tab }) {
           })}
         </Box>
 
-        <Button
-          color="error"
-          className="text-lg md:w-min w-full"
-          onClick={handleOpen}
-        >
-          خروج
-        </Button>
-
       </Box>
 
       <Box className="col-span-3 p-4">
@@ -125,41 +94,6 @@ export default function Profile({ tab }) {
           <MyTX />
         )}
       </Box>
-
-      <Dialog
-        onClose={Close}
-        open={openDialog}
-        sx={{
-          "& .MuiDialog-paper": {
-            lg: { width: "50%", maxWidth: "none" },
-            md: { width: "70%", maxWidth: "none" },
-            sm: { width: "100%", maxWidth: "none" },
-            xs: { width: "100%", maxWidth: "none" },
-          },
-        }}
-      >
-        <DialogContent dividers>
-          <Box component="div" className="text-xl mt-3">
-            آیا واقعا می خواهید خارج شوید؟
-          </Box>
-        </DialogContent>
-        <DialogActions>
-          <Button
-            variant="contained"
-            className="bg-red-500 hover:bg-red-600 text-xl rounded-lg w-1/6"
-            onClick={logOut}
-          >
-            خروج
-          </Button>
-          <Button
-            variant="contained"
-            className="bg-green-500 hover:bg-green-600 text-xl rounded-lg w-1/6 mr-4"
-            onClick={Close}
-          >
-            انصراف
-          </Button>
-        </DialogActions>
-      </Dialog>
 
     </Box>
   );

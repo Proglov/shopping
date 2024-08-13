@@ -1,4 +1,4 @@
-import { loadAddressAndTimeState } from "@/Storage/Storage";
+import { loadAddressAndTimeState } from "@/store/Storage/Storage";
 import { createSlice } from "@reduxjs/toolkit";
 
 const emptyState = {
