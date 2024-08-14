@@ -86,6 +86,15 @@ export const farsiNumCharacter = (x) => {
     }
 }
 
+export const dayCalculator = day => {
+    const todayIndex = (new Date).getDay()
+    const days = []
+    for (let i = 0; i < 7; i++) {
+        days.push((i + todayIndex) % 7)
+    }
+    return dayOfWeek(days[day])
+}
+
 export const convertToFarsiNumbers = str => {
     let newStr = ''
     if (typeof str !== "string")

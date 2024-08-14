@@ -2,7 +2,7 @@
 import { Box, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import Api from "@/services/withAuthActivities/tx";
-import { convertToFarsiNumbers, price2Farsi } from "@/utils/funcs";
+import { convertToFarsiNumbers, dayOfWeek, iranianCalendar, price2Farsi } from "@/utils/funcs";
 import Link from "next/link";
 
 export default function MyTX() {
@@ -93,11 +93,12 @@ export default function MyTX() {
                                             {
                                                 !!transaction?.shouldBeSentAt &&
                                                 <>
-                                                    {new Intl.DateTimeFormat('fa-IR').format(parseInt(transaction?.shouldBeSentAt))}
-                                                    &nbsp;&nbsp;
-                                                    ساعت
-                                                    {" "}
-                                                    {convertToFarsiNumbers((new Date(parseInt(transaction.shouldBeSentAt)).getHours()))}
+                                                    <span className='ml-1'>{iranianCalendar(new Date(parseInt(transaction?.shouldBeSentAt)))}</span>
+                                                    <span className='ml-1'>{dayOfWeek((new Date(parseInt(transaction?.shouldBeSentAt))).getDay())}</span>
+                                                    <span className='mx-1'>ساعت</span>
+                                                    {convertToFarsiNumbers(new Date(parseInt(transaction?.shouldBeSentAt)).getHours())}
+                                                    <span className="text-red-500">:</span>
+                                                    {convertToFarsiNumbers("00")}
                                                 </>
                                             }
                                         </span>

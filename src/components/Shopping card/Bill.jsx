@@ -1,6 +1,6 @@
 "use client";
 import { useContext } from "react";
-import { convertToFarsiNumbers, formatPrice, iranianCalendar } from "@/utils/funcs";
+import { convertToFarsiNumbers, dayCalculator, formatPrice, iranianCalendar } from "@/utils/funcs";
 import { Box, Button, Card, Typography } from "@mui/material";
 import { GrFormPrevious } from "react-icons/gr";
 import { useRouter } from "next/navigation";
@@ -175,6 +175,8 @@ export default function Bill({ counter, step }) {
                         <span>
                           {iranianCalendar(theTime)}
                         </span>
+
+                        {dayCalculator(AddressAndTime.day || 0)}
 
                         {
                           theHour < 12 ?
