@@ -72,6 +72,7 @@ export default function ChangeProfile() {
         },
         prevFormData: {}
     })
+    const [loading, setLoading] = useState(true)
 
     useEffect(() => {
         const fetchMe = async () => {
@@ -82,6 +83,7 @@ export default function ChangeProfile() {
                     formData: { ...prevProps.formData, ...seller?.seller },
                     prevFormData: { ...seller?.seller },
                 }));
+                setLoading(false)
             } catch (error) {
                 toast.error(error)
             }
@@ -278,8 +280,28 @@ export default function ChangeProfile() {
                         throw ("توکن شما منقضی شده. لطفا خارج، و دوباره وارد شوید")
                     toast.success('با موفقیت ارسال شد!')
                 }
-            } catch (err) {
-                toast.error(err)
+            } catch (error) {
+                const { message } = error.response.data;
+
+                switch (message) {
+                    case "working phone Already Exists":
+                        toast.error("تلفن محل کار قبلا ثبت شده")
+                        break;
+                    case "Phone Already Exists":
+                    case "Phone Already Exists In Users":
+                        toast.error("شماره همراه قبلا ثبت شده")
+                        break;
+                    case "Email Already Exists":
+                    case "Email Already Exists In Users":
+                        toast.error("ایمیل قبلا ثبت شده")
+                        break;
+                    case "username Already Exists":
+                        toast.error("نام کاربری قبلا ثبت شده")
+                        break;
+                    default:
+                        console.log("مشکلی رخ داد!");
+                        break;
+                }
             } finally {
                 setTimeout(() => {
                     window.location.reload()
@@ -293,12 +315,17 @@ export default function ChangeProfile() {
         }
     };
 
+    if (loading) return (
+        <div>
+            کمی صبر کنید ...
+        </div>
+    )
     return (
         <div>
             {
                 AddNewData.disabled ?
                     <Button className='float-left m-2' onClick={() => editDisabler(false)}>
-                        <span className='text-red-500'>تغییر پروفایل</span>
+                        <span className='text-red-500'>ویرایش پروفایل</span>
                         <BiSolidEditAlt className='float-left mt-1 mr-1 text-red-400' />
                     </Button> :
                     <div className='float-left m-2 text-sm text-purple-500'>
@@ -318,6 +345,7 @@ export default function ChangeProfile() {
                             id="inline-full-name"
                             type="text"
                             name="name"
+                            disabled={AddNewData.disabled}
                             value={AddNewData.formData.name}
                             placeholder={`نام و نام خانوادگی مدیریت فروشگاه را وارد کنید`}
                             onChange={handleChange}
@@ -332,6 +360,7 @@ export default function ChangeProfile() {
                             className="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500"
                             id="inline-store-name"
                             type="text"
+                            disabled={AddNewData.disabled}
                             name="storeName"
                             value={AddNewData.formData.storeName}
                             placeholder={`نام فروشگاه را وارد کنید`}
@@ -348,6 +377,7 @@ export default function ChangeProfile() {
                             id="inline-email"
                             type="email"
                             name="email"
+                            disabled={AddNewData.disabled}
                             value={AddNewData.formData.email}
                             placeholder={`ایمیل را وارد کنید`}
                             onChange={handleChange}
@@ -364,6 +394,7 @@ export default function ChangeProfile() {
                             type="text"
                             name="username"
                             value={AddNewData.formData.username}
+                            disabled={AddNewData.disabled}
                             placeholder={`نام کاربری را وارد کنید`}
                             onChange={handleChange}
                         />
@@ -379,6 +410,7 @@ export default function ChangeProfile() {
                             type="text"
                             name="workingPhone"
                             value={AddNewData.formData.workingPhone}
+                            disabled={AddNewData.disabled}
                             placeholder={`تلفن فروشگاه را وارد کنید`}
                             onChange={handleChange}
                         />
@@ -394,6 +426,7 @@ export default function ChangeProfile() {
                             type="text"
                             name="phone"
                             value={AddNewData.formData.phone}
+                            disabled={AddNewData.disabled}
                             placeholder={`تلفن همراه را وارد کنید`}
                             onChange={handleChange}
                         />
@@ -415,6 +448,7 @@ export default function ChangeProfile() {
                                                 type="text"
                                                 name={`address`}
                                                 value={ad}
+                                                disabled={AddNewData.disabled}
                                                 placeholder={`آدرس جدید را وارد کنید`}
                                                 onChange={e => handleChangeAddresses(e, i)}
                                             />
@@ -449,6 +483,7 @@ export default function ChangeProfile() {
                                                     value={AddNewData.formData.newAddresses[i]}
                                                     placeholder={`آدرس جدید را وارد کنید`}
                                                     onChange={e => handleChangeNewAddress(e, i)}
+                                                    disabled={AddNewData.disabled}
                                                 />
                                                 <GiCancel className={`${!AddNewData.disabled ? 'text-red-500' : 'text-gray-500'} mt-5 hover:cursor-pointer`} onClick={() => deleteNewAddress(i)} />
                                             </div>
