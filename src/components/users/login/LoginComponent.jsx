@@ -95,6 +95,7 @@ export default function LoginComponent({ isUsernameParam, type }) { // isUsernam
         });
 
         router.push("/");
+        window.location.reload()
         // setNextStep(true);
       } catch (error) {
         dispatch(SetLogin({ status: '', token: null }))
