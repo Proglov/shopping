@@ -11,7 +11,7 @@ const Wait = () => {
 
 export default function Home() {
   return (
-    <SellerProtector Wait={<Wait />}>
+    <SellerProtector Wait={<Wait />} shouldRouterPush={true}>
       <Main />
     </SellerProtector>
   )
