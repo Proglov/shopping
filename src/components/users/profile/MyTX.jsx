@@ -59,8 +59,9 @@ export default function MyTX() {
                                             کالا
                                             {
                                                 transaction?.boughtProducts.length > 1 &&
-                                                "های "
+                                                "ها"
                                             }
+                                            ی
                                             شما
                                             <span className="text-red-600">:</span>
                                         </Typography>
