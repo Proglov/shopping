@@ -279,8 +279,8 @@ export default function SignUpComponent({ type }) {
         toast.success("ثبت نام شما موفقیت آمیز بود", {
           position: toast.POSITION.TOP_RIGHT,
         });
-        window.location.reload()
-        router.push("/");
+
+        window.location.replace('/')
       } catch (error) {
         dispatch(SetLogin({ status: '', token: null }))
 

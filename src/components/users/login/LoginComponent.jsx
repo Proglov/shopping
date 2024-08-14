@@ -94,8 +94,7 @@ export default function LoginComponent({ isUsernameParam, type }) { // isUsernam
           position: toast.POSITION.TOP_RIGHT,
         });
 
-        router.push("/");
-        window.location.reload()
+        window.location.replace('/')
         // setNextStep(true);
       } catch (error) {
         dispatch(SetLogin({ status: '', token: null }))
