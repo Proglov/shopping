@@ -17,14 +17,15 @@ const CustomObj = (array, tab) => {
     res[val] = index
   })
 
-  res.active = res[tab] || 0
+  res.active = typeof res[tab] === 'number' ? res[tab] : 0;
+
   return res
 }
 
 export default function Home({ searchParams }) {
   const tabs = CustomObj(['products', 'tx', 'setting'], searchParams?.tab)
 
-
+  console.log(tabs);
   return (
     <SellerProtector Wait={<Wait />} shouldRouterPush={true}>
       <Main tabs={tabs} />
