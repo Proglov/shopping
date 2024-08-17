@@ -13,6 +13,7 @@ import { Provider, useDispatch } from "react-redux";
 import { storeAdmin } from '@/components/admin-and-seller/redux/store';
 import { resetToInitialState } from '../admin-and-seller/redux/reducers/global';
 import { useRouter } from 'next/navigation';
+import Discounts from '../admin-and-seller/festivals/Discounts';
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -104,6 +105,9 @@ export default function Main({ tabs }) {
                     </TabPanel>
                     <TabPanel value={tabs.active} index={6} className='text-center'>
                         <CommentsMain />
+                    </TabPanel>
+                    <TabPanel value={tabs.active} index={7} className='text-center'>
+                        <Discounts which={"ADMIN"} />
                     </TabPanel>
                 </div>
             </Box>

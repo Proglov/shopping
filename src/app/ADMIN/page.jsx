@@ -22,7 +22,7 @@ const CustomObj = (array, tab) => {
 }
 
 export default function Home({ searchParams }) {
-  const tabs = CustomObj(['products', 'users', 'sellers', 'categories', 'subcategories', 'tx', 'comments'], searchParams?.tab)
+  const tabs = CustomObj(['products', 'users', 'sellers', 'categories', 'subcategories', 'tx', 'comments', 'discounts'], searchParams?.tab)
 
   return (
     <AdminProtector Wait={<Wait />} shouldRouterPush={true}>

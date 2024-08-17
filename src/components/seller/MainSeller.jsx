@@ -1,14 +1,15 @@
 'use client'
-import { Box, Grid, Tab, Tabs, Typography } from '@mui/material'
+import { Box, Tab, Tabs, Typography } from '@mui/material'
 import ProductsMain from '../admin-and-seller/products/ProductsMain';
 import TXMain from '../admin-and-seller/txs/TXMain';
 import Info from './Info';
-import MainSetting from './settings/MainSetting';
 import Link from 'next/link';
 import { IoMdHome } from 'react-icons/io';
 import { Provider } from "react-redux";
 import { storeAdmin } from '@/components/admin-and-seller/redux/store';
 import { useRouter } from 'next/navigation';
+import ChangeProfile from './ChangeProfile';
+import Discounts from '../admin-and-seller/festivals/Discounts';
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -45,19 +46,19 @@ export default function Main({ tabs }) {
 
     return (
         <Provider store={storeAdmin}>
-            <Grid container direction={'row-reverse'}
-                className='mt-5 p-3 text-black'
-            // sx={{ flexGrow: 1 }}
-            >
-                <div className='w-full text-purple-600 mb-3 underline hover:text-red-500'>
+            <Box className='mt-5 p-3 text-black'>
+
+                <Typography className='w-full text-purple-600 mb-3 underline hover:text-red-500'>
                     <Link href={'/'} className='flex'>
                         بازگشت به صفحه اصلی <IoMdHome className='mr-1 mt-1' />
                     </Link>
-                </div>
-                <Grid item xs={12} sm={12} md={5} lg={4} xl={3}>
+                </Typography>
+
+                <Box className='max-w-xl mx-auto'>
                     <Info />
-                </Grid>
-                <Grid item xs={12} sm={12} md={7} lg={8} xl={9} className='lg:p-2 p-1'>
+                </Box>
+
+                <Box className='lg:p-2 p-1'>
                     <Tabs
                         orientation='horizontal'
                         value={tabs.active}
@@ -73,8 +74,9 @@ export default function Main({ tabs }) {
                         <Tab label="محصولات" {...a11yProps(0)} />
                         <Tab label="تراکنش ها" {...a11yProps(1)} />
                         <Tab label="تنظیمات" {...a11yProps(2)} />
+                        <Tab label="طرح های ویژه" {...a11yProps(3)} />
                     </Tabs>
-                    <div style={{ width: '100%' }}>
+                    <Box style={{ width: '100%' }}>
                         <TabPanel value={tabs.active} index={0} className='text-center'>
                             <ProductsMain which={"Seller"} />
                         </TabPanel>
@@ -82,11 +84,14 @@ export default function Main({ tabs }) {
                             <TXMain which={"Seller"} />
                         </TabPanel>
                         <TabPanel value={tabs.active} index={2} className='text-center'>
-                            <MainSetting />
+                            <ChangeProfile />
                         </TabPanel>
-                    </div>
-                </Grid>
-            </Grid>
+                        <TabPanel value={tabs.active} index={3} className='text-center'>
+                            <Discounts which={"Seller"} />
+                        </TabPanel>
+                    </Box>
+                </Box>
+            </Box>
         </Provider>
     )
 }
