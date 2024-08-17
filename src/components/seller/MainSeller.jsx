@@ -1,5 +1,4 @@
 'use client'
-import React, { useState } from 'react'
 import { Box, Grid, Tab, Tabs, Typography } from '@mui/material'
 import ProductsMain from '../admin-and-seller/products/ProductsMain';
 import TXMain from '../admin-and-seller/txs/TXMain';
@@ -9,6 +8,7 @@ import Link from 'next/link';
 import { IoMdHome } from 'react-icons/io';
 import { Provider } from "react-redux";
 import { storeAdmin } from '@/components/admin-and-seller/redux/store';
+import { useRouter } from 'next/navigation';
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -35,12 +35,13 @@ function a11yProps(index) {
     };
 }
 
-export default function Main() {
-    const [addSegmentsPage, setAddSegmentsPage] = useState(0)
+export default function Main({ tabs }) {
+    const router = useRouter()
 
-    const handleChange = (_event, newAddSegmentsPage) => {
-        setAddSegmentsPage(newAddSegmentsPage);
+    const handleChange = (_event, newPageIndex) => {
+        router.push(`/Seller?tab=${tabs[newPageIndex]}`)
     };
+
 
     return (
         <Provider store={storeAdmin}>
@@ -59,7 +60,7 @@ export default function Main() {
                 <Grid item xs={12} sm={12} md={7} lg={8} xl={9} className='lg:p-2 p-1'>
                     <Tabs
                         orientation='horizontal'
-                        value={addSegmentsPage}
+                        value={tabs.active}
                         onChange={handleChange}
                         aria-label="horizontal tabs example"
                         textColor='inherit'
@@ -74,13 +75,13 @@ export default function Main() {
                         <Tab label="تنظیمات" {...a11yProps(2)} />
                     </Tabs>
                     <div style={{ width: '100%' }}>
-                        <TabPanel value={addSegmentsPage} index={0} className='text-center'>
+                        <TabPanel value={tabs.active} index={0} className='text-center'>
                             <ProductsMain which={"Seller"} />
                         </TabPanel>
-                        <TabPanel value={addSegmentsPage} index={1} className='text-center'>
+                        <TabPanel value={tabs.active} index={1} className='text-center'>
                             <TXMain which={"Seller"} />
                         </TabPanel>
-                        <TabPanel value={addSegmentsPage} index={2} className='text-center'>
+                        <TabPanel value={tabs.active} index={2} className='text-center'>
                             <MainSetting />
                         </TabPanel>
                     </div>

@@ -55,7 +55,7 @@ export default function MainSetting() {
                     }}
                 >
                     <Tab label="پروفایل" {...a11yProps(0)} />
-                    <Tab label="تخفیف ها و جشنواره" {...a11yProps(1)} />
+                    <Tab label="طرح های ویژه" {...a11yProps(1)} />
                 </Tabs>
                 <div style={{ width: '100%' }}>
                     <TabPanel value={addSegmentsPage} index={0} className='text-center'>

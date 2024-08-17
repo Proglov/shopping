@@ -9,10 +9,24 @@ const Wait = () => {
   )
 }
 
-export default function Home() {
+const CustomObj = (array, tab) => {
+  const res = {}
+
+  array.map((val, index) => {
+    res[index] = val
+    res[val] = index
+  })
+
+  res.active = res[tab] || 0
+  return res
+}
+
+export default function Home({ searchParams }) {
+  const tabs = CustomObj(['products', 'users', 'sellers', 'categories', 'subcategories', 'tx', 'comments'], searchParams?.tab)
+
   return (
     <AdminProtector Wait={<Wait />} shouldRouterPush={true}>
-      <Main />
+      <Main tabs={tabs} />
     </AdminProtector>
   )
 }

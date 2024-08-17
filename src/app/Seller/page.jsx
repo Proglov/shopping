@@ -9,10 +9,25 @@ const Wait = () => {
   )
 }
 
-export default function Home() {
+const CustomObj = (array, tab) => {
+  const res = {}
+
+  array.map((val, index) => {
+    res[index] = val
+    res[val] = index
+  })
+
+  res.active = res[tab] || 0
+  return res
+}
+
+export default function Home({ searchParams }) {
+  const tabs = CustomObj(['products', 'tx', 'setting'], searchParams?.tab)
+
+
   return (
     <SellerProtector Wait={<Wait />} shouldRouterPush={true}>
-      <Main />
+      <Main tabs={tabs} />
     </SellerProtector>
   )
 }

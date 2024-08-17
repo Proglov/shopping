@@ -1,5 +1,4 @@
 'use client'
-import React, { useState } from 'react'
 import { Box, Tab, Tabs, Typography } from '@mui/material'
 import ProductsMain from '../admin-and-seller/products/ProductsMain';
 import SellersMain from '../admin-and-seller/sellers/SellersMain';
@@ -13,6 +12,7 @@ import SubcategoriesMain from '../admin-and-seller/subcategories/SubcategoriesMa
 import { Provider, useDispatch } from "react-redux";
 import { storeAdmin } from '@/components/admin-and-seller/redux/store';
 import { resetToInitialState } from '../admin-and-seller/redux/reducers/global';
+import { useRouter } from 'next/navigation';
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -39,16 +39,17 @@ function a11yProps(index) {
     };
 }
 
-export default function Main() {
-    const [addSegmentsPage, setAddSegmentsPage] = useState(0)
+export default function Main({ tabs }) {
     const dispatch = useDispatch()
+    const router = useRouter()
 
-    const handleChange = (_event, newAddSegmentsPage) => {
-        setAddSegmentsPage(newAddSegmentsPage);
-
+    const handleChange = (_event, newPageIndex) => {
         // reset the global state
         dispatch(resetToInitialState())
+
+        router.push(`/ADMIN?tab=${tabs[newPageIndex]}`)
     };
+
 
     return (
         <Provider store={storeAdmin}>
@@ -62,7 +63,7 @@ export default function Main() {
                 </Link>
                 <Tabs
                     orientation='horizontal'
-                    value={addSegmentsPage}
+                    value={tabs.active}
                     onChange={handleChange}
                     variant="scrollable"
                     visibleScrollbar
@@ -83,25 +84,25 @@ export default function Main() {
                     <Tab label="کامنت ها" {...a11yProps(6)} />
                 </Tabs>
                 <div style={{ width: '100%' }}>
-                    <TabPanel value={addSegmentsPage} index={0} className='text-center'>
+                    <TabPanel value={tabs.active} index={0} className='text-center'>
                         <ProductsMain which={"ADMIN"} />
                     </TabPanel>
-                    <TabPanel value={addSegmentsPage} index={1} className='text-center'>
+                    <TabPanel value={tabs.active} index={1} className='text-center'>
                         <UsersMain />
                     </TabPanel>
-                    <TabPanel value={addSegmentsPage} index={2} className='text-center'>
+                    <TabPanel value={tabs.active} index={2} className='text-center'>
                         <SellersMain />
                     </TabPanel>
-                    <TabPanel value={addSegmentsPage} index={3} className='text-center'>
+                    <TabPanel value={tabs.active} index={3} className='text-center'>
                         <CategoriesMain />
                     </TabPanel>
-                    <TabPanel value={addSegmentsPage} index={4} className='text-center'>
+                    <TabPanel value={tabs.active} index={4} className='text-center'>
                         <SubcategoriesMain />
                     </TabPanel>
-                    <TabPanel value={addSegmentsPage} index={5} className='text-center'>
+                    <TabPanel value={tabs.active} index={5} className='text-center'>
                         <TXMain which={"ADMIN"} />
                     </TabPanel>
-                    <TabPanel value={addSegmentsPage} index={6} className='text-center'>
+                    <TabPanel value={tabs.active} index={6} className='text-center'>
                         <CommentsMain />
                     </TabPanel>
                 </div>
