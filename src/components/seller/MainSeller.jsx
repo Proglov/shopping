@@ -9,7 +9,7 @@ import { Provider } from "react-redux";
 import { storeAdmin } from '@/components/admin-and-seller/redux/store';
 import { useRouter } from 'next/navigation';
 import ChangeProfile from './ChangeProfile';
-import Discounts from '../admin-and-seller/festivals/Discounts';
+import Discounts from '../admin-and-seller/disconts/Discounts';
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -36,7 +36,7 @@ function a11yProps(index) {
     };
 }
 
-export default function Main({ tabs }) {
+export default function Main({ tabs, discountTabs }) {
     const router = useRouter()
 
     const handleChange = (_event, newPageIndex) => {
@@ -58,7 +58,7 @@ export default function Main({ tabs }) {
                     <Info />
                 </Box>
 
-                <Box className='lg:p-2 p-1'>
+                <Box className='max-w-6xl mx-auto shadow-lg lg:p-2 p-1'>
                     <Tabs
                         orientation='horizontal'
                         value={tabs.active}
@@ -87,7 +87,7 @@ export default function Main({ tabs }) {
                             <ChangeProfile />
                         </TabPanel>
                         <TabPanel value={tabs.active} index={3} className='text-center'>
-                            <Discounts which={"Seller"} />
+                            <Discounts which={"Seller"} tabs={discountTabs} />
                         </TabPanel>
                     </Box>
                 </Box>

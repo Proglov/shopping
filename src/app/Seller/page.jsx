@@ -24,10 +24,11 @@ const CustomObj = (array, tab) => {
 
 export default function Home({ searchParams }) {
   const tabs = CustomObj(['products', 'tx', 'setting', 'discounts'], searchParams?.tab)
+  const discountTabs = CustomObj(['festivals', 'majorShopping', 'company'], searchParams?.discountTab)
 
   return (
     <SellerProtector Wait={<Wait />} shouldRouterPush={true}>
-      <Main tabs={tabs} />
+      <Main tabs={tabs} discountTabs={discountTabs} />
     </SellerProtector>
   )
 }

@@ -9,13 +9,13 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import Pagination from '../../Pagination';
-import { price2Farsi } from '@/utils/funcs';
-import ModalEdit from './ModalEdit';
-import { getProductsFromServer, toggleAvailabilityProduct } from '../redux/globalAsyncThunks';
-import { setCurrentPage } from '../redux/reducers/global';
+import Pagination from '../../../Pagination';
+import { convertToFarsiNumbers, iranianCalendar, price2Farsi } from '@/utils/funcs';
 import { useDispatch, useSelector } from 'react-redux';
-import { setIsModalEditOpen, setSelectedItem } from '../redux/reducers/products';
+import { GetFestivalProductsFromServer } from '../../redux/globalAsyncThunks';
+import { setCurrentPage } from '../../redux/reducers/global';
+import ModalDelete from './ModalDelete';
+import { setIsModalDeleteOpen, setSelectedItem } from '../../redux/reducers/discounts/festivals';
 
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -37,7 +37,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 
-export default function ProductsTable({ which }) {
+export default function FestivalsTable({ which }) {
     const dispatch = useDispatch();
 
     const {
@@ -53,27 +53,27 @@ export default function ProductsTable({ which }) {
     const {
         operatingError,
         selectedItem,
-    } = useSelector((state) => state.products);
+    } = useSelector((state) => state.festivals);
 
     useEffect(() => {
-        dispatch(getProductsFromServer({ which, currentPage, itemsPerPage }))
+        dispatch(GetFestivalProductsFromServer({ which, currentPage, itemsPerPage }))
     }, [currentPage, itemsPerPage, which, dispatch]);
 
 
     return (
         <Stack spacing={2} className='mt-7'>
             <div className='w-full text-start'>
-                جدول محصولات
+                جدول جشنواره ها
             </div>
             <div className='text-start'>
                 {
                     itemsCount !== 0 &&
                     <>
-                        تعداد : {itemsCount}
+                        تعداد : {convertToFarsiNumbers(itemsCount)}
                     </>
                 }
             </div>
-            {!!error ? (
+            {(!!error && error !== 'this product already exists in the festival!') ? (
                 <div>
                     مشکلی رخ داد! لطفا دوباره تلاش کنید ...
                     <br />
@@ -85,16 +85,13 @@ export default function ProductsTable({ which }) {
                 items?.length !== 0 ?
                     <div>
                         <TableContainer component={Paper}>
-                            <Table sx={{ minWidth: 1000 }} aria-label="customized table">
+                            <Table aria-label="customized table">
                                 <TableHead>
                                     <TableRow>
                                         <StyledTableCell align='center'>ردیف</StyledTableCell>
-                                        <StyledTableCell align='center'>نام</StyledTableCell>
-                                        <StyledTableCell align='center'>قیمت به حروف</StyledTableCell>
-                                        <StyledTableCell align='center'>قیمت به عدد</StyledTableCell>
-                                        <StyledTableCell align='center'>دسته بندی</StyledTableCell>
-                                        <StyledTableCell align='center'>زیر دسته بندی</StyledTableCell>
-                                        <StyledTableCell align='center'>موجود</StyledTableCell>
+                                        <StyledTableCell align='center'>نام محصول</StyledTableCell>
+                                        <StyledTableCell align='center'>درصد تخفیف</StyledTableCell>
+                                        <StyledTableCell align='center'>لغایت</StyledTableCell>
                                         <StyledTableCell align='center'>عملیات</StyledTableCell>
                                     </TableRow>
                                 </TableHead>
@@ -102,45 +99,26 @@ export default function ProductsTable({ which }) {
                                     {items.map((item, index) => (
                                         <StyledTableRow key={item._id}
                                             className='align-middle'>
-                                            <StyledTableCell align='center'>{index + 1 + itemsPerPage * (currentPage - 1)}</StyledTableCell>
+                                            <StyledTableCell align='center'>{convertToFarsiNumbers(index + 1 + itemsPerPage * (currentPage - 1))}</StyledTableCell>
                                             <StyledTableCell align='center'>{item.name}</StyledTableCell>
-                                            <StyledTableCell align='center'>{price2Farsi(item.price)} تومان</StyledTableCell>
-                                            <StyledTableCell align='center'>{item.price}</StyledTableCell>
-                                            <StyledTableCell align='center'>{item.subcategoryId?.categoryId.name}</StyledTableCell>
-                                            <StyledTableCell align='center'>{item.subcategoryId?.name}</StyledTableCell>
-                                            <StyledTableCell align='center'>
-                                                <div style={{ width: '20px', height: '20px' }} className={`${item?.available ? 'bg-green-400' : 'bg-red-400'} rounded-full mx-auto`} />
-                                            </StyledTableCell>
+                                            <StyledTableCell align='center'>{price2Farsi(item.offPercentage)}</StyledTableCell>
+                                            <StyledTableCell align='center'>{iranianCalendar(new Date(parseInt(item?.until)))}</StyledTableCell>
                                             <StyledTableCell className='border-b-0'>
                                                 {selectedItem?._id === item._id ? (
                                                     <div className='text-center mt-2 text-xs'>درحال انجام عملیات
                                                     </div>
                                                 ) : (
-                                                    <div className='flex flex-col gap-2'>
+                                                    <div className='flex justify-center'>
                                                         <Button
                                                             variant='outlined'
-                                                            className='p-0 m-1'
-                                                            sx={{ color: 'primary', borderColor: 'primary' }}
+                                                            sx={{ color: 'red', borderColor: 'red' }}
+                                                            className='p-0'
                                                             onClick={() => {
-                                                                dispatch(setIsModalEditOpen(true));
-                                                                dispatch(setSelectedItem({ ...item }));
+                                                                dispatch(setIsModalDeleteOpen(true));
+                                                                dispatch(setSelectedItem({ ...item }))
                                                             }}
                                                         >
-                                                            ویرایش
-                                                        </Button>
-                                                        <Button
-                                                            variant='outlined'
-                                                            sx={{ color: `${!item?.available ? 'green' : 'red'}`, borderColor: `${!item?.available ? 'green' : 'red'}` }}
-                                                            className='p-0 m-1'
-                                                            onClick={() => {
-                                                                dispatch(toggleAvailabilityProduct(item._id));
-                                                            }}
-                                                        >
-                                                            {
-                                                                item.available &&
-                                                                "نا"
-                                                            }
-                                                            موجود شد
+                                                            حذف
                                                         </Button>
                                                     </div>
                                                 )}
@@ -166,11 +144,11 @@ export default function ProductsTable({ which }) {
 
                     </div>
                     : <div>
-                        اطلاعاتی جهت نمایش وجود ندارد
+                        جشنواره ای جهت نمایش وجود ندارد
                     </div>
             )}
 
-            <ModalEdit />
+            <ModalDelete />
 
         </Stack>
     );

@@ -6,6 +6,7 @@ import usersReducer from "./reducers/users"
 import sellersReducer from "./reducers/sellers"
 import commentsReducer from "./reducers/comments"
 import transactionsReducer from "./reducers/transactions"
+import festivalsReducer from "./reducers/discounts/festivals"
 
 export const storeAdmin = configureStore({
     reducer: {
@@ -16,5 +17,6 @@ export const storeAdmin = configureStore({
         global: globalReducer,
         transactions: transactionsReducer,
         comments: commentsReducer,
+        festivals: festivalsReducer,
     }
 })

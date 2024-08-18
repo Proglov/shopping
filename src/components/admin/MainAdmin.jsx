@@ -13,7 +13,7 @@ import { Provider, useDispatch } from "react-redux";
 import { storeAdmin } from '@/components/admin-and-seller/redux/store';
 import { resetToInitialState } from '../admin-and-seller/redux/reducers/global';
 import { useRouter } from 'next/navigation';
-import Discounts from '../admin-and-seller/festivals/Discounts';
+import Discounts from '../admin-and-seller/disconts/Discounts';
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;

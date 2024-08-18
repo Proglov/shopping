@@ -1,5 +1,7 @@
 
 export const reject = (state, action) => {
+    console.log(action);
+    // console.log(state);
     state.error = action.payload.message
     state.loading = false
 };
@@ -120,4 +122,24 @@ export const updateTXStatusFulfilled = (state, action) => {
         console.log(item);
         return item
     });
+}
+
+//festivals
+export const GetFestivalProductsFulfilled = (state, action) => {
+    state.items = action.payload.products
+    state.itemsCount = action.payload.allProductsCount
+    state.lastPage = Math.ceil(action.payload?.allProductsCount / state.itemsPerPage)
+    state.loading = false
+}
+export const addFestivalFulfilled = (state, action) => {
+    if (action.payload.status === 400) {
+        state.error = action.payload.message
+    } else {
+        state.items.push(action.payload)
+        state.itemsCount++;
+    }
+}
+export const deleteFestivalFulfilled = (state, action) => {
+    state.items = state.items.filter((item) => item._id !== action.payload)
+    state.itemsCount--;
 }

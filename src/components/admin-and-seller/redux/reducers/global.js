@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { addCategoryToServer, addProductToServer, addSubcategoryToServer, getCategoriesFromServer, getAdminProductsFromServer, getSellerProductsFromServer, getSubcategoriesFromServer, updateProductFromServer, getUsersFromServer, deleteUserFromServer, getInvalidatedSellersFromServer, deleteSellerFromServer, validateSellerToServer, getInvalidatedCommentsFromServer, deleteCommentFromServer, validateCommentToServer, getFutureTXsFromServer, updateTXStatusToServer, toggleAvailabilityProduct } from "../globalAsyncThunks";
-import { getCategoryFulfilled, addCategoryFulfilled, addSubcategoriesFulfilled, getSubcategoriesFulfilled, getProductsFulfilled, addProductsFulfilled, pending, reject, updateProductFulfilled, getUsersFulfilled, deleteUserFulfilled, getInvalidatedSellersFulfilled, deleteSellerFulfilled, validateSellerFulfilled, getInvalidatedCommentsFulfilled, validateCommentFulfilled, deleteCommentFulfilled, getFutureTXsFulfilled, updateTXStatusFulfilled, toggleAvailabilityProductFulfilled } from "../globalExtraReducers";
+import { addCategoryToServer, addProductToServer, addSubcategoryToServer, getCategoriesFromServer, getSubcategoriesFromServer, updateProductFromServer, getUsersFromServer, deleteUserFromServer, getInvalidatedSellersFromServer, deleteSellerFromServer, validateSellerToServer, getInvalidatedCommentsFromServer, deleteCommentFromServer, validateCommentToServer, getFutureTXsFromServer, updateTXStatusToServer, toggleAvailabilityProduct, GetFestivalProductsFromServer, getProductsFromServer, addFestivalToServer, deleteFestivalFromServer } from "../globalAsyncThunks";
+import { getCategoryFulfilled, addCategoryFulfilled, addSubcategoriesFulfilled, getSubcategoriesFulfilled, getProductsFulfilled, addProductsFulfilled, pending, reject, updateProductFulfilled, getUsersFulfilled, deleteUserFulfilled, getInvalidatedSellersFulfilled, deleteSellerFulfilled, validateSellerFulfilled, getInvalidatedCommentsFulfilled, validateCommentFulfilled, deleteCommentFulfilled, getFutureTXsFulfilled, updateTXStatusFulfilled, toggleAvailabilityProductFulfilled, GetFestivalProductsFulfilled, addFestivalFulfilled, deleteFestivalFulfilled } from "../globalExtraReducers";
 
 
 const initialState = {
@@ -78,12 +78,9 @@ const globalSlice = createSlice({
         builder.addCase(addSubcategoryToServer.fulfilled, addSubcategoriesFulfilled);
 
         // products
-        builder.addCase(getAdminProductsFromServer.pending, pending);
-        builder.addCase(getAdminProductsFromServer.fulfilled, getProductsFulfilled);
-        builder.addCase(getAdminProductsFromServer.rejected, reject);
-        builder.addCase(getSellerProductsFromServer.pending, pending);
-        builder.addCase(getSellerProductsFromServer.fulfilled, getProductsFulfilled);
-        builder.addCase(getSellerProductsFromServer.rejected, reject);
+        builder.addCase(getProductsFromServer.pending, pending);
+        builder.addCase(getProductsFromServer.fulfilled, getProductsFulfilled);
+        builder.addCase(getProductsFromServer.rejected, reject);
         builder.addCase(addProductToServer.fulfilled, addProductsFulfilled);
         builder.addCase(toggleAvailabilityProduct.fulfilled, toggleAvailabilityProductFulfilled);
         builder.addCase(updateProductFromServer.fulfilled, updateProductFulfilled);
@@ -113,6 +110,14 @@ const globalSlice = createSlice({
         builder.addCase(getFutureTXsFromServer.fulfilled, getFutureTXsFulfilled);
         builder.addCase(getFutureTXsFromServer.rejected, reject);
         builder.addCase(updateTXStatusToServer.fulfilled, updateTXStatusFulfilled);
+
+        //festivals
+        builder.addCase(GetFestivalProductsFromServer.pending, pending);
+        builder.addCase(GetFestivalProductsFromServer.fulfilled, GetFestivalProductsFulfilled);
+        builder.addCase(GetFestivalProductsFromServer.rejected, reject);
+        builder.addCase(addFestivalToServer.fulfilled, addFestivalFulfilled);
+        builder.addCase(addFestivalToServer.rejected, reject);
+        builder.addCase(deleteFestivalFromServer.fulfilled, deleteFestivalFulfilled);
 
     }
 });

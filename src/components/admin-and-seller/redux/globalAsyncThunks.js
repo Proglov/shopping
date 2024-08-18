@@ -1,3 +1,4 @@
+import { createAsyncThunk } from "@reduxjs/toolkit";
 import Api from "@/services/withoutAuthActivities/subcategories";
 import Api1 from "@/services/withAuthActivities/subcategories";
 import Api2 from "@/services/withAuthActivities/categories";
@@ -9,7 +10,8 @@ import Api7 from "@/services/withAuthActivities/seller";
 import Api8 from "@/services/withAuthActivities/comment";
 import Api9 from "@/services/withoutAuthActivities/comment";
 import Api10 from "@/services/withAuthActivities/tx";
-import { createAsyncThunk } from "@reduxjs/toolkit";
+import Api11 from "@/services/withAuthActivities/discounts/festivals";
+import Api12 from "@/services/withoutAuthActivities/discounts/festivals";
 
 //categories
 export const getCategoriesFromServer = createAsyncThunk(
@@ -44,18 +46,14 @@ export const addSubcategoryToServer = createAsyncThunk(
 )
 
 //products
-export const getAdminProductsFromServer = createAsyncThunk(
-    "Global/getAdminProductsFromServer",
-    async ({ currentPage, itemsPerPage }) => {
+export const getProductsFromServer = createAsyncThunk(
+    "Global/getProductsFromServer",
+    async ({ which, currentPage, itemsPerPage }) => {
         const { getAllProducts } = Api4
-        return await getAllProducts({ page: currentPage, perPage: itemsPerPage })
-    }
-)
-export const getSellerProductsFromServer = createAsyncThunk(
-    "Global/getSellerProductsFromServer",
-    async ({ currentPage, itemsPerPage }) => {
         const { getAllMyProducts } = Api5
-        return await getAllMyProducts({ page: currentPage, perPage: itemsPerPage })
+        if (which === "Seller")
+            return await getAllMyProducts({ page: currentPage, perPage: itemsPerPage })
+        return await getAllProducts({ page: currentPage, perPage: itemsPerPage })
     }
 )
 export const addProductToServer = createAsyncThunk(
@@ -162,5 +160,43 @@ export const updateTXStatusToServer = createAsyncThunk(
         const { TXStatus } = Api10
         await TXStatus({ id, newStatus })
         return { id, newStatus }
+    }
+)
+
+//festivals
+export const GetFestivalProductsFromServer = createAsyncThunk(
+    "Global/GetFestivalProductsFromServer",
+    async ({ page, perPage, which }) => {
+        const { GetAllMyFestivalProducts } = Api11
+        const { GetAllFestivalProducts } = Api12
+        if (which === "Seller")
+            return await GetAllMyFestivalProducts({ page, perPage })
+        return await GetAllFestivalProducts({ page, perPage })
+    }
+)
+export const addFestivalToServer = createAsyncThunk(
+    "Global/addFestivalToServer",
+    async (obj) => {
+        try {
+            const { CreateFestival } = Api11
+            const res = (await CreateFestival(obj))?.festival
+            return {
+                ...res,
+                name: obj.name
+            }
+        } catch (error) {
+            return {
+                status: 400,
+                message: error.response.data.message
+            }
+        }
+    }
+)
+export const deleteFestivalFromServer = createAsyncThunk(
+    "Global/deleteFestivalFromServer",
+    async (id) => {
+        const { DeleteFestival } = Api11
+        await DeleteFestival(id)
+        return id
     }
 )

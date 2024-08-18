@@ -23,10 +23,11 @@ const CustomObj = (array, tab) => {
 
 export default function Home({ searchParams }) {
   const tabs = CustomObj(['products', 'users', 'sellers', 'categories', 'subcategories', 'tx', 'comments', 'discounts'], searchParams?.tab)
+  const discountTabs = CustomObj(['festivals', 'majorShopping', 'company'], searchParams?.discountTab)
 
   return (
     <AdminProtector Wait={<Wait />} shouldRouterPush={true}>
-      <Main tabs={tabs} />
+      <Main tabs={tabs} discountTabs={discountTabs} />
     </AdminProtector>
   )
 }
