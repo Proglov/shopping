@@ -9,23 +9,21 @@ import "react-toastify/dist/ReactToastify.css";
 import { useDispatch, useSelector } from 'react-redux';
 import { getProductsFromServer } from '../../redux/reducers/discounts/festivals';
 import { addFestivalToServer } from '../../redux/globalAsyncThunks';
-import { setError } from '../../redux/reducers/global';
+import { setError, setLoading } from '../../redux/reducers/global';
+import { GradientCircularProgress } from '@/app/loading';
 
 
 export default function AddFestival() {
     const dispatch = useDispatch();
     const initialData = {
-        isSubmitting: false,
-        formData: {
-            name: '',
-            productId: '',
-            offPercentage: '',
-            until: '',
-        }
+        name: '',
+        productId: '',
+        offPercentage: '',
+        until: ''
     }
     const [AddNewData, setAddNewData] = useState(initialData)
     const { products } = useSelector((state) => state.festivals);
-    const { error } = useSelector((state) => state.global);
+    const { error, loading } = useSelector((state) => state.global);
 
     useEffect(() => { dispatch(getProductsFromServer()) }, [dispatch])
 
@@ -37,10 +35,7 @@ export default function AddFestival() {
                 if (newValue == value)
                     return {
                         ...prevProps,
-                        formData: {
-                            ...prevProps.formData,
-                            [name]: newValue,
-                        }
+                        [name]: newValue,
                     }
                 return {
                     ...prevProps
@@ -50,10 +45,7 @@ export default function AddFestival() {
             setAddNewData(prevProps => {
                 return {
                     ...prevProps,
-                    formData: {
-                        ...prevProps.formData,
-                        [name]: DOMPurify.sanitize(value),
-                    }
+                    [name]: DOMPurify.sanitize(value),
                 }
             })
         }
@@ -61,38 +53,20 @@ export default function AddFestival() {
     const handleProductId = id => setAddNewData(prevProps => {
         return {
             ...prevProps,
-            formData: {
-                ...prevProps.formData,
-                productId: id
-            }
+            productId: id
         }
     })
 
     const onSubmitForm = async () => {
-        setAddNewData(prevProps => ({
-            ...prevProps,
-            isSubmitting: true
-        }));
+        dispatch(setLoading(true))
 
-        if (AddNewData.formData.name === '') {
+        if (AddNewData.name === '')
             toast.error('انتخاب محصول ضروری میباشد')
-            setAddNewData(prevProps => ({
-                ...prevProps,
-                isSubmitting: false
-            }))
-        } else if (AddNewData.formData.offPercentage === '' || AddNewData.formData.offPercentage === 0) {
+        else if (AddNewData.offPercentage === '' || AddNewData.offPercentage === 0)
             toast.error('درصد تخفیف را وارد کنید')
-            setAddNewData(prevProps => ({
-                ...prevProps,
-                isSubmitting: false
-            }))
-        } else if (AddNewData.formData.until === '' || AddNewData.formData.until === 0) {
+        else if (AddNewData.until === '' || AddNewData.until === 0)
             toast.error('تعداد روزها را وارد کنید')
-            setAddNewData(prevProps => ({
-                ...prevProps,
-                isSubmitting: false
-            }))
-        } else {
+        else {
             try {
                 //set day 
                 const date = new Date()
@@ -100,12 +74,12 @@ export default function AddFestival() {
                 date.setMinutes(0)
                 date.setSeconds(0)
                 date.setMilliseconds(0)
-                date.setDate(date.getDate() + AddNewData.formData.until)
+                date.setDate(date.getDate() + AddNewData.until)
 
                 const obj = {
-                    name: AddNewData.formData.name,
-                    productId: AddNewData.formData.productId,
-                    offPercentage: AddNewData.formData.offPercentage,
+                    name: AddNewData.name,
+                    productId: AddNewData.productId,
+                    offPercentage: AddNewData.offPercentage,
                     until: date.getTime()
                 };
 
@@ -114,16 +88,11 @@ export default function AddFestival() {
 
                 setTimeout(() => {
                     dispatch(setError(''))
+                    dispatch(setLoading(false))
                 }, 2000);
 
                 setAddNewData(initialData);
-            } catch (err) {
-                setAddNewData(prevProps => ({
-                    ...prevProps,
-                    isSubmitting: false
-                }));
-                toast.error(err)
-            }
+            } catch (err) { toast.error(err) }
         }
     };
 
@@ -163,7 +132,7 @@ export default function AddFestival() {
                             id="inline-full-name"
                             type="text"
                             name="offPercentage"
-                            value={AddNewData.formData.offPercentage}
+                            value={AddNewData.offPercentage}
                             placeholder={`درصد تخفیف را وارد کنید`}
                             onChange={handleChange}
                         />
@@ -179,7 +148,7 @@ export default function AddFestival() {
                             id="inline-full-name"
                             type="text"
                             name="until"
-                            value={AddNewData.formData.until}
+                            value={AddNewData.until}
                             placeholder={`تعداد روز را وارد کنید`}
                             onChange={handleChange}
                         />
@@ -206,14 +175,19 @@ export default function AddFestival() {
                         }
                     </Grid>
 
-
+                    <Grid item xs={12} lg={6} className='place-content-center text-red-500'>
+                        {
+                            loading &&
+                            <GradientCircularProgress />
+                        }
+                    </Grid>
 
                     <Grid item xs={12}>
                         <Button
                             variant='contained'
                             className='mt-2 bg-blue-600 hover:bg-blue-500 text-white py-2 px-4 rounded'
                             type="submit"
-                            disabled={AddNewData.isSubmitting}
+                            disabled={loading}
                             onClick={onSubmitForm}
                         >
                             ارسال
@@ -222,11 +196,7 @@ export default function AddFestival() {
                 </Grid>
 
             </FormControl>
-            <div className='w-full text-center'>
-                {AddNewData.isSubmitting && <div className='text-green-700 bg-slate-200 mt-3 rounded-xl text-center'>
-                    در حال ارسال ...
-                </div>}
-            </div>
+
             <ToastContainer
                 position="top-right"
                 autoClose={5000}

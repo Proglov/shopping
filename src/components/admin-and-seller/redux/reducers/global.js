@@ -124,6 +124,7 @@ const globalSlice = createSlice({
         builder.addCase(GetMajorShoppingProductsFromServer.fulfilled, GetMajorShoppingProductsFulfilled);
         builder.addCase(GetMajorShoppingProductsFromServer.rejected, reject);
         builder.addCase(addMajorShoppingToServer.fulfilled, addMajorShoppingFulfilled);
+        builder.addCase(addMajorShoppingToServer.pending, pending);
         builder.addCase(addMajorShoppingToServer.rejected, reject);
         builder.addCase(deleteMajorShoppingFromServer.fulfilled, deleteMajorShoppingFulfilled);
     }
