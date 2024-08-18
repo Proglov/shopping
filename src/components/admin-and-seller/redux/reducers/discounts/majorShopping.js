@@ -9,7 +9,7 @@ const initialState = {
 };
 
 export const getProductsFromServer = createAsyncThunk(
-    "Festivals/getProductsFromServer",
+    "Products/getProductsFromServer",
     async () => {
         const { getAllMyProducts } = Api
         return await getAllMyProducts()
@@ -17,7 +17,7 @@ export const getProductsFromServer = createAsyncThunk(
 )
 
 const festivalsSlice = createSlice({
-    name: "Festivals",
+    name: "Products",
     initialState,
     reducers: {
         setSelectedItem(state, action) {

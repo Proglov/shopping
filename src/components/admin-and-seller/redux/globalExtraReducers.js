@@ -1,7 +1,5 @@
 
 export const reject = (state, action) => {
-    console.log(action);
-    // console.log(state);
     state.error = action.payload.message
     state.loading = false
 };
@@ -119,7 +117,6 @@ export const getFutureTXsFulfilled = (state, action) => {
 export const updateTXStatusFulfilled = (state, action) => {
     state.items.forEach(item => {
         if (item._id === action.payload.id) item.status = action.payload.newStatus
-        console.log(item);
         return item
     });
 }

@@ -2,6 +2,7 @@
 import { Box, Tab, Tabs, Typography } from '@mui/material'
 import { useRouter } from 'next/navigation';
 import FestivalMain from './festivals/FestivalMain';
+import MajorShoppingMain from './majorShopping/MajorShoppingMain';
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -60,7 +61,7 @@ export default function Discounts({ which, tabs }) {
                     <FestivalMain which={'Seller'} />
                 </TabPanel>
                 <TabPanel value={tabs.active} index={1} className='text-center'>
-                    خرید عمده
+                    <MajorShoppingMain />
                 </TabPanel>
                 <TabPanel value={tabs.active} index={2} className='text-center'>
                     خرید پرسنلی
