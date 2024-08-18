@@ -7,8 +7,8 @@ import DOMPurify from 'dompurify';
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useDispatch, useSelector } from 'react-redux';
-import { getProductsFromServer } from '../../redux/reducers/discounts/festivals';
-import { addFestivalToServer } from '../../redux/globalAsyncThunks';
+import { getProductsFromServer } from '../../redux/reducers/discounts/majorShopping';
+import { addMajorShoppingToServer } from '../../redux/globalAsyncThunks';
 import { setError } from '../../redux/reducers/global';
 
 
@@ -20,18 +20,18 @@ export default function AddMajorShopping() {
             name: '',
             productId: '',
             offPercentage: '',
-            until: '',
+            quantity: '',
         }
     }
     const [AddNewData, setAddNewData] = useState(initialData)
-    const { products } = useSelector((state) => state.festivals);
+    const { products } = useSelector((state) => state.majorShoppings);
     const { error } = useSelector((state) => state.global);
 
     useEffect(() => { dispatch(getProductsFromServer()) }, [dispatch])
 
     const handleChange = (event) => {
         const { name, value } = event.target;
-        if (name === 'offPercentage' || name === 'until') {
+        if (name === 'offPercentage' || name === 'quantity') {
             const newValue = parseInt(value) || 0
             setAddNewData(prevProps => {
                 if (newValue == value)
@@ -86,31 +86,24 @@ export default function AddMajorShopping() {
                 ...prevProps,
                 isSubmitting: false
             }))
-        } else if (AddNewData.formData.until === '' || AddNewData.formData.until === 0) {
-            toast.error('تعداد روزها را وارد کنید')
+        } else if (AddNewData.formData.quantity === '' || AddNewData.formData.quantity === 0) {
+            toast.error('تعداد را وارد کنید')
             setAddNewData(prevProps => ({
                 ...prevProps,
                 isSubmitting: false
             }))
         } else {
             try {
-                //set day 
-                const date = new Date()
-                date.setHours(0)
-                date.setMinutes(0)
-                date.setSeconds(0)
-                date.setMilliseconds(0)
-                date.setDate(date.getDate() + AddNewData.formData.until)
 
                 const obj = {
                     name: AddNewData.formData.name,
                     productId: AddNewData.formData.productId,
                     offPercentage: AddNewData.formData.offPercentage,
-                    until: date.getTime()
+                    quantity: AddNewData.formData.quantity
                 };
 
                 //make a request
-                dispatch(addFestivalToServer(obj))
+                dispatch(addMajorShoppingToServer(obj))
 
                 setTimeout(() => {
                     dispatch(setError(''))
@@ -153,6 +146,25 @@ export default function AddMajorShopping() {
                             </div>
                     }
 
+                    <Grid item xs={12} lg={6} className='place-content-center'>
+                        <div className='text-start text-sm mb-1'>
+                            تعداد هر خرید عمده را وارد کنید
+                        </div>
+                        <input
+                            className="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500"
+                            id="inline-full-name"
+                            type="text"
+                            name="quantity"
+                            value={AddNewData.formData.quantity}
+                            placeholder={`تعداد را وارد کنید`}
+                            onChange={handleChange}
+                        />
+
+                    </Grid>
+
+
+
+
                     <Grid item xs={12} lg={6}>
 
                         <div className='text-start text-sm mb-1'>
@@ -168,35 +180,16 @@ export default function AddMajorShopping() {
                             onChange={handleChange}
                         />
 
-                    </Grid>
-
-                    <Grid item xs={12} lg={6} className='place-content-center'>
-                        <div className='text-start text-sm mb-1'>
-                            چند روز بعد غیر فعال شود؟
-                        </div>
-                        <input
-                            className="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500"
-                            id="inline-full-name"
-                            type="text"
-                            name="until"
-                            value={AddNewData.formData.until}
-                            placeholder={`تعداد روز را وارد کنید`}
-                            onChange={handleChange}
-                        />
-
-                    </Grid>
-
-
-                    <Grid item xs={12} lg={6} className='place-content-center text-red-500'>
+                    </Grid><Grid item xs={12} lg={6} className='place-content-center text-red-500'>
                         {
                             error === 'You are not authorized!' ?
                                 <>
                                     توکن شما منقضی شده. لطفا خارج، و دوباره وارد شوید
                                 </>
                                 :
-                                error == "this product already exists in the festival!" ?
+                                error == "this product already exists in the majorShopping!" ?
                                     <>
-                                        این محصول در جشنواره حضور دارد!
+                                        این محصول در طرح محصولات عمده حضور دارد!
                                     </>
                                     :
                                     error?.length > 0 &&

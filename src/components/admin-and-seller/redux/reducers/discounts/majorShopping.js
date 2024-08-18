@@ -9,15 +9,15 @@ const initialState = {
 };
 
 export const getProductsFromServer = createAsyncThunk(
-    "Products/getProductsFromServer",
+    "MajorShopping/getProductsFromServer",
     async () => {
         const { getAllMyProducts } = Api
         return await getAllMyProducts()
     }
 )
 
-const festivalsSlice = createSlice({
-    name: "Products",
+const MajorShoppingsSlice = createSlice({
+    name: "MajorShopping",
     initialState,
     reducers: {
         setSelectedItem(state, action) {
@@ -43,5 +43,5 @@ const festivalsSlice = createSlice({
     }
 });
 
-export const { setIsModalDeleteOpen, setOperatingError, setProducts, setSelectedItem } = festivalsSlice.actions;
-export default festivalsSlice.reducer;
+export const { setIsModalDeleteOpen, setOperatingError, setProducts, setSelectedItem } = MajorShoppingsSlice.actions;
+export default MajorShoppingsSlice.reducer;

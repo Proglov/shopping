@@ -7,6 +7,7 @@ import sellersReducer from "./reducers/sellers"
 import commentsReducer from "./reducers/comments"
 import transactionsReducer from "./reducers/transactions"
 import festivalsReducer from "./reducers/discounts/festivals"
+import majorShoppingsReducer from "./reducers/discounts/majorShopping"
 
 export const storeAdmin = configureStore({
     reducer: {
@@ -18,5 +19,6 @@ export const storeAdmin = configureStore({
         transactions: transactionsReducer,
         comments: commentsReducer,
         festivals: festivalsReducer,
+        majorShoppings: majorShoppingsReducer,
     }
 })

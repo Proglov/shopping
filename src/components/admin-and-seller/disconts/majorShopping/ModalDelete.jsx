@@ -6,8 +6,8 @@ import Fade from '@mui/material/Fade';
 import Typography from '@mui/material/Typography';
 import { Button } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
-import { setIsModalDeleteOpen, setSelectedItem, setOperatingError } from '../../redux/reducers/discounts/festivals';
-import { deleteFestivalFromServer } from '../../redux/globalAsyncThunks';
+import { setIsModalDeleteOpen, setSelectedItem, setOperatingError } from '../../redux/reducers/discounts/majorShopping';
+import { deleteMajorShoppingFromServer } from '../../redux/globalAsyncThunks';
 
 const ModalStyle = {
     position: 'absolute',
@@ -26,7 +26,7 @@ export default function ModalDelete() {
     const {
         isModalDeleteOpen,
         selectedItem
-    } = useSelector((state) => state.festivals);
+    } = useSelector((state) => state.majorShoppings);
 
     const handleClose = () => {
         dispatch(setIsModalDeleteOpen(false));
@@ -36,7 +36,7 @@ export default function ModalDelete() {
 
     const deleteItem = async () => {
         try {
-            dispatch(deleteFestivalFromServer(selectedItem?._id))
+            dispatch(deleteMajorShoppingFromServer(selectedItem?._id))
             dispatch(setSelectedItem({}));
         } catch (error) {
             dispatch(setOperatingError(error.message))
@@ -65,7 +65,7 @@ export default function ModalDelete() {
                 <Fade in={isModalDeleteOpen}>
                     <Box sx={ModalStyle} className='rounded-3xl'>
                         <Typography id="transition-modal-title" variant="h6" component="h2">
-                            آیا از حذف این جشنواره مطمئن هستید؟
+                            آیا از حذف این محصول از خرید عمده مطمئن هستید؟
                         </Typography>
 
                         <div className='mt-2 flex justify-between'>

@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { addCategoryToServer, addProductToServer, addSubcategoryToServer, getCategoriesFromServer, getSubcategoriesFromServer, updateProductFromServer, getUsersFromServer, deleteUserFromServer, getInvalidatedSellersFromServer, deleteSellerFromServer, validateSellerToServer, getInvalidatedCommentsFromServer, deleteCommentFromServer, validateCommentToServer, getFutureTXsFromServer, updateTXStatusToServer, toggleAvailabilityProduct, GetFestivalProductsFromServer, getProductsFromServer, addFestivalToServer, deleteFestivalFromServer } from "../globalAsyncThunks";
-import { getCategoryFulfilled, addCategoryFulfilled, addSubcategoriesFulfilled, getSubcategoriesFulfilled, getProductsFulfilled, addProductsFulfilled, pending, reject, updateProductFulfilled, getUsersFulfilled, deleteUserFulfilled, getInvalidatedSellersFulfilled, deleteSellerFulfilled, validateSellerFulfilled, getInvalidatedCommentsFulfilled, validateCommentFulfilled, deleteCommentFulfilled, getFutureTXsFulfilled, updateTXStatusFulfilled, toggleAvailabilityProductFulfilled, GetFestivalProductsFulfilled, addFestivalFulfilled, deleteFestivalFulfilled } from "../globalExtraReducers";
+import { addCategoryToServer, addProductToServer, addSubcategoryToServer, getCategoriesFromServer, getSubcategoriesFromServer, updateProductFromServer, getUsersFromServer, deleteUserFromServer, getInvalidatedSellersFromServer, deleteSellerFromServer, validateSellerToServer, getInvalidatedCommentsFromServer, deleteCommentFromServer, validateCommentToServer, getFutureTXsFromServer, updateTXStatusToServer, toggleAvailabilityProduct, GetFestivalProductsFromServer, getProductsFromServer, addFestivalToServer, deleteFestivalFromServer, GetMajorShoppingProductsFromServer, addMajorShoppingToServer, deleteMajorShoppingFromServer } from "../globalAsyncThunks";
+import { getCategoryFulfilled, addCategoryFulfilled, addSubcategoriesFulfilled, getSubcategoriesFulfilled, getProductsFulfilled, addProductsFulfilled, pending, reject, updateProductFulfilled, getUsersFulfilled, deleteUserFulfilled, getInvalidatedSellersFulfilled, deleteSellerFulfilled, validateSellerFulfilled, getInvalidatedCommentsFulfilled, validateCommentFulfilled, deleteCommentFulfilled, getFutureTXsFulfilled, updateTXStatusFulfilled, toggleAvailabilityProductFulfilled, GetFestivalProductsFulfilled, addFestivalFulfilled, deleteFestivalFulfilled, deleteMajorShoppingFulfilled, addMajorShoppingFulfilled, GetMajorShoppingProductsFulfilled } from "../globalExtraReducers";
 
 
 const initialState = {
@@ -119,6 +119,13 @@ const globalSlice = createSlice({
         builder.addCase(addFestivalToServer.rejected, reject);
         builder.addCase(deleteFestivalFromServer.fulfilled, deleteFestivalFulfilled);
 
+        //majorShoppings
+        builder.addCase(GetMajorShoppingProductsFromServer.pending, pending);
+        builder.addCase(GetMajorShoppingProductsFromServer.fulfilled, GetMajorShoppingProductsFulfilled);
+        builder.addCase(GetMajorShoppingProductsFromServer.rejected, reject);
+        builder.addCase(addMajorShoppingToServer.fulfilled, addMajorShoppingFulfilled);
+        builder.addCase(addMajorShoppingToServer.rejected, reject);
+        builder.addCase(deleteMajorShoppingFromServer.fulfilled, deleteMajorShoppingFulfilled);
     }
 });
 

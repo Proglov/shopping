@@ -12,6 +12,8 @@ import Api9 from "@/services/withoutAuthActivities/comment";
 import Api10 from "@/services/withAuthActivities/tx";
 import Api11 from "@/services/withAuthActivities/discounts/festivals";
 import Api12 from "@/services/withoutAuthActivities/discounts/festivals";
+import Api13 from "@/services/withAuthActivities/discounts/majorShopping";
+import Api14 from "@/services/withoutAuthActivities/discounts/majorShopping";
 
 //categories
 export const getCategoriesFromServer = createAsyncThunk(
@@ -197,6 +199,45 @@ export const deleteFestivalFromServer = createAsyncThunk(
     async (id) => {
         const { DeleteFestival } = Api11
         await DeleteFestival(id)
+        return id
+    }
+)
+
+
+//majorShoppings
+export const GetMajorShoppingProductsFromServer = createAsyncThunk(
+    "Global/GetMajorShoppingProductsFromServer",
+    async ({ page, perPage, which }) => {
+        const { GetAllMyMajorShoppingProducts } = Api13
+        const { GetAllMajorShoppingProducts } = Api14
+        if (which === "Seller")
+            return await GetAllMyMajorShoppingProducts({ page, perPage })
+        return await GetAllMajorShoppingProducts({ page, perPage })
+    }
+)
+export const addMajorShoppingToServer = createAsyncThunk(
+    "Global/addMajorShoppingToServer",
+    async (obj) => {
+        try {
+            const { CreateMajorShopping } = Api13
+            const res = (await CreateMajorShopping(obj))?.majorShopping
+            return {
+                ...res,
+                name: obj.name
+            }
+        } catch (error) {
+            return {
+                status: 400,
+                message: error.response.data.message
+            }
+        }
+    }
+)
+export const deleteMajorShoppingFromServer = createAsyncThunk(
+    "Global/deleteMajorShoppingFromServer",
+    async (id) => {
+        const { DeleteMajorShopping } = Api13
+        await DeleteMajorShopping(id)
         return id
     }
 )

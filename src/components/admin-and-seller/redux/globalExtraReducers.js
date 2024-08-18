@@ -140,3 +140,23 @@ export const deleteFestivalFulfilled = (state, action) => {
     state.items = state.items.filter((item) => item._id !== action.payload)
     state.itemsCount--;
 }
+
+//majorShoppings
+export const GetMajorShoppingProductsFulfilled = (state, action) => {
+    state.items = action.payload.products
+    state.itemsCount = action.payload.allProductsCount
+    state.lastPage = Math.ceil(action.payload?.allProductsCount / state.itemsPerPage)
+    state.loading = false
+}
+export const addMajorShoppingFulfilled = (state, action) => {
+    if (action.payload.status === 400) {
+        state.error = action.payload.message
+    } else {
+        state.items.push(action.payload)
+        state.itemsCount++;
+    }
+}
+export const deleteMajorShoppingFulfilled = (state, action) => {
+    state.items = state.items.filter((item) => item._id !== action.payload)
+    state.itemsCount--;
+}

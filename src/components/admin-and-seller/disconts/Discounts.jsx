@@ -61,7 +61,7 @@ export default function Discounts({ which, tabs }) {
                     <FestivalMain which={'Seller'} />
                 </TabPanel>
                 <TabPanel value={tabs.active} index={1} className='text-center'>
-                    <MajorShoppingMain />
+                    <MajorShoppingMain which={'Seller'} />
                 </TabPanel>
                 <TabPanel value={tabs.active} index={2} className='text-center'>
                     خرید پرسنلی

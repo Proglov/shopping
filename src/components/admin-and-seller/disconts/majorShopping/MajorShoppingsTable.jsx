@@ -10,12 +10,12 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Pagination from '../../../Pagination';
-import { convertToFarsiNumbers, iranianCalendar, price2Farsi } from '@/utils/funcs';
+import { convertToFarsiNumbers, price2Farsi } from '@/utils/funcs';
 import { useDispatch, useSelector } from 'react-redux';
-import { GetFestivalProductsFromServer } from '../../redux/globalAsyncThunks';
+import { GetMajorShoppingProductsFromServer } from '../../redux/globalAsyncThunks';
 import { setCurrentPage } from '../../redux/reducers/global';
-// import ModalDelete from './ModalDelete';
-import { setIsModalDeleteOpen, setSelectedItem } from '../../redux/reducers/discounts/festivals';
+import ModalDelete from './ModalDelete';
+import { setIsModalDeleteOpen, setSelectedItem } from '../../redux/reducers/discounts/majorShopping';
 
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -53,27 +53,27 @@ export default function MajorShoppingsTable({ which }) {
     const {
         operatingError,
         selectedItem,
-    } = useSelector((state) => state.festivals);
+    } = useSelector((state) => state.majorShoppings);
 
     useEffect(() => {
-        dispatch(GetFestivalProductsFromServer({ which, currentPage, itemsPerPage }))
+        dispatch(GetMajorShoppingProductsFromServer({ which, currentPage, itemsPerPage }))
     }, [currentPage, itemsPerPage, which, dispatch]);
 
 
     return (
         <Stack spacing={2} className='mt-7'>
             <div className='w-full text-start'>
-                جدول جشنواره ها
+                جدول محصولات عمده
             </div>
             <div className='text-start'>
                 {
                     itemsCount !== 0 &&
                     <>
-                        تعداد : {convertToFarsiNumbers(itemsCount)}
+                        تعداد محصولات : {convertToFarsiNumbers(itemsCount)}
                     </>
                 }
             </div>
-            {(!!error && error !== 'this product already exists in the festival!') ? (
+            {(!!error && error !== 'this product already exists in the majorShopping!') ? (
                 <div>
                     مشکلی رخ داد! لطفا دوباره تلاش کنید ...
                     <br />
@@ -91,7 +91,7 @@ export default function MajorShoppingsTable({ which }) {
                                         <StyledTableCell align='center'>ردیف</StyledTableCell>
                                         <StyledTableCell align='center'>نام محصول</StyledTableCell>
                                         <StyledTableCell align='center'>درصد تخفیف</StyledTableCell>
-                                        <StyledTableCell align='center'>لغایت</StyledTableCell>
+                                        <StyledTableCell align='center'>تعداد</StyledTableCell>
                                         <StyledTableCell align='center'>عملیات</StyledTableCell>
                                     </TableRow>
                                 </TableHead>
@@ -102,7 +102,7 @@ export default function MajorShoppingsTable({ which }) {
                                             <StyledTableCell align='center'>{convertToFarsiNumbers(index + 1 + itemsPerPage * (currentPage - 1))}</StyledTableCell>
                                             <StyledTableCell align='center'>{item.name}</StyledTableCell>
                                             <StyledTableCell align='center'>{price2Farsi(item.offPercentage)}</StyledTableCell>
-                                            <StyledTableCell align='center'>{iranianCalendar(new Date(parseInt(item?.until)))}</StyledTableCell>
+                                            <StyledTableCell align='center'>{convertToFarsiNumbers(item?.quantity)}</StyledTableCell>
                                             <StyledTableCell className='border-b-0'>
                                                 {selectedItem?._id === item._id ? (
                                                     <div className='text-center mt-2 text-xs'>درحال انجام عملیات
@@ -148,7 +148,7 @@ export default function MajorShoppingsTable({ which }) {
                     </div>
             )}
 
-            {/* <ModalDelete /> */}
+            <ModalDelete />
 
         </Stack>
     );

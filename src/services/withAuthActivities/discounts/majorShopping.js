@@ -2,24 +2,24 @@ import { clientWithAuth } from "@/lib/axios"
 
 
 const Api = {
-    CreateFestival: async (payload) => {
+    CreateMajorShopping: async (payload) => {
         const response = await clientWithAuth.post(
-            `festivalsPost/FestivalCreate`,
+            `festivalsPost/MajorShoppingCreate`,
             {
                 input: payload
             }
         );
         return response?.data;
     },
-    GetAllMyFestivalProducts: async (payload) => {
+    GetAllMyMajorShoppingProducts: async (payload) => {
         const response = await clientWithAuth.get(
-            `festivalsGet/GetAllMyFestivalProducts?page=${payload?.page}&perPage=${payload?.perPage}`
+            `festivalsGet/GetMyAllMajorShoppingProducts?page=${payload?.page}&perPage=${payload?.perPage}`
         );
         return response?.data;
     },
-    DeleteFestival: async (payload) => {
+    DeleteMajorShopping: async (payload) => {
         const response = await clientWithAuth.delete(
-            `festivalsDelete/DeleteOneFestival?id=${payload}`
+            `festivalsDelete/DeleteOneMajorShopping?id=${payload}`
         );
         return response?.data;
     },
