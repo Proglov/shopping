@@ -23,6 +23,8 @@ export default function AddProduct() {
         categories
     } = useSelector((state) => state.products);
     const [uploadRes, setUploadRes] = useState([]);
+
+    // you should use addDataLoading instead of isSubmitting!
     const [AddNewData, setAddNewData] = useState({
         isSubmitting: false,
         formData: {
@@ -215,8 +217,8 @@ export default function AddProduct() {
                         <div className='w-full text-start text-sm'>
                             <label htmlFor="underline_select_category">دسته بندی</label>
                         </div>
-                        <select id="underline_select_category" className="block py-2.5 px-3 w-full text-sm text-gray-500 bg-transparent my-2 rounded-md border-2 border-gray-200 appearance-none focus:outline-none focus:ring-0 focus:border-gray-200" onChange={handleChange} name='category'>
-                            <option defaultValue={''}>دسته بندی را انتخاب کنید &#11167;</option>
+                        <select id="underline_select_category" className="block py-2.5 px-3 w-full text-sm text-gray-500 bg-transparent my-2 rounded-md border-2 border-gray-200 appearance-none focus:outline-none focus:ring-0 focus:border-gray-200" value={AddNewData.formData.category} onChange={handleChange} name='category'>
+                            <option value='' disabled>دسته بندی را انتخاب کنید &#11167;</option>
                             {
                                 categories.map((categoryObj, index) => <option key={index} value={categoryObj?.categoryName} className='text-black'>{categoryObj?.categoryName}</option>)
                             }
@@ -229,8 +231,8 @@ export default function AddProduct() {
                             <div className='w-full text-start text-sm'>
                                 <label htmlFor="underline_select_subcategory">زیر دسته بندی</label>
                             </div>
-                            <select id="underline_select_subcategory" className="block py-2.5 px-3 w-full text-sm text-gray-500 bg-transparent my-2 rounded-md border-2 border-gray-200 appearance-none focus:outline-none focus:ring-0 focus:border-gray-200" onChange={handleChange} name='subcategory'>
-                                <option defaultValue={''}>زیر دسته بندی را انتخاب کنید &#11167;</option>
+                            <select id="underline_select_subcategory" className="block py-2.5 px-3 w-full text-sm text-gray-500 bg-transparent my-2 rounded-md border-2 border-gray-200 appearance-none focus:outline-none focus:ring-0 focus:border-gray-200" onChange={handleChange} value={AddNewData.formData.subcategory} name='subcategory'>
+                                <option value='' disabled>زیر دسته بندی را انتخاب کنید &#11167;</option>
                                 {
                                     categories.map(categoryObj => {
                                         if (categoryObj?.categoryName === AddNewData?.formData?.category) {

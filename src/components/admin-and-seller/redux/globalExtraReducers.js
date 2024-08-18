@@ -2,9 +2,13 @@
 export const reject = (state, action) => {
     state.error = action.payload.message
     state.loading = false
+    state.addDataLoading = false
 };
 export const pending = (state) => {
     state.loading = true
+}
+export const addDataPending = (state) => {
+    state.addDataLoading = true
 }
 
 // categories
@@ -43,6 +47,7 @@ export const getProductsFulfilled = (state, action) => {
 export const addProductsFulfilled = (state, action) => {
     state.items.push(action.payload.product)
     state.itemsCount++;
+    state.addDataLoading = false
 }
 export const toggleAvailabilityProductFulfilled = (state, action) => {
     state.items.forEach(item => {
@@ -135,6 +140,7 @@ export const addFestivalFulfilled = (state, action) => {
         state.items.push(action.payload)
         state.itemsCount++;
     }
+    state.addDataLoading = false
 }
 export const deleteFestivalFulfilled = (state, action) => {
     state.items = state.items.filter((item) => item._id !== action.payload)
@@ -155,6 +161,7 @@ export const addMajorShoppingFulfilled = (state, action) => {
         state.items.push(action.payload)
         state.itemsCount++;
     }
+    state.addDataLoading = false
 }
 export const deleteMajorShoppingFulfilled = (state, action) => {
     state.items = state.items.filter((item) => item._id !== action.payload)

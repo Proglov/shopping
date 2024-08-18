@@ -1,10 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { addCategoryToServer, addProductToServer, addSubcategoryToServer, getCategoriesFromServer, getSubcategoriesFromServer, updateProductFromServer, getUsersFromServer, deleteUserFromServer, getInvalidatedSellersFromServer, deleteSellerFromServer, validateSellerToServer, getInvalidatedCommentsFromServer, deleteCommentFromServer, validateCommentToServer, getFutureTXsFromServer, updateTXStatusToServer, toggleAvailabilityProduct, GetFestivalProductsFromServer, getProductsFromServer, addFestivalToServer, deleteFestivalFromServer, GetMajorShoppingProductsFromServer, addMajorShoppingToServer, deleteMajorShoppingFromServer } from "../globalAsyncThunks";
-import { getCategoryFulfilled, addCategoryFulfilled, addSubcategoriesFulfilled, getSubcategoriesFulfilled, getProductsFulfilled, addProductsFulfilled, pending, reject, updateProductFulfilled, getUsersFulfilled, deleteUserFulfilled, getInvalidatedSellersFulfilled, deleteSellerFulfilled, validateSellerFulfilled, getInvalidatedCommentsFulfilled, validateCommentFulfilled, deleteCommentFulfilled, getFutureTXsFulfilled, updateTXStatusFulfilled, toggleAvailabilityProductFulfilled, GetFestivalProductsFulfilled, addFestivalFulfilled, deleteFestivalFulfilled, deleteMajorShoppingFulfilled, addMajorShoppingFulfilled, GetMajorShoppingProductsFulfilled } from "../globalExtraReducers";
+import { getCategoryFulfilled, addCategoryFulfilled, addSubcategoriesFulfilled, getSubcategoriesFulfilled, getProductsFulfilled, addProductsFulfilled, pending, reject, updateProductFulfilled, getUsersFulfilled, deleteUserFulfilled, getInvalidatedSellersFulfilled, deleteSellerFulfilled, validateSellerFulfilled, getInvalidatedCommentsFulfilled, validateCommentFulfilled, deleteCommentFulfilled, getFutureTXsFulfilled, updateTXStatusFulfilled, toggleAvailabilityProductFulfilled, GetFestivalProductsFulfilled, addFestivalFulfilled, deleteFestivalFulfilled, deleteMajorShoppingFulfilled, addMajorShoppingFulfilled, GetMajorShoppingProductsFulfilled, addDataPending } from "../globalExtraReducers";
 
 
 const initialState = {
     items: [],
+    addDataLoading: false, //used for creating data
     loading: false,
     error: null,
     currentPage: 1,
@@ -35,6 +36,9 @@ const globalSlice = createSlice({
         },
         setLoading(state, action) {
             state.loading = action.payload
+        },
+        setAddDataLoading(state, action) {
+            state.addDataLoading = action.payload
         },
         setError(state, action) {
             state.error = action.payload
@@ -81,6 +85,7 @@ const globalSlice = createSlice({
         builder.addCase(getProductsFromServer.pending, pending);
         builder.addCase(getProductsFromServer.fulfilled, getProductsFulfilled);
         builder.addCase(getProductsFromServer.rejected, reject);
+        builder.addCase(addProductToServer.pending, addDataPending);
         builder.addCase(addProductToServer.fulfilled, addProductsFulfilled);
         builder.addCase(toggleAvailabilityProduct.fulfilled, toggleAvailabilityProductFulfilled);
         builder.addCase(updateProductFromServer.fulfilled, updateProductFulfilled);
@@ -116,6 +121,7 @@ const globalSlice = createSlice({
         builder.addCase(GetFestivalProductsFromServer.fulfilled, GetFestivalProductsFulfilled);
         builder.addCase(GetFestivalProductsFromServer.rejected, reject);
         builder.addCase(addFestivalToServer.fulfilled, addFestivalFulfilled);
+        builder.addCase(addFestivalToServer.pending, addDataPending);
         builder.addCase(addFestivalToServer.rejected, reject);
         builder.addCase(deleteFestivalFromServer.fulfilled, deleteFestivalFulfilled);
 
@@ -124,12 +130,12 @@ const globalSlice = createSlice({
         builder.addCase(GetMajorShoppingProductsFromServer.fulfilled, GetMajorShoppingProductsFulfilled);
         builder.addCase(GetMajorShoppingProductsFromServer.rejected, reject);
         builder.addCase(addMajorShoppingToServer.fulfilled, addMajorShoppingFulfilled);
-        builder.addCase(addMajorShoppingToServer.pending, pending);
+        builder.addCase(addMajorShoppingToServer.pending, addDataPending);
         builder.addCase(addMajorShoppingToServer.rejected, reject);
         builder.addCase(deleteMajorShoppingFromServer.fulfilled, deleteMajorShoppingFulfilled);
     }
 });
 
-export const { setItems, addItem, removeItem, setLoading, setError, setCurrentPage, setLastPage, setItemsCount, resetToInitialState } = globalSlice.actions;
+export const { setItems, addItem, removeItem, setLoading, setError, setCurrentPage, setLastPage, setItemsCount, resetToInitialState, setAddDataLoading } = globalSlice.actions;
 
 export default globalSlice.reducer;

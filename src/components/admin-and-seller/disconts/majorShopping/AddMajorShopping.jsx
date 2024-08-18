@@ -9,7 +9,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { useDispatch, useSelector } from 'react-redux';
 import { getProductsFromServer } from '../../redux/reducers/discounts/majorShopping';
 import { addMajorShoppingToServer } from '../../redux/globalAsyncThunks';
-import { setError, setLoading } from '../../redux/reducers/global';
+import { setError } from '../../redux/reducers/global';
 import { GradientCircularProgress } from '@/app/loading';
 
 
@@ -23,7 +23,7 @@ export default function AddMajorShopping() {
     }
     const [AddNewData, setAddNewData] = useState(initialData)
     const { products } = useSelector((state) => state.majorShoppings);
-    const { error, loading } = useSelector((state) => state.global);
+    const { error, addDataLoading } = useSelector((state) => state.global);
 
     useEffect(() => { dispatch(getProductsFromServer()) }, [dispatch])
 
@@ -57,8 +57,20 @@ export default function AddMajorShopping() {
         }
     })
 
+    const errorObj = {
+        'You are not authorized!': 'توکن شما منقضی شده. لطفا خارج، و دوباره وارد شوید',
+        'this product already exists in the majorShopping!': 'این محصول در طرح محصولات عمده حضور دارد'
+    }
+
+    useEffect(() => {
+        console.log(error);
+        if (error?.length > 0) {
+            toast.error(errorObj[error] || 'مشکلی رخ داده است')
+            dispatch(setError(''))
+        }
+    }, [error])
+
     const onSubmitForm = async () => {
-        dispatch(setLoading(true))
 
         if (AddNewData.name === '')
             toast.error('انتخاب محصول ضروری میباشد')
@@ -79,11 +91,6 @@ export default function AddMajorShopping() {
                 //make a request
                 dispatch(addMajorShoppingToServer(obj))
 
-                setTimeout(() => {
-                    dispatch(setError(''))
-                    dispatch(setLoading(false))
-                }, 2000);
-
                 setAddNewData(initialData);
             } catch (err) { toast.error(err) }
         }
@@ -100,8 +107,8 @@ export default function AddMajorShopping() {
                                 <div className='w-full text-start text-sm'>
                                     <label htmlFor="underline_select_subcategory">محصولات من</label>
                                 </div>
-                                <select id="underline_select_subcategory" className="block py-2.5 px-3 w-full text-sm text-gray-500 bg-transparent my-2 rounded-md border-2 border-gray-200 appearance-none focus:outline-none focus:ring-0 focus:border-gray-200" onChange={handleChange} name='name'>
-                                    <option defaultValue={''}>محصول مورد نظر را انتخاب کنید &#11167;</option>
+                                <select id="underline_select_subcategory" className="block py-2.5 px-3 w-full text-sm text-gray-500 bg-transparent my-2 rounded-md border-2 border-gray-200 appearance-none focus:outline-none focus:ring-0 focus:border-gray-200" value={AddNewData.name} onChange={handleChange} name='name'>
+                                    <option value='' disabled>محصول مورد نظر را انتخاب کنید &#11167;</option>
                                     {
                                         products.map(product => {
                                             return <option key={product._id} onClick={() => handleProductId(product._id)} value={product?.name} className='text-black'>{product?.name}</option>
@@ -151,26 +158,7 @@ export default function AddMajorShopping() {
 
                     <Grid item xs={12} lg={6} className='place-content-center text-red-500'>
                         {
-                            error == 'You are not authorized!' ?
-                                <>
-                                    توکن شما منقضی شده. لطفا خارج، و دوباره وارد شوید
-                                </>
-                                :
-                                error == "this product already exists in the majorShopping!" ?
-                                    <>
-                                        این محصول در طرح محصولات عمده حضور دارد!
-                                    </>
-                                    :
-                                    error?.length > 0 &&
-                                    <>
-                                        مشکلی رخ داده است!
-                                    </>
-                        }
-                    </Grid>
-
-                    <Grid item xs={12} lg={6} className='place-content-center text-red-500'>
-                        {
-                            loading &&
+                            addDataLoading &&
                             <GradientCircularProgress />
                         }
                     </Grid>
@@ -182,7 +170,7 @@ export default function AddMajorShopping() {
                             variant='contained'
                             className='mt-2 bg-blue-600 hover:bg-blue-500 text-white py-2 px-4 rounded'
                             type="submit"
-                            disabled={loading}
+                            disabled={addDataLoading}
                             onClick={onSubmitForm}
                         >
                             ارسال
