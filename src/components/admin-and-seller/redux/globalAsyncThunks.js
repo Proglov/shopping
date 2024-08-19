@@ -14,6 +14,7 @@ import Api11 from "@/services/withAuthActivities/discounts/festivals";
 import Api12 from "@/services/withoutAuthActivities/discounts/festivals";
 import Api13 from "@/services/withAuthActivities/discounts/majorShopping";
 import Api14 from "@/services/withoutAuthActivities/discounts/majorShopping";
+import Api15 from "@/services/withAuthActivities/discounts/companyCouponForSomeProducts";
 
 //categories
 export const getCategoriesFromServer = createAsyncThunk(
@@ -203,7 +204,6 @@ export const deleteFestivalFromServer = createAsyncThunk(
     }
 )
 
-
 //majorShoppings
 export const GetMajorShoppingProductsFromServer = createAsyncThunk(
     "Global/GetMajorShoppingProductsFromServer",
@@ -238,6 +238,43 @@ export const deleteMajorShoppingFromServer = createAsyncThunk(
     async (id) => {
         const { DeleteMajorShopping } = Api13
         await DeleteMajorShopping(id)
+        return id
+    }
+)
+
+//companyCouponForSomeProducts
+export const GetCompanyCouponForSomeProductsProductsFromServer = createAsyncThunk(
+    "Global/GetCompanyCouponForSomeProductsProductsFromServer",
+    async ({ page, perPage, which }) => {
+        const { GetAllMyCompanyCouponForSomeProducts, GetAllCompanyCouponForSomeProducts } = Api15
+        if (which === "Seller")
+            return await GetAllMyCompanyCouponForSomeProducts({ page, perPage })
+        return await GetAllCompanyCouponForSomeProducts({ page, perPage })
+    }
+)
+export const addCompanyCouponForSomeProductsToServer = createAsyncThunk(
+    "Global/addCompanyCouponForSomeProductsToServer",
+    async (obj) => {
+        try {
+            const { CreateCompanyCouponForSomeProducts } = Api15
+            const res = (await CreateCompanyCouponForSomeProducts(obj))?.companyCouponForSomeProducts
+            return {
+                ...res,
+                name: obj.name
+            }
+        } catch (error) {
+            return {
+                status: 400,
+                message: error.response.data.message
+            }
+        }
+    }
+)
+export const deleteCompanyCouponForSomeProductsFromServer = createAsyncThunk(
+    "Global/deleteCompanyCouponForSomeProductsFromServer",
+    async (id) => {
+        const { DeleteCompanyCouponForSomeProducts } = Api15
+        await DeleteCompanyCouponForSomeProducts(id)
         return id
     }
 )

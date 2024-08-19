@@ -3,6 +3,7 @@ import { Box, Tab, Tabs, Typography } from '@mui/material'
 import { useRouter } from 'next/navigation';
 import FestivalMain from './festivals/FestivalMain';
 import MajorShoppingMain from './majorShopping/MajorShoppingMain';
+import CompanyCouponForSomeProductsMain from './companyCouponForSomeProducts/CompanyCouponForSomeProductMain';
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -58,13 +59,13 @@ export default function Discounts({ which, tabs }) {
 
             <Box style={{ width: '100%' }}>
                 <TabPanel value={tabs.active} index={0} className='text-center'>
-                    <FestivalMain which={'Seller'} />
+                    <FestivalMain which={which} />
                 </TabPanel>
                 <TabPanel value={tabs.active} index={1} className='text-center'>
-                    <MajorShoppingMain which={'Seller'} />
+                    <MajorShoppingMain which={which} />
                 </TabPanel>
                 <TabPanel value={tabs.active} index={2} className='text-center'>
-                    خرید پرسنلی
+                    <CompanyCouponForSomeProductsMain which={which} />
                 </TabPanel>
             </Box>
 

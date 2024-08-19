@@ -8,6 +8,7 @@ import commentsReducer from "./reducers/comments"
 import transactionsReducer from "./reducers/transactions"
 import festivalsReducer from "./reducers/discounts/festivals"
 import majorShoppingsReducer from "./reducers/discounts/majorShopping"
+import CompanyCouponForSomeProductsReducer from "./reducers/discounts/companyCouponForSomeProducts"
 
 export const storeAdmin = configureStore({
     reducer: {
@@ -20,5 +21,6 @@ export const storeAdmin = configureStore({
         comments: commentsReducer,
         festivals: festivalsReducer,
         majorShoppings: majorShoppingsReducer,
+        companyCouponForSomeProducts: CompanyCouponForSomeProductsReducer,
     }
 })

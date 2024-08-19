@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { addCategoryToServer, addProductToServer, addSubcategoryToServer, getCategoriesFromServer, getSubcategoriesFromServer, updateProductFromServer, getUsersFromServer, deleteUserFromServer, getInvalidatedSellersFromServer, deleteSellerFromServer, validateSellerToServer, getInvalidatedCommentsFromServer, deleteCommentFromServer, validateCommentToServer, getFutureTXsFromServer, updateTXStatusToServer, toggleAvailabilityProduct, GetFestivalProductsFromServer, getProductsFromServer, addFestivalToServer, deleteFestivalFromServer, GetMajorShoppingProductsFromServer, addMajorShoppingToServer, deleteMajorShoppingFromServer } from "../globalAsyncThunks";
-import { getCategoryFulfilled, addCategoryFulfilled, addSubcategoriesFulfilled, getSubcategoriesFulfilled, getProductsFulfilled, addProductsFulfilled, pending, reject, updateProductFulfilled, getUsersFulfilled, deleteUserFulfilled, getInvalidatedSellersFulfilled, deleteSellerFulfilled, validateSellerFulfilled, getInvalidatedCommentsFulfilled, validateCommentFulfilled, deleteCommentFulfilled, getFutureTXsFulfilled, updateTXStatusFulfilled, toggleAvailabilityProductFulfilled, GetFestivalProductsFulfilled, addFestivalFulfilled, deleteFestivalFulfilled, deleteMajorShoppingFulfilled, addMajorShoppingFulfilled, GetMajorShoppingProductsFulfilled, addDataPending } from "../globalExtraReducers";
+import { addCategoryToServer, addProductToServer, addSubcategoryToServer, getCategoriesFromServer, getSubcategoriesFromServer, updateProductFromServer, getUsersFromServer, deleteUserFromServer, getInvalidatedSellersFromServer, deleteSellerFromServer, validateSellerToServer, getInvalidatedCommentsFromServer, deleteCommentFromServer, validateCommentToServer, getFutureTXsFromServer, updateTXStatusToServer, toggleAvailabilityProduct, GetFestivalProductsFromServer, getProductsFromServer, addFestivalToServer, deleteFestivalFromServer, GetMajorShoppingProductsFromServer, addMajorShoppingToServer, deleteMajorShoppingFromServer, GetCompanyCouponForSomeProductsProductsFromServer, addCompanyCouponForSomeProductsToServer, deleteCompanyCouponForSomeProductsFromServer } from "../globalAsyncThunks";
+import { getCategoryFulfilled, addCategoryFulfilled, addSubcategoriesFulfilled, getSubcategoriesFulfilled, getProductsFulfilled, addProductsFulfilled, pending, reject, updateProductFulfilled, getUsersFulfilled, deleteUserFulfilled, getInvalidatedSellersFulfilled, deleteSellerFulfilled, validateSellerFulfilled, getInvalidatedCommentsFulfilled, validateCommentFulfilled, deleteCommentFulfilled, getFutureTXsFulfilled, updateTXStatusFulfilled, toggleAvailabilityProductFulfilled, GetFestivalProductsFulfilled, addFestivalFulfilled, deleteFestivalFulfilled, deleteMajorShoppingFulfilled, addMajorShoppingFulfilled, GetMajorShoppingProductsFulfilled, addDataPending, GetCompanyCouponForSomeProductsProductsFulfilled, addCompanyCouponForSomeProductsFulfilled, deleteCompanyCouponForSomeProductsFulfilled } from "../globalExtraReducers";
 
 
 const initialState = {
@@ -133,6 +133,15 @@ const globalSlice = createSlice({
         builder.addCase(addMajorShoppingToServer.pending, addDataPending);
         builder.addCase(addMajorShoppingToServer.rejected, reject);
         builder.addCase(deleteMajorShoppingFromServer.fulfilled, deleteMajorShoppingFulfilled);
+
+        //companyCouponForSomeProducts
+        builder.addCase(GetCompanyCouponForSomeProductsProductsFromServer.pending, pending);
+        builder.addCase(GetCompanyCouponForSomeProductsProductsFromServer.fulfilled, GetCompanyCouponForSomeProductsProductsFulfilled);
+        builder.addCase(GetCompanyCouponForSomeProductsProductsFromServer.rejected, reject);
+        builder.addCase(addCompanyCouponForSomeProductsToServer.fulfilled, addCompanyCouponForSomeProductsFulfilled);
+        builder.addCase(addCompanyCouponForSomeProductsToServer.pending, addDataPending);
+        builder.addCase(addCompanyCouponForSomeProductsToServer.rejected, reject);
+        builder.addCase(deleteCompanyCouponForSomeProductsFromServer.fulfilled, deleteCompanyCouponForSomeProductsFulfilled);
     }
 });
 
