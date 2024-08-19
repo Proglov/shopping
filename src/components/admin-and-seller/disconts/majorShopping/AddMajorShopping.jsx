@@ -63,7 +63,6 @@ export default function AddMajorShopping() {
     }
 
     useEffect(() => {
-        console.log(error);
         if (error?.length > 0) {
             toast.error(errorObj[error] || 'مشکلی رخ داده است')
             dispatch(setError(''))

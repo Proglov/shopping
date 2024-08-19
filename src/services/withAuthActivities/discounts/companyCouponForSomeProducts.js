@@ -32,6 +32,12 @@ const Api = {
         );
         return response?.data;
     },
+    GetProductsOfOneCompanyCouponForSomeProducts: async (payload) => {
+        const response = await clientWithAuth.get(
+            `festivalsGet/GetOneCompanyCouponForSomeProducts?id=${payload}`
+        );
+        return response?.data;
+    },
     DeleteCompanyCouponForSomeProducts: async (payload) => {
         const response = await clientWithAuth.delete(
             `festivalsDelete/DeleteOneCompanyCouponForSomeProducts?id=${payload}`

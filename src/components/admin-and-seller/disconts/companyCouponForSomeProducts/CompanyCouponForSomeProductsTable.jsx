@@ -10,12 +10,13 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Pagination from '../../../Pagination';
-import { convertToFarsiNumbers, iranianCalendar, price2Farsi } from '@/utils/funcs';
+import { convertToFarsiNumbers, price2Farsi } from '@/utils/funcs';
 import { useDispatch, useSelector } from 'react-redux';
 import { GetCompanyCouponForSomeProductsProductsFromServer } from '../../redux/globalAsyncThunks';
 import { setCurrentPage } from '../../redux/reducers/global';
 import ModalDelete from './ModalDelete';
-import { setIsModalDeleteOpen, setSelectedItem } from '../../redux/reducers/discounts/companyCouponForSomeProducts';
+import { getShowMoreProductsFromServer, setIsModalDeleteOpen, setIsModalShowMoreOpen, setSelectedItem } from '../../redux/reducers/discounts/companyCouponForSomeProducts';
+import ModalShowMore from './ModalShowMore';
 
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -63,7 +64,7 @@ export default function CompanyCouponForSomeProductsTable({ which }) {
     return (
         <Stack spacing={2} className='mt-7'>
             <div className='w-full text-start'>
-                جدول جشنواره ها
+                جدول طرح ها
             </div>
             <div className='text-start'>
                 {
@@ -73,7 +74,7 @@ export default function CompanyCouponForSomeProductsTable({ which }) {
                     </>
                 }
             </div>
-            {(!!error && error !== 'this product already exists in the companyCouponForSomeProducts!') ? (
+            {!!error ? (
                 <div>
                     مشکلی رخ داد! لطفا دوباره تلاش کنید ...
                     <br />
@@ -89,9 +90,11 @@ export default function CompanyCouponForSomeProductsTable({ which }) {
                                 <TableHead>
                                     <TableRow>
                                         <StyledTableCell align='center'>ردیف</StyledTableCell>
-                                        <StyledTableCell align='center'>نام محصول</StyledTableCell>
+                                        <StyledTableCell align='center'>کد تخفیف</StyledTableCell>
                                         <StyledTableCell align='center'>درصد تخفیف</StyledTableCell>
-                                        <StyledTableCell align='center'>لغایت</StyledTableCell>
+                                        <StyledTableCell align='center'>حداقل خرید</StyledTableCell>
+                                        <StyledTableCell align='center'>حداکثر مبلغ تخفیف</StyledTableCell>
+                                        <StyledTableCell align='center'>باقیمانده</StyledTableCell>
                                         <StyledTableCell align='center'>عملیات</StyledTableCell>
                                     </TableRow>
                                 </TableHead>
@@ -100,15 +103,29 @@ export default function CompanyCouponForSomeProductsTable({ which }) {
                                         <StyledTableRow key={item._id}
                                             className='align-middle'>
                                             <StyledTableCell align='center'>{convertToFarsiNumbers(index + 1 + itemsPerPage * (currentPage - 1))}</StyledTableCell>
-                                            <StyledTableCell align='center'>{item.name}</StyledTableCell>
-                                            <StyledTableCell align='center'>{price2Farsi(item.offPercentage)}</StyledTableCell>
-                                            <StyledTableCell align='center'>{iranianCalendar(new Date(parseInt(item?.until)))}</StyledTableCell>
+                                            <StyledTableCell align='center'>{item.body}</StyledTableCell>
+                                            <StyledTableCell align='center'>{convertToFarsiNumbers(item.offPercentage)}</StyledTableCell>
+                                            <StyledTableCell align='center'>{price2Farsi(item.minBuy)} تومان</StyledTableCell>
+                                            <StyledTableCell align='center'>{price2Farsi(item.maxOffPrice)} تومان</StyledTableCell>
+                                            <StyledTableCell align='center'>{convertToFarsiNumbers(item.remainingCount)}</StyledTableCell>
                                             <StyledTableCell className='border-b-0'>
                                                 {selectedItem?._id === item._id ? (
                                                     <div className='text-center mt-2 text-xs'>درحال انجام عملیات
                                                     </div>
                                                 ) : (
-                                                    <div className='flex justify-center'>
+                                                    <div className='flex flex-col justify-center gap-2'>
+                                                        <Button
+                                                            size='small'
+                                                            variant='outlined'
+                                                            color='info'
+                                                            className='p-0'
+                                                            onClick={() => {
+                                                                dispatch(setIsModalShowMoreOpen(true));
+                                                                dispatch(getShowMoreProductsFromServer(item._id))
+                                                            }}
+                                                        >
+                                                            مشاهدۀ محصولات
+                                                        </Button>
                                                         <Button
                                                             variant='outlined'
                                                             sx={{ color: 'red', borderColor: 'red' }}
@@ -149,6 +166,7 @@ export default function CompanyCouponForSomeProductsTable({ which }) {
             )}
 
             <ModalDelete />
+            <ModalShowMore />
 
         </Stack>
     );

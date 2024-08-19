@@ -88,7 +88,6 @@ export default function AddFestival() {
                 date.setDate(date.getDate() + AddNewData.until)
 
                 const obj = {
-                    name: AddNewData.name,
                     productId: AddNewData.productId,
                     offPercentage: AddNewData.offPercentage,
                     until: date.getTime()

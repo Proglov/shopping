@@ -257,11 +257,8 @@ export const addCompanyCouponForSomeProductsToServer = createAsyncThunk(
     async (obj) => {
         try {
             const { CreateCompanyCouponForSomeProducts } = Api15
-            const res = (await CreateCompanyCouponForSomeProducts(obj))?.companyCouponForSomeProducts
-            return {
-                ...res,
-                name: obj.name
-            }
+            const res = (await CreateCompanyCouponForSomeProducts(obj))?.coupon
+            return res
         } catch (error) {
             return {
                 status: 400,
