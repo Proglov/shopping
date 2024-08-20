@@ -150,83 +150,88 @@ export default function CommentItem({ productID }) {
         const userID = await GetUser();
         const response = await getCommentsOfAProduct({ id: productID });
 
-        const arr = response?.comments.reduce((accumulator, currentComment) => {
-          const res = [...accumulator];
-          let status = 0;
-          let userIndex = currentComment.likes.findIndex(item => item.id === userID)
-          // user liked the comment
-          if (userIndex > -1)
-            status = 1
-          else {
-            userIndex = currentComment.disLikes.findIndex(item => item.id === userID)
-            // user disliked the comment
+        if (response?.comments?.length > 0) {
+          const arr = response?.comments.reduce((accumulator, currentComment) => {
+            const res = [...accumulator];
+            let status = 0;
+            let userIndex = currentComment.likes.findIndex(item => item.id === userID)
+            // user liked the comment
             if (userIndex > -1)
-              status = -1
-          }
+              status = 1
+            else {
+              userIndex = currentComment.disLikes.findIndex(item => item.id === userID)
+              // user disliked the comment
+              if (userIndex > -1)
+                status = -1
+            }
 
-          if (currentComment.parentCommentId == null) {
-            const thisCommentIndex = res.findIndex(obj => obj._id === currentComment._id)
+            if (currentComment.parentCommentId == null) {
+              const thisCommentIndex = res.findIndex(obj => obj._id === currentComment._id)
 
-            if (thisCommentIndex > -1)
-              res[thisCommentIndex] = {
-                ...res[thisCommentIndex],
-                body: currentComment.body,
-                likes: currentComment.likes,
-                disLikes: currentComment.disLikes,
-                ownerId: currentComment.ownerId,
-                status
-              }
-            else
-              res.push({
-                _id: currentComment._id,
-                body: currentComment.body,
-                likes: currentComment.likes,
-                disLikes: currentComment.disLikes,
-                ownerId: currentComment.ownerId,
-                childrenComments: [],
-                status
-              })
+              if (thisCommentIndex > -1)
+                res[thisCommentIndex] = {
+                  ...res[thisCommentIndex],
+                  body: currentComment.body,
+                  likes: currentComment.likes,
+                  disLikes: currentComment.disLikes,
+                  ownerId: currentComment.ownerId,
+                  status
+                }
+              else
+                res.push({
+                  _id: currentComment._id,
+                  body: currentComment.body,
+                  likes: currentComment.likes,
+                  disLikes: currentComment.disLikes,
+                  ownerId: currentComment.ownerId,
+                  childrenComments: [],
+                  status
+                })
 
 
-          } else {
-            const parentCommentIndex = res.findIndex(obj => obj._id === currentComment.parentCommentId)
-            if (parentCommentIndex > -1)
-              res[parentCommentIndex] = {
-                ...res[parentCommentIndex],
-                childrenComments: [
-                  ...res[parentCommentIndex].childrenComments,
-                  {
-                    _id: currentComment._id,
-                    body: currentComment.body,
-                    likes: currentComment.likes,
-                    disLikes: currentComment.disLikes,
-                    ownerId: currentComment.ownerId,
-                    status
-                  }
-                ]
-              }
-            else
-              res.push({
-                _id: currentComment.parentCommentId,
-                childrenComments: [
-                  {
-                    _id: currentComment._id,
-                    body: currentComment.body,
-                    likes: currentComment.likes,
-                    disLikes: currentComment.disLikes,
-                    ownerId: currentComment.ownerId,
-                    status
-                  }
-                ]
-              })
+            } else {
+              const parentCommentIndex = res.findIndex(obj => obj._id === currentComment.parentCommentId)
+              if (parentCommentIndex > -1)
+                res[parentCommentIndex] = {
+                  ...res[parentCommentIndex],
+                  childrenComments: [
+                    ...res[parentCommentIndex].childrenComments,
+                    {
+                      _id: currentComment._id,
+                      body: currentComment.body,
+                      likes: currentComment.likes,
+                      disLikes: currentComment.disLikes,
+                      ownerId: currentComment.ownerId,
+                      status
+                    }
+                  ]
+                }
+              else
+                res.push({
+                  _id: currentComment.parentCommentId,
+                  childrenComments: [
+                    {
+                      _id: currentComment._id,
+                      body: currentComment.body,
+                      likes: currentComment.likes,
+                      disLikes: currentComment.disLikes,
+                      ownerId: currentComment.ownerId,
+                      status
+                    }
+                  ]
+                })
 
-          }
+            }
 
-          return res
+            return res
 
-        }, [])
+          }, [])
 
-        setComments(arr)
+          setComments(arr)
+        } else {
+          setComments([])
+        }
+
       } catch (error) {
         toast.error("اشکال در دریافت کامنت ها", {
           position: toast.POSITION.TOP_RIGHT,

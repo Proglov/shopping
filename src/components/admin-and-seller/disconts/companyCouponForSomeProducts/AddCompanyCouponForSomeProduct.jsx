@@ -29,7 +29,7 @@ function getStyles(tagOptions, tags, theme) {
             : theme.typography.fontWeightMedium,
     };
 }
-export default function AddCompanyCouponForSomeProducts() {
+export default function AddCompanyCouponForSomeProducts({ which }) {
     const theme = useTheme();
     const dispatch = useDispatch();
     const initialData = {
@@ -44,7 +44,7 @@ export default function AddCompanyCouponForSomeProducts() {
     const { products } = useSelector((state) => state.companyCouponForSomeProducts);
     const { error, addDataLoading } = useSelector((state) => state.global);
 
-    useEffect(() => { dispatch(getProductsFromServer()) }, [dispatch])
+    useEffect(() => { dispatch(getProductsFromServer(which)) }, [dispatch])
 
     const handleChange = (event) => {
         const { name, value } = event.target;

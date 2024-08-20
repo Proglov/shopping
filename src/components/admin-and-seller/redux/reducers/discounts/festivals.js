@@ -1,4 +1,5 @@
 import Api from "@/services/withAuthActivities/product";
+import Api2 from "@/services/withoutAuthActivities/product";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
@@ -10,8 +11,11 @@ const initialState = {
 
 export const getProductsFromServer = createAsyncThunk(
     "Festivals/getProductsFromServer",
-    async () => {
+    async (which) => {
         const { getAllMyProducts } = Api
+        const { getAllProducts } = Api2
+        if (which === 'ADMIN')
+            return await getAllProducts()
         return await getAllMyProducts()
     }
 )

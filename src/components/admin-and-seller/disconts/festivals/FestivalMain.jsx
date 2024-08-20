@@ -37,7 +37,7 @@ export default function FestivalMain({ which }) {
 
             </div>
             <div className={`${isAddComponentHidden ? 'hidden' : ''}`}>
-                <AddFestival />
+                <AddFestival which={which} />
             </div>
 
             <FestivalsTable which={which} />

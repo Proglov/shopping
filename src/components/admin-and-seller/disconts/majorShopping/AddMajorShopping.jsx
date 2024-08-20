@@ -13,7 +13,7 @@ import { setError } from '../../redux/reducers/global';
 import { GradientCircularProgress } from '@/app/loading';
 
 
-export default function AddMajorShopping() {
+export default function AddMajorShopping({ which }) {
     const dispatch = useDispatch();
     const initialData = {
         name: '',
@@ -25,7 +25,7 @@ export default function AddMajorShopping() {
     const { products } = useSelector((state) => state.majorShoppings);
     const { error, addDataLoading } = useSelector((state) => state.global);
 
-    useEffect(() => { dispatch(getProductsFromServer()) }, [dispatch])
+    useEffect(() => { dispatch(getProductsFromServer(which)) }, [dispatch])
 
     const handleChange = (event) => {
         const { name, value } = event.target;

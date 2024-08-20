@@ -18,7 +18,6 @@ const CustomObj = (array, tab) => {
   })
 
   res.active = typeof res[tab] === 'number' ? res[tab] : 0;
-
   return res
 }
 

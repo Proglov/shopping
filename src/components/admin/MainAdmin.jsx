@@ -40,7 +40,7 @@ function a11yProps(index) {
     };
 }
 
-export default function Main({ tabs }) {
+export default function Main({ tabs, discountTabs }) {
     const dispatch = useDispatch()
     const router = useRouter()
 
@@ -83,6 +83,7 @@ export default function Main({ tabs }) {
                     <Tab label="زیر دسته بندی ها" {...a11yProps(4)} />
                     <Tab label="تراکنش ها" {...a11yProps(5)} />
                     <Tab label="کامنت ها" {...a11yProps(6)} />
+                    <Tab label="طرح های ویژه" {...a11yProps(7)} />
                 </Tabs>
                 <div style={{ width: '100%' }}>
                     <TabPanel value={tabs.active} index={0} className='text-center'>
@@ -107,7 +108,7 @@ export default function Main({ tabs }) {
                         <CommentsMain />
                     </TabPanel>
                     <TabPanel value={tabs.active} index={7} className='text-center'>
-                        <Discounts which={"ADMIN"} />
+                        <Discounts which={"ADMIN"} tabs={discountTabs} />
                     </TabPanel>
                 </div>
             </Box>

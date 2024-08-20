@@ -36,7 +36,7 @@ export default function CompanyCouponForSomeProductsMain({ which }) {
 
             </div>
             <div className={`${isAddComponentHidden ? 'hidden' : ''}`}>
-                <AddCompanyCouponForSomeProducts />
+                <AddCompanyCouponForSomeProducts which={which} />
             </div>
 
             <CompanyCouponForSomeProductsTable which={which} />

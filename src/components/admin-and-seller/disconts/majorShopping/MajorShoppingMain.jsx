@@ -37,7 +37,7 @@ export default function MajorShoppingMain({ which }) {
 
             </div>
             <div className={`${isAddComponentHidden ? 'hidden' : ''}`}>
-                <AddMajorShopping />
+                <AddMajorShopping which={which} />
             </div>
 
             <MajorShoppingsTable which={which} />

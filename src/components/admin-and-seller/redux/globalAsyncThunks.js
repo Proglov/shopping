@@ -183,10 +183,7 @@ export const addFestivalToServer = createAsyncThunk(
         try {
             const { CreateFestival } = Api11
             const res = (await CreateFestival(obj))?.festival
-            return {
-                ...res,
-                name: obj.name
-            }
+            return res
         } catch (error) {
             return {
                 status: 400,
