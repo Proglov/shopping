@@ -3,18 +3,20 @@ import { Button } from '@mui/material'
 import Image from 'next/image'
 import Link from 'next/link';
 import { FiPackage } from "react-icons/fi"
+import AddButton from '../AddButton';
 
 
 export default function MajorBuyComponent({ src, name, realPrice, off, number, productId }) {
 
     const priceString = realPrice.toString()
     const priceOffedString = (realPrice * (100 - off) / 100).toString()
+    const profit = realPrice * off / 100
 
     return (
         <div className='rounded-md p-1 m-1 bg-white' dir='rtl'>
 
             <div className='sm:w-56 w-44 mx-auto'>
-                <Image src={src} alt={name} width={200} height={150} style={{ borderRadius: '20px', marginRight: 'auto', marginLeft: 'auto' }} loading='lazy' />
+                <Image src={src} alt={name} width={200} height={150} loading='lazy' className='rounded-lg' />
             </div>
 
             <div className='mx-3 py-2 sm:text-base text-xs flex justify-between items-center'>
@@ -60,11 +62,14 @@ export default function MajorBuyComponent({ src, name, realPrice, off, number, p
                 </div>
             </div>
 
-            <Link href={'/products/' + productId} className='flex justify-center mb-4'>
-                <Button className='w-[calc(100%-20px)]' variant='outlined'>
-                    مشاهده محصول
-                </Button>
-            </Link>
+            <div className='flex flex-col justify-center items-center gap-2 my-4 h-24'>
+                <Link href={'/products/' + productId}>
+                    <Button className='w-fit sm:text-base text-xs' variant='outlined' color='info'>
+                        مشاهده محصول
+                    </Button>
+                </Link>
+                <AddButton productId={productId} isMajorBuy={true} quantity={number} profit={profit} />
+            </div>
         </div>
     )
 }

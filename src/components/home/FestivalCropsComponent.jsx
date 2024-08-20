@@ -2,7 +2,7 @@ import { convertToFarsiNumbers, formatPrice } from '@/utils/funcs';
 import { Button } from '@mui/material'
 import Image from 'next/image'
 import Link from 'next/link';
-import { CiCirclePlus } from "react-icons/ci";
+import AddButton from '../AddButton';
 
 export default function FestivalCropsComponent({ src, name, price: realPrice, offPercentage, productId }) {
 
@@ -22,16 +22,11 @@ export default function FestivalCropsComponent({ src, name, price: realPrice, of
             </div>
 
             <div className='sm:w-56 w-44 mx-auto'>
-                <Image src={src} alt={name} width={200} height={150} className='mx-auto' loading='lazy' />
-                <div className='flex justify-end'>
-                    <Button>
-                        <CiCirclePlus className='text-red-500 sm:text-5xl text-3xl' />
-                    </Button>
-                </div>
+                <Image src={src} alt={name} width={200} height={150} className='mx-auto rounded-lg' loading='lazy' />
             </div>
 
 
-            <div className='mx-2 mb-1 mt-0 sm:text-base text-xs flex justify-around items-baseline'>
+            <div className='mx-2 mb-1 mt-4 sm:text-base text-xs flex justify-around items-baseline'>
                 <span>
                     {name}
                 </span>
@@ -65,12 +60,15 @@ export default function FestivalCropsComponent({ src, name, price: realPrice, of
                 </div>
             </div>
 
+            <div className='flex flex-col justify-center items-center gap-2 mb-4'>
+                <AddButton productId={productId} />
+                <Link href={'/products/' + productId}>
+                    <Button className='w-fit sm:text-base text-xs' variant='outlined' color='info'>
+                        مشاهده محصول
+                    </Button>
+                </Link>
+            </div>
 
-            <Link href={'/products/' + productId} className='flex justify-center mb-4'>
-                <Button className='w-[calc(100%-20px)]' variant='outlined'>
-                    مشاهده محصول
-                </Button>
-            </Link>
 
         </div>
     )
