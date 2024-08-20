@@ -42,7 +42,7 @@ export default function DetailItem({ product }) {
         />
       </Grid>
       <Grid item xs={12} className="mt-3 text-center">
-        <AddButton productId={product._id} />
+        <AddButton productId={product._id} which='' sellerId={product.sellerId} />
       </Grid>
     </Grid>
   );

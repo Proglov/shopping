@@ -15,7 +15,9 @@ export const CartProductsSlice = createSlice({
         ...state,
         {
           number: 1,
-          _id: action.payload.toString(),
+          _id: action.payload.id.toString(),
+          sellerId: action.payload.sellerId.toString(),
+          which: action.payload.which.toString(),
         }
       ];
       localStorage.setItem("cart", JSON.stringify(newState));

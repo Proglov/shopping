@@ -40,7 +40,7 @@ export default function CardItemSM({ product, subID, id }) {
           </Link>
         </Box>
         <Box className="mt-3 text-center">
-          <AddButton productId={product._id} />
+          <AddButton productId={product._id} which='' sellerId={product.sellerId} />
         </Box>
       </CardContent>
     </Card>

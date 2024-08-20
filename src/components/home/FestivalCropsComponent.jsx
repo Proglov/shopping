@@ -4,7 +4,7 @@ import Image from 'next/image'
 import Link from 'next/link';
 import AddButton from '../AddButton';
 
-export default function FestivalCropsComponent({ src, name, price: realPrice, offPercentage, productId }) {
+export default function FestivalCropsComponent({ src, name, price: realPrice, offPercentage, productId, sellerId }) {
 
     const priceString = realPrice.toString()
     const priceOffedString = (realPrice * (100 - offPercentage) / 100).toString()
@@ -61,7 +61,7 @@ export default function FestivalCropsComponent({ src, name, price: realPrice, of
             </div>
 
             <div className='flex flex-col justify-center items-center gap-2 mb-4'>
-                <AddButton productId={productId} />
+                <AddButton productId={productId} which='festival' sellerId={sellerId} />
                 <Link href={'/products/' + productId}>
                     <Button className='w-fit sm:text-base text-xs' variant='outlined' color='info'>
                         مشاهده محصول

@@ -122,7 +122,7 @@ export default function FestivalCrops() {
                             <div ref={sliderRef} className="keen-slider">
                                 {products.map(product => (
                                     <div className="keen-slider__slide sm:min-w-64 min-w-52" key={product?._id}>
-                                        <FestivalCropsComponent src={product?.imageUrl || '/img/no-pic.png'} name={product?.name} price={product?.price} offPercentage={product?.offPercentage} productId={product.productId} />
+                                        <FestivalCropsComponent src={product?.imageUrl || '/img/no-pic.png'} name={product?.name} price={product?.price} offPercentage={product?.offPercentage} productId={product.productId} sellerId={product.sellerId} />
                                     </div>
                                 ))}
                             </div>

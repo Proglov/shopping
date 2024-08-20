@@ -11,7 +11,7 @@ import { useEffect, useState } from 'react';
 import { AddCart, DecrementCart, IncrementCart } from '@/store/CartProductsSlice';
 
 
-export default function AddButton({ productId, isMajorBuy, quantity, profit }) {
+export default function AddButton({ productId, which, sellerId, quantity, profit }) {
     const dispatch = useDispatch();
     const cartProducts = useSelector((state) => state.CartProducts);
     const login = useSelector((state) => state.Login);
@@ -53,7 +53,7 @@ export default function AddButton({ productId, isMajorBuy, quantity, profit }) {
                 </Button>
             </div>
             {
-                isMajorBuy &&
+                which === 'major' &&
                 <div className='sm:text-sm text-xs text-teal-600'>
                     {
                         quantity > number ?
@@ -79,7 +79,7 @@ export default function AddButton({ productId, isMajorBuy, quantity, profit }) {
         variant="outlined"
         color="primary"
         className="sm:w-fit sm:text-base text-xs"
-        onClick={() => dispatch(AddCart(productId))}
+        onClick={() => dispatch(AddCart({ id: productId, sellerId, which }))}
     >
         افزودن به سبد
         <GiShoppingCart />

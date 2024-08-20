@@ -184,7 +184,7 @@ export default function MajorBuy() {
                             <div ref={sliderRef} className="keen-slider">
                                 {products.map(product => (
                                     <div className="keen-slider__slide sm:min-w-64 min-w-52" key={product?._id}>
-                                        <MajorBuyComponent name={product?.name} number={product?.quantity} off={product?.offPercentage} realPrice={product?.price} productId={product?.productId} src={product?.imageUrl || '/img/no-pic.png'} />
+                                        <MajorBuyComponent name={product?.name} number={product?.quantity} off={product?.offPercentage} realPrice={product?.price} productId={product?.productId} src={product?.imageUrl || '/img/no-pic.png'} sellerId={product.sellerId} />
                                     </div>
                                 ))}
                             </div>

@@ -6,7 +6,7 @@ import { FiPackage } from "react-icons/fi"
 import AddButton from '../AddButton';
 
 
-export default function MajorBuyComponent({ src, name, realPrice, off, number, productId }) {
+export default function MajorBuyComponent({ src, name, realPrice, off, number, productId, sellerId }) {
 
     const priceString = realPrice.toString()
     const priceOffedString = (realPrice * (100 - off) / 100).toString()
@@ -68,7 +68,7 @@ export default function MajorBuyComponent({ src, name, realPrice, off, number, p
                         مشاهده محصول
                     </Button>
                 </Link>
-                <AddButton productId={productId} isMajorBuy={true} quantity={number} profit={profit} />
+                <AddButton productId={productId} which='major' sellerId={sellerId} quantity={number} profit={profit} />
             </div>
         </div>
     )
