@@ -1,8 +1,9 @@
 'use client'
+import { useEffect, useState } from "react"
 import FestivalCropsComponent from "./FestivalCropsComponent"
 import { Button } from "@mui/material"
 import { MdOutlineKeyboardArrowLeft, MdOutlineKeyboardArrowRight } from "react-icons/md"
-import { useState } from "react"
+import Api from '@/services/withoutAuthActivities/discounts/festivals'
 import { useKeenSlider } from 'keen-slider/react'
 import 'keen-slider/keen-slider.min.css'
 import '@/styles/Swiper.css'
@@ -94,8 +95,11 @@ function Arrow(props) {
 }
 
 export default function FestivalCrops() {
+    const { GetAllFestivalProducts } = Api
+    const [products, setProducts] = useState([])
     const [currentSlide, setCurrentSlide] = useState(0)
     const [loaded, setLoaded] = useState(false)
+    const [isLoading, setIsLoading] = useState(true)
 
     const [sliderRef, instanceRef] = useKeenSlider(
         {
@@ -141,53 +145,69 @@ export default function FestivalCrops() {
         ]
     )
 
+    useEffect(() => {
+        const getProducts = async () => {
+            const res = await GetAllFestivalProducts({ page: 1, perPage: 10 })
+            setProducts(res?.products)
+            setIsLoading(false)
+        }
+        getProducts()
+    }, [])
+
+
     return (
         <div className="m-4 rounded-xl" style={{ background: 'linear-gradient(to left top, #ff0000 10%, #541a1a 90%)', boxShadow: '0 7px 6px rgba(0, 0, 0, 0.12), 0 1px 4px rgba(0, 0, 0, 0.24)' }}>
             <div className="text-center p-2 text-slate-50" style={{ textShadow: '0px 0px 10px white' }}>پیشنهادهای شگفت انگیز</div>
 
-            <div className="navigation-wrapper">
-                {loaded && instanceRef.current && (
-                    <Arrow
-                        right={true}
-                        onClick={(e) =>
-                            e.stopPropagation() || instanceRef.current?.next()
-                        }
-                    />
-                )}
-                <div ref={sliderRef} className="keen-slider">
-                    {arr.map((slide, i) => (
-                        <div className="keen-slider__slide sm:min-w-64 min-w-52" key={i}>
-                            <FestivalCropsComponent {...slide} />
+            {
+                !isLoading &&
+                <>
+                    <div className="navigation-wrapper">
+                        {loaded && instanceRef.current && (
+                            <Arrow
+                                right={true}
+                                onClick={(e) =>
+                                    e.stopPropagation() || instanceRef.current?.next()
+                                }
+                            />
+                        )}
+                        <div ref={sliderRef} className="keen-slider">
+                            {products.map(product => (
+                                <div className="keen-slider__slide sm:min-w-64 min-w-52" key={product?._id}>
+                                    <FestivalCropsComponent src={product?.imageUrl || '/img/no-pic.png'} name={product?.name} price={product?.price} offPercentage={product?.offPercentage} productId={product.productId} />
+                                </div>
+                            ))}
                         </div>
-                    ))}
-                </div>
-                {loaded && instanceRef.current && (
-                    <Arrow
-                        left={true}
-                        onClick={(e) =>
-                            e.stopPropagation() || instanceRef.current?.prev()
-                        }
-                    />
-                )}
-            </div>
+                        {loaded && instanceRef.current && (
+                            <Arrow
+                                left={true}
+                                onClick={(e) =>
+                                    e.stopPropagation() || instanceRef.current?.prev()
+                                }
+                            />
+                        )}
+                    </div>
 
-            {loaded && instanceRef.current && (
-                <div className="dots" dir="ltr">
-                    {[
-                        ...Array(instanceRef.current.track.details.slides.length).keys(),
-                    ].map((idx) => {
-                        return (
-                            <button
-                                key={idx}
-                                onClick={() => {
-                                    instanceRef.current?.moveToIdx(idx)
-                                }}
-                                className={"dot" + (currentSlide === idx ? " active" : "")}
-                            ></button>
-                        )
-                    })}
-                </div>
-            )}
+                    {loaded && instanceRef.current && (
+                        <div className="dots" dir="ltr">
+                            {[
+                                ...Array(instanceRef.current.track.details.slides.length).keys(),
+                            ].map((idx) => {
+                                return (
+                                    <button
+                                        key={idx}
+                                        onClick={() => {
+                                            instanceRef.current?.moveToIdx(idx)
+                                        }}
+                                        className={"dot" + (currentSlide === idx ? " active" : "")}
+                                    ></button>
+                                )
+                            })}
+                        </div>
+                    )}
+                </>
+            }
+
 
         </div >
     )

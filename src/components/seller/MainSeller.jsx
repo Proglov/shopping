@@ -48,11 +48,13 @@ export default function Main({ tabs, discountTabs }) {
         <Provider store={storeAdmin}>
             <Box className='mt-5 p-3 text-black'>
 
-                <Typography className='w-full text-purple-600 mb-3 underline hover:text-red-500'>
-                    <Link href={'/'} className='flex'>
+                <Typography className='w-full text-purple-600 underline hover:text-red-500'>
+                    <Link href={'/'} className='flex max-w-5xl mx-auto'>
                         بازگشت به صفحه اصلی <IoMdHome className='mr-1 mt-1' />
                     </Link>
                 </Typography>
+
+                <br />
 
                 <Box className='max-w-xl mx-auto'>
                     <Info />

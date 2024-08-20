@@ -7,8 +7,12 @@ export default function GetParams({ id }) {
     const router = useRouter()
 
     const getParams = async () => {
-        const res = await getOneProductParams({ id })
-        router.push('/categories/' + res?.params)
+        try {
+            const res = await getOneProductParams({ id })
+            router.push('/categories/' + res?.params)
+        } catch (error) {
+            router.push('/not-found')
+        }
     }
 
     getParams()
