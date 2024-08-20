@@ -40,7 +40,9 @@ export const getCartProductsFromServer = async () => {
       const { __v, imagesName, ...obj } = res.products[indx]
       newProducts.push({
         ...obj,
-        number: product.number
+        number: product.number,
+        which: product.which,
+        sellerId: product?.sellerId
       })
     })
     return newProducts
@@ -57,4 +59,27 @@ export const calculateDate = (day, time) => {
   date.setMinutes(0)
 
   return date
+}
+
+export const setOffCodeToken = (token, body) => {
+  const now = Date.now()
+  localStorage.setItem("offCode", JSON.stringify({
+    token,
+    body,
+    date: now
+  }));
+}
+
+export const getOffCodeBody = () => {
+  const obj = JSON.parse(localStorage.getItem("offCode"));
+  if (obj === null) return '';
+
+  const now = Date.now();
+
+  if (obj?.date - now > 300000) {
+    localStorage.removeItem('offCode')
+    return ''
+  }
+
+  return { body: obj?.body, token: obj?.token }
 }

@@ -9,22 +9,21 @@ import {
   FormControlLabel,
   Radio,
   RadioGroup,
-  TextField,
   Typography,
 } from "@mui/material";
 import { convertToFarsiNumbers, formatPrice } from "@/utils/funcs";
-import ConfirmationNumberOutlinedIcon from "@mui/icons-material/ConfirmationNumberOutlined";
 import Link from "next/link";
 import { GrFormNext } from "react-icons/gr";
 import { useEffect, useState } from "react";
 import TXApi from "@/services/withAuthActivities/tx";
-import { calculateDate, getCartProductsFromServer, getTotalPrice } from "@/store/Storage/Storage";
+import { calculateDate, getCartProductsFromServer, getOffCodeBody, getTotalPrice } from "@/store/Storage/Storage";
 import { useRouter } from "next/navigation";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import { useDispatch, useSelector } from "react-redux";
 import { ResetAddressAndTime } from "@/store/AddressAndTime";
 import { ResetCartProducts } from "@/store/CartProductsSlice";
+import DiscountCode from "./DiscountCode";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function PaymentBill() {
   const { createTX } = TXApi;
@@ -33,7 +32,7 @@ export default function PaymentBill() {
   const AddressAndTime = useSelector((state) => state.AddressAndTime);
   const dispatch = useDispatch()
 
-  const [pay, setPay] = useState(true);
+  const [pay, setPay] = useState(true);  // in the future, this says if user paid the money
   const [products, setProducts] = useState([])
   const [loading, setLoading] = useState(true)
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -42,18 +41,21 @@ export default function PaymentBill() {
   const CreateTX = async () => {
     try {
       setIsSubmitting(true)
-      const newArray = products.map((item) => ({ productId: item._id, quantity: item.number }));
+      const { token: discountToken } = getOffCodeBody()
+      const newArray = products.map((item) => ({ productId: item._id, quantity: item.number, which: item?.which }));
       if (newArray.length === 0) {
-        throw new Error('sabad khalist !')
+        throw new Error('sabad khalist!')
       }
       const res = await createTX({
         boughtProducts: newArray,
         address: AddressAndTime.address,
         shouldBeSentAt: ((calculateDate(AddressAndTime.day, AddressAndTime.time)).getTime()).toString(),
+        discountToken,
       });
       toast.success("سفارش شما با موفقیت ثبت شد", {
         position: toast.POSITION.TOP_RIGHT,
       });
+      localStorage.removeItem('offCode')
       dispatch(ResetAddressAndTime())
       dispatch(ResetCartProducts())
       router.push("/shopping-card/payment/" + res?.transactionId);
@@ -93,86 +95,64 @@ export default function PaymentBill() {
 
           {
             loading ?
-              <div className="text-center">کمی صبر منید ...</div>
+              <div className="text-center">کمی صبر کنید ...</div>
               :
               <>
                 <CardContent>
-                  <Box component="div">
 
-                    <Box className='flex gap-2 items-baseline'>
-                      <Typography className="lg:text-xl mb-2">
-                        مبلغ قابل پرداخت
-                        <span className="text-red-500 mx-1">:</span>
-                      </Typography>
-                      <Typography className="lg:text-xl mb-2">
-                        {convertToFarsiNumbers(
-                          formatPrice(
-                            (totalPrice + 50000).toString()
-                          )
-                        )}{" "}
-                        <span className="text-lg text-gray-600">تومان</span>
-                      </Typography>
-                    </Box>
+                  <Box className='flex gap-2 items-baseline'>
+                    <Typography className="lg:text-xl mb-2">
+                      مبلغ قابل پرداخت
+                      <span className="text-red-500 mx-1">:</span>
+                    </Typography>
+                    <Typography className="lg:text-xl mb-2">
+                      {convertToFarsiNumbers(
+                        formatPrice(
+                          (totalPrice + 50000).toString()
+                        )
+                      )}{" "}
+                      <span className="text-lg text-gray-600">تومان</span>
+                    </Typography>
+                  </Box>
 
-                    <Box className="mt-2 sm:flex sm:gap-2 sm:items-baseline">
-                      <Typography>
-                        <ConfirmationNumberOutlinedIcon className="ml-1 text-emerald-500" />
-                        <span>افزودن کد تخفیف</span>
-                      </Typography>
+                  <DiscountCode />
 
-                      <TextField
-                        className="mt-2"
-                        size="small"
-                        label="کد تخفیف"
-                        variant="outlined"
-                        color="success"
-                        sx={{
-                          " & .MuiInputLabel-root": {
-                            left: "inherit !important",
-                            right: "1.75rem !important",
-                            transformOrigin: "right !important",
-                          }
-                        }}
-                      />
-                    </Box>
+                  <Box component="div" className="flex p-5">
+
+                    <FormControl className="flex">
+                      <Box id="payment" className="text-lg">
+                        نحوه پرداخت:
+                      </Box>
+
+                      <RadioGroup
+                        aria-labelledby="payment"
+                        name="row-radio-buttons-group"
+                      >
+                        <FormControlLabel
+                          value="offline"
+                          control={<Radio color="error" />}
+                          label="پرداخت درب منزل"
+                          checked
+                        />
+                        <FormControlLabel
+                          value="online"
+                          control={<Radio />}
+                          label={<div>
+                            پرداخت آنلاین
+                            <span className="text-sm text-gray-400 mr-1">
+                              به زودی ...
+                            </span>
+                          </div>}
+                          disabled
+                        />
+
+                      </RadioGroup>
+                    </FormControl>
+
 
                   </Box>
                 </CardContent>
 
-                <Box component="div" className="flex p-5">
-
-                  <FormControl className="flex">
-                    <Box id="payment" className="text-lg">
-                      نحوه پرداخت:
-                    </Box>
-
-                    <RadioGroup
-                      aria-labelledby="payment"
-                      name="row-radio-buttons-group"
-                    >
-                      <FormControlLabel
-                        value="offline"
-                        control={<Radio color="error" />}
-                        label="پرداخت درب منزل"
-                        checked
-                      />
-                      <FormControlLabel
-                        value="online"
-                        control={<Radio />}
-                        label={<div>
-                          پرداخت آنلاین
-                          <span className="text-sm text-gray-400 mr-1">
-                            به زودی ...
-                          </span>
-                        </div>}
-                        disabled
-                      />
-
-                    </RadioGroup>
-                  </FormControl>
-
-
-                </Box>
               </>
           }
 
