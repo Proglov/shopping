@@ -3,13 +3,14 @@ import GalleryItem from "./GalleryItem";
 import DetailItem from "./DetailItem";
 import CommentItem from "./CommentItem";
 import ProductApi from "@/services/withoutAuthActivities/product";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { GradientCircularProgress } from "@/app/loading";
 
 export default function Item() {
-  const router = usePathname();
+  const path = usePathname();
+  const router = useRouter()
   const { getOneProduct } = ProductApi;
   const [product, setProduct] = useState({
     desc: "",
@@ -27,31 +28,29 @@ export default function Item() {
   useEffect(() => {
     const getProduct = async () => {
       try {
-        const p = await getOneProduct({ id: router.split("/")[4] });
+        const p = await getOneProduct({ id: path.split("/")[4] });
         setProduct({ ...p.data.product });
       } catch (error) {
-        toast.error("دوباره تلاش کنید", {
-          position: toast.POSITION.TOP_RIGHT,
-        });
+        router.push('/not-found')
       } finally {
         setIsLoading(false);
       }
     };
     getProduct();
-  }, [getOneProduct, setProduct, router]);
+  }, [getOneProduct, setProduct, path]);
+
   if (isLoading) {
     return (
-      <div className="mt-5 grid justify-center h-[400px] place-items-center">
-        <span>درحال دریافت اطلاعات ... </span>
+      <div className="mt-5 grid justify-center h-[400px]">
+        <GradientCircularProgress />
       </div>
     );
   }
-
   return (
     <>
       <GalleryItem images={product.imagesUrl} />
       <DetailItem product={product} />
-      <CommentItem productID={router.split("/")[3]} />
+      <CommentItem productID={path.split("/")[4]} />
       {/* <SimilarProducts /> */}
     </>
   );
