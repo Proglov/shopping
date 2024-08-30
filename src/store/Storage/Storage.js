@@ -41,8 +41,6 @@ export const getCartProductsFromServer = async () => {
       newProducts.push({
         ...obj,
         number: product.number,
-        which: product.which,
-        sellerId: product?.sellerId
       })
     })
     return newProducts

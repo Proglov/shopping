@@ -25,6 +25,128 @@ import { useDispatch } from "react-redux";
 
 export const TotalPriceContext = createContext()
 
+const ProductComponent = ({ product, addProduct, removeProduct }) => {
+  let img;
+  if (product?.imagesUrl?.length !== 0) img = product?.imagesUrl[0]
+  else img = "/img/no-pic.png"
+
+  return (
+    <div>
+      <div className="w-full border border-gray-200" />
+      <div className="m-4 h-auto w-full lg:w-3/4 flex sm:flex-row flex-col items-center">
+
+        <div className="p-1 sm:mx-0">
+          <Image
+            height={200}
+            width={200}
+            src={img}
+            alt="Product"
+          />
+        </div>
+
+        <div className="p-2 text-gray-900 sm:mx-0">
+
+          <div className=" mb-1 sm:mb-3">
+            {product.name}
+          </div>
+
+          <div className="mb-1 sm:mb-3 flex">
+            فی
+            <span className="text-red-500 mx-1">:</span>
+            {
+              product?.which === 'festival' ?
+                <span className="sm:text-base text-sm flex flex-col">
+                  <span>
+                    {convertToFarsiNumbers(
+                      formatPrice(Math.floor((product.price * (1 - product.festivalOffPercentage / 100))).toString())
+                    )}
+                  </span>
+                  <span className="line-through text-red-600">
+                    {convertToFarsiNumbers(
+                      formatPrice(product.price.toString())
+                    )}
+                  </span>
+                </span>
+                :
+                product?.which === 'major' && product.number >= product.quantity ?
+                  <span className="sm:text-base text-sm flex flex-col">
+                    <span>
+                      {convertToFarsiNumbers(
+                        formatPrice(Math.floor((product.price * (1 - product.majorOffPercentage / 100))).toString())
+                      )}
+                    </span>
+                    <span className="line-through text-red-600">
+                      {convertToFarsiNumbers(
+                        formatPrice(product.price.toString())
+                      )}
+                    </span>
+                  </span>
+                  :
+                  <span>
+                    {convertToFarsiNumbers(
+                      formatPrice(product.price.toString())
+                    )}
+                  </span>
+            }
+            <span className="mr-1">
+              تومان
+            </span>
+          </div>
+
+          <div className="mb-1 sm:mb-3">
+            مجموع
+            <span className="text-red-500 mx-1">:</span>
+            {
+              product.which === 'major' && product.number >= product.quantity ?
+                <>
+                  {convertToFarsiNumbers(formatPrice(product.number * product.price * (1 - product.majorOffPercentage / 100)).toString())}
+                </>
+                :
+                product.which === 'festival' ?
+                  <>
+                    {convertToFarsiNumbers(formatPrice(product.number * product.price * (1 - product.festivalOffPercentage / 100)).toString())}
+                  </>
+                  :
+                  <>
+                    {convertToFarsiNumbers(formatPrice(product.number * product.price).toString())}
+                  </>
+            }
+            {" "}
+            تومان
+          </div>
+
+          <div>
+            <div className="border border-gray-400 rounded-lg w-auto inline-block">
+              <Button
+                className="hover:bg-white active:bg-white rounded-lg w-auto"
+                sx={{ color: red[400] }}
+                onClick={() => addProduct(product._id)}
+              >
+                <AddIcon />
+              </Button>
+              <span className="text-red-500">
+                {farsiNumCharacter(product.number)}
+              </span>
+              <Button
+                className="hover:bg-white active:bg-white rounded-lg w-auto"
+                sx={{ color: red[400] }}
+                onClick={() => removeProduct(product._id)}
+              >
+                {product.number === 1 ? (
+                  <DeleteOutlineOutlinedIcon />
+                ) : (
+                  <RemoveOutlinedIcon />
+                )}
+              </Button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  )
+}
+
 export default function ShoppingCard({ step }) {
   const dispatch = useDispatch();
   const router = useRouter();
@@ -123,72 +245,7 @@ export default function ShoppingCard({ step }) {
                     <div>
                       {counter == 0
                         ? "سبد خرید شما خالی است!"
-                        : products.map((item, index) => {
-                          return (
-                            <div key={index}>
-                              <div className="w-full border border-gray-200" />
-                              <div className="m-4 h-auto w-full lg:w-3/4 flex sm:flex-row flex-col items-center">
-                                <div className="p-1 sm:mx-0">
-                                  <Image
-                                    height={200}
-                                    width={200}
-                                    src={item.imagesUrl[0] || "/img/no-pic.png"}
-                                    alt="Product"
-                                  />
-                                </div>
-                                <div className="p-2 text-gray-900 sm:mx-0">
-
-                                  <div className=" mb-1 sm:mb-3">
-                                    {item.name}
-                                  </div>
-
-                                  <div className="mb-1 sm:mb-3">
-                                    فی
-                                    <span className="text-red-500 mx-1">:</span>
-                                    {convertToFarsiNumbers(formatPrice(parseInt(item.price).toString()))}
-                                    {" "}
-                                    تومان
-                                  </div>
-
-                                  <div className="mb-1 sm:mb-3">
-                                    مجموع
-                                    <span className="text-red-500 mx-1">:</span>
-                                    {convertToFarsiNumbers(formatPrice(item.number * parseInt(item.price).toString()))}
-                                    {" "}
-                                    تومان
-                                  </div>
-
-                                  <div>
-                                    <div className="border border-gray-400 rounded-lg w-auto inline-block">
-                                      <Button
-                                        className="hover:bg-white active:bg-white rounded-lg w-auto"
-                                        sx={{ color: red[400] }}
-                                        onClick={() => addProduct(item._id)}
-                                      >
-                                        <AddIcon />
-                                      </Button>
-                                      <span className="text-red-500">
-                                        {farsiNumCharacter(item.number)}
-                                      </span>
-                                      <Button
-                                        className="hover:bg-white active:bg-white rounded-lg w-auto"
-                                        sx={{ color: red[400] }}
-                                        onClick={() => removeProduct(item._id)}
-                                      >
-                                        {item.number === 1 ? (
-                                          <DeleteOutlineOutlinedIcon />
-                                        ) : (
-                                          <RemoveOutlinedIcon />
-                                        )}
-                                      </Button>
-                                    </div>
-                                  </div>
-
-                                </div>
-                              </div>
-                            </div>
-                          );
-                        })}
+                        : products.map((product) => <ProductComponent key={product._id} product={product} addProduct={addProduct} removeProduct={removeProduct} />)}
                     </div>
                 }
               </CardContent>
