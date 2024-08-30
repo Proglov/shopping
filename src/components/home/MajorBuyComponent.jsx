@@ -16,7 +16,7 @@ export default function MajorBuyComponent({ src, name, realPrice, off, number, p
         <div className='rounded-md p-1 m-1 bg-white' dir='rtl'>
 
             <div className='sm:w-56 w-44 mx-auto'>
-                <Image src={src} alt={name} width={200} height={150} loading='lazy' className='rounded-lg' />
+                <Image src={src} alt={name} width={200} height={150} loading='lazy' className='mx-auto rounded-lg' />
             </div>
 
             <div className='mx-3 py-2 sm:text-base text-xs flex justify-between items-center'>

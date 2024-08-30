@@ -59,7 +59,8 @@ export default function AddFestival({ which }) {
 
     const errorObj = {
         'You are not authorized!': 'توکن شما منقضی شده. لطفا خارج، و دوباره وارد شوید',
-        "this product already exists in the festival!": 'این محصول در جشنواره حضور دارد'
+        "this product already exists in the festival!": 'این محصول در جشنواره حضور دارد',
+        "this product already exists in the major!": 'این محصول در طرح محصولات عمده حضور دارد'
     }
 
     useEffect(() => {

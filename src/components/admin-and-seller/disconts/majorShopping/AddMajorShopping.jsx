@@ -59,7 +59,8 @@ export default function AddMajorShopping({ which }) {
 
     const errorObj = {
         'You are not authorized!': 'توکن شما منقضی شده. لطفا خارج، و دوباره وارد شوید',
-        'this product already exists in the majorShopping!': 'این محصول در طرح محصولات عمده حضور دارد'
+        'this product already exists in the majorShopping!': 'این محصول در طرح محصولات عمده حضور دارد',
+        "this product already exists in the festival!": 'این محصول در طرح جشنواره شگفت انگیز حضور دارد',
     }
 
     useEffect(() => {
