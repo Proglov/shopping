@@ -16,7 +16,7 @@ export default function DetailItem({ product }) {
         دسته بندی
         <span className="text-red-600 ml-1">:</span>
         <span className="sm:text-lg md:text-xl text-sm">
-          {product.subcategoryId.categoryId.name}
+          {product.categoryName}
           <span className="text-red-600 mx-1">،</span>
           {product.subcategoryId.name}
         </span>
