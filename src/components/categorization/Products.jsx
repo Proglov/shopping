@@ -11,20 +11,20 @@ export default function Products() {
   const router = usePathname();
   const id = router.split("/")[2];
   const subId = router.split("/")[3];
-  const { getAllProductsOfACategory } = ProductApi;
+  const { getAllProductsOfASubcategory } = ProductApi;
   const [products, setProducts] = useState([]);
   const cartProducts = useSelector((state) => state.CartProducts);
 
   useEffect(() => {
     const getProduct = async () => {
       try {
-        const response = await getAllProductsOfACategory({ id });
-        const filteredProducts = response?.products?.filter(product => product.subcategoryId === subId)
+        const response = await getAllProductsOfASubcategory({ id: subId });
+        const filteredProducts = response?.products
         setProducts(filteredProducts);
       } catch (error) { }
     };
     getProduct();
-  }, [getAllProductsOfACategory, id]);
+  }, [getAllProductsOfASubcategory, id]);
 
   return (
     <>

@@ -32,6 +32,12 @@ const Api = {
         );
         return response?.data;
     },
+    getAllProductsOfASubcategory: async (payload) => {
+        const response = await clientWithoutAuth.get(
+            `productGet/getAllProductsOfASubcategory?subcategoryId=${payload?.id}`
+        );
+        return response?.data;
+    },
 };
 
 export default Api;
