@@ -1,5 +1,5 @@
 'use client'
-import { convertToFarsiNumbers } from '@/utils/funcs'
+import { convertToFarsiNumbers, formatPrice } from '@/utils/funcs'
 import { Button } from '@mui/material'
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import RemoveOutlinedIcon from "@mui/icons-material/RemoveOutlined";
@@ -64,7 +64,7 @@ export default function AddButton({ productId, which, sellerId, quantity, profit
                             </>
                             :
                             <>
-                                {convertToFarsiNumbers(profit * number)}
+                                {convertToFarsiNumbers(formatPrice(profit * number))}
                                 {" "}
                                 تومان
                                 سود!
@@ -78,7 +78,7 @@ export default function AddButton({ productId, which, sellerId, quantity, profit
     return (<Button
         variant="outlined"
         color="primary"
-        className="sm:w-fit sm:text-base text-xs"
+        className="sm:w-fit text-sm"
         onClick={() => dispatch(AddCart({ id: productId, sellerId, which }))}
     >
         افزودن به سبد

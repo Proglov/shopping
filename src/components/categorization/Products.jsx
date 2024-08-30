@@ -19,8 +19,7 @@ export default function Products() {
     const getProduct = async () => {
       try {
         const response = await getAllProductsOfASubcategory({ id: subId });
-        const filteredProducts = response?.products
-        setProducts(filteredProducts);
+        setProducts(response?.products);
       } catch (error) { }
     };
     getProduct();
@@ -29,12 +28,12 @@ export default function Products() {
   return (
     <>
       <Box className="mt-6">
-        <Box className="hidden sm:flex sm:flex-wrap sm:justify-around gap-8">
-          {products?.map((item, itemIndex) => <CardItem product={item} key={itemIndex} subID={subId} id={id} cartProducts={cartProducts} />)}
+        <Box className="hidden sm:flex sm:flex-wrap sm:justify-evenly">
+          {products?.map(item => <CardItem product={item} key={item._id} subID={subId} id={id} cartProducts={cartProducts} />)}
         </Box>
 
         <Box className="sm:hidden">
-          {products?.map((item, itemIndex) => <CardItemSM product={item} key={itemIndex} subID={subId} id={id} cartProducts={cartProducts} />)}
+          {products?.map(item => <CardItemSM product={item} key={item._id} subID={subId} id={id} cartProducts={cartProducts} />)}
         </Box>
       </Box>
     </>
