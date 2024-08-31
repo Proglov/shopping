@@ -24,39 +24,44 @@ export default function GalleryItem({ images }) {
       {
         images.length !== 0 ?
           <>
-            <div className="navigation-wrapper flex justify-center mx-auto  sm:max-w-lg md:max-w-2xl">
+            <div className="navigation-wrapper flex justify-center mx-auto max-w-sm">
+
               {loaded && instanceRef.current && (
-                <Button
+                <Button className="min-w-0"
                   onClick={(e) => e.stopPropagation() || instanceRef.current?.next()} disabled={currentSlide === instanceRef.current.track.details.slides.length - 1}
                 >
                   <FaArrowRight />
                 </Button>
               )}
-              <div ref={sliderRef} className="keen-slider">
+
+              <div ref={sliderRef} className="keen-slider w-full h-[50vw] max-h-[215px]">
                 {
                   images.map((item, indx) => {
                     return (
-                      <div className="keen-slider__slide flex items-center justify-center max-h-96 mx-auto" key={indx}>
+                      <div className="keen-slider__slide relative" key={indx}>
                         <Image
                           src={item}
                           alt="gallery"
                           width={280}
                           height={100}
-                          className="h-60 w-72 md:h-[400px] md:w-[550px] mx-auto flex"
+                          className="absolute bottom-1/2 right-1/2 translate-x-1/2 translate-y-1/2"
                         />
                       </div>
                     )
                   })
                 }
               </div>
+
               {loaded && instanceRef.current && (
-                <Button
+                <Button className="min-w-0"
                   onClick={(e) => e.stopPropagation() || instanceRef.current?.prev()} disabled={currentSlide === 0}
                 >
                   <FaArrowLeft />
                 </Button>
               )}
+
             </div>
+
             {loaded && instanceRef.current && (
               <div className="dots flex p-2 justify-center">
                 {[
@@ -68,7 +73,7 @@ export default function GalleryItem({ images }) {
                       variant="contained"
                       color={`${currentSlide === idx ? 'error' : 'secondary'}`}
                       onClick={() => { instanceRef.current?.moveToIdx(idx) }}
-                      className={"w-1 h-2 rounded-full mx-1 p-1 py-1.5"}
+                      className={"min-w-0 w-5 h-2 rounded-full mx-1 p-1 py-1.5"}
                     ></Button>
                   )
                 })}

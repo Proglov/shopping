@@ -98,7 +98,7 @@ export default function CommentItem({ productID }) {
         id: userId,
       });
       setNewComment("");
-      toast.success("نظر شما ثبت شد", {
+      toast.success("نظر شما برای بررسی ثبت شد", {
         position: toast.POSITION.TOP_RIGHT,
       });
     } catch (error) {
@@ -125,7 +125,7 @@ export default function CommentItem({ productID }) {
         id: userId,
       });
       setNewReplay("");
-      toast.success("پاسخ شما ثبت شد", {
+      toast.success("پاسخ شما برای بررسی ثبت شد", {
         position: toast.POSITION.TOP_RIGHT,
       });
     } catch (error) {
