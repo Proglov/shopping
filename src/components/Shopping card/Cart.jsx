@@ -29,6 +29,7 @@ export default function Cart({ Close, Open }) {
         component="div"
       >
         <Box component="div" className="col-span-2 md:mr-3">
+
           <Box
             component="span"
             className="ml-2 md:ml-3"
@@ -44,6 +45,7 @@ export default function Cart({ Close, Open }) {
           >
             سبد خرید من
           </Box>
+
           <Box
             component="span"
             sx={{
@@ -59,6 +61,7 @@ export default function Cart({ Close, Open }) {
             {convertToFarsiNumbers(counter)} کالا
           </Box>
         </Box>
+
         <Box component="div" className="grid justify-end">
           <IconButton onClick={Close}>
             <CloseIcon
@@ -74,6 +77,7 @@ export default function Cart({ Close, Open }) {
           </IconButton>
         </Box>
       </Box>
+
       <ShoppingCard step={0} />
 
       {

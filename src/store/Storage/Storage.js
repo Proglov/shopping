@@ -26,7 +26,15 @@ export const getCounterProducts = () => loadCartState()?.reduce((accumulator, cu
 
 export const getCounterProductsWithoutLS = products => products?.reduce((accumulator, currentObject) => accumulator + currentObject.number, 0).toString() | "0";
 
-export const getTotalPrice = (products) => products.reduce((accumulator, currentObject) => accumulator + currentObject.price * currentObject.number, 0).toString() | "0";
+export const getTotalPrice = (products) => products.reduce((accumulator, currentObject) => {
+  if (currentObject?.which === 'major' && currentObject.number >= currentObject?.quantity)
+    return accumulator + (currentObject.price * currentObject.number) * (1 - currentObject?.majorOffPercentage / 100)
+
+  if (currentObject?.which === 'festival' && currentObject?.until > Date.now())
+    return accumulator + (currentObject.price * currentObject.number) * (1 - currentObject?.festivalOffPercentage / 100)
+
+  return accumulator + currentObject.price * currentObject.number
+}, 0).toString() | "0";
 
 export const getCartProductsFromServer = async () => {
   const { getSomeProducts } = Api
