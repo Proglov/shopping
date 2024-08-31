@@ -22,7 +22,7 @@ export default function ShippingTime() {
   }
 
   return (
-    <Box className="p-5 mb-1 max-w-xl mx-auto" component="div">
+    <Box className="p-2 mb-1 max-w-xl mx-auto" component="div">
       <Card className="rounded-xl">
         <CardContent >
 

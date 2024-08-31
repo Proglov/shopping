@@ -23,7 +23,7 @@ export default function Bill({ counter, step }) {
         totalPrice > 0 &&
         <>
 
-          <Box className="p-5 mb-1 max-w-xl mx-auto" component="div">
+          <Box className="p-2 mb-1 max-w-xl mx-auto" component="div">
             <Card className="shadow-2xl" sx={{
               boxShadow: 'unset',
               borderRadius: '20px',
@@ -176,7 +176,9 @@ export default function Bill({ counter, step }) {
                           {iranianCalendar(theTime)}
                         </span>
 
-                        {dayCalculator(AddressAndTime.day || 0)}
+                        <span>
+                          {dayCalculator(AddressAndTime.day || 0)}
+                        </span>
 
                         {
                           theHour < 12 ?

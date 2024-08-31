@@ -210,7 +210,7 @@ export default function ShoppingCard({ step }) {
 
   return (
     <div>
-      <Box className="mb-1 mx-auto max-w-xl shadow-lg rounded-xl" style={{ border: '1px solid #ededed' }} component="div">
+      <Box className="mb-1 mx-auto max-w-[560px] shadow-lg rounded-xl" style={{ border: '1px solid #ededed' }} component="div">
         <Accordion expanded={expanded} onChange={() => setExpanded(prev => !prev)}>
 
           <AccordionSummary aria-controls="panel1d-content">
