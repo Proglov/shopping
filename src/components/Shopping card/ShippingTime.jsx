@@ -2,7 +2,6 @@
 import { FaCalendarAlt } from "react-icons/fa";
 import {
   Box,
-  Button,
   Card,
   CardContent,
   Typography,
@@ -69,12 +68,13 @@ const CustomDate = ({ days }) => {
   const AddressAndTime = useSelector((state) => state.AddressAndTime);
 
 
-  const [isEditing, setIsEditing] = useState(false)
   const [day, setDay] = useState(0) // day 0: today, 1 : tomorrow , etc
   const [time, setTime] = useState(0) // time 0: 7AM, 1: 8AM
 
   const nowHours = (new Date).getHours()
   const hoursGray = nowHours < 5 ? 0 : nowHours - 5 // 5: 7 - 2 -> 7 : first hour, 2 : maximum shipping time
+
+  const [thisTimeOut, setThisTimeOut] = useState(0)
 
   const dayCalculator = (relative) => {
     return dayOfWeek(days[relative])
@@ -92,9 +92,14 @@ const CustomDate = ({ days }) => {
   }
 
   const clickHandler = () => {
-    setIsEditing(false);
-    dispatch(SetDay(day));
-    dispatch(SetTime(time));
+    clearTimeout(thisTimeOut)
+    if (day !== 0 || time >= hoursGray) {
+      setThisTimeOut(setTimeout(() => {
+        dispatch(SetDay(day));
+        dispatch(SetTime(time));
+      }, 200))
+    }
+
   }
 
   return (
@@ -104,12 +109,12 @@ const CustomDate = ({ days }) => {
         <span className="text-red-500 mx-1">:</span>
         <div className="w-[100px] sm:w-[150px] h-[180px]">
           <Wheel
-            initIdx={AddressAndTime.day}
+            initIdx={day === 0 && AddressAndTime?.time < hoursGray ? 1 : AddressAndTime.day}
             length={7}
             width={100}
             setValue={dayCalculator}
             setState={setDay}
-            setState2={setIsEditing}
+            setState2={clickHandler}
           />
         </div>
 
@@ -121,7 +126,7 @@ const CustomDate = ({ days }) => {
             perspective="right"
             setValue={timeCalculator}
             setState={setTime}
-            setState2={setIsEditing}
+            setState2={clickHandler}
             shouldBeGray={day === 0 ? hoursGray : 0}
           />
         </div>
@@ -131,28 +136,6 @@ const CustomDate = ({ days }) => {
 
         <br />
       </div >
-
-      {
-        isEditing &&
-        <div div className="text-center">
-          {
-            (day === 0 && time < hoursGray) ?
-              <Button variant="outlined" disabled>
-                امکان انتخاب این زمان وجود ندارد
-              </Button>
-              :
-              <Button variant="outlined" color="success" onClick={clickHandler}>
-                تغییر ارسال به
-                {" "}
-                {dayCalculator(day)}
-                &nbsp;
-                {timeCalculator(time)}
-              </Button>
-          }
-
-        </div >
-
-      }
 
       <div className="mt-10 flex justify-center gap-1 text-base md:text-lg lg:text-xl">
         <div>

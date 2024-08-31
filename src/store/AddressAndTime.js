@@ -3,7 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const emptyState = {
   address: '',
-  day: 0, // 0 means today, 1 means tomorrow, etc
+  day: 1, // 0 means today, 1 means tomorrow, etc
   time: 0 // if day is 0, time 0 means 2 hours after now, else, 0 means 7 A.M.
 };
 

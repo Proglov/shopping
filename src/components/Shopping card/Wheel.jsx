@@ -53,7 +53,7 @@ export default function Wheel(props) {
     React.useEffect(() => {
         if (slider.current) {
             props.setState(sliderState?.abs || 0)
-            props.setState2(true)
+            props.setState2()
         }
     }, [sliderState])
 
