@@ -6,6 +6,7 @@ import { convertToFarsiNumbers, dayCalculator, dayOfWeek, formatPrice, iranianCa
 import { LiaFileInvoiceDollarSolid } from 'react-icons/lia'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
+import { GradientCircularProgress } from '@/app/loading'
 
 export default function LastFactor({ id }) {
     const { getOneTX } = Api
@@ -84,7 +85,10 @@ export default function LastFactor({ id }) {
 
             <Box className='mt-6 md:mt-7 lg:mt-8 xl:mt-9'>
                 {
-                    loading ? <>لطفا کمی صبر کنید ...</>
+                    loading ?
+                        <div className='text-center'>
+                            <GradientCircularProgress />
+                        </div>
                         :
                         <>
                             <Box className='text-lg my-1'>
@@ -105,6 +109,7 @@ export default function LastFactor({ id }) {
                                 </Typography>
 
                             </Box>
+
                             <Box className='text-lg my-1'>
                                 <span className="text-lg md:text-xl">مبلغ کل</span>
                                 <span className="text-red-500 ml-1">:</span>
@@ -112,6 +117,16 @@ export default function LastFactor({ id }) {
                                 {" "}
                                 <span className="text-lg text-gray-600">تومان</span>
                             </Box>
+                            {
+                                !!transaction?.totalDiscount &&
+                                <Box className='text-lg my-1'>
+                                    <span className="text-lg md:text-xl">سود شما از این خرید</span>
+                                    <span className="text-red-500 ml-1">:</span>
+                                    {convertToFarsiNumbers(formatPrice((transaction?.totalDiscount).toString()))}
+                                    {" "}
+                                    <span className="text-lg text-gray-600">تومان</span>
+                                </Box>
+                            }
                             <Box className='text-lg mt-3'>
                                 <span className="text-lg md:text-xl">
                                     کالاهای خریداری شده

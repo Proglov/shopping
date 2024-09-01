@@ -66,13 +66,33 @@ export default function PaymentBill() {
     } finally { setIsSubmitting(false) }
   };
 
+  const computeDisCount = (totalCost, products) => {
+    const { productsIds, maxOffPrice, minBuy, offPercentage } = getOffCodeBody()
+    let totalDiscount = 0
+
+    if (!!productsIds && productsIds?.length > 0 && totalCost >= minBuy) {
+      const totalDiscountedProducts = products.reduce((acc, currentProduct) => {
+        const currentIndex = productsIds.findIndex(id => id === currentProduct._id)
+
+        if (currentIndex >= 0)
+          return acc + (currentProduct.price * currentProduct.number)
+        return acc
+      }, 0)
+
+      totalDiscount = Math.min((totalDiscountedProducts * offPercentage / 100), maxOffPrice)
+      return totalCost - totalDiscount
+    }
+
+    return totalCost
+  }
+
   useEffect(() => {
     const getProds = async () => {
       try {
         setLoading(true)
         const prods = await getCartProductsFromServer()
         setProducts(prods)
-        setTotalPrice(getTotalPrice(prods))
+        setTotalPrice(computeDisCount(getTotalPrice(prods), prods))
       } catch (error) {
         console.log(error);
       } finally {
@@ -82,6 +102,10 @@ export default function PaymentBill() {
 
     getProds()
   }, [])
+
+  const applyDiscountCode = () => {
+    setTotalPrice(computeDisCount(totalPrice, products))
+  }
 
   return (
     <>
@@ -115,7 +139,7 @@ export default function PaymentBill() {
                     </Typography>
                   </Box>
 
-                  <DiscountCode />
+                  <DiscountCode applyDiscountCode={applyDiscountCode} />
 
                   <Box component="div" className="flex p-5">
 

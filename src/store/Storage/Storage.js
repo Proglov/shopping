@@ -67,11 +67,15 @@ export const calculateDate = (day, time) => {
   return date
 }
 
-export const setOffCodeToken = (token, body) => {
+export const setOffCodeToken = ({ token, body, productsIds, maxOffPrice, minBuy, offPercentage }) => {
   const now = Date.now()
   localStorage.setItem("offCode", JSON.stringify({
     token,
     body,
+    productsIds,
+    maxOffPrice,
+    minBuy,
+    offPercentage,
     date: now
   }));
 }
@@ -82,10 +86,10 @@ export const getOffCodeBody = () => {
 
   const now = Date.now();
 
-  if (obj?.date - now > 300000) {
+  if (now - obj?.date > 300000) {
     localStorage.removeItem('offCode')
     return ''
   }
 
-  return { body: obj?.body, token: obj?.token }
+  return obj
 }

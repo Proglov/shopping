@@ -2,7 +2,7 @@
 import { Box, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import Api from "@/services/withAuthActivities/tx";
-import { convertToFarsiNumbers, dayOfWeek, iranianCalendar, price2Farsi } from "@/utils/funcs";
+import { convertToFarsiNumbers, dayOfWeek, formatPrice, iranianCalendar, price2Farsi } from "@/utils/funcs";
 import Link from "next/link";
 
 export default function MyTX() {
@@ -61,11 +61,10 @@ export default function MyTX() {
                                                 transaction?.boughtProducts.length > 1 &&
                                                 "ها"
                                             }
-                                            ی
-                                            شما
+                                            ی شما
                                             <span className="text-red-600">:</span>
                                         </Typography>
-                                        <Box className='mr-5'>
+                                        <Box className='mr-5 border-r-2 pr-3 mt-2 border-green-300'>
                                             {
                                                 transaction?.boughtProducts.map((product, i) => (
                                                     <Box key={i}>
@@ -122,7 +121,8 @@ export default function MyTX() {
                                                     <span dir='ltr'>
                                                         ساعت &nbsp;
                                                         {convertToFarsiNumbers((new Date(transaction?.createdAt).getHours()))}
-                                                        :{convertToFarsiNumbers(("0" + (new Date((transaction?.createdAt)).getMinutes())).slice(-2))}
+                                                        <span className="text-red-600">:</span>
+                                                        {convertToFarsiNumbers(("0" + (new Date((transaction?.createdAt)).getMinutes())).slice(-2))}
                                                     </span>
 
                                                 </Box>
@@ -132,17 +132,35 @@ export default function MyTX() {
                                     </Box>
 
 
-                                    <Box className='flex gap-x-2'>
-                                        <span>
-                                            قیمت نهایی
-                                            <span className="text-red-600">:</span>
-                                        </span>
-                                        <span>
-                                            {price2Farsi(transaction.totalPrice)}
-                                            تومان
-                                        </span>
+                                    <Box>
+                                        <Box className='flex gap-x-2'>
+                                            <span>
+                                                قیمت نهایی
+                                                <span className="text-red-600">:</span>
+                                            </span>
+                                            <span>
+                                                {formatPrice(transaction.totalPrice)}
+                                                <span className="text-gray-600 mx-1">تومان</span>
+
+                                            </span>
+                                        </Box>
+
+                                        <span className="text-sm text-gray-600">{price2Farsi(transaction.totalPrice)}</span>
+                                        <span className="text-gray-600 text-sm">تومان</span>
 
                                     </Box>
+
+
+                                    {
+                                        !!transaction?.totalDiscount &&
+                                        <Box className='my-1'>
+                                            <span >سود شما از این خرید</span>
+                                            <span className="text-red-500 ml-1">:</span>
+                                            {convertToFarsiNumbers(formatPrice((transaction?.totalDiscount).toString()))}
+                                            {" "}
+                                            <span className="text-gray-600">تومان</span>
+                                        </Box>
+                                    }
 
                                     <Box className='flex gap-x-2'>
                                         <span>
