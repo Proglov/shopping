@@ -39,13 +39,13 @@ export default function Profile({ tab }) {
   ]
 
   useEffect(() => {
-    if (login !== 'user') {
+    if (localStorage.getItem('login') !== 'user') {
       toast.warning("شما وارد نشده اید", {
         position: toast.POSITION.TOP_RIGHT,
       });
       router.push("/users/login");
     }
-  }, [router, login]);
+  }, [login]);
 
   return (
     <Box className="w-full max-w-3xl mt-3 mx-auto grid md:grid-cols-4 grid-cols-1">
