@@ -5,11 +5,11 @@ import TXMain from '../admin-and-seller/txs/TXMain';
 import Info from './Info';
 import Link from 'next/link';
 import { IoMdHome } from 'react-icons/io';
-import { Provider } from "react-redux";
-import { storeAdmin } from '@/components/admin-and-seller/redux/store';
+import { useDispatch } from "react-redux";
 import { useRouter } from 'next/navigation';
 import ChangeProfile from './ChangeProfile';
 import Discounts from '../admin-and-seller/disconts/Discounts';
+import { resetToInitialState } from '../admin-and-seller/redux/reducers/global';
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -38,14 +38,18 @@ function a11yProps(index) {
 
 export default function Main({ tabs, discountTabs }) {
     const router = useRouter()
+    const dispatch = useDispatch()
 
     const handleChange = (_event, newPageIndex) => {
+        // reset the global state
+        dispatch(resetToInitialState())
+
         router.push(`/Seller?tab=${tabs[newPageIndex]}`)
     };
 
 
     return (
-        <Provider store={storeAdmin}>
+        <>
             <Box className='mt-5 p-3 text-black'>
 
                 <Typography className='w-full text-purple-600 underline hover:text-red-500'>
@@ -94,6 +98,6 @@ export default function Main({ tabs, discountTabs }) {
                     </Box>
                 </Box>
             </Box>
-        </Provider>
+        </>
     )
 }

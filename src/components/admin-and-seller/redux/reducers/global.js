@@ -11,7 +11,7 @@ const initialState = {
     currentPage: 1,
     lastPage: 1,
     itemsCount: 0,
-    itemsPerPage: 20
+    itemsPerPage: 1
 };
 
 
@@ -57,14 +57,11 @@ const globalSlice = createSlice({
                         break;
                 }
         },
-        setLastPage(state, action) {
-            state.lastPage = Math.ceil(action.payload / state.itemsPerPage)
-        },
         setItemsCount(state, action) {
             state.itemsCount = action.payload
         },
-        resetToInitialState(state) {
-            state = initialState
+        resetToInitialState() {
+            return initialState
         }
     },
     extraReducers: builder => {
@@ -145,6 +142,6 @@ const globalSlice = createSlice({
     }
 });
 
-export const { setItems, addItem, removeItem, setLoading, setError, setCurrentPage, setLastPage, setItemsCount, resetToInitialState, setAddDataLoading } = globalSlice.actions;
+export const { setItems, addItem, removeItem, setLoading, setError, setCurrentPage, setItemsCount, resetToInitialState, setAddDataLoading } = globalSlice.actions;
 
 export default globalSlice.reducer;

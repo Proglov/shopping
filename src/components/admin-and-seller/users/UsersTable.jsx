@@ -1,6 +1,6 @@
 "use client"
-import { Button, Stack } from '@mui/material';
-import { useEffect, useContext } from 'react';
+import { Button, Pagination, Stack } from '@mui/material';
+import { useEffect } from 'react';
 import { styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -9,11 +9,9 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import Pagination from '../../Pagination';
 import ModalDelete from './ModalDelete';
-import { UsersContext } from './UsersMain';
 import { useDispatch, useSelector } from 'react-redux';
-import { setCurrentPage, setLastPage, setLoading, setError } from '../redux/reducers/global';
+import { setCurrentPage } from '../redux/reducers/global';
 import { setIsModalDeleteOpen, setSelectedItem } from '../redux/reducers/users';
 import { getUsersFromServer } from '../redux/globalAsyncThunks';
 
@@ -59,6 +57,12 @@ export default function UsersTable() {
     useEffect(() => {
         dispatch(getUsersFromServer({ currentPage, itemsPerPage }))
     }, [dispatch, currentPage, itemsPerPage]);
+
+    const handlePageClick = (page) => {
+        if (currentPage !== page) {
+            dispatch(setCurrentPage(page))
+        }
+    }
 
     return (
         <Stack spacing={2}>
@@ -148,8 +152,7 @@ export default function UsersTable() {
                         {
                             itemsCount > itemsPerPage &&
                             <div className='flex justify-center' style={{ marginTop: '25px' }}>
-                                <Pagination currentPage={currentPage} lastPage={lastPage} setCurrentPage={setCurrentPage} />
-                            </div>
+                                <Pagination dir='ltr' color='info' variant='outlined' count={lastPage} page={currentPage} onChange={(_e, v) => handlePageClick(v)} />                            </div>
                         }
 
                     </div>

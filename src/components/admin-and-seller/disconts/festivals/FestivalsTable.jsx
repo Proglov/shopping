@@ -1,5 +1,5 @@
 "use client"
-import { Button, Stack } from '@mui/material';
+import { Button, Pagination, Stack } from '@mui/material';
 import { useEffect } from 'react';
 import { styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
@@ -9,7 +9,6 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import Pagination from '../../../Pagination';
 import { convertToFarsiNumbers, iranianCalendar, price2Farsi } from '@/utils/funcs';
 import { useDispatch, useSelector } from 'react-redux';
 import { GetFestivalProductsFromServer } from '../../redux/globalAsyncThunks';
@@ -56,9 +55,15 @@ export default function FestivalsTable({ which }) {
     } = useSelector((state) => state.festivals);
 
     useEffect(() => {
-        dispatch(GetFestivalProductsFromServer({ which, currentPage, itemsPerPage }))
+        dispatch(GetFestivalProductsFromServer({ which, page: currentPage, perPage: itemsPerPage }))
     }, [currentPage, itemsPerPage, which, dispatch]);
 
+
+    const handlePageClick = (page) => {
+        if (currentPage !== page) {
+            dispatch(setCurrentPage(page))
+        }
+    }
 
     return (
         <Stack spacing={2} className='mt-7'>
@@ -138,7 +143,7 @@ export default function FestivalsTable({ which }) {
                         {
                             itemsCount > itemsPerPage &&
                             <div className='flex justify-center' style={{ marginTop: '25px' }}>
-                                <Pagination currentPage={currentPage} setCurrentPage={setCurrentPage} lastPage={lastPage} />
+                                <Pagination dir='ltr' color='info' variant='outlined' count={lastPage} page={currentPage} onChange={(_e, v) => handlePageClick(v)} />
                             </div>
                         }
 

@@ -19,7 +19,7 @@ const initialState = {
     currentPageRecentTX: 1,
     lastPageRecentTX: 1,
     itemsCountRecentTX: 0,
-    itemsPerPageRecentTX: 20
+    itemsPerPageRecentTX: 2
 };
 
 export const getRecentTXFromServer = createAsyncThunk(
@@ -64,7 +64,6 @@ const transactionSlice = createSlice({
         },
         setCurrentPageRecentTX(state, action) {
             const { payload } = action
-
             if (typeof payload === "number") state.currentPageRecentTX = action.payload;
             else
                 switch (payload) {

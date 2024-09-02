@@ -9,8 +9,7 @@ import CategoriesMain from '../admin-and-seller/categories/CategoriesMain';
 import Link from 'next/link';
 import { TiArrowBackOutline } from "react-icons/ti";
 import SubcategoriesMain from '../admin-and-seller/subcategories/SubcategoriesMain';
-import { Provider, useDispatch } from "react-redux";
-import { storeAdmin } from '@/components/admin-and-seller/redux/store';
+import { useDispatch } from "react-redux";
 import { resetToInitialState } from '../admin-and-seller/redux/reducers/global';
 import { useRouter } from 'next/navigation';
 import Discounts from '../admin-and-seller/disconts/Discounts';
@@ -53,7 +52,7 @@ export default function Main({ tabs, discountTabs }) {
 
 
     return (
-        <Provider store={storeAdmin}>
+        <>
             <Box
                 className='mt-5 p-3 flex flex-col text-black'
                 sx={{ flexGrow: 1 }}
@@ -112,6 +111,6 @@ export default function Main({ tabs, discountTabs }) {
                     </TabPanel>
                 </div>
             </Box>
-        </Provider>
+        </>
     )
 }

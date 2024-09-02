@@ -22,7 +22,7 @@ const initialState = {
     currentPageConfirmedComments: 1,
     lastPageConfirmedComments: 1,
     itemsCountConfirmedComments: 0,
-    itemsPerPageConfirmedComments: 20
+    itemsPerPageConfirmedComments: 2
 };
 
 export const getConfirmedCommentsFromServer = createAsyncThunk(

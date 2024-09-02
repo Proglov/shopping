@@ -1,5 +1,5 @@
 "use client"
-import { Button, Stack } from '@mui/material';
+import { Button, Pagination, Stack } from '@mui/material';
 import { useEffect } from 'react';
 import { styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
@@ -10,7 +10,6 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { convertToFarsiNumbers, formatPrice, price2Farsi } from '@/utils/funcs';
-import Pagination from '../../Pagination';
 import ModalShowMore from './ModalShowMore';
 import { useDispatch, useSelector } from 'react-redux';
 import { setCurrentPage } from '../redux/reducers/global';
@@ -36,7 +35,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
     },
 }));
 
-const Component = ({ txStatuses, itemsCount, error, loading, items, currentPage, itemsPerPage, selectedItem, setCurrentPage, lastPage, dispatch, operatingError, isFutureOrder }) => (
+const Component = ({ txStatuses, itemsCount, error, loading, items, currentPage, itemsPerPage, selectedItem, handlePageClick, setPage, lastPage, dispatch, operatingError, isFutureOrder }) => (
     <Stack spacing={2} className={`${!isFutureOrder && 'mt-16'}`}>
         <div className='w-full text-start'>
             جدول تراکنش های سفارشات &nbsp;
@@ -157,7 +156,7 @@ const Component = ({ txStatuses, itemsCount, error, loading, items, currentPage,
                     {
                         itemsCount > itemsPerPage &&
                         <div className='flex justify-center' style={{ marginTop: '25px' }}>
-                            <Pagination currentPage={currentPage} setCurrentPage={setCurrentPage} lastPage={lastPage} />
+                            <Pagination dir='ltr' color='info' variant='outlined' count={lastPage} page={currentPage} onChange={(_e, v) => handlePageClick(v, setPage, currentPage)} />
                         </div>
                     }
 
@@ -197,8 +196,15 @@ export default function TXTable({ which, isFutureOrder }) {
         if (!!isFutureOrder)
             dispatch(getFutureTXsFromServer({ page: currentPage, perPage: itemsPerPage, which }));
         else
-            dispatch(getRecentTXFromServer({ page: currentPage, perPage: itemsPerPage, which }));
-    }, [currentPage, dispatch, isFutureOrder, itemsPerPage, which]);
+            dispatch(getRecentTXFromServer({ page: currentPageRecentTX, perPage: itemsPerPageRecentTX, which }));
+    }, [currentPage, dispatch, isFutureOrder, itemsPerPage, currentPageRecentTX, itemsPerPageRecentTX, which]);
+
+
+    const handlePageClick = (page, setPage, current) => {
+        if (current !== page) {
+            dispatch(setPage(page))
+        }
+    }
 
     const txStatuses = {
         Requested: {
@@ -226,11 +232,11 @@ export default function TXTable({ which, isFutureOrder }) {
     return (<>
         {
             !!isFutureOrder &&
-            <Component txStatuses={txStatuses} currentPage={currentPage} dispatch={dispatch} error={error} items={items} itemsCount={itemsCount} itemsPerPage={itemsPerPage} lastPage={lastPage} loading={loading} selectedItem={selectedItem} setCurrentPage={setCurrentPage} operatingError={operatingError} isFutureOrder={isFutureOrder} which={which} />
+            <Component txStatuses={txStatuses} currentPage={currentPage} dispatch={dispatch} error={error} items={items} itemsCount={itemsCount} itemsPerPage={itemsPerPage} lastPage={lastPage} loading={loading} selectedItem={selectedItem} handlePageClick={handlePageClick} setPage={setCurrentPage} operatingError={operatingError} isFutureOrder={isFutureOrder} which={which} />
         }
         {
             !isFutureOrder &&
-            <Component txStatuses={txStatuses} currentPage={currentPageRecentTX} dispatch={dispatch} error={errorRecentTX} items={recentTX} itemsCount={itemsCountRecentTX} itemsPerPage={itemsPerPageRecentTX} lastPage={lastPageRecentTX} loading={loadingRecentTX} selectedItem={selectedItem} setCurrentPage={setCurrentPageRecentTX} operatingError={operatingError} isFutureOrder={isFutureOrder} which={which} />
+            <Component txStatuses={txStatuses} currentPage={currentPageRecentTX} dispatch={dispatch} error={errorRecentTX} items={recentTX} itemsCount={itemsCountRecentTX} itemsPerPage={itemsPerPageRecentTX} lastPage={lastPageRecentTX} loading={loadingRecentTX} selectedItem={selectedItem} handlePageClick={handlePageClick} setPage={setCurrentPageRecentTX} operatingError={operatingError} isFutureOrder={isFutureOrder} which={which} />
         }
         <ModalShowMore />
     </>);

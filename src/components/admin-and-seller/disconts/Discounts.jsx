@@ -4,6 +4,8 @@ import { useRouter } from 'next/navigation';
 import FestivalMain from './festivals/FestivalMain';
 import MajorShoppingMain from './majorShopping/MajorShoppingMain';
 import CompanyCouponForSomeProductsMain from './companyCouponForSomeProducts/CompanyCouponForSomeProductMain';
+import { useDispatch } from 'react-redux';
+import { resetToInitialState } from '../redux/reducers/global';
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -31,9 +33,13 @@ function a11yProps(index) {
 }
 
 export default function Discounts({ which, tabs }) {
+    const dispatch = useDispatch()
     const router = useRouter()
 
     const handleChange = (_event, newPageIndex) => {
+        // reset the global state
+        dispatch(resetToInitialState())
+
         router.push(`/${which}?tab=discounts&discountTab=${tabs[newPageIndex]}`)
     };
 

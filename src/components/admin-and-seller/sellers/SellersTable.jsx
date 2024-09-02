@@ -1,5 +1,5 @@
 "use client"
-import { Button, Stack } from '@mui/material';
+import { Button, Pagination, Stack } from '@mui/material';
 import { useEffect } from 'react';
 import { styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
@@ -10,7 +10,6 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { convertToFarsiNumbers } from '@/utils/funcs';
-import Pagination from '../../Pagination'
 import ModalDelete from './ModalDelete';
 import ModalConfirm from './ModalConfirm';
 import { useDispatch, useSelector } from 'react-redux';
@@ -38,7 +37,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
     },
 }));
 
-const CommonTable = ({ validated, itemsCount, error, loading, items, currentPage, itemsPerPage, selectedId, setCurrentPage, lastPage, dispatch, operatingError }) => (
+const CommonTable = ({ validated, itemsCount, error, loading, items, currentPage, itemsPerPage, selectedId, handlePageClick, setPage, lastPage, dispatch, operatingError }) => (
     <Stack spacing={2} className={`${!!validated && 'mt-16'}`}>
         <div className='w-full text-start'>
             جدول فروشندگان های تایید {!!validated ? <></> : <>ن</>}شده
@@ -134,7 +133,7 @@ const CommonTable = ({ validated, itemsCount, error, loading, items, currentPage
                     {
                         itemsCount > itemsPerPage &&
                         <div className='flex justify-center' style={{ marginTop: '25px' }}>
-                            <Pagination currentPage={currentPage} setCurrentPage={setCurrentPage} lastPage={lastPage} />
+                            <Pagination dir='ltr' color='info' variant='outlined' count={lastPage} page={currentPage} onChange={(_e, v) => handlePageClick(v, setPage, currentPage)} />
                         </div>
                     }
 
@@ -179,18 +178,24 @@ export default function SellersTable({ validated }) {
     }, [dispatch, currentPage, currentPageConfirmedSellers, itemsPerPage, itemsPerPageConfirmedSellers, validated]);
 
 
+    const handlePageClick = (page, setPage, current) => {
+        if (current !== page) {
+            dispatch(setPage(page))
+        }
+    }
+
     return (
         <>
             {
                 !validated &&
                 <>
-                    <CommonTable currentPage={currentPage} dispatch={dispatch} error={error} items={items} itemsCount={itemsCount} itemsPerPage={itemsPerPage} lastPage={lastPage} loading={loading} selectedId={selectedId} setCurrentPage={setCurrentPage} setIsModalConfirmOpen={setIsModalConfirmOpen} setIsModalDeleteOpen={setIsModalDeleteOpen} validated={false} operatingError={operatingError} />
+                    <CommonTable currentPage={currentPage} dispatch={dispatch} error={error} items={items} itemsCount={itemsCount} itemsPerPage={itemsPerPage} lastPage={lastPage} loading={loading} selectedId={selectedId} handlePageClick={handlePageClick} setPage={setCurrentPage} setIsModalConfirmOpen={setIsModalConfirmOpen} setIsModalDeleteOpen={setIsModalDeleteOpen} validated={false} operatingError={operatingError} />
                     <ModalConfirm />
                 </>
             }
             {
                 validated &&
-                <CommonTable currentPage={currentPageConfirmedSellers} dispatch={dispatch} error={errorConfirmedSellers} items={confirmedSellers} itemsCount={itemsCountConfirmedSellers} itemsPerPage={itemsPerPageConfirmedSellers} lastPage={lastPageConfirmedSellers} loading={loadingConfirmedSellers} selectedId={selectedId} setCurrentPage={setCurrentPageConfirmedSellers} setIsModalConfirmOpen={setIsModalConfirmOpen} setIsModalDeleteOpen={setIsModalDeleteOpen} validated={true} operatingError={operatingError} />
+                <CommonTable currentPage={currentPageConfirmedSellers} dispatch={dispatch} error={errorConfirmedSellers} items={confirmedSellers} itemsCount={itemsCountConfirmedSellers} itemsPerPage={itemsPerPageConfirmedSellers} lastPage={lastPageConfirmedSellers} loading={loadingConfirmedSellers} selectedId={selectedId} handlePageClick={handlePageClick} setPage={setCurrentPageConfirmedSellers} setIsModalConfirmOpen={setIsModalConfirmOpen} setIsModalDeleteOpen={setIsModalDeleteOpen} validated={true} operatingError={operatingError} />
             }
             <ModalDelete />
         </>

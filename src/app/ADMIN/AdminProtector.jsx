@@ -2,6 +2,8 @@
 import React, { useEffect, useState } from 'react'
 import Api from '@/services/withAuthActivities/user';
 import { useRouter } from 'next/navigation';
+import { Provider } from "react-redux";
+import { storeAdmin } from '@/components/admin-and-seller/redux/store';
 
 
 
@@ -42,5 +44,5 @@ export default function AdminProtector({ children, Wait, shouldRouterPush, showN
     if (!show && !loading)
         return showNotFound
     else if (show)
-        return <>{children}</>;
+        return <Provider store={storeAdmin}>{children}</Provider>;
 }
