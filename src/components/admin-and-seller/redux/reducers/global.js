@@ -11,7 +11,7 @@ const initialState = {
     currentPage: 1,
     lastPage: 1,
     itemsCount: 0,
-    itemsPerPage: 1
+    itemsPerPage: 20
 };
 
 

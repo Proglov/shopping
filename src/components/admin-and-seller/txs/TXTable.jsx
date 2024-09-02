@@ -195,9 +195,12 @@ export default function TXTable({ which, isFutureOrder }) {
     useEffect(() => {
         if (!!isFutureOrder)
             dispatch(getFutureTXsFromServer({ page: currentPage, perPage: itemsPerPage, which }));
-        else
+    }, [currentPage, dispatch, isFutureOrder, itemsPerPage, which]);
+
+    useEffect(() => {
+        if (!isFutureOrder)
             dispatch(getRecentTXFromServer({ page: currentPageRecentTX, perPage: itemsPerPageRecentTX, which }));
-    }, [currentPage, dispatch, isFutureOrder, itemsPerPage, currentPageRecentTX, itemsPerPageRecentTX, which]);
+    }, [dispatch, isFutureOrder, currentPageRecentTX, itemsPerPageRecentTX, which]);
 
 
     const handlePageClick = (page, setPage, current) => {

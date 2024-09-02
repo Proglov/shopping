@@ -166,11 +166,16 @@ export default function CommentsTable({ validated }) {
 
 
     useEffect(() => {
-        if (!validated)
-            dispatch(getInvalidatedCommentsFromServer({ page: currentPage, perPage: itemsPerPage }))
-        else
+        if (validated) {
             dispatch(getConfirmedCommentsFromServer({ page: currentPageConfirmedComments, perPage: itemsPerPageConfirmedComments }))
-    }, [dispatch, currentPage, currentPageConfirmedComments, itemsPerPage, itemsPerPageConfirmedComments, validated]);
+        }
+    }, [dispatch, currentPageConfirmedComments, itemsPerPageConfirmedComments, validated]);
+
+    useEffect(() => {
+        if (!validated) {
+            dispatch(getInvalidatedCommentsFromServer({ page: currentPage, perPage: itemsPerPage }))
+        }
+    }, [dispatch, currentPage, itemsPerPage, validated]);
 
     const handlePageClick = (page, setPage, current) => {
         if (current !== page) {

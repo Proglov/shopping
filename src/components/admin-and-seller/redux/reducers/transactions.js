@@ -1,6 +1,6 @@
 import Api from "@/services/withAuthActivities/tx";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { pending, reject } from "../globalExtraReducers";
+import { reject } from "../globalExtraReducers";
 
 // we have future and recent transactions. the future ones, are stored in the global reducers. some fields of future ones, like operating properties are here since they are singleton
 const initialState = {
@@ -19,7 +19,7 @@ const initialState = {
     currentPageRecentTX: 1,
     lastPageRecentTX: 1,
     itemsCountRecentTX: 0,
-    itemsPerPageRecentTX: 2
+    itemsPerPageRecentTX: 20
 };
 
 export const getRecentTXFromServer = createAsyncThunk(
@@ -83,7 +83,9 @@ const transactionSlice = createSlice({
         }
     },
     extraReducers: builder => {
-        builder.addCase(getRecentTXFromServer.pending, pending);
+        builder.addCase(getRecentTXFromServer.pending, (state) => {
+            state.loadingRecentTX = true
+        });
         builder.addCase(getRecentTXFromServer.fulfilled, (state, action) => {
             state.recentTX = action.payload.transactions
             state.itemsCountRecentTX = action.payload.transactionsCount

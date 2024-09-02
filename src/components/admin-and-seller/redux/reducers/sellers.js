@@ -1,6 +1,6 @@
 import Api from "@/services/withAuthActivities/seller";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { pending, reject } from "../globalExtraReducers";
+import { reject } from "../globalExtraReducers";
 
 // we have unconfirmed and confirmed sellers. the unconfirmed ones, are stored in the global reducers. some fields of unconfirmed ones, like operating properties are here since they are singleton
 const initialState = {
@@ -91,7 +91,9 @@ const sellersSlice = createSlice({
         },
     },
     extraReducers: builder => {
-        builder.addCase(getConfirmedSellersFromServer.pending, pending);
+        builder.addCase(getConfirmedSellersFromServer.pending, (state) => {
+            state.loadingConfirmedSellers = true
+        });
         builder.addCase(getConfirmedSellersFromServer.fulfilled, (state, action) => {
             state.confirmedSellers = action.payload.sellers
             state.itemsCountConfirmedSellers = action.payload.allSellersCount

@@ -1,7 +1,7 @@
 import Api from "@/services/withAuthActivities/comment";
 import Api2 from "@/services/withoutAuthActivities/comment";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { pending, reject } from "../globalExtraReducers";
+import { reject } from "../globalExtraReducers";
 
 // we have unconfirmed and confirmed comments. the unconfirmed ones, are stored in the global reducers. some fields of unconfirmed ones, like operating properties are here since they are singleton
 const initialState = {
@@ -22,7 +22,7 @@ const initialState = {
     currentPageConfirmedComments: 1,
     lastPageConfirmedComments: 1,
     itemsCountConfirmedComments: 0,
-    itemsPerPageConfirmedComments: 2
+    itemsPerPageConfirmedComments: 20
 };
 
 export const getConfirmedCommentsFromServer = createAsyncThunk(
@@ -92,7 +92,9 @@ const commentSlice = createSlice({
         },
     },
     extraReducers: builder => {
-        builder.addCase(getConfirmedCommentsFromServer.pending, pending);
+        builder.addCase(getConfirmedCommentsFromServer.pending, (state) => {
+            state.loadingConfirmedComments = true
+        });
         builder.addCase(getConfirmedCommentsFromServer.fulfilled, (state, action) => {
             state.confirmedComments = action.payload.comments
             state.itemsCountConfirmedComments = action.payload.allCommentsCount

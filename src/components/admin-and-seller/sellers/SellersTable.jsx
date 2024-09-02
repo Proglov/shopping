@@ -173,9 +173,12 @@ export default function SellersTable({ validated }) {
     useEffect(() => {
         if (!validated)
             dispatch(getInvalidatedSellersFromServer({ page: currentPage, perPage: itemsPerPage }))
-        else
+    }, [dispatch, currentPage, itemsPerPage, validated]);
+
+    useEffect(() => {
+        if (validated)
             dispatch(getConfirmedSellersFromServer({ page: currentPageConfirmedSellers, perPage: itemsPerPageConfirmedSellers }))
-    }, [dispatch, currentPage, currentPageConfirmedSellers, itemsPerPage, itemsPerPageConfirmedSellers, validated]);
+    }, [dispatch, currentPageConfirmedSellers, itemsPerPageConfirmedSellers, validated]);
 
 
     const handlePageClick = (page, setPage, current) => {
