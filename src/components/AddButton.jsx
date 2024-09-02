@@ -78,7 +78,7 @@ export default function AddButton({ productId, which, sellerId, quantity, profit
     return (<Button
         variant="outlined"
         color="primary"
-        className="sm:w-fit text-sm"
+        className="w-fit sm:text-sm text-xs"
         onClick={() => dispatch(AddCart({ id: productId, sellerId, which }))}
     >
         افزودن به سبد

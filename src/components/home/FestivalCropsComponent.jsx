@@ -62,7 +62,7 @@ export default function FestivalCropsComponent({ src, name, price: realPrice, of
 
             <div className='flex flex-col justify-center items-center gap-2 mb-4'>
                 <Link href={'/products/' + productId}>
-                    <Button className='w-fit sm:text-base text-xs' variant='outlined' color='info'>
+                    <Button className='w-fit sm:text-sm text-xs' variant='outlined' color='info'>
                         مشاهده محصول
                     </Button>
                 </Link>
