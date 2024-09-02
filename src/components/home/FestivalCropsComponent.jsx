@@ -10,7 +10,7 @@ export default function FestivalCropsComponent({ src, name, price: realPrice, of
     const priceOffedString = (realPrice * (100 - offPercentage) / 100).toString()
 
     return (
-        <div className='rounded-md p-1 m-2 bg-white'>
+        <div className='rounded-md min-h-[390px] p-1 m-2 bg-white'>
 
             <div className='text-red-600 mx-3 py-2 sm:text-base text-xs flex justify-between items-center'>
                 <span>
@@ -61,12 +61,12 @@ export default function FestivalCropsComponent({ src, name, price: realPrice, of
             </div>
 
             <div className='flex flex-col justify-center items-center gap-2 mb-4'>
-                <AddButton productId={productId} which='festival' sellerId={sellerId} />
                 <Link href={'/products/' + productId}>
                     <Button className='w-fit sm:text-base text-xs' variant='outlined' color='info'>
                         مشاهده محصول
                     </Button>
                 </Link>
+                <AddButton productId={productId} which='festival' sellerId={sellerId} />
             </div>
 
 
