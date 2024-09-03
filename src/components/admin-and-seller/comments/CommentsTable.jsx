@@ -1,10 +1,8 @@
 "use client"
 import { Button, Pagination, Stack } from '@mui/material';
 import { useEffect } from 'react';
-import { styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
-import TableCell, { tableCellClasses } from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
@@ -16,25 +14,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setCurrentPage } from '../redux/reducers/global';
 import { getInvalidatedCommentsFromServer } from '../redux/globalAsyncThunks';
 import { getConfirmedCommentsFromServer, setSelectedId, setIsModalConfirmOpen, setIsModalDeleteOpen, setIsConfirmedTableOperating, setCurrentPageConfirmedComments } from '../redux/reducers/comments';
+import { StyledTableCell, StyledTableRow } from '../products/ProductsTable';
 
 
-const StyledTableCell = styled(TableCell)(({ theme }) => ({
-    [`&.${tableCellClasses.head}`]: {
-        backgroundColor: theme.palette.common.black,
-        color: theme.palette.common.white,
-    },
-    [`&.${tableCellClasses.body}`]: {
-        fontSize: 14,
-    },
-}));
-const StyledTableRow = styled(TableRow)(({ theme }) => ({
-    '&:nth-of-type(odd)': {
-        backgroundColor: theme.palette.action.hover,
-    },
-    '&:last-child td, &:last-child th': {
-        border: 0,
-    },
-}));
 
 const Component = ({ validated, itemsCount, error, loading, items, currentPage, itemsPerPage, selectedId, setPage, handlePageClick, lastPage, dispatch, operatingError }) => (
     <Stack spacing={2} className={`${!!validated ? 'mt-10' : ''}`}>

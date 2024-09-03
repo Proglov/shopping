@@ -17,18 +17,22 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setIsModalEditOpen, setSelectedItem } from '../redux/reducers/products';
 
 
-const StyledTableCell = styled(TableCell)(({ theme }) => ({
+export const StyledTableCell = styled(TableCell)(() => ({
     [`&.${tableCellClasses.head}`]: {
-        backgroundColor: theme.palette.common.black,
-        color: theme.palette.common.white,
+        backgroundColor: 'black',
+        color: 'white',
+        fontSize: 16
     },
     [`&.${tableCellClasses.body}`]: {
         fontSize: 14,
     },
 }));
-const StyledTableRow = styled(TableRow)(({ theme }) => ({
+export const StyledTableRow = styled(TableRow)(() => ({
     '&:nth-of-type(odd)': {
-        backgroundColor: theme.palette.action.hover,
+        backgroundColor: '#f7f7f7',
+    },
+    '&:hover': {
+        backgroundColor: '#f5f8ff',
     },
     '&:last-child td, &:last-child th': {
         border: 0,
