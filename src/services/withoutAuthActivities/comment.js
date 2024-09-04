@@ -10,7 +10,7 @@ const Api = {
     },
     getCommentsOfAProduct: async (payload) => {
         const response = await clientWithoutAuth.get(
-            `commentGet/getCommentsOfAProduct?id=${payload?.id}`
+            `commentGet/getCommentsOfAProduct?id=${payload?.id}&page=${payload?.page}&perPage=${payload?.perPage}`
         );
         return response?.data;
     },

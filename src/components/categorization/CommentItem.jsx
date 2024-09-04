@@ -13,6 +13,8 @@ import { convertToFarsiNumbers } from "@/utils/funcs";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useSelector } from "react-redux";
+import { GradientCircularProgress } from "@/app/loading";
+import { useInView } from "react-intersection-observer";
 
 export default function CommentItem({ productID }) {
   const { getCommentsOfAProduct } = CommentsApi;
@@ -25,6 +27,12 @@ export default function CommentItem({ productID }) {
   const [newReplay, setNewReplay] = useState("");
   const [userId, setUserId] = useState("");
   const [replyId, setReplyId] = useState("");
+
+  const [currentPage, setCurrentPage] = useState(2);
+  const [isFinished, setIsFinished] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const perPage = 20;
+  const { ref, inView } = useInView();
 
   // -1 -> 1, 0 -> 1 , 1 -> 0
   const likeStatusArr = [1, 0, 1]
@@ -135,6 +143,132 @@ export default function CommentItem({ productID }) {
     }
   };
 
+  const arrangeComments = (newComments, userID) => {
+    return newComments.reduce((accumulator, currentComment) => {
+      const res = [...accumulator];
+      let status = 0;
+      let userIndex = currentComment.likes.findIndex(item => item.id === userID)
+      // user liked the comment
+      if (userIndex > -1)
+        status = 1
+      else {
+        userIndex = currentComment.disLikes.findIndex(item => item.id === userID)
+        // user disliked the comment
+        if (userIndex > -1)
+          status = -1
+      }
+
+      if (currentComment.parentCommentId == null) {
+        const thisCommentIndex = res.findIndex(obj => obj._id === currentComment._id)
+
+        if (thisCommentIndex > -1)
+          res[thisCommentIndex] = {
+            ...res[thisCommentIndex],
+            body: currentComment.body,
+            likes: currentComment.likes,
+            disLikes: currentComment.disLikes,
+            ownerId: currentComment.ownerId,
+            status
+          }
+        else
+          res.push({
+            _id: currentComment._id,
+            body: currentComment.body,
+            likes: currentComment.likes,
+            disLikes: currentComment.disLikes,
+            ownerId: currentComment.ownerId,
+            childrenComments: [],
+            status
+          })
+
+
+      } else {
+        const parentCommentIndex = res.findIndex(obj => obj._id === currentComment.parentCommentId)
+        if (parentCommentIndex > -1)
+          res[parentCommentIndex] = {
+            ...res[parentCommentIndex],
+            childrenComments: [
+              ...res[parentCommentIndex].childrenComments,
+              {
+                _id: currentComment._id,
+                body: currentComment.body,
+                likes: currentComment.likes,
+                disLikes: currentComment.disLikes,
+                ownerId: currentComment.ownerId,
+                parentCommentId: currentComment.parentCommentId,
+                status
+              }
+            ]
+          }
+        else
+          res.push({
+            _id: currentComment.parentCommentId,
+            childrenComments: [
+              {
+                _id: currentComment._id,
+                body: currentComment.body,
+                likes: currentComment.likes,
+                disLikes: currentComment.disLikes,
+                ownerId: currentComment.ownerId,
+                parentCommentId: currentComment.parentCommentId,
+                status
+              }
+            ]
+          })
+
+      }
+
+      return res
+
+    }, [])
+  }
+
+  const checkComments = newComments => {
+    const parentLessComments = [], parentComments = []
+    newComments.map(comment => {
+      if (!comment?.ownerId)
+        parentLessComments.push(comment)
+      else parentComments.push(comment)
+    })
+
+    parentLessComments.map(comments => {
+      let flag = false;
+      const pId = comments?.childrenComments[0]?.parentCommentId
+
+      for (let i = 0; i < parentComments.length; i++) {
+        if (parentComments[i]._id === pId) {
+          comments.childrenComments.map(thisComment => parentComments[i].childrenComments.push(thisComment))
+          flag = true
+          break
+        }
+      }
+
+      if (!flag)
+        comments.childrenComments.map(thisComment => parentComments.push(thisComment))
+
+
+    })
+
+    return parentComments
+  }
+
+  const fetchComments = async (page) => {
+    if (loading) return;
+    setLoading(true);
+
+    try {
+      const response = await getCommentsOfAProduct({ id: productID, page, perPage });
+      const newComments = arrangeComments(response?.comments, userId)
+      setComments(checkComments([...comments, ...newComments]))
+      setCurrentPage(page + 1);
+      if (!response?.comments?.length) setIsFinished(true);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
     const GetUser = async () => {
       try {
@@ -148,86 +282,10 @@ export default function CommentItem({ productID }) {
     const GetComments = async () => {
       try {
         const userID = await GetUser();
-        const response = await getCommentsOfAProduct({ id: productID });
+        const response = await getCommentsOfAProduct({ id: productID, page: 1, perPage });
 
         if (response?.comments?.length > 0) {
-          const arr = response?.comments.reduce((accumulator, currentComment) => {
-            const res = [...accumulator];
-            let status = 0;
-            let userIndex = currentComment.likes.findIndex(item => item.id === userID)
-            // user liked the comment
-            if (userIndex > -1)
-              status = 1
-            else {
-              userIndex = currentComment.disLikes.findIndex(item => item.id === userID)
-              // user disliked the comment
-              if (userIndex > -1)
-                status = -1
-            }
-
-            if (currentComment.parentCommentId == null) {
-              const thisCommentIndex = res.findIndex(obj => obj._id === currentComment._id)
-
-              if (thisCommentIndex > -1)
-                res[thisCommentIndex] = {
-                  ...res[thisCommentIndex],
-                  body: currentComment.body,
-                  likes: currentComment.likes,
-                  disLikes: currentComment.disLikes,
-                  ownerId: currentComment.ownerId,
-                  status
-                }
-              else
-                res.push({
-                  _id: currentComment._id,
-                  body: currentComment.body,
-                  likes: currentComment.likes,
-                  disLikes: currentComment.disLikes,
-                  ownerId: currentComment.ownerId,
-                  childrenComments: [],
-                  status
-                })
-
-
-            } else {
-              const parentCommentIndex = res.findIndex(obj => obj._id === currentComment.parentCommentId)
-              if (parentCommentIndex > -1)
-                res[parentCommentIndex] = {
-                  ...res[parentCommentIndex],
-                  childrenComments: [
-                    ...res[parentCommentIndex].childrenComments,
-                    {
-                      _id: currentComment._id,
-                      body: currentComment.body,
-                      likes: currentComment.likes,
-                      disLikes: currentComment.disLikes,
-                      ownerId: currentComment.ownerId,
-                      status
-                    }
-                  ]
-                }
-              else
-                res.push({
-                  _id: currentComment.parentCommentId,
-                  childrenComments: [
-                    {
-                      _id: currentComment._id,
-                      body: currentComment.body,
-                      likes: currentComment.likes,
-                      disLikes: currentComment.disLikes,
-                      ownerId: currentComment.ownerId,
-                      status
-                    }
-                  ]
-                })
-
-            }
-
-            return res
-
-          }, [])
-
-          setComments(arr)
+          setComments(checkComments(arrangeComments(response?.comments, userID)))
         } else {
           setComments([])
         }
@@ -251,14 +309,23 @@ export default function CommentItem({ productID }) {
   ]);
 
 
+  useEffect(() => {
+    if (inView && !isFinished) {
+      fetchComments(currentPage);
+    }
+  }, [inView, currentPage, isFinished]);
+
+
   return (
     <Box className="p-5 m-5 border-2 rounded-lg mx-auto max-w-3xl">
+
       <Box
         component="div"
         className="mb-5 h-12 border-b-2 text-center text-gray-950 text-bold text-lg"
       >
         نظرات
       </Box>
+
       {login ? (
         <Box component="form">
           <Box className="grid">
@@ -299,6 +366,7 @@ export default function CommentItem({ productID }) {
           برای ثبت نظر و پاسخ باید ابتدا وارد شوید.
         </Box>
       )}
+
       <Box component="div">
         {comments.length !== 0 ? (
           comments.map((item, index) => {
@@ -309,6 +377,7 @@ export default function CommentItem({ productID }) {
                 className="border-2 shadow-lg rounded-lg p-5 m-3 grid grid-rows-2"
               >
                 <Box className="row-span-2">
+
                   <Box className="sm:text-lg text-sm bold">
                     {!item?.userId?.username
                       ? "کاربر بدون نام"
@@ -471,7 +540,8 @@ export default function CommentItem({ productID }) {
                     }
 
                   </Box>
-                  {item.childrenComments.map((comment, childrenIndex) => {
+
+                  {!!item?.childrenComments && item?.childrenComments.map((comment, childrenIndex) => {
                     return (
                       <Box
                         key={childrenIndex}
@@ -523,16 +593,22 @@ export default function CommentItem({ productID }) {
                     );
 
                   })}
+
                 </Box>
               </Box>
             );
           })
         ) : (
           <Box component="div" className="text-center m-5">
-            نظری تا کنون ثبت نشده است ! اولین نفری باشد که نظر می دهید .
+            نظری تا کنون ثبت نشده است ! اولین نفری باشید که نظر می دهید .
           </Box>
         )}
       </Box>
+
+      <Box className='w-full text-center mt-3' ref={ref}>
+        {!isFinished && <GradientCircularProgress />}
+      </Box>
+
     </Box>
   );
 }
