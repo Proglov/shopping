@@ -94,9 +94,9 @@ const Slider = ({ item, cartProducts, id }) => {
         className="min-h-12 border-b-2 border-gray-200 p-5 items-center"
       >
         <span className="flex-1 text-right text-gray-950 text-bold text-xl">
-          {item?.subcategoryName}
+          {item?.products[0]?.subcategoryName}
         </span>
-        <Link href={`/categories/${id}/${item.subcategoryId}`}>
+        <Link href={`/categories/${id}/${item?.products[0].subcategoryId}`}>
           <Button
             variant="outlined"
             className="float-left"
@@ -147,27 +147,8 @@ export default function SubCategory({ id }) {
   useEffect(() => {
     const getProduct = async () => {
       try {
-        const response = await getAllProductsOfACategory({ id });
-
-        //differentiate products based on the subcategories
-        const groupedProducts = response.products.reduce((acc, product) => {
-          const { subcategoryId, subcategoryName, ...rest } = product;
-
-          const existingSubcategory = acc.find((item) => item.subcategoryId === subcategoryId);
-
-          if (existingSubcategory) {
-            existingSubcategory.products.push(rest);
-          } else {
-            acc.push({
-              subcategoryName,
-              subcategoryId,
-              products: [rest],
-            });
-          }
-          return acc;
-        }, []);
-
-        setSubcategories(groupedProducts);
+        const response = await getAllProductsOfACategory({ id, page: 1, perPage: 10 });
+        setSubcategories(response?.products.sort((a, b) => a._id.localeCompare(b._id)));
       } catch (error) { }
     };
     getProduct();
@@ -176,8 +157,8 @@ export default function SubCategory({ id }) {
 
   return (
     <Box className="mt-6">
-      {subcategories.map((item, index) =>
-        <Slider item={item} key={index} cartProducts={cartProducts} id={id} />
+      {subcategories.map((item) =>
+        <Slider item={item} key={item?._id} cartProducts={cartProducts} id={id} />
       )}
     </Box>
   );
