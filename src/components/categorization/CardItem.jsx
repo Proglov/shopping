@@ -69,20 +69,18 @@ export default function CardItem({ product, subID, id }) {
         }
 
         <Box className='absolute bottom-1 min-h-[120px]'>
-          <Box className="mt-3 text-center">
-            <Link href={`/categories/${id}/${subID}/${product._id}`}>
-              <Button
-                variant="outlined"
-                color="info"
-                className="sm:w-full text-sm"
-              >
-                مشاهده محصول
-              </Button>
-            </Link>
-          </Box>
-          <Box className="mt-3 text-center">
+          <Box className="my-3 text-center">
             <AddButton productId={product._id} which={product.which} quantity={product?.quantity} profit={product.price * product?.majorOffPercentage / 100} sellerId={product.sellerId} />
           </Box>
+          <Link href={`/categories/${id}/${subID}/${product._id}`}>
+            <Button
+              variant="outlined"
+              color="info"
+              className="sm:w-full text-sm"
+            >
+              مشاهده محصول
+            </Button>
+          </Link>
         </Box>
 
       </CardContent>

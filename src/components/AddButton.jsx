@@ -24,8 +24,8 @@ export default function AddButton({ productId, which, sellerId, quantity, profit
     }, [setNumber, cartProducts, productId]);
 
     if (login === 'seller') return (
-        <>
-        </>
+        <div className='h-5'>
+        </div>
     )
 
     if (number > 0) return (

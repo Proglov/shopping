@@ -63,12 +63,12 @@ export default function MajorBuyComponent({ src, name, realPrice, off, number, p
             </div>
 
             <div className='flex flex-col justify-center items-center gap-2 my-4 h-24'>
+                <AddButton productId={productId} which='major' sellerId={sellerId} quantity={number} profit={profit} />
                 <Link href={'/products/' + productId}>
                     <Button className='w-fit sm:text-sm text-xs' variant='outlined' color='info'>
                         مشاهده محصول
                     </Button>
                 </Link>
-                <AddButton productId={productId} which='major' sellerId={sellerId} quantity={number} profit={profit} />
             </div>
         </div>
     )
