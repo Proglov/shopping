@@ -1,13 +1,4 @@
 import Main from '@/components/admin/MainAdmin'
-import AdminProtector from './AdminProtector'
-
-const Wait = () => {
-  return (
-    <div className='text-center w-screen h-screen bg-black text-slate-50'>
-      لطفا صبر کنید ...
-    </div>
-  )
-}
 
 const CustomObj = (array, tab) => {
   const res = {}
@@ -26,8 +17,6 @@ export default function Home({ searchParams }) {
   const discountTabs = CustomObj(['festivals', 'majorShopping', 'company'], searchParams?.discountTab)
 
   return (
-    <AdminProtector Wait={<Wait />} shouldRouterPush={true}>
-      <Main tabs={tabs} discountTabs={discountTabs} />
-    </AdminProtector>
+    <Main tabs={tabs} discountTabs={discountTabs} />
   )
 }
