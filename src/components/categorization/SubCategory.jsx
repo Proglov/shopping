@@ -5,7 +5,6 @@ import ProductApi from "@/services/withoutAuthActivities/product";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useKeenSlider } from 'keen-slider/react'
-import { useSelector } from "react-redux";
 import 'keen-slider/keen-slider.min.css'
 import '@/styles/Swiper.css'
 import { GradientCircularProgress } from "@/app/loading";
@@ -40,7 +39,7 @@ const Plate = ({ children, classNameProp, subcategoryName, subcategoryId, id }) 
 
 
 
-const Slider = ({ item, cartProducts, id }) => {
+const Slider = ({ item, id }) => {
   const [currentSlide, setCurrentSlide] = useState(0)
   const [loaded, setLoaded] = useState(false)
 
@@ -102,7 +101,6 @@ const Slider = ({ item, cartProducts, id }) => {
 
   const extraProps = {
     id,
-    cartProducts,
   }
 
   const plateExtraProps = {
@@ -126,7 +124,6 @@ const Slider = ({ item, cartProducts, id }) => {
 export default function SubCategory({ id }) {
   const [subcategories, setSubcategories] = useState([]);
   const { getAllProductsOfACategory } = ProductApi;
-  const cartProducts = useSelector((state) => state.CartProducts);
   const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
@@ -151,7 +148,7 @@ export default function SubCategory({ id }) {
           :
           <>
             {subcategories.map((item) =>
-              <Slider item={item} key={item?._id} cartProducts={cartProducts} id={id} />
+              <Slider item={item} key={item?._id} id={id} />
             )}
           </>
       }

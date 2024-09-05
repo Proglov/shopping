@@ -7,11 +7,16 @@ import { useKeenSlider } from 'keen-slider/react'
 import 'keen-slider/keen-slider.min.css'
 import '@/styles/Swiper.css'
 import SliderWrapper from '../SliderWrapper'
+import Link from 'next/link'
 
 
 const Plate = ({ children, classNameProp, isLoading }) =>
-    <div className={`${classNameProp} m-4 rounded-xl overflow-x-hidden`} style={{ background: 'linear-gradient(to left top, #f9b49b 20%, #9fb6c3)', boxShadow: '0 7px 6px rgba(0, 0, 0, 0.12), 0 1px 4px rgba(0, 0, 0, 0.24)' }}>
-        <div className="text-center text-xl p-2 text-slate-50" style={{ textShadow: '0px 0px 10px red' }}>خرید عمده</div>
+    <div className={`${classNameProp} min-w-[300px] m-4 rounded-xl overflow-x-hidden`} style={{ background: 'linear-gradient(to left top, #f9b49b 20%, #9fb6c3)', boxShadow: '0 7px 6px rgba(0, 0, 0, 0.12), 0 1px 4px rgba(0, 0, 0, 0.24)' }}>
+
+        <div className="relative p-2 text-slate-50">
+            <div className="text-center text-xl p-2 text-slate-50" style={{ textShadow: '0px 0px 10px red' }}>خرید عمده</div>
+            <Link href={'/majors'} className="absolute left-0 top-2 p-2 text-xs underline decoration-red-700 hover:text-purple-500">مشاهده بیشتر</Link>
+        </div>
 
         {
             isLoading ?
