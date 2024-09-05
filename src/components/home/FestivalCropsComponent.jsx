@@ -4,13 +4,13 @@ import Image from 'next/image'
 import Link from 'next/link';
 import AddButton from '../AddButton';
 
-export default function FestivalCropsComponent({ src, name, price: realPrice, offPercentage, productId, sellerId }) {
+export default function FestivalCropsComponent({ src, name, price: realPrice, offPercentage, productId, sellerId, margin = 2 }) {
 
     const priceString = realPrice.toString()
     const priceOffedString = (realPrice * (100 - offPercentage) / 100).toString()
 
     return (
-        <div className='rounded-md min-h-[390px] p-1 m-2 bg-white'>
+        <div className={`rounded-md min-h-[390px] p-1 m-${margin} bg-white`}>
 
             <div className='text-red-600 mx-3 py-2 sm:text-base text-xs flex justify-between items-center'>
                 <span>

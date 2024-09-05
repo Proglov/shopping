@@ -1,91 +1,43 @@
 'use client'
 import { useEffect, useState } from 'react'
 import MajorBuyComponent from './MajorBuyComponent'
-import { Button, Skeleton } from "@mui/material"
-import { MdOutlineKeyboardArrowLeft, MdOutlineKeyboardArrowRight } from "react-icons/md"
+import { Skeleton } from "@mui/material"
 import Api from '@/services/withoutAuthActivities/discounts/majorShopping'
 import { useKeenSlider } from 'keen-slider/react'
 import 'keen-slider/keen-slider.min.css'
 import '@/styles/Swiper.css'
+import SliderWrapper from '../SliderWrapper'
 
 
+const Plate = ({ children, classNameProp, isLoading }) =>
+    <div className={`${classNameProp} m-4 rounded-xl overflow-x-hidden`} style={{ background: 'linear-gradient(to left top, #f9b49b 20%, #9fb6c3)', boxShadow: '0 7px 6px rgba(0, 0, 0, 0.12), 0 1px 4px rgba(0, 0, 0, 0.24)' }}>
+        <div className="text-center text-xl p-2 text-slate-50" style={{ textShadow: '0px 0px 10px red' }}>خرید عمده</div>
 
-const arr = [
-    {
-        name: 'خامه صباح - 200 میلی لیتر',
-        off: 26,
-        realPrice: 32000000,
-        src: '/img/home/tanagholat.jpg',
-        number: 3
-    },
-    {
-        name: 'خامه صباح - 1 میلی لیتر',
-        off: 25,
-        realPrice: 32000000,
-        src: '/img/home/tanagholat.jpg',
-        number: 4
-    },
-    {
-        name: 'خامه صباح - 2 میلی لیتر',
-        off: 22,
-        realPrice: 32000000,
-        src: '/img/home/tanagholat.jpg',
-        number: 5
-    },
-    {
-        name: 'خامه صباح - 3 میلی لیتر',
-        off: 2,
-        realPrice: 32000000,
-        src: '/img/home/tanagholat.jpg',
-        number: 1
-    },
-    {
-        name: 'خامه صباح - 4 میلی لیتر',
-        off: 16,
-        realPrice: 32000000,
-        src: '/img/home/tanagholat.jpg',
-        number: 10
-    },
-    {
-        name: 'خامه صباح - 5 میلی لیتر',
-        off: 62,
-        realPrice: 32000000,
-        src: '/img/home/tanagholat.jpg',
-        number: 2
-    },
-    {
-        name: 'خامه صباح - 6 میلی لیتر',
-        off: 46,
-        realPrice: 32000000,
-        src: '/img/home/tanagholat.jpg',
-        number: 3
-    },
-    {
-        name: 'خامه صباح - 7 میلی لیتر',
-        off: 65,
-        realPrice: 32000000,
-        src: '/img/home/tanagholat.jpg',
-        number: 7
-    },
+        {
+            isLoading ?
+                <>
+                    <div className="flex gap-2 justify-center overflow-x-hidden w-max mb-3">
+                        {
+                            Array.from({ length: 10 }).map((_, index) => (
+                                <Skeleton
+                                    key={index}
+                                    sx={{ bgcolor: 'grey.300' }}
+                                    variant="rectangular"
+                                    width={250}
+                                    height={300}
+                                />
+                            ))
+                        }
+                    </div>
+                </>
+                :
+                <>
+                    {children}
+                </>
 
-]
+        }
 
-function Arrow(props) {
-    return (
-        <Button
-            sx={{ zIndex: 1000 }}
-            onClick={props.onClick}
-            className={`arrow ${props.left ? "arrow--left" : "arrow--right"}`}
-        >
-            {!!props.left && (
-                <MdOutlineKeyboardArrowLeft className='text-6xl text-blue-500' />
-            )}
-            {!!props.right && (
-                <MdOutlineKeyboardArrowRight className='text-6xl text-blue-500' />
-            )}
-        </Button>
-    )
-}
+    </div >
 
 export default function MajorBuy() {
     const { GetAllMajorShoppingProducts } = Api
@@ -147,79 +99,26 @@ export default function MajorBuy() {
         getProducts()
     }, [])
 
+    const getComponentProps = (product) => ({
+        src: product?.imageUrl || '/img/no-pic.png',
+        name: product?.name,
+        number: product?.quantity,
+        off: product?.offPercentage,
+        realPrice: product?.price,
+        productId: product.productId,
+        sellerId: product.sellerId
+    });
+
+    const breakPoints = {
+        xs: products.length >= 3,
+        sm: products.length >= 3,
+        md: products.length >= 5,
+        lg: products.length >= 6,
+        xl: products.length >= 7,
+        '2xl': products.length >= 8
+    }
 
     return (
-        <div className="m-4 rounded-xl overflow-x-hidden" style={{ background: 'linear-gradient(to left top, #f9b49b 20%, #9fb6c3)', boxShadow: '0 7px 6px rgba(0, 0, 0, 0.12), 0 1px 4px rgba(0, 0, 0, 0.24)' }}>
-            <div className="text-center text-xl p-2 text-slate-50" style={{ textShadow: '0px 0px 10px red' }}>خرید عمده</div>
-
-            {
-                isLoading ?
-                    <>
-                        <div className="flex gap-2 justify-center overflow-x-hidden w-max mb-3">
-                            {
-                                Array.from({ length: 10 }).map((_, index) => (
-                                    <Skeleton
-                                        key={index}
-                                        sx={{ bgcolor: 'grey.300' }}
-                                        variant="rectangular"
-                                        width={250}
-                                        height={300}
-                                    />
-                                ))
-                            }
-                        </div>
-                    </>
-                    :
-                    <>
-                        <div className="navigation-wrapper">
-                            {loaded && instanceRef.current && (
-                                <Arrow
-                                    right={true}
-                                    onClick={(e) =>
-                                        e.stopPropagation() || instanceRef.current?.next()
-                                    }
-                                />
-                            )}
-
-                            <div ref={sliderRef} className="keen-slider">
-                                {products.map(product => (
-                                    <div className="keen-slider__slide sm:min-w-64 min-w-52" key={product?._id}>
-                                        <MajorBuyComponent name={product?.name} number={product?.quantity} off={product?.offPercentage} realPrice={product?.price} productId={product?.productId} src={product?.imageUrl || '/img/no-pic.png'} sellerId={product.sellerId} />
-                                    </div>
-                                ))}
-                            </div>
-
-                            {loaded && instanceRef.current && (
-                                <Arrow
-                                    left={true}
-                                    onClick={(e) =>
-                                        e.stopPropagation() || instanceRef.current?.prev()
-                                    }
-                                />
-                            )}
-                        </div>
-
-                        {loaded && instanceRef.current && (
-                            <div className="dots" dir="ltr">
-                                {[
-                                    ...Array(instanceRef.current.track.details.slides.length).keys(),
-                                ].map((idx) => {
-                                    return (
-                                        <button
-                                            key={idx}
-                                            onClick={() => {
-                                                instanceRef.current?.moveToIdx(idx)
-                                            }}
-                                            className={"dot" + (currentSlide === idx ? " active" : "")}
-                                        ></button>
-                                    )
-                                })}
-                            </div>
-                        )}
-                    </>
-
-            }
-
-        </div >
+        <SliderWrapper Component={MajorBuyComponent} breakPoints={breakPoints} array={products} componentProps={getComponentProps} currentSlide={currentSlide} instanceRef={instanceRef} loaded={loaded} sliderRef={sliderRef} isLoading={isLoading} Plate={Plate} />
     )
 }

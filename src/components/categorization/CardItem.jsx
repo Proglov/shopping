@@ -4,7 +4,7 @@ import Link from "next/link";
 import AddButton from "../AddButton";
 
 
-export default function CardItem({ product, subID, id }) {
+export default function CardItem({ product, subID, id, margin = 1 }) {
   let img;
   if (product?.imagesUrl?.length !== 0) {
     img = product.imagesUrl[0]
@@ -12,7 +12,7 @@ export default function CardItem({ product, subID, id }) {
     img = "/img/no-pic.png"
 
   return (
-    <Card className="relative ml-6 max-w-[200px] min-h-[400px] p-1 mb-2 shadow-lg" sx={{ border: '1px solid #dbd9d9' }}>
+    <Card className={`relative mx-${margin} max-w-[200px] min-h-[400px] p-1 mb-2 shadow-lg`} sx={{ border: '1px solid #dbd9d9' }}>
       <CardMedia
         sx={{ height: 150, width: 200 }}
         component="img"

@@ -5,32 +5,43 @@ import ProductApi from "@/services/withoutAuthActivities/product";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useKeenSlider } from 'keen-slider/react'
-import { MdOutlineKeyboardArrowLeft, MdOutlineKeyboardArrowRight } from "react-icons/md";
 import { useSelector } from "react-redux";
 import 'keen-slider/keen-slider.min.css'
 import '@/styles/Swiper.css'
+import { GradientCircularProgress } from "@/app/loading";
+import SliderWrapper from "../SliderWrapper";
 
 
+const Plate = ({ children, classNameProp, subcategoryName, subcategoryId, id }) =>
+  <Box
+    className={`${classNameProp} rounded-xl mt-5 mb-10 min-h-[100px] bg-orange-400 shadow-lg shadow-gray-300 max-w-5xl mx-auto`}
+  >
 
-function Arrow(props) {
-  return (
-    <Button
-      sx={{ zIndex: 1000 }}
-      onClick={props.onClick}
-      className={`arrow ${props.left ? "arrow--left" : "arrow--right"}`}
+    <Box
+      component="div"
+      className="min-h-12  p-5 items-center"
     >
-      {!!props.left && (
-        <MdOutlineKeyboardArrowLeft className='text-6xl text-blue-500' />
-      )}
-      {!!props.right && (
-        <MdOutlineKeyboardArrowRight className='text-6xl text-blue-500' />
-      )}
-    </Button>
-  )
-}
+      <span className="flex-1 text-right text-gray-950 text-bold text-xl">
+        {subcategoryName}
+      </span>
+      <Link href={`/categories/${id}/${subcategoryId}`}>
+        <Button
+          variant="outlined"
+          className="float-left"
+          color="info"
+        >
+          مشاهده بیشتر
+        </Button>
+      </Link>
+    </Box>
+
+    {children}
+  </Box>
+
+
 
 const Slider = ({ item, cartProducts, id }) => {
-  const [_currentSlider, setCurrentSlide] = useState(0)
+  const [currentSlide, setCurrentSlide] = useState(0)
   const [loaded, setLoaded] = useState(false)
 
   const [sliderRef, instanceRef] = useKeenSlider(
@@ -84,58 +95,31 @@ const Slider = ({ item, cartProducts, id }) => {
     ]
   )
 
+  const getComponentProps = (product) => ({
+    product,
+    subID: product?.subcategoryId
+  });
+
+  const extraProps = {
+    id,
+    cartProducts,
+  }
+
+  const plateExtraProps = {
+    subcategoryName: item?.products[0]?.subcategoryName,
+    id,
+    subcategoryId: item?.products[0]?.subcategoryId,
+  }
+
+  const breakPoints = {
+    xs: item?.products.length >= 3,
+    sm: item?.products.length >= 3,
+    md: item?.products.length >= 5,
+    lg: item?.products.length >= 6
+  }
+
   return (
-    <Box
-      className="rounded-xl mt-5 mb-10 min-h-[100px] shadow-lg shadow-gray-300 max-w-5xl mx-auto"
-    >
-
-      <Box
-        component="div"
-        className="min-h-12 border-b-2 border-gray-200 p-5 items-center"
-      >
-        <span className="flex-1 text-right text-gray-950 text-bold text-xl">
-          {item?.products[0]?.subcategoryName}
-        </span>
-        <Link href={`/categories/${id}/${item?.products[0].subcategoryId}`}>
-          <Button
-            variant="outlined"
-            className="float-left"
-            color="info"
-          >
-            مشاهده بیشتر
-          </Button>
-        </Link>
-      </Box>
-
-      <div className="navigation-wrapper">
-        {loaded && instanceRef.current && (
-          <Arrow
-            right={true}
-            onClick={(e) =>
-              e.stopPropagation() || instanceRef.current?.next()
-            }
-          />
-        )}
-        <div ref={sliderRef} className="keen-slider">
-          {item?.products.map((product, i) => {
-            return (
-              <div className="keen-slider__slide sm:min-w-60 min-w-52 mt-2" key={i}>
-                <CardItem product={product} subID={item.subcategoryId} id={id} cartProducts={cartProducts} />
-              </div>
-            );
-          })}
-        </div>
-        {loaded && instanceRef.current && (
-          <Arrow
-            left={true}
-            onClick={(e) =>
-              e.stopPropagation() || instanceRef.current?.prev()
-            }
-          />
-        )}
-      </div>
-
-    </Box>
+    <SliderWrapper Component={CardItem} breakPoints={breakPoints} array={item?.products} componentProps={getComponentProps} extraProps={extraProps} currentSlide={currentSlide} instanceRef={instanceRef} loaded={loaded} sliderRef={sliderRef} Plate={Plate} plateExtraProps={plateExtraProps} />
   )
 }
 
@@ -143,13 +127,15 @@ export default function SubCategory({ id }) {
   const [subcategories, setSubcategories] = useState([]);
   const { getAllProductsOfACategory } = ProductApi;
   const cartProducts = useSelector((state) => state.CartProducts);
+  const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
     const getProduct = async () => {
+      setIsLoading(true)
       try {
         const response = await getAllProductsOfACategory({ id, page: 1, perPage: 10 });
         setSubcategories(response?.products.sort((a, b) => a._id.localeCompare(b._id)));
-      } catch (error) { }
+      } catch (error) { } finally { setIsLoading(false) }
     };
     getProduct();
   }, [setSubcategories, getAllProductsOfACategory, id]);
@@ -157,9 +143,18 @@ export default function SubCategory({ id }) {
 
   return (
     <Box className="mt-6">
-      {subcategories.map((item) =>
-        <Slider item={item} key={item?._id} cartProducts={cartProducts} id={id} />
-      )}
+      {
+        isLoading ?
+          <div className="flex justify-center">
+            <GradientCircularProgress />
+          </div>
+          :
+          <>
+            {subcategories.map((item) =>
+              <Slider item={item} key={item?._id} cartProducts={cartProducts} id={id} />
+            )}
+          </>
+      }
     </Box>
   );
 }

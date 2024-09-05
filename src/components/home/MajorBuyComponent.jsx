@@ -6,14 +6,14 @@ import { FiPackage } from "react-icons/fi"
 import AddButton from '../AddButton';
 
 
-export default function MajorBuyComponent({ src, name, realPrice, off, number, productId, sellerId }) {
+export default function MajorBuyComponent({ src, name, realPrice, off, number, productId, sellerId, margin = 1 }) {
 
     const priceString = realPrice.toString()
     const priceOffedString = (realPrice * (100 - off) / 100).toString()
     const profit = realPrice * off / 100
 
     return (
-        <div className='rounded-md p-1 m-1 bg-white' dir='rtl'>
+        <div className={`rounded-md p-1 m-${margin} bg-white`} dir='rtl'>
 
             <div className='sm:w-56 w-44 mx-auto'>
                 <Image src={src} alt={name} width={200} height={150} loading='lazy' className='mx-auto rounded-lg' />

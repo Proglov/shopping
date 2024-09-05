@@ -1,30 +1,43 @@
 'use client'
 import { useEffect, useState } from "react"
 import FestivalCropsComponent from "./FestivalCropsComponent"
-import { Button, Skeleton } from "@mui/material"
-import { MdOutlineKeyboardArrowLeft, MdOutlineKeyboardArrowRight } from "react-icons/md"
+import { Skeleton } from "@mui/material"
 import Api from '@/services/withoutAuthActivities/discounts/festivals'
 import { useKeenSlider } from 'keen-slider/react'
 import 'keen-slider/keen-slider.min.css'
 import '@/styles/Swiper.css'
+import SliderWrapper from "../SliderWrapper"
 
 
-function Arrow(props) {
-    return (
-        <Button
-            sx={{ zIndex: 1000 }}
-            onClick={props.onClick}
-            className={`arrow ${props.left ? "arrow--left" : "arrow--right"}`}
-        >
-            {!!props.left && (
-                <MdOutlineKeyboardArrowLeft className='text-6xl text-blue-500' />
-            )}
-            {!!props.right && (
-                <MdOutlineKeyboardArrowRight className='text-6xl text-blue-500' />
-            )}
-        </Button>
-    )
-}
+
+const Plate = ({ children, classNameProp, isLoading }) =>
+    <div className={`${classNameProp} m-4 rounded-xl overflow-x-hidden`} style={{ background: 'linear-gradient(to left top, #ff0000 10%, #541a1a 90%)', boxShadow: '0 7px 6px rgba(0, 0, 0, 0.12), 0 1px 4px rgba(0, 0, 0, 0.24)' }}>
+        <div className="text-center p-2 text-slate-50" style={{ textShadow: '0px 0px 10px white' }}>پیشنهادهای شگفت انگیز</div>
+
+        {
+            isLoading ?
+                <>
+                    <div className="flex gap-2 justify-center overflow-x-hidden w-max mb-3">
+                        {
+                            Array.from({ length: 10 }).map((_, index) => (
+                                <Skeleton
+                                    key={index}
+                                    sx={{ bgcolor: 'grey.500' }}
+                                    variant="rectangular"
+                                    width={250}
+                                    height={350}
+                                />
+                            ))
+                        }
+                    </div>
+                </>
+                :
+                <>
+                    {children}
+                </>
+        }
+
+    </div >
 
 export default function FestivalCrops() {
     const { GetAllFestivalProducts } = Api
@@ -86,77 +99,25 @@ export default function FestivalCrops() {
         getProducts()
     }, [])
 
+    const getComponentProps = (product) => ({
+        src: product?.imageUrl || '/img/no-pic.png',
+        name: product?.name,
+        price: product?.price,
+        offPercentage: product?.offPercentage,
+        productId: product.productId,
+        sellerId: product.sellerId
+    });
+
+    const breakPoints = {
+        xs: products.length >= 3,
+        sm: products.length >= 4,
+        md: products.length >= 5,
+        lg: products.length >= 6,
+        xl: products.length >= 7,
+        '2xl': products.length >= 8
+    }
 
     return (
-        <div className="m-4 rounded-xl overflow-x-hidden" style={{ background: 'linear-gradient(to left top, #ff0000 10%, #541a1a 90%)', boxShadow: '0 7px 6px rgba(0, 0, 0, 0.12), 0 1px 4px rgba(0, 0, 0, 0.24)' }}>
-            <div className="text-center p-2 text-slate-50" style={{ textShadow: '0px 0px 10px white' }}>پیشنهادهای شگفت انگیز</div>
-
-            {
-                isLoading ?
-                    <>
-                        <div className="flex gap-2 justify-center overflow-x-hidden w-max mb-3">
-                            {
-                                Array.from({ length: 10 }).map((_, index) => (
-                                    <Skeleton
-                                        key={index}
-                                        sx={{ bgcolor: 'grey.500' }}
-                                        variant="rectangular"
-                                        width={250}
-                                        height={350}
-                                    />
-                                ))
-                            }
-                        </div>
-                    </>
-                    :
-                    <>
-                        <div className="navigation-wrapper">
-                            {loaded && instanceRef.current && (
-                                <Arrow
-                                    right={true}
-                                    onClick={(e) =>
-                                        e.stopPropagation() || instanceRef.current?.next()
-                                    }
-                                />
-                            )}
-                            <div ref={sliderRef} className="keen-slider">
-                                {products.map(product => (
-                                    <div className="keen-slider__slide sm:min-w-64 min-w-52" key={product?._id}>
-                                        <FestivalCropsComponent src={product?.imageUrl || '/img/no-pic.png'} name={product?.name} price={product?.price} offPercentage={product?.offPercentage} productId={product.productId} sellerId={product.sellerId} />
-                                    </div>
-                                ))}
-                            </div>
-                            {loaded && instanceRef.current && (
-                                <Arrow
-                                    left={true}
-                                    onClick={(e) =>
-                                        e.stopPropagation() || instanceRef.current?.prev()
-                                    }
-                                />
-                            )}
-                        </div>
-
-                        {loaded && instanceRef.current && (
-                            <div className="dots" dir="ltr">
-                                {[
-                                    ...Array(instanceRef.current.track.details.slides.length).keys(),
-                                ].map((idx) => {
-                                    return (
-                                        <button
-                                            key={idx}
-                                            onClick={() => {
-                                                instanceRef.current?.moveToIdx(idx)
-                                            }}
-                                            className={"dot" + (currentSlide === idx ? " active" : "")}
-                                        ></button>
-                                    )
-                                })}
-                            </div>
-                        )}
-                    </>
-            }
-
-
-        </div >
+        <SliderWrapper Component={FestivalCropsComponent} breakPoints={breakPoints} array={products} componentProps={getComponentProps} currentSlide={currentSlide} instanceRef={instanceRef} loaded={loaded} sliderRef={sliderRef} isLoading={isLoading} Plate={Plate} />
     )
 }
