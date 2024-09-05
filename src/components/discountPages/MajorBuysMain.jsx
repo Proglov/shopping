@@ -1,13 +1,13 @@
 'use client'
-import Api from '@/services/withoutAuthActivities/discounts/festivals'
+import Api from '@/services/withoutAuthActivities/discounts/majorShopping'
 import { useInView } from 'react-intersection-observer';
-import FestivalCropsComponent from '../home/FestivalCropsComponent';
 import { useEffect, useState } from 'react';
 import { Box, Typography } from '@mui/material';
 import { GradientCircularProgress } from '@/app/loading';
+import MajorBuyComponent from '../home/MajorBuyComponent';
 
-export default function FestivalsMain() {
-    const { GetAllFestivalProducts } = Api;
+export default function MajorBuysMain() {
+    const { GetAllMajorShoppingProducts } = Api
     const { ref, inView } = useInView();
     const perPage = 20;
 
@@ -21,7 +21,7 @@ export default function FestivalsMain() {
         setLoading(true);
 
         try {
-            const response = await GetAllFestivalProducts({ page, perPage });
+            const response = await GetAllMajorShoppingProducts({ page, perPage });
             setProducts((prev) => [...prev, ...response?.products]);
             if (!response?.products?.length) setIsFinished(true);
             setCurrentPage(page + 1);
@@ -49,17 +49,18 @@ export default function FestivalsMain() {
         }
     }, [inView, currentPage, isFinished]);
 
+
     return (
         <Box className="mt-6">
 
             <Typography className='text-center mb-4 text-slate-900' sx={{ textShadow: '0px 0px 5px red' }}>
-                پیشنهاد های شگفت انگیز شما
+                خرید محصولات عمده
             </Typography>
 
             <Box className="flex flex-wrap justify-evenly gap-y-5 gap-x-2">
                 {products?.map((item) => (
                     <Box key={item._id} className='border-2 rounded-lg'>
-                        <FestivalCropsComponent productId={item?.productId} name={item?.name} offPercentage={item?.offPercentage} price={item?.price} sellerId={item?.sellerId} src={item?.imageUrl || '/img/no-pic.png'} />
+                        <MajorBuyComponent productId={item?.productId} name={item?.name} off={item?.offPercentage} realPrice={item?.price} sellerId={item?.sellerId} src={item?.imageUrl || '/img/no-pic.png'} number={item?.quantity} />
                     </Box>
                 ))}
             </Box>
