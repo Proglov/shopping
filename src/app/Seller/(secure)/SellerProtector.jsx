@@ -20,7 +20,7 @@ export default function SellerProtector({ children, Wait, shouldRouterPush, show
                 const result = res?.isSeller
                 if (!result) {
                     if (shouldRouterPush)
-                        router.push("not-found")
+                        router.push("/not-found")
                     else
                         setShow(false)
                 } else {
@@ -28,7 +28,7 @@ export default function SellerProtector({ children, Wait, shouldRouterPush, show
                 }
             } catch (error) {
                 if (shouldRouterPush)
-                    router.push("not-found")
+                    router.push("/not-found")
                 else
                     setShow(false)
             } finally {

@@ -20,6 +20,12 @@ const Api = {
         );
         return response?.data;
     },
+    getAllTransActionsOfAUser: async (payload) => {
+        const response = await clientWithAuth.get(
+            `transactionGet/getAllTransActionsOfAUser?page=${payload?.page}&perPage=${payload?.perPage}&id=${payload?.id}`
+        );
+        return response?.data;
+    },
     TXStatus: async (payload) => {
         const response = await clientWithAuth.post(
             `transactionUpdate/TransActionStatus`,

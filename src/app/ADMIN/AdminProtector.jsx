@@ -20,7 +20,7 @@ export default function AdminProtector({ children, Wait, shouldRouterPush, showN
                 const isUserAdmin = res?.isAdmin
                 if (!isUserAdmin) {
                     if (shouldRouterPush)
-                        router.push("not-found")
+                        router.push("/not-found")
                     else
                         setShow(false)
                 } else {
@@ -28,7 +28,7 @@ export default function AdminProtector({ children, Wait, shouldRouterPush, showN
                 }
             } catch (error) {
                 if (shouldRouterPush)
-                    router.push("not-found")
+                    router.push("/not-found")
                 else
                     setShow(false)
             } finally {

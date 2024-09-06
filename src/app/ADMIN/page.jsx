@@ -1,6 +1,6 @@
 import Main from '@/components/admin/MainAdmin'
 
-const CustomObj = (array, tab) => {
+export const searchParamsHandler = (array, tab) => {
   const res = {}
 
   array.map((val, index) => {
@@ -13,8 +13,8 @@ const CustomObj = (array, tab) => {
 }
 
 export default function Home({ searchParams }) {
-  const tabs = CustomObj(['products', 'users', 'sellers', 'categories', 'subcategories', 'tx', 'comments', 'discounts'], searchParams?.tab)
-  const discountTabs = CustomObj(['festivals', 'majorShopping', 'company'], searchParams?.discountTab)
+  const tabs = searchParamsHandler(['products', 'users', 'sellers', 'categories', 'subcategories', 'tx', 'comments', 'discounts'], searchParams?.tab)
+  const discountTabs = searchParamsHandler(['festivals', 'majorShopping', 'company'], searchParams?.discountTab)
 
   return (
     <Main tabs={tabs} discountTabs={discountTabs} />

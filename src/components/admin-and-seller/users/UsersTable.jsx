@@ -13,6 +13,7 @@ import { setCurrentPage } from '../redux/reducers/global';
 import { setIsModalDeleteOpen, setSelectedItem } from '../redux/reducers/users';
 import { getUsersFromServer } from '../redux/globalAsyncThunks';
 import { StyledTableCell, StyledTableRow } from '../products/ProductsTable';
+import Link from 'next/link';
 
 
 export default function UsersTable() {
@@ -101,7 +102,16 @@ export default function UsersTable() {
                                                 {selectedItem?._id === item._id ? (
                                                     <div className='text-center mt-2 text-xs'>درحال انجام عملیات</div>
                                                 ) : (
-                                                    <>
+                                                    <div className='flex flex-col gap-2'>
+                                                        <Button
+                                                            variant='outlined'
+                                                            color='info'
+                                                            className='p-0 m-1'
+                                                        >
+                                                            <Link href={'/ADMIN/users/' + item?._id}>
+                                                                مشاهده بیشتر
+                                                            </Link>
+                                                        </Button>
                                                         <Button
                                                             variant='outlined'
                                                             sx={{ color: 'red', borderColor: 'red' }}
@@ -113,7 +123,7 @@ export default function UsersTable() {
                                                         >
                                                             حذف
                                                         </Button>
-                                                    </>
+                                                    </div>
                                                 )}
                                                 {selectedItem?._id === item._id && operatingError !== '' ? (
                                                     <>
