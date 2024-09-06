@@ -47,7 +47,7 @@ export default function Breadcrumbs() {
           })
           if (BreadcrumbsArray.length > 2) {
             const response3 = await getOneProduct({ id: BreadcrumbsArray[2] });
-            setProductName(response3?.data?.product?.name)
+            setProductName(response3?.product?.name)
           }
         }
       }

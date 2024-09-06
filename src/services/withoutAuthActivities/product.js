@@ -12,7 +12,7 @@ const Api = {
         const response = await clientWithoutAuth.get(
             `productGet/getOneProduct?id=${payload?.id}`
         );
-        return response;
+        return response?.data;
     },
     getOneProductParams: async (payload) => {
         const response = await clientWithoutAuth.get(

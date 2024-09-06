@@ -29,7 +29,7 @@ export default function Item() {
     const getProduct = async () => {
       try {
         const p = await getOneProduct({ id: path.split("/")[4] });
-        setProduct({ ...p.data.product });
+        setProduct({ ...p?.product });
       } catch (error) {
         router.push('/not-found')
       } finally {

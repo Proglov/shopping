@@ -15,6 +15,7 @@ import { getProductsFromServer, toggleAvailabilityProduct } from '../redux/globa
 import { setCurrentPage } from '../redux/reducers/global';
 import { useDispatch, useSelector } from 'react-redux';
 import { setIsModalEditOpen, setSelectedItem } from '../redux/reducers/products';
+import Link from 'next/link';
 
 
 export const StyledTableCell = styled(TableCell)(() => ({
@@ -125,6 +126,15 @@ export default function ProductsTable({ which }) {
                                                     </div>
                                                 ) : (
                                                     <div className='flex flex-col gap-2'>
+                                                        <Button
+                                                            variant='outlined'
+                                                            className='p-0 m-1'
+                                                            color='info'
+                                                        >
+                                                            <Link href={'/ADMIN/products/' + item?._id}>
+                                                                مشاهده بیشتر
+                                                            </Link>
+                                                        </Button>
                                                         <Button
                                                             variant='outlined'
                                                             className='p-0 m-1'
