@@ -1,21 +1,24 @@
 'use client'
 import Api from '@/services/withoutAuthActivities/product'
 import { useRouter } from 'next/navigation'
+import { useEffect } from 'react'
 
 export default function GetParams({ id }) {
     const { getOneProductParams } = Api
     const router = useRouter()
 
-    const getParams = async () => {
-        try {
-            const res = await getOneProductParams({ id })
-            router.push('/categories/' + res?.params)
-        } catch (error) {
-            router.push('/not-found')
+    useEffect(() => {
+        const getParams = async () => {
+            try {
+                const res = await getOneProductParams({ id })
+                router.push('/categories/' + res?.params)
+            } catch (error) {
+                router.push('/not-found')
+            }
         }
-    }
+        getParams()
+    }, [])
 
-    getParams()
     return (
         <div className='text-center mt-5'>لطفا صبر کنید ...</div>
     )

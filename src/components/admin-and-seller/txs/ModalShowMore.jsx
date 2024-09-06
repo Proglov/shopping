@@ -4,10 +4,11 @@ import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import Fade from '@mui/material/Fade';
 import { Button } from '@mui/material';
-import { MdKeyboardDoubleArrowLeft, MdKeyboardDoubleArrowRight } from "react-icons/md";
+import { MdKeyboardArrowRight, MdKeyboardArrowLeft } from "react-icons/md";
 import { convertToFarsiNumbers } from '@/utils/funcs';
 import { useDispatch, useSelector } from 'react-redux';
 import { setIsModalShowMoreOpen } from '../redux/reducers/transactions';
+import Link from 'next/link';
 
 const ModalStyle = {
     position: 'absolute',
@@ -31,7 +32,7 @@ export default function ModalShowMore() {
     const handleClose = () => {
         dispatch(setIsModalShowMoreOpen(false));
     }
-
+    console.log(selectedItem);
     return (
         <>
             <Modal
@@ -60,19 +61,17 @@ export default function ModalShowMore() {
                                         !!selectedItem?.boughtProducts &&
                                         selectedItem?.boughtProducts.map((bp, i) => (
                                             <div key={i} className='flex'>
-                                                <span className='flex'>
-                                                    <MdKeyboardDoubleArrowRight className='mt-1 text-red-600' />
+                                                <Link href={'/products/' + bp?.productId?._id} className='flex text-purple-700 underline'>
                                                     {bp.productId.name}
-                                                    <MdKeyboardDoubleArrowLeft className='mt-1 text-red-600' />
-                                                </span>
+                                                </Link>
 
                                                 &nbsp;
                                                 به تعداد
                                                 &nbsp;
-                                                <span className='flex'>
-                                                    <MdKeyboardDoubleArrowRight className='mt-1 text-red-600' />
+                                                <span className='flex gap-0 justify-center'>
+                                                    <MdKeyboardArrowRight className='mt-1 text-red-600' />
                                                     {bp.quantity}
-                                                    <MdKeyboardDoubleArrowLeft className='mt-1 text-red-600' />
+                                                    <MdKeyboardArrowLeft className='mt-1 text-red-600' />
                                                 </span>
                                                 &nbsp;
                                                 عدد
