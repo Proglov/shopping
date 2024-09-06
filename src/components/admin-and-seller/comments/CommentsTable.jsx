@@ -15,6 +15,7 @@ import { setCurrentPage } from '../redux/reducers/global';
 import { getInvalidatedCommentsFromServer } from '../redux/globalAsyncThunks';
 import { getConfirmedCommentsFromServer, setSelectedId, setIsModalConfirmOpen, setIsModalDeleteOpen, setIsConfirmedTableOperating, setCurrentPageConfirmedComments } from '../redux/reducers/comments';
 import { StyledTableCell, StyledTableRow } from '../products/ProductsTable';
+import Link from 'next/link';
 
 
 
@@ -43,12 +44,13 @@ const Component = ({ validated, itemsCount, error, loading, items, currentPage, 
             items?.length !== 0 ?
                 <div>
                     <TableContainer component={Paper}>
-                        <Table sx={{ minWidth: 1000 }} aria-label="customized table">
+                        <Table aria-label="customized table">
                             <TableHead>
                                 <TableRow>
                                     <StyledTableCell align='center'>ردیف</StyledTableCell>
-                                    <StyledTableCell align='center'>آیدی کاربر</StyledTableCell>
+                                    <StyledTableCell align='center'>کاربر</StyledTableCell>
                                     <StyledTableCell align='center'>متن ارسال شده</StyledTableCell>
+                                    <StyledTableCell align='center'>محصول</StyledTableCell>
                                     <StyledTableCell align='center'>عملیات</StyledTableCell>
                                 </TableRow>
                             </TableHead>
@@ -57,8 +59,16 @@ const Component = ({ validated, itemsCount, error, loading, items, currentPage, 
                                     <StyledTableRow key={item._id}
                                         className='align-middle'>
                                         <StyledTableCell align='center'>{convertToFarsiNumbers(index + 1 + itemsPerPage * (currentPage - 1))}</StyledTableCell>
-                                        <StyledTableCell align='center'>{item.ownerId?._id}</StyledTableCell>
-                                        <StyledTableCell align='center'>{item.body}</StyledTableCell>
+                                        <StyledTableCell align='center'>
+                                            <Link href={'ADMIN/users/' + item.ownerId?._id} className="text-purple-600 underline">
+                                                {item.ownerId?.name}
+                                            </Link>
+                                        </StyledTableCell>
+                                        <StyledTableCell align='center'>{item.body}</StyledTableCell><StyledTableCell align='center'>
+                                            <Link href={'/products/' + item.productId?._id} className="text-purple-600 underline">
+                                                {item.productId?.name}
+                                            </Link>
+                                        </StyledTableCell>
                                         <StyledTableCell className='border-b-0'>
                                             {selectedId === item._id ? (
                                                 <div className='text-center mt-2 text-xs'>درحال انجام عملیات</div>
@@ -151,13 +161,13 @@ export default function CommentsTable({ validated }) {
         if (validated) {
             dispatch(getConfirmedCommentsFromServer({ page: currentPageConfirmedComments, perPage: itemsPerPageConfirmedComments }))
         }
-    }, [dispatch, currentPageConfirmedComments, itemsPerPageConfirmedComments, validated]);
+    }, [dispatch, currentPageConfirmedComments, itemsPerPageConfirmedComments]);
 
     useEffect(() => {
         if (!validated) {
             dispatch(getInvalidatedCommentsFromServer({ page: currentPage, perPage: itemsPerPage }))
         }
-    }, [dispatch, currentPage, itemsPerPage, validated]);
+    }, [dispatch, currentPage, itemsPerPage]);
 
     const handlePageClick = (page, setPage, current) => {
         if (current !== page) {

@@ -148,7 +148,6 @@ export default function MyTX({ id }) {
             setInitialLoading(true);
             try {
                 const response = await getAllTransActionsOfAUser({ page: currentPage, perPage, id });
-                console.log(response);
                 setTransactions(response?.transactions)
                 setTransactionsCount(response?.transactionsCount)
             } catch (error) {

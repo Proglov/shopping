@@ -128,7 +128,9 @@ export const getInvalidatedCommentsFromServer = createAsyncThunk(
     "Global/getInvalidatedCommentsFromServer",
     async ({ page, perPage }) => {
         const { getAllComments } = Api9
-        return await getAllComments({ page, perPage, validated: false })
+        const x = await getAllComments({ page, perPage, validated: false })
+        console.log(x);
+        return x
     }
 )
 export const deleteCommentFromServer = createAsyncThunk(

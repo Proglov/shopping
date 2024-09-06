@@ -8,6 +8,12 @@ const Api = {
         );
         return response?.data;
     },
+    getAllCommentsOfAUser: async (payload) => {
+        const response = await clientWithoutAuth.get(
+            `commentGet/getAllCommentsOfAUser?page=${payload?.page}&perPage=${payload?.perPage}&id=${payload?.id}`
+        );
+        return response?.data;
+    },
     getCommentsOfAProduct: async (payload) => {
         const response = await clientWithoutAuth.get(
             `commentGet/getCommentsOfAProduct?id=${payload?.id}&page=${payload?.page}&perPage=${payload?.perPage}`
