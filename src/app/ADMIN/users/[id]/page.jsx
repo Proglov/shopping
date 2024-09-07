@@ -1,5 +1,5 @@
 import UserMain from "@/components/admin/user/UserMain";
-import { searchParamsHandler } from "../../page";
+import { searchParamsHandler } from "@/utils/funcs";
 
 
 export default async function page({ params: { id }, searchParams }) {

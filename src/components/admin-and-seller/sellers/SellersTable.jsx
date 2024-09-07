@@ -88,7 +88,7 @@ const CommonTable = ({ validated, itemsCount, error, loading, items, currentPage
                                                             color='info'
                                                             className='p-0 m-1'
                                                         >
-                                                            <Link href={'/ADMIN/seller/' + item._id}>
+                                                            <Link href={'/ADMIN/sellers/' + item._id}>
                                                                 مشاهده بیشتر
                                                             </Link>
                                                         </Button>

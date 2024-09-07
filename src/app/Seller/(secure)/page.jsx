@@ -1,5 +1,5 @@
-import { searchParamsHandler } from '@/app/ADMIN/page'
 import Main from '@/components/seller/MainSeller'
+import { searchParamsHandler } from '@/utils/funcs'
 
 export default function Home({ searchParams }) {
   const tabs = searchParamsHandler(['products', 'tx', 'setting', 'discounts'], searchParams?.tab)
