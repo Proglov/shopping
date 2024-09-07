@@ -49,36 +49,40 @@ export default function UserComments({ id }) {
                 </Box>
                 :
                 <Box className='flex flex-col gap-3'>
-
-                    <TableContainer component={Paper}>
-                        <Table aria-label="customized table">
-                            <TableHead>
-                                <TableRow>
-                                    <StyledTableCell align='center'>ردیف</StyledTableCell>
-                                    <StyledTableCell align='center'>متن ارسال شده</StyledTableCell>
-                                    <StyledTableCell align='center'>محصول</StyledTableCell>
-                                    <StyledTableCell align='center'>وضعیت</StyledTableCell>
-                                </TableRow>
-                            </TableHead>
-                            <TableBody>
-                                {comments.map((item, index) => (
-                                    <StyledTableRow key={item._id}
-                                        className='align-middle'>
-                                        <StyledTableCell align='center'>{convertToFarsiNumbers(index + 1 + perPage * (currentPage - 1))}</StyledTableCell>
-                                        <StyledTableCell align='center'>{item.body}</StyledTableCell>
-                                        <StyledTableCell align='center'>
-                                            <Link href={'/products/' + item.productId?._id} className="text-purple-600 underline">
-                                                {item.productId?.name}
-                                            </Link>
-                                        </StyledTableCell>
-                                        <StyledTableCell>
-                                            <div className={`mx-auto w-4 h-4 ${item?.validated ? 'bg-green-500' : 'bg-red-600'}  rounded-full`}></div>
-                                        </StyledTableCell>
-                                    </StyledTableRow>
-                                ))}
-                            </TableBody>
-                        </Table>
-                    </TableContainer>
+                    {
+                        comments.length === 0 ?
+                            <span className="text-center">این کاربر تاکنون نظری نداده است!</span>
+                            :
+                            <TableContainer component={Paper}>
+                                <Table aria-label="customized table">
+                                    <TableHead>
+                                        <TableRow>
+                                            <StyledTableCell align='center'>ردیف</StyledTableCell>
+                                            <StyledTableCell align='center'>متن ارسال شده</StyledTableCell>
+                                            <StyledTableCell align='center'>محصول</StyledTableCell>
+                                            <StyledTableCell align='center'>وضعیت</StyledTableCell>
+                                        </TableRow>
+                                    </TableHead>
+                                    <TableBody>
+                                        {comments.map((item, index) => (
+                                            <StyledTableRow key={item._id}
+                                                className='align-middle'>
+                                                <StyledTableCell align='center'>{convertToFarsiNumbers(index + 1 + perPage * (currentPage - 1))}</StyledTableCell>
+                                                <StyledTableCell align='center'>{item.body}</StyledTableCell>
+                                                <StyledTableCell align='center'>
+                                                    <Link href={'/products/' + item.productId?._id} className="text-purple-600 underline">
+                                                        {item.productId?.name}
+                                                    </Link>
+                                                </StyledTableCell>
+                                                <StyledTableCell>
+                                                    <div className={`mx-auto w-4 h-4 ${item?.validated ? 'bg-green-500' : 'bg-red-600'}  rounded-full`}></div>
+                                                </StyledTableCell>
+                                            </StyledTableRow>
+                                        ))}
+                                    </TableBody>
+                                </Table>
+                            </TableContainer>
+                    }
 
                     {
                         commentsCount > perPage &&

@@ -600,7 +600,12 @@ export default function CommentItem({ productID }) {
           })
         ) : (
           <Box component="div" className="text-center m-5">
-            نظری تا کنون ثبت نشده است ! اولین نفری باشید که نظر می دهید .
+            {
+              !loading &&
+              <>
+                نظری تا کنون ثبت نشده است ! اولین نفری باشید که نظر می دهید .
+              </>
+            }
           </Box>
         )}
       </Box>
