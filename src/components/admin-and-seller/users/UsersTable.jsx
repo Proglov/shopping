@@ -7,10 +7,8 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import ModalDelete from './ModalDelete';
 import { useDispatch, useSelector } from 'react-redux';
 import { setCurrentPage } from '../redux/reducers/global';
-import { setIsModalDeleteOpen, setSelectedItem } from '../redux/reducers/users';
 import { getUsersFromServer } from '../redux/globalAsyncThunks';
 import { StyledTableCell, StyledTableRow } from '../products/ProductsTable';
 import Link from 'next/link';
@@ -112,17 +110,6 @@ export default function UsersTable() {
                                                                 مشاهده بیشتر
                                                             </Link>
                                                         </Button>
-                                                        <Button
-                                                            variant='outlined'
-                                                            sx={{ color: 'red', borderColor: 'red' }}
-                                                            className='p-0 m-1'
-                                                            onClick={() => {
-                                                                dispatch(setIsModalDeleteOpen(true));
-                                                                dispatch(setSelectedItem({ ...item }))
-                                                            }}
-                                                        >
-                                                            حذف
-                                                        </Button>
                                                     </div>
                                                 )}
                                                 {selectedItem?._id === item._id && operatingError !== '' ? (
@@ -150,7 +137,6 @@ export default function UsersTable() {
                     </div>
             )}
 
-            <ModalDelete />
 
         </Stack>
     );

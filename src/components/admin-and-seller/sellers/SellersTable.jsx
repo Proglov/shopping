@@ -8,13 +8,13 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { convertToFarsiNumbers } from '@/utils/funcs';
-import ModalDelete from './ModalDelete';
 import ModalConfirm from './ModalConfirm';
 import { useDispatch, useSelector } from 'react-redux';
 import { setCurrentPage } from '../redux/reducers/global';
 import { getInvalidatedSellersFromServer } from '../redux/globalAsyncThunks';
-import { getConfirmedSellersFromServer, setSelectedId, setIsModalConfirmOpen, setIsModalDeleteOpen, setCurrentPageConfirmedSellers, setIsConfirmedTableOperating } from '../redux/reducers/sellers';
+import { getConfirmedSellersFromServer, setSelectedId, setIsModalConfirmOpen, setIsModalDeleteOpen, setCurrentPageConfirmedSellers } from '../redux/reducers/sellers';
 import { StyledTableCell, StyledTableRow } from '../products/ProductsTable';
+import Link from 'next/link';
 
 
 
@@ -85,15 +85,12 @@ const CommonTable = ({ validated, itemsCount, error, loading, items, currentPage
 
                                                         <Button
                                                             variant='outlined'
-                                                            sx={{ color: 'red', borderColor: 'red' }}
+                                                            color='info'
                                                             className='p-0 m-1'
-                                                            onClick={() => {
-                                                                dispatch(setIsConfirmedTableOperating(!!validated));
-                                                                dispatch(setIsModalDeleteOpen(true));
-                                                                dispatch(setSelectedId(item._id));
-                                                            }}
                                                         >
-                                                            حذف
+                                                            <Link href={'/ADMIN/seller/' + item._id}>
+                                                                مشاهده بیشتر
+                                                            </Link>
                                                         </Button>
                                                     </div>
                                                 )}
@@ -181,7 +178,6 @@ export default function SellersTable({ validated }) {
                 validated &&
                 <CommonTable currentPage={currentPageConfirmedSellers} dispatch={dispatch} error={errorConfirmedSellers} items={confirmedSellers} itemsCount={itemsCountConfirmedSellers} itemsPerPage={itemsPerPageConfirmedSellers} lastPage={lastPageConfirmedSellers} loading={loadingConfirmedSellers} selectedId={selectedId} handlePageClick={handlePageClick} setPage={setCurrentPageConfirmedSellers} setIsModalConfirmOpen={setIsModalConfirmOpen} setIsModalDeleteOpen={setIsModalDeleteOpen} validated={true} operatingError={operatingError} />
             }
-            <ModalDelete />
         </>
     )
 }
