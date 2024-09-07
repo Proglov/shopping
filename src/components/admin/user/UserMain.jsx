@@ -73,7 +73,7 @@ export default function UserMain({ id, tabs }) {
 
     return (
         <div className="mt-5">
-            <Link href={'/'} className='flex justify-center text-red-500 underline my-4'>
+            <Link href={'/'} className='max-w-xl flex mx-auto text-red-500 '>
                 بازگشت به خانه
                 <AiOutlineHome className='mr-1 mt-1' />
             </Link>
@@ -112,7 +112,7 @@ export default function UserMain({ id, tabs }) {
             </TableContainer>
 
             <Box
-                className='mt-5 p-3 flex flex-col text-black'
+                className='mt-5 p-3 max-w-xl mx-auto flex flex-col text-black'
                 sx={{ flexGrow: 1 }}
             >
                 <Tabs

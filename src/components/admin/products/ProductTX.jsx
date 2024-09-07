@@ -127,8 +127,8 @@ const TransactionComponent = ({ transaction, txStatuses }) => (
     </Box>
 )
 
-export default function UserTX({ id }) {
-    const { getAllTransActionsOfAUser } = Api
+export default function ProductTX({ id }) {
+    const { getAllTransActionsOfAProduct } = Api
     const [initialLoading, setInitialLoading] = useState(true)
     const [transactions, setTransactions] = useState([])
     const perPage = 10;
@@ -147,7 +147,7 @@ export default function UserTX({ id }) {
         const fetchTransactions = async () => {
             setInitialLoading(true);
             try {
-                const response = await getAllTransActionsOfAUser({ page: currentPage, perPage, id });
+                const response = await getAllTransActionsOfAProduct({ page: currentPage, perPage, id });
                 setTransactions(response?.transactions)
                 setTransactionsCount(response?.transactionsCount)
             } catch (error) {
@@ -187,10 +187,9 @@ export default function UserTX({ id }) {
                 </Box>
                 :
                 <Box className='flex flex-col gap-3'>
-
                     {
                         transactions.length === 0 ?
-                            <span className="text-center">این کاربر تاکنون سفارشی نداده است!</span>
+                            <span className="text-center">این محصول تاکنون در هیچ سفارشی نبوده است!</span>
                             :
                             transactions.map((transaction, index) => (
                                 <TransactionComponent key={index} transaction={transaction} txStatuses={txStatuses} />

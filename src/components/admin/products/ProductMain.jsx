@@ -9,6 +9,7 @@ import Link from "next/link";
 import { AiOutlineHome } from "react-icons/ai";
 import { convertToFarsiNumbers, formatPrice, iranianCalendar } from "@/utils/funcs";
 import DOMPurify from "dompurify";
+import ProductTX from "./ProductTX";
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -50,7 +51,6 @@ export default function ProductMain({ id, tabs }) {
         const getProduct = async () => {
             try {
                 const productData = await getOneProduct({ id });
-                console.log(productData);
                 setProduct(productData?.product);
             } catch (error) {
                 setError(error);
@@ -74,10 +74,14 @@ export default function ProductMain({ id, tabs }) {
 
     return (
         <div className="mt-5">
-            <Link href={'/'} className='flex justify-center text-red-500 underline my-4'>
+            <Link href={'/'} className='max-w-xl flex mx-auto text-red-500 '>
                 بازگشت به خانه
                 <AiOutlineHome className='mr-1 mt-1' />
             </Link>
+
+            <Typography className="text-center">
+                محصول من
+            </Typography>
 
             <TableContainer component={Paper} className="max-w-xl mx-auto">
                 <Table aria-label="customized table">
@@ -159,7 +163,7 @@ export default function ProductMain({ id, tabs }) {
             }
 
             <Box
-                className='mt-5 p-3 flex flex-col text-black'
+                className='mt-5 p-3 max-w-xl mx-auto flex flex-col text-black'
                 sx={{ flexGrow: 1 }}
             >
                 <Tabs
@@ -176,11 +180,18 @@ export default function ProductMain({ id, tabs }) {
                         }
                     }}
                 >
-                    <Tab label="سفارش ها" {...a11yProps(0)} />
+                    <Tab label="تراکنش ها" {...a11yProps(0)} />
+                    <Tab label="کامنت ها" {...a11yProps(1)} />
                 </Tabs>
                 <div style={{ width: '100%' }}>
                     <TabPanel value={tabs.active} index={0} className='text-center'>
-                        hi
+                        <Typography className="text-center pb-5">
+                            تراکنش هایی که این محصول در آنها حضور دارد
+                        </Typography>
+                        <ProductTX id={id} />
+                    </TabPanel>
+                    <TabPanel value={tabs.active} index={1} className='text-center'>
+                        h
                     </TabPanel>
                 </div>
             </Box>
