@@ -20,6 +20,12 @@ const Api = {
         );
         return response?.data;
     },
+    getCommentsOfAProductForSeller: async (payload) => {
+        const response = await clientWithoutAuth.get(
+            `commentGet/getCommentsOfAProductForSeller?id=${payload?.id}&page=${payload?.page}&perPage=${payload?.perPage}`
+        );
+        return response?.data;
+    },
     getOneComment: async (payload) => {
         const response = await clientWithoutAuth.get(
             `commentGet/getOneComment?id=${payload?.id}`

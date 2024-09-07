@@ -50,7 +50,7 @@ export default function ModalShowMore() {
             >
                 <Fade in={isModalShowMoreOpen}>
                     {
-                        selectedItem.id !== '' &&
+                        selectedItem?.id !== '' &&
                         <Box sx={ModalStyle} className='rounded-3xl'>
 
                             <div>

@@ -1,4 +1,4 @@
-import ProductMain from '@/components/admin/products/ProductMain'
+import ProductMain from '@/components/admin/product/ProductMain'
 import { searchParamsHandler } from '../../page'
 
 export default function page({ params: { id }, searchParams }) {

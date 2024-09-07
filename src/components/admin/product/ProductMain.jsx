@@ -10,6 +10,7 @@ import { AiOutlineHome } from "react-icons/ai";
 import { convertToFarsiNumbers, formatPrice, iranianCalendar } from "@/utils/funcs";
 import DOMPurify from "dompurify";
 import ProductTX from "./ProductTX";
+import ProductComments from "./ProductComments";
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -191,7 +192,7 @@ export default function ProductMain({ id, tabs }) {
                         <ProductTX id={id} />
                     </TabPanel>
                     <TabPanel value={tabs.active} index={1} className='text-center'>
-                        h
+                        <ProductComments id={id} />
                     </TabPanel>
                 </div>
             </Box>
