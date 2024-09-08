@@ -30,6 +30,7 @@ export default function AddProduct() {
         formData: {
             name: '',
             price: 0,
+            count: 0,
             category: '',
             desc: '',
             subcategory: '',
@@ -56,7 +57,7 @@ export default function AddProduct() {
 
     const handleChange = (event) => {
         const { name, value } = event.target;
-        if (name === 'price') {
+        if (name === 'price' || name === 'count') {
             const newValue = parseInt(value) || 0
             setAddNewData(prevProps => {
                 if (newValue == value)
@@ -64,7 +65,7 @@ export default function AddProduct() {
                         ...prevProps,
                         formData: {
                             ...prevProps.formData,
-                            price: newValue,
+                            [name]: newValue,
                         }
                     }
                 return {
@@ -102,6 +103,12 @@ export default function AddProduct() {
                 ...prevProps,
                 isSubmitting: false
             }))
+        } else if (AddNewData.formData.count == 0 || AddNewData.formData.count == '') {
+            toast.error('تعداد محصولات ضروری میباشد')
+            setAddNewData(prevProps => ({
+                ...prevProps,
+                isSubmitting: false
+            }))
         } else if (AddNewData.formData.category === '') {
             toast.error('دسته بندی محصول ضروری میباشد')
             setAddNewData(prevProps => ({
@@ -118,16 +125,17 @@ export default function AddProduct() {
             try {
                 // set the subcategoryId
                 let subcategoryId = '';
-                let bool = true;
+                let flag = true;
                 let i = 0;
-                while (bool) {
-                    for (let j = 0; j < categories[i].subcategories.length; j++) {
-                        if (categories[i].subcategories[j]?.subcategoryName === AddNewData?.formData.subcategory) {
-                            subcategoryId = categories[i].subcategories[j]?.subcategoryId
-                            bool = false;
-                            break
+                while (flag) {
+                    categories[i].subcategories.find(subcategory => {
+                        if (subcategory.subcategoryName === AddNewData?.formData.subcategory) {
+                            subcategoryId = subcategory.subcategoryId
+                            flag = false;
+                            return true
                         }
-                    }
+                        return false
+                    })
                     i++;
                 }
 
@@ -136,6 +144,7 @@ export default function AddProduct() {
                     name: AddNewData.formData.name,
                     price: AddNewData.formData.price,
                     desc: AddNewData.formData.desc,
+                    count: AddNewData.formData.count,
                     subcategoryId,
                     imagesUrl: uploadRes
                 };
@@ -210,6 +219,22 @@ export default function AddProduct() {
                                 {price2Farsi(AddNewData.formData.price)} تومان
                             </div>
                         }
+
+                    </Grid>
+
+                    <Grid item xs={12} sm={12} md={12} lg={6}>
+                        <div className='text-start text-sm mb-1'>
+                            تعداد محصولات موجود
+                        </div>
+                        <input
+                            className="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500"
+                            id="inline-full-name"
+                            type="text"
+                            name="count"
+                            value={AddNewData.formData.count}
+                            placeholder={`تعداد محصولات موجود در انبار را وارد کنید`}
+                            onChange={handleChange}
+                        />
 
                     </Grid>
 

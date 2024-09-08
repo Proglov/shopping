@@ -9,7 +9,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import { formatPrice, price2Farsi } from '@/utils/funcs';
+import { convertToFarsiNumbers, formatPrice, price2Farsi } from '@/utils/funcs';
 import ModalEdit from './ModalEdit';
 import { getProductsFromServer, toggleAvailabilityProduct } from '../redux/globalAsyncThunks';
 import { setCurrentPage } from '../redux/reducers/global';
@@ -103,7 +103,7 @@ export default function ProductsTable({ which }) {
                                         <StyledTableCell align='center'>قیمت به عدد</StyledTableCell>
                                         <StyledTableCell align='center'>دسته بندی</StyledTableCell>
                                         <StyledTableCell align='center'>زیر دسته بندی</StyledTableCell>
-                                        <StyledTableCell align='center'>موجود</StyledTableCell>
+                                        <StyledTableCell align='center'>تعداد</StyledTableCell>
                                         <StyledTableCell align='center'>عملیات</StyledTableCell>
                                     </TableRow>
                                 </TableHead>
@@ -117,9 +117,7 @@ export default function ProductsTable({ which }) {
                                             <StyledTableCell align='center'>{formatPrice(item.price)}</StyledTableCell>
                                             <StyledTableCell align='center'>{item.subcategoryId?.categoryId.name}</StyledTableCell>
                                             <StyledTableCell align='center'>{item.subcategoryId?.name}</StyledTableCell>
-                                            <StyledTableCell align='center'>
-                                                <div style={{ width: '20px', height: '20px' }} className={`${item?.available ? 'bg-green-400' : 'bg-red-400'} rounded-full mx-auto`} />
-                                            </StyledTableCell>
+                                            <StyledTableCell align='center'>{convertToFarsiNumbers(item?.count || 0)}</StyledTableCell>
                                             <StyledTableCell className='border-b-0'>
                                                 {selectedItem?._id === item._id ? (
                                                     <div className='text-center mt-2 text-xs'>درحال انجام عملیات
