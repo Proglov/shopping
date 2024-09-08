@@ -8,6 +8,12 @@ const Api = {
         );
         return response?.data;
     },
+    getAllProductsOfASeller: async (payload) => {
+        const response = await clientWithAuth.get(
+            `/productGet/getAllProductsOfASeller?page=${payload?.page}&perPage=${payload?.perPage}&id=${payload?.id}`
+        );
+        return response?.data;
+    },
     createProduct: async (payload) => {
         const response = await clientWithAuth.post(
             `/productPost/ProductCreate`,

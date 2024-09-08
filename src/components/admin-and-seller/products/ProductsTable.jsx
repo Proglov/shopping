@@ -9,7 +9,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import { price2Farsi } from '@/utils/funcs';
+import { formatPrice, price2Farsi } from '@/utils/funcs';
 import ModalEdit from './ModalEdit';
 import { getProductsFromServer, toggleAvailabilityProduct } from '../redux/globalAsyncThunks';
 import { setCurrentPage } from '../redux/reducers/global';
@@ -114,7 +114,7 @@ export default function ProductsTable({ which }) {
                                             <StyledTableCell align='center'>{index + 1 + itemsPerPage * (currentPage - 1)}</StyledTableCell>
                                             <StyledTableCell align='center'>{item.name}</StyledTableCell>
                                             <StyledTableCell align='center'>{price2Farsi(item.price)} تومان</StyledTableCell>
-                                            <StyledTableCell align='center'>{item.price}</StyledTableCell>
+                                            <StyledTableCell align='center'>{formatPrice(item.price)}</StyledTableCell>
                                             <StyledTableCell align='center'>{item.subcategoryId?.categoryId.name}</StyledTableCell>
                                             <StyledTableCell align='center'>{item.subcategoryId?.name}</StyledTableCell>
                                             <StyledTableCell align='center'>

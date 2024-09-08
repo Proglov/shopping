@@ -7,7 +7,8 @@ import { GradientCircularProgress } from "@/app/loading";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { AiOutlineHome } from "react-icons/ai";
-import SellerComments from "./SellerComments";
+import UserComments from "../user/UserComments";
+import SellerProducts from "./SellerProducts";
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -131,7 +132,7 @@ export default function SellerMain({ id, tabs }) {
             </TableContainer>
 
             <Box
-                className='mt-5 p-3 max-w-xl mx-auto flex flex-col text-black'
+                className='mt-5 p-3 mx-auto flex flex-col text-black'
                 sx={{ flexGrow: 1 }}
             >
                 <Tabs
@@ -154,13 +155,13 @@ export default function SellerMain({ id, tabs }) {
                 </Tabs>
                 <div style={{ width: '100%' }}>
                     <TabPanel value={tabs.active} index={0} className='text-center'>
-                        he
+                        <SellerProducts id={id} />
                     </TabPanel>
                     <TabPanel value={tabs.active} index={1} className='text-center'>
                         he
                     </TabPanel>
                     <TabPanel value={tabs.active} index={2} className='text-center'>
-                        <SellerComments id={id} />
+                        <UserComments id={id} />
                     </TabPanel>
                 </div>
             </Box>
