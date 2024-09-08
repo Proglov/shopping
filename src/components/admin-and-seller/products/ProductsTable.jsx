@@ -11,7 +11,7 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { convertToFarsiNumbers, formatPrice, price2Farsi } from '@/utils/funcs';
 import ModalEdit from './ModalEdit';
-import { getProductsFromServer, toggleAvailabilityProduct } from '../redux/globalAsyncThunks';
+import { getProductsFromServer } from '../redux/globalAsyncThunks';
 import { setCurrentPage } from '../redux/reducers/global';
 import { useDispatch, useSelector } from 'react-redux';
 import { setIsModalEditOpen, setSelectedItem } from '../redux/reducers/products';
@@ -30,10 +30,10 @@ export const StyledTableCell = styled(TableCell)(() => ({
 }));
 export const StyledTableRow = styled(TableRow)(() => ({
     '&:nth-of-type(odd)': {
-        backgroundColor: '#f7f7f7',
+        backgroundColor: 'rgba(0, 0, 0,.12)',
     },
     '&:hover': {
-        backgroundColor: '#f5f8ff',
+        backgroundColor: 'rgba(0, 255, 0,.1)',
     },
     '&:last-child td, &:last-child th': {
         border: 0,
@@ -93,8 +93,8 @@ export default function ProductsTable({ which }) {
             ) : (
                 items?.length !== 0 ?
                     <div>
-                        <TableContainer component={Paper}>
-                            <Table sx={{ minWidth: 1000 }} aria-label="customized table">
+                        <TableContainer component={Paper} className='max-w-5xl mx-auto'>
+                            <Table sx={{ minWidth: 900 }} aria-label="customized table">
                                 <TableHead>
                                     <TableRow>
                                         <StyledTableCell align='center'>ردیف</StyledTableCell>
@@ -143,20 +143,6 @@ export default function ProductsTable({ which }) {
                                                             }}
                                                         >
                                                             ویرایش
-                                                        </Button>
-                                                        <Button
-                                                            variant='outlined'
-                                                            sx={{ color: `${!item?.available ? 'green' : 'red'}`, borderColor: `${!item?.available ? 'green' : 'red'}` }}
-                                                            className='p-0 m-1'
-                                                            onClick={() => {
-                                                                dispatch(toggleAvailabilityProduct(item._id));
-                                                            }}
-                                                        >
-                                                            {
-                                                                item.available &&
-                                                                "نا"
-                                                            }
-                                                            موجود شد
                                                         </Button>
                                                     </div>
                                                 )}

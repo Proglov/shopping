@@ -42,8 +42,8 @@ const CommonTable = ({ validated, itemsCount, error, loading, items, currentPage
         ) : (
             items?.length !== 0 ?
                 <div>
-                    <TableContainer component={Paper}>
-                        <Table sx={{ minWidth: 1000 }} aria-label="customized table">
+                    <TableContainer component={Paper} className='max-w-5xl mx-auto'>
+                        <Table sx={{ minWidth: 800 }} aria-label="customized table">
                             <TableHead>
                                 <TableRow>
                                     <StyledTableCell align='center'>ردیف</StyledTableCell>

@@ -54,7 +54,7 @@ export default function Main({ tabs, discountTabs }) {
     return (
         <>
             <Box
-                className='mt-5 p-3 flex flex-col text-black'
+                className='mt-5 p-3 flex flex-col text-black mx-auto max-w-5xl'
                 sx={{ flexGrow: 1 }}
             >
                 <Link href={'/'} className='flex text-red-500'>

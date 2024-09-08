@@ -43,7 +43,7 @@ const Component = ({ validated, itemsCount, error, loading, items, currentPage, 
         ) : (
             items?.length !== 0 ?
                 <div>
-                    <TableContainer component={Paper}>
+                    <TableContainer component={Paper} className='max-w-4xl mx-auto'>
                         <Table aria-label="customized table">
                             <TableHead>
                                 <TableRow>

@@ -157,6 +157,7 @@ export default function AddProduct() {
                     formData: {
                         name: '',
                         price: '',
+                        count: '',
                         category: '',
                         desc: '',
                         subcategory: '',

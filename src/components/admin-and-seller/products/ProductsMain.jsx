@@ -11,7 +11,7 @@ export default function ProductsMain({ which }) {
     const [isHidden, setIsHidden] = useState(true)
 
     return (
-        <div>
+        <div className='max-w-5xl mx-auto'>
             <div className='text-start text-sm mb-1'>
                 {
                     isHidden ?

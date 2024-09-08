@@ -62,8 +62,8 @@ export default function CategoriesTable() {
             ) : (
                 items?.length !== 0 ?
                     <div>
-                        <TableContainer component={Paper}>
-                            <Table sx={{ minWidth: 500 }} aria-label="customized table">
+                        <TableContainer component={Paper} className='max-w-lg mx-auto'>
+                            <Table aria-label="customized table">
                                 <TableHead>
                                     <TableRow>
                                         <StyledTableCell align='center'>ردیف</StyledTableCell>
