@@ -37,14 +37,14 @@ function a11yProps(index) {
     };
 }
 
-export default function ProductMain({ id, tabs }) {
+export default function ProductMain({ id, tabs, which }) {
     const router = useRouter()
     const { getOneProduct } = Api;
     const [product, setProduct] = useState(null);
     const [error, setError] = useState(null);
 
     const handleChange = (_event, newPageIndex) => {
-        router.push(`/ADMIN/products/${id}?tab=${tabs[newPageIndex]}`)
+        router.push(`${(which === 'Seller' ? '/Seller' : '/ADMIN')}/products/${id}?tab=${tabs[newPageIndex]}`)
     };
 
 
@@ -189,7 +189,7 @@ export default function ProductMain({ id, tabs }) {
                         <Typography className="text-center pb-5">
                             تراکنش هایی که این محصول در آنها حضور دارد
                         </Typography>
-                        <ProductTX id={id} />
+                        <ProductTX id={id} which={which} />
                     </TabPanel>
                     <TabPanel value={tabs.active} index={1} className='text-center'>
                         <ProductComments id={id} />

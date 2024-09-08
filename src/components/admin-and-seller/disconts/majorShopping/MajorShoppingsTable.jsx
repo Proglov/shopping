@@ -14,6 +14,7 @@ import { setCurrentPage } from '../../redux/reducers/global';
 import ModalDelete from './ModalDelete';
 import { setIsModalDeleteOpen, setSelectedItem } from '../../redux/reducers/discounts/majorShopping';
 import { StyledTableCell, StyledTableRow } from '../../products/ProductsTable';
+import Link from 'next/link';
 
 
 
@@ -86,7 +87,11 @@ export default function MajorShoppingsTable({ which }) {
                                         <StyledTableRow key={item._id}
                                             className='align-middle'>
                                             <StyledTableCell align='center'>{convertToFarsiNumbers(index + 1 + itemsPerPage * (currentPage - 1))}</StyledTableCell>
-                                            <StyledTableCell align='center'>{item.name}</StyledTableCell>
+                                            <StyledTableCell align='center'>
+                                                <Link className='text-purple-500 underline' href={(which === 'Seller' ? '/Seller' : '/ADMIN') + '/products/' + item?.productId}>
+                                                    {item.name}
+                                                </Link>
+                                            </StyledTableCell>
                                             <StyledTableCell align='center'>{price2Farsi(item.offPercentage)}</StyledTableCell>
                                             <StyledTableCell align='center'>{convertToFarsiNumbers(item?.quantity)}</StyledTableCell>
                                             <StyledTableCell className='border-b-0'>

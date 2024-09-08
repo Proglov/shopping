@@ -131,7 +131,7 @@ export default function ProductsTable({ which }) {
                                                             className='p-0 m-1'
                                                             color='info'
                                                         >
-                                                            <Link href={'/ADMIN/products/' + item?._id}>
+                                                            <Link href={(which === 'Seller' ? '/Seller' : '/ADMIN') + '/products/' + item?._id}>
                                                                 مشاهده بیشتر
                                                             </Link>
                                                         </Button>

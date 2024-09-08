@@ -6,7 +6,7 @@ import { convertToFarsiNumbers, dayOfWeek, formatPrice, iranianCalendar, price2F
 import Link from "next/link";
 import { GradientCircularProgress } from "@/app/loading";
 
-const TransactionComponent = ({ transaction, txStatuses }) => (
+const TransactionComponent = ({ transaction, txStatuses, which }) => (
     <Box className='flex flex-col text-start justify-start gap-2 shadow-lg shadow-slate-400 p-3 rounded-lg'>
 
         <Box>
@@ -23,7 +23,7 @@ const TransactionComponent = ({ transaction, txStatuses }) => (
                 {
                     transaction?.boughtProducts.map((product, i) => (
                         <Box key={i}>
-                            <Link href={'/products/' + product?.productId._id}>
+                            <Link href={(which === 'Seller' ? '/Seller' : '/ADMIN') + '/products/' + product?.productId._id}>
                                 <span dir="rtl" className="text-purple-950 underline">{product.productId.name}</span>
                             </Link>
                             <span className="text-red-600">،</span>
@@ -127,7 +127,7 @@ const TransactionComponent = ({ transaction, txStatuses }) => (
     </Box>
 )
 
-export default function ProductTX({ id }) {
+export default function ProductTX({ id, which }) {
     const { getAllTransActionsOfAProduct } = Api
     const [initialLoading, setInitialLoading] = useState(true)
     const [transactions, setTransactions] = useState([])
@@ -192,7 +192,7 @@ export default function ProductTX({ id }) {
                             <span className="text-center">این محصول تاکنون در هیچ سفارشی نبوده است!</span>
                             :
                             transactions.map((transaction, index) => (
-                                <TransactionComponent key={index} transaction={transaction} txStatuses={txStatuses} />
+                                <TransactionComponent key={index} which={which} transaction={transaction} txStatuses={txStatuses} />
                             ))
                     }
 

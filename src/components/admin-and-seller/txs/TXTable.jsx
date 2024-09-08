@@ -216,12 +216,12 @@ export default function TXTable({ which, isFutureOrder }) {
     return (<>
         {
             !!isFutureOrder &&
-            <Component txStatuses={txStatuses} currentPage={currentPage} dispatch={dispatch} error={error} items={items} itemsCount={itemsCount} itemsPerPage={itemsPerPage} lastPage={lastPage} loading={loading} selectedItem={selectedItem} handlePageClick={handlePageClick} setPage={setCurrentPage} operatingError={operatingError} isFutureOrder={isFutureOrder} which={which} />
+            <Component txStatuses={txStatuses} currentPage={currentPage} dispatch={dispatch} error={error} items={items} itemsCount={itemsCount} itemsPerPage={itemsPerPage} lastPage={lastPage} loading={loading} selectedItem={selectedItem} handlePageClick={handlePageClick} setPage={setCurrentPage} operatingError={operatingError} isFutureOrder={isFutureOrder} />
         }
         {
             !isFutureOrder &&
-            <Component txStatuses={txStatuses} currentPage={currentPageRecentTX} dispatch={dispatch} error={errorRecentTX} items={recentTX} itemsCount={itemsCountRecentTX} itemsPerPage={itemsPerPageRecentTX} lastPage={lastPageRecentTX} loading={loadingRecentTX} selectedItem={selectedItem} handlePageClick={handlePageClick} setPage={setCurrentPageRecentTX} operatingError={operatingError} isFutureOrder={isFutureOrder} which={which} />
+            <Component txStatuses={txStatuses} currentPage={currentPageRecentTX} dispatch={dispatch} error={errorRecentTX} items={recentTX} itemsCount={itemsCountRecentTX} itemsPerPage={itemsPerPageRecentTX} lastPage={lastPageRecentTX} loading={loadingRecentTX} selectedItem={selectedItem} handlePageClick={handlePageClick} setPage={setCurrentPageRecentTX} operatingError={operatingError} isFutureOrder={isFutureOrder} />
         }
-        <ModalShowMore />
+        <ModalShowMore which={which} />
     </>);
 }

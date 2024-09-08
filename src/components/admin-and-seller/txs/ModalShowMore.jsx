@@ -22,7 +22,7 @@ const ModalStyle = {
     p: 4,
 };
 
-export default function ModalShowMore() {
+export default function ModalShowMore({ which }) {
     const dispatch = useDispatch();
     const {
         isModalShowMoreOpen,
@@ -32,7 +32,6 @@ export default function ModalShowMore() {
     const handleClose = () => {
         dispatch(setIsModalShowMoreOpen(false));
     }
-    console.log(selectedItem);
     return (
         <>
             <Modal
@@ -61,7 +60,7 @@ export default function ModalShowMore() {
                                         !!selectedItem?.boughtProducts &&
                                         selectedItem?.boughtProducts.map((bp, i) => (
                                             <div key={i} className='flex'>
-                                                <Link href={'/products/' + bp?.productId?._id} className='flex text-purple-700 underline'>
+                                                <Link href={(which === 'Seller' ? '/Seller' : '/ADMIN') + '/products/' + bp?.productId?._id} className='flex text-purple-700 underline'>
                                                     {bp.productId.name}
                                                 </Link>
 

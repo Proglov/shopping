@@ -23,7 +23,7 @@ const TransactionComponent = ({ transaction, txStatuses }) => (
                 {
                     transaction?.boughtProducts.map((product, i) => (
                         <Box key={i}>
-                            <Link href={'/products/' + product?.productId._id}>
+                            <Link href={'/ADMIN/products/' + product?.productId._id}>
                                 <span dir="rtl" className="text-purple-950 underline">{product.productId.name}</span>
                             </Link>
                             <span className="text-red-600">،</span>

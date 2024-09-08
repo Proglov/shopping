@@ -5,6 +5,7 @@ import Api from "@/services/withAuthActivities/product";
 import { convertToFarsiNumbers, formatPrice, price2Farsi } from "@/utils/funcs";
 import { GradientCircularProgress } from "@/app/loading";
 import { StyledTableCell, StyledTableRow } from "@/components/admin-and-seller/products/ProductsTable";
+import Link from "next/link";
 
 
 export default function SellerProducts({ id }) {
@@ -29,6 +30,7 @@ export default function SellerProducts({ id }) {
             try {
                 const response = await getAllProductsOfASeller({ page: currentPage, perPage, id });
                 setProducts(response?.products)
+                console.log(response?.products)
                 setProductsCount(response?.allProductsCount)
             } catch (error) {
                 console.error(error);
@@ -70,7 +72,11 @@ export default function SellerProducts({ id }) {
                                             <StyledTableRow key={item._id}
                                                 className='align-middle'>
                                                 <StyledTableCell align='center'>{index + 1 + perPage * (currentPage - 1)}</StyledTableCell>
-                                                <StyledTableCell align='center'>{item.name}</StyledTableCell>
+                                                <StyledTableCell align='center'>
+                                                    <Link className='text-purple-500 underline' href={'/ADMIN/products/' + item?._id}>
+                                                        {item.name}
+                                                    </Link>
+                                                </StyledTableCell>
                                                 <StyledTableCell align='center'>{price2Farsi(item.price)} تومان</StyledTableCell>
                                                 <StyledTableCell align='center'>{formatPrice(item.price)}</StyledTableCell>
                                                 <StyledTableCell align='center'>{item.subcategoryId?.categoryId.name}</StyledTableCell>

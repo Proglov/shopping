@@ -70,7 +70,7 @@ export default function UserComments({ id }) {
                                                 <StyledTableCell align='center'>{convertToFarsiNumbers(index + 1 + perPage * (currentPage - 1))}</StyledTableCell>
                                                 <StyledTableCell align='center'>{item.body}</StyledTableCell>
                                                 <StyledTableCell align='center'>
-                                                    <Link href={'/products/' + item.productId?._id} className="text-purple-600 underline">
+                                                    <Link href={'/ADMIN//products/' + item.productId?._id} className="text-purple-600 underline">
                                                         {item.productId?.name}
                                                     </Link>
                                                 </StyledTableCell>

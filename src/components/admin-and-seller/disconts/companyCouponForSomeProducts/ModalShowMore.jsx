@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setIsModalShowMoreOpen } from '../../redux/reducers/discounts/companyCouponForSomeProducts';
 import { GradientCircularProgress } from '@/app/loading';
 import { Typography } from '@mui/material';
+import Link from 'next/link';
 
 const ModalStyle = {
     position: 'absolute',
@@ -20,7 +21,7 @@ const ModalStyle = {
     p: 4,
 };
 
-export default function ModalShowMore() {
+export default function ModalShowMore({ which }) {
     const dispatch = useDispatch();
 
     const { isShowMoreLoading, isModalShowMoreOpen, showMoreProducts: products } = useSelector((state) => state.companyCouponForSomeProducts);
@@ -59,7 +60,9 @@ export default function ModalShowMore() {
                                     {
                                         products.map((product, index) => (
                                             <Typography key={product._id} className={`${index !== 0 && 'pt-2'}`}>
-                                                {product.name}
+                                                <Link className='text-purple-600 underline' href={(which === 'Seller' ? '/Seller' : '/ADMIN') + '/products/' + product?._id}>
+                                                    {product.name}
+                                                </Link>
                                             </Typography>
                                         ))
                                     }

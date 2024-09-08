@@ -14,6 +14,7 @@ import { setCurrentPage } from '../../redux/reducers/global';
 import ModalDelete from './ModalDelete';
 import { setIsModalDeleteOpen, setSelectedItem } from '../../redux/reducers/discounts/festivals';
 import { StyledTableCell, StyledTableRow } from '../../products/ProductsTable';
+import Link from 'next/link';
 
 
 export default function FestivalsTable({ which }) {
@@ -85,7 +86,11 @@ export default function FestivalsTable({ which }) {
                                         <StyledTableRow key={item._id}
                                             className='align-middle'>
                                             <StyledTableCell align='center'>{convertToFarsiNumbers(index + 1 + itemsPerPage * (currentPage - 1))}</StyledTableCell>
-                                            <StyledTableCell align='center'>{item.name}</StyledTableCell>
+                                            <StyledTableCell align='center'>
+                                                <Link className='text-purple-500 underline' href={(which === 'Seller' ? '/Seller' : '/ADMIN') + '/products/' + item?.productId}>
+                                                    {item.name}
+                                                </Link>
+                                            </StyledTableCell>
                                             <StyledTableCell align='center'>{price2Farsi(item.offPercentage)}</StyledTableCell>
                                             <StyledTableCell align='center'>{iranianCalendar(new Date(parseInt(item?.until)))}</StyledTableCell>
                                             <StyledTableCell className='border-b-0'>

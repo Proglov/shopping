@@ -153,7 +153,7 @@ export default function CompanyCouponForSomeProductsTable({ which }) {
             )}
 
             <ModalDelete />
-            <ModalShowMore />
+            <ModalShowMore which={which} />
 
         </Stack>
     );
