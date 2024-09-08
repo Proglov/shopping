@@ -28,7 +28,6 @@ export default function SellerProducts({ id }) {
             setInitialLoading(true);
             try {
                 const response = await getAllProductsOfASeller({ page: currentPage, perPage, id });
-                console.log(response);
                 setProducts(response?.products)
                 setProductsCount(response?.allProductsCount)
             } catch (error) {

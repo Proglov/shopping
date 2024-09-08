@@ -9,6 +9,7 @@ import Link from "next/link";
 import { AiOutlineHome } from "react-icons/ai";
 import UserComments from "../user/UserComments";
 import SellerProducts from "./SellerProducts";
+import SellerTX from "./SellerTX";
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -132,7 +133,7 @@ export default function SellerMain({ id, tabs }) {
             </TableContainer>
 
             <Box
-                className='mt-5 p-3 mx-auto flex flex-col text-black'
+                className='mt-5 p-3 mx-auto flex flex-col max-w-4xl text-black'
                 sx={{ flexGrow: 1 }}
             >
                 <Tabs
@@ -158,7 +159,7 @@ export default function SellerMain({ id, tabs }) {
                         <SellerProducts id={id} />
                     </TabPanel>
                     <TabPanel value={tabs.active} index={1} className='text-center'>
-                        he
+                        <SellerTX id={id} />
                     </TabPanel>
                     <TabPanel value={tabs.active} index={2} className='text-center'>
                         <UserComments id={id} />

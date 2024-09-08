@@ -26,6 +26,12 @@ const Api = {
         );
         return response?.data;
     },
+    getAllTransActionsOfASeller: async (payload) => {
+        const response = await clientWithAuth.get(
+            `transactionGet/getAllTransActionsOfASeller?page=${payload?.page}&perPage=${payload?.perPage}&id=${payload?.id}`
+        );
+        return response?.data;
+    },
     getAllTransActionsOfAProduct: async (payload) => {
         const response = await clientWithAuth.get(
             `transactionGet/getAllTransActionsOfAProduct?page=${payload?.page}&perPage=${payload?.perPage}&id=${payload?.id}`
