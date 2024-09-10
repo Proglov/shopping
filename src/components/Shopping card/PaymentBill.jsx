@@ -11,7 +11,7 @@ import {
   RadioGroup,
   Typography,
 } from "@mui/material";
-import { convertToFarsiNumbers, formatPrice } from "@/utils/funcs";
+import { convertToFarsiNumbers, formatPrice, parseProductString } from "@/utils/funcs";
 import Link from "next/link";
 import { GrFormNext } from "react-icons/gr";
 import { useEffect, useState } from "react";
@@ -60,9 +60,15 @@ export default function PaymentBill() {
       dispatch(ResetCartProducts())
       router.push("/shopping-card/payment/" + res?.transactionId);
     } catch (error) {
-      toast.error("اشکال در اتصال به اینترنت! لطفا دوباره وارد شوید", {
-        position: toast.POSITION.TOP_RIGHT,
-      });
+      const obj = parseProductString(error?.response?.data?.message)
+      if (obj.ProductName) {
+        toast.error(`متاسفانه محصول ${obj.ProductName} به تعداد ${obj.max} عدد در انبار موجود میباشد`, {
+          position: toast.POSITION.TOP_RIGHT,
+        });
+      } else
+        toast.error("اشکال در اتصال به اینترنت! لطفا دوباره وارد شوید", {
+          position: toast.POSITION.TOP_RIGHT,
+        });
     } finally { setIsSubmitting(false) }
   };
 

@@ -11,7 +11,7 @@ import { Grid } from '@mui/material';
 import Image from 'next/image';
 import 'react-quill/dist/quill.snow.css';
 const CustomQuill = lazy(() => import('../../CustomQuil'))
-import { price2Farsi } from '@/utils/funcs';
+import { formatPrice, price2Farsi } from '@/utils/funcs';
 import { MultiFileDropzone } from '../../multi-image-dropzone';
 import Api2 from '@/services/withAuthActivities/image';
 import DOMPurify from 'dompurify';
@@ -47,6 +47,7 @@ export default function ModalEdit() {
         , setFileStates] = useState([]);
     const [uploadRes, setUploadRes] = useState([]);
     const [imagesToDelete, setImagesToDelete] = useState([]);
+    const [addedCount, setAddedCount] = useState('');
 
 
     const handleClose = () => {
@@ -63,6 +64,9 @@ export default function ModalEdit() {
                     ...selectedItem,
                     price: newValue,
                 }))
+        } if (name === 'addedCount') {
+            const newValue = parseInt(value) || 0
+            setAddedCount(newValue)
         } else {
             if (name !== "desc")
                 dispatch(setSelectedItem({
@@ -152,7 +156,8 @@ export default function ModalEdit() {
                 ...selectedItem,
                 id: selectedItem._id,
                 subcategoryId,
-                imagesUrl: newImagesName
+                imagesUrl: newImagesName,
+                addedCount
             }
             delete augmentedObj.__v;
             delete augmentedObj._id;
@@ -380,6 +385,28 @@ export default function ModalEdit() {
                                         value={selectedItem.desc}
                                         onChange={(value) => handleChange({ target: { name: 'desc', value } })}
                                     />
+                                </Grid>
+
+                                <Grid item xs={12}>
+                                    <div className='text-start text-sm mb-1'>
+                                        افزودن محصول به انبار
+                                    </div>
+                                    <input
+                                        className="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500"
+                                        id="inline-full-price"
+                                        type="text"
+                                        name="addedCount"
+                                        value={addedCount}
+                                        placeholder={`تعداد محصولات جدید را وارد کنید`}
+                                        onChange={handleChange}
+                                    />
+                                    {
+                                        addedCount !== '' &&
+                                        <div className='text-sm text-start text-gray-600 mr-2'>
+                                            {formatPrice(addedCount)} عدد
+                                        </div>
+                                    }
+
                                 </Grid>
 
                             </Grid>

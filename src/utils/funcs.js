@@ -229,3 +229,20 @@ export const searchParamsHandler = (array, tab) => {
     res.active = typeof res[tab] === 'number' ? res[tab] : 0;
     return res
 }
+
+export const parseProductString = input => {
+    const result = {};
+    // Match the maximum value
+    const maxMatch = input.match(/Maximum:\s*(\d+)/);
+    if (maxMatch) {
+        result.max = parseInt(maxMatch[1], 10);
+    }
+
+    // Match the product name
+    const nameMatch = input.match(/ProductName:\s*([^,]+)/);
+    if (nameMatch) {
+        result.ProductName = nameMatch[1].trim();
+    }
+
+    return result;
+}
