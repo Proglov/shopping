@@ -13,8 +13,8 @@ import { useDispatch } from "react-redux";
 import { resetToInitialState } from '../admin-and-seller/redux/reducers/global';
 import { useRouter } from 'next/navigation';
 import Discounts from '../admin-and-seller/disconts/Discounts';
-import UserInPersonsMain from '../admin-and-seller/userInPersons/userInPersonsMain';
 import TransactionInPersonsMain from '../admin-and-seller/transactionInPersons/TransactionInPersonsMain';
+import UserInPersonsMain from '../admin-and-seller/userInPersons/UserInPersonsMain';
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
