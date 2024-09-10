@@ -13,6 +13,7 @@ import { useDispatch } from "react-redux";
 import { resetToInitialState } from '../admin-and-seller/redux/reducers/global';
 import { useRouter } from 'next/navigation';
 import Discounts from '../admin-and-seller/disconts/Discounts';
+import UserInPersonsMain from '../admin-and-seller/userInPersons/userInPersonsMain';
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -77,12 +78,13 @@ export default function Main({ tabs, discountTabs }) {
                 >
                     <Tab label="محصولات" {...a11yProps(0)} />
                     <Tab label="کاربران" {...a11yProps(1)} />
-                    <Tab label="فروشندگان" {...a11yProps(2)} />
-                    <Tab label="دسته بندی ها" {...a11yProps(3)} />
-                    <Tab label="زیر دسته بندی ها" {...a11yProps(4)} />
-                    <Tab label="تراکنش ها" {...a11yProps(5)} />
-                    <Tab label="کامنت ها" {...a11yProps(6)} />
-                    <Tab label="طرح های ویژه" {...a11yProps(7)} />
+                    <Tab label="مشتریان حضوری" {...a11yProps(2)} />
+                    <Tab label="فروشندگان" {...a11yProps(3)} />
+                    <Tab label="دسته بندی ها" {...a11yProps(4)} />
+                    <Tab label="زیر دسته بندی ها" {...a11yProps(5)} />
+                    <Tab label="تراکنش ها" {...a11yProps(6)} />
+                    <Tab label="کامنت ها" {...a11yProps(7)} />
+                    <Tab label="طرح های ویژه" {...a11yProps(8)} />
                 </Tabs>
                 <div style={{ width: '100%' }}>
                     <TabPanel value={tabs.active} index={0} className='text-center'>
@@ -92,21 +94,24 @@ export default function Main({ tabs, discountTabs }) {
                         <UsersMain />
                     </TabPanel>
                     <TabPanel value={tabs.active} index={2} className='text-center'>
-                        <SellersMain />
+                        <UserInPersonsMain which={"ADMIN"} />
                     </TabPanel>
                     <TabPanel value={tabs.active} index={3} className='text-center'>
-                        <CategoriesMain />
+                        <SellersMain />
                     </TabPanel>
                     <TabPanel value={tabs.active} index={4} className='text-center'>
-                        <SubcategoriesMain />
+                        <CategoriesMain />
                     </TabPanel>
                     <TabPanel value={tabs.active} index={5} className='text-center'>
-                        <TXMain which={"ADMIN"} />
+                        <SubcategoriesMain />
                     </TabPanel>
                     <TabPanel value={tabs.active} index={6} className='text-center'>
-                        <CommentsMain />
+                        <TXMain which={"ADMIN"} />
                     </TabPanel>
                     <TabPanel value={tabs.active} index={7} className='text-center'>
+                        <CommentsMain />
+                    </TabPanel>
+                    <TabPanel value={tabs.active} index={8} className='text-center'>
                         <Discounts which={"ADMIN"} tabs={discountTabs} />
                     </TabPanel>
                 </div>

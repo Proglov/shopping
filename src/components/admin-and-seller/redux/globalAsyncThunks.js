@@ -15,6 +15,7 @@ import Api12 from "@/services/withoutAuthActivities/discounts/festivals";
 import Api13 from "@/services/withAuthActivities/discounts/majorShopping";
 import Api14 from "@/services/withoutAuthActivities/discounts/majorShopping";
 import Api15 from "@/services/withAuthActivities/discounts/companyCouponForSomeProducts";
+import Api16 from "@/services/withAuthActivities/userInPerson";
 
 //categories
 export const getCategoriesFromServer = createAsyncThunk(
@@ -98,6 +99,23 @@ export const deleteUserFromServer = createAsyncThunk(
     }
 )
 
+//userInPersons
+export const getUserInPersonsFromServer = createAsyncThunk(
+    "Global/getUserInPersonsFromServer",
+    async ({ currentPage, itemsPerPage, which }) => {
+        const { getAllUserInPersons, getAllMyUserInPersons } = Api16
+        if (which === "Seller")
+            return await getAllMyUserInPersons({ page: currentPage, perPage: itemsPerPage })
+        return await getAllUserInPersons({ page: currentPage, perPage: itemsPerPage })
+    }
+)
+export const addUserInPersonToServer = createAsyncThunk(
+    "Global/addUserInPersonToServer",
+    async (obj) => {
+        const { UserInPersonCreate } = Api16
+        return await UserInPersonCreate(obj)
+    }
+)
 
 //sellers
 export const getInvalidatedSellersFromServer = createAsyncThunk(

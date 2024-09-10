@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { addCategoryToServer, addProductToServer, addSubcategoryToServer, getCategoriesFromServer, getSubcategoriesFromServer, updateProductFromServer, getUsersFromServer, deleteUserFromServer, getInvalidatedSellersFromServer, deleteSellerFromServer, validateSellerToServer, getInvalidatedCommentsFromServer, deleteCommentFromServer, validateCommentToServer, getFutureTXsFromServer, updateTXStatusToServer, toggleAvailabilityProduct, GetFestivalProductsFromServer, getProductsFromServer, addFestivalToServer, deleteFestivalFromServer, GetMajorShoppingProductsFromServer, addMajorShoppingToServer, deleteMajorShoppingFromServer, GetCompanyCouponForSomeProductsProductsFromServer, addCompanyCouponForSomeProductsToServer, deleteCompanyCouponForSomeProductsFromServer } from "../globalAsyncThunks";
-import { getCategoryFulfilled, addCategoryFulfilled, addSubcategoriesFulfilled, getSubcategoriesFulfilled, getProductsFulfilled, addProductsFulfilled, pending, reject, updateProductFulfilled, getUsersFulfilled, deleteUserFulfilled, getInvalidatedSellersFulfilled, deleteSellerFulfilled, validateSellerFulfilled, getInvalidatedCommentsFulfilled, validateCommentFulfilled, deleteCommentFulfilled, getFutureTXsFulfilled, updateTXStatusFulfilled, toggleAvailabilityProductFulfilled, GetFestivalProductsFulfilled, addFestivalFulfilled, deleteFestivalFulfilled, deleteMajorShoppingFulfilled, addMajorShoppingFulfilled, GetMajorShoppingProductsFulfilled, addDataPending, GetCompanyCouponForSomeProductsProductsFulfilled, addCompanyCouponForSomeProductsFulfilled, deleteCompanyCouponForSomeProductsFulfilled } from "../globalExtraReducers";
+import { addCategoryToServer, addProductToServer, addSubcategoryToServer, getCategoriesFromServer, getSubcategoriesFromServer, updateProductFromServer, getUsersFromServer, deleteUserFromServer, getInvalidatedSellersFromServer, deleteSellerFromServer, validateSellerToServer, getInvalidatedCommentsFromServer, deleteCommentFromServer, validateCommentToServer, getFutureTXsFromServer, updateTXStatusToServer, toggleAvailabilityProduct, GetFestivalProductsFromServer, getProductsFromServer, addFestivalToServer, deleteFestivalFromServer, GetMajorShoppingProductsFromServer, addMajorShoppingToServer, deleteMajorShoppingFromServer, GetCompanyCouponForSomeProductsProductsFromServer, addCompanyCouponForSomeProductsToServer, deleteCompanyCouponForSomeProductsFromServer, getUserInPersonsFromServer, addUserInPersonToServer } from "../globalAsyncThunks";
+import { getCategoryFulfilled, addCategoryFulfilled, addSubcategoriesFulfilled, getSubcategoriesFulfilled, getProductsFulfilled, addProductsFulfilled, pending, reject, updateProductFulfilled, getUsersFulfilled, deleteUserFulfilled, getInvalidatedSellersFulfilled, deleteSellerFulfilled, validateSellerFulfilled, getInvalidatedCommentsFulfilled, validateCommentFulfilled, deleteCommentFulfilled, getFutureTXsFulfilled, updateTXStatusFulfilled, toggleAvailabilityProductFulfilled, GetFestivalProductsFulfilled, addFestivalFulfilled, deleteFestivalFulfilled, deleteMajorShoppingFulfilled, addMajorShoppingFulfilled, GetMajorShoppingProductsFulfilled, addDataPending, GetCompanyCouponForSomeProductsProductsFulfilled, addCompanyCouponForSomeProductsFulfilled, deleteCompanyCouponForSomeProductsFulfilled, getUserInPersonsFulfilled, addUserInPersonFulfilled } from "../globalExtraReducers";
 
 
 const initialState = {
@@ -92,6 +92,13 @@ const globalSlice = createSlice({
         builder.addCase(getUsersFromServer.fulfilled, getUsersFulfilled);
         builder.addCase(getUsersFromServer.rejected, reject);
         builder.addCase(deleteUserFromServer.fulfilled, deleteUserFulfilled);
+
+        // UserInPersons
+        builder.addCase(getUserInPersonsFromServer.pending, pending);
+        builder.addCase(getUserInPersonsFromServer.fulfilled, getUserInPersonsFulfilled);
+        builder.addCase(getUserInPersonsFromServer.rejected, reject);
+        builder.addCase(addUserInPersonToServer.pending, addDataPending);
+        builder.addCase(addUserInPersonToServer.fulfilled, addUserInPersonFulfilled);
 
         //sellers
         builder.addCase(getInvalidatedSellersFromServer.pending, pending);

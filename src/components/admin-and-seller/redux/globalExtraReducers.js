@@ -78,6 +78,20 @@ export const deleteUserFulfilled = (state, action) => {
 }
 
 
+//userInPersons
+export const getUserInPersonsFulfilled = (state, action) => {
+    state.items = action.payload.users
+    state.itemsCount = action.payload.usersCount
+    state.lastPage = Math.ceil(action.payload?.usersCount / state.itemsPerPage)
+    state.loading = false
+}
+export const addUserInPersonFulfilled = (state, action) => {
+    state.items.push(action.payload.user)
+    state.itemsCount++;
+    state.addDataLoading = false
+}
+
+
 //sellers
 export const getInvalidatedSellersFulfilled = (state, action) => {
     state.items = action.payload.sellers

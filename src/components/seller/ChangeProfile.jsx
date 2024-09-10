@@ -518,6 +518,7 @@ export default function ChangeProfile() {
                             type="text"
                             name="bio"
                             value={AddNewData.formData.bio}
+                            disabled={AddNewData.disabled}
                             placeholder={`بیوگرافی خود را وارد کنید`}
                             onChange={handleChange}
                         />
