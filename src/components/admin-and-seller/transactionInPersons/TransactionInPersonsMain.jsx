@@ -1,7 +1,7 @@
 'use client'
 import React, { useState } from 'react'
 import TransactionInPersonsTable from './TransactionInPersonsTable'
-import AddTransactionInPersons from './AddTransactionInPerson'
+import AddTransactionInPerson from './AddTransactionInPerson'
 import { Button } from '@mui/material'
 import { IoMdClose } from "react-icons/io";
 
@@ -31,7 +31,7 @@ export default function TransactionInPersonsMain({ which }) {
 
             </div>
             <div className={`${isHidden ? 'hidden' : ''}`}>
-                <AddTransactionInPersons which={which} />
+                <AddTransactionInPerson which={which} />
             </div>
 
             <TransactionInPersonsTable which={which} /> */}
