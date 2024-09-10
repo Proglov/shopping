@@ -11,6 +11,7 @@ import ChangeProfile from './ChangeProfile';
 import Discounts from '../admin-and-seller/disconts/Discounts';
 import { resetToInitialState } from '../admin-and-seller/redux/reducers/global';
 import UserInPersonsMain from '../admin-and-seller/userInPersons/UserInPersonsMain';
+import TransactionInPersonsMain from '../admin-and-seller/transactionInPersons/TransactionInPersonsMain';
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -80,9 +81,10 @@ export default function Main({ tabs, discountTabs }) {
                     >
                         <Tab label="محصولات" {...a11yProps(0)} />
                         <Tab label="مشتریان حضوری" {...a11yProps(1)} />
-                        <Tab label="تراکنش ها" {...a11yProps(2)} />
-                        <Tab label="طرح های ویژه" {...a11yProps(3)} />
-                        <Tab label="تنظیمات" {...a11yProps(4)} />
+                        <Tab label="سفارشات حضوری" {...a11yProps(2)} />
+                        <Tab label="تراکنش ها" {...a11yProps(3)} />
+                        <Tab label="طرح های ویژه" {...a11yProps(4)} />
+                        <Tab label="تنظیمات" {...a11yProps(5)} />
                     </Tabs>
                     <Box style={{ width: '100%' }}>
                         <TabPanel value={tabs.active} index={0} className='text-center'>
@@ -90,6 +92,9 @@ export default function Main({ tabs, discountTabs }) {
                         </TabPanel>
                         <TabPanel value={tabs.active} index={1} className='text-center'>
                             <UserInPersonsMain which={"Seller"} />
+                        </TabPanel>
+                        <TabPanel value={tabs.active} index={1} className='text-center'>
+                            <TransactionInPersonsMain which={"Seller"} />
                         </TabPanel>
                         <TabPanel value={tabs.active} index={2} className='text-center'>
                             <TXMain which={"Seller"} />

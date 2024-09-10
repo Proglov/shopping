@@ -6,6 +6,7 @@ import usersReducer from "./reducers/users"
 import sellersReducer from "./reducers/sellers"
 import commentsReducer from "./reducers/comments"
 import transactionsReducer from "./reducers/transactions"
+import transactionInPersonsReducer from "./reducers/transactionInPersons"
 import festivalsReducer from "./reducers/discounts/festivals"
 import majorShoppingsReducer from "./reducers/discounts/majorShopping"
 import CompanyCouponForSomeProductsReducer from "./reducers/discounts/companyCouponForSomeProducts"
@@ -18,6 +19,7 @@ export const storeAdmin = configureStore({
         subcategories: subcategoriesReducer,
         global: globalReducer,
         transactions: transactionsReducer,
+        transactionInPersons: transactionInPersonsReducer,
         comments: commentsReducer,
         festivals: festivalsReducer,
         majorShoppings: majorShoppingsReducer,
