@@ -121,7 +121,7 @@ export default function AddTransactionInPerson({ which }) {
                                 <div className='w-full text-start text-sm'>
                                     <label htmlFor="underline_select">
                                         مشتری
-                                        (از بخش 'مشتریان حضوری' اقدام به ثبت مشتریان خود کنید)
+                                        (از بخش &lsquo;مشتریان حضوری&lsquo; اقدام به ثبت مشتریان خود کنید)
                                     </label>
                                 </div>
                                 <select id="underline_select" className="block py-2.5 px-3 w-full text-sm text-gray-500 bg-transparent my-2 rounded-md border-2 border-gray-200 appearance-none focus:outline-none focus:ring-0 focus:border-gray-200" onChange={handleChange} name='userInPersonId' defaultValue={''}>

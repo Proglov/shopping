@@ -93,16 +93,16 @@ export default function Main({ tabs, discountTabs }) {
                         <TabPanel value={tabs.active} index={1} className='text-center'>
                             <UserInPersonsMain which={"Seller"} />
                         </TabPanel>
-                        <TabPanel value={tabs.active} index={1} className='text-center'>
+                        <TabPanel value={tabs.active} index={2} className='text-center'>
                             <TransactionInPersonsMain which={"Seller"} />
                         </TabPanel>
-                        <TabPanel value={tabs.active} index={2} className='text-center'>
+                        <TabPanel value={tabs.active} index={3} className='text-center'>
                             <TXMain which={"Seller"} />
                         </TabPanel>
-                        <TabPanel value={tabs.active} index={3} className='text-center'>
+                        <TabPanel value={tabs.active} index={4} className='text-center'>
                             <Discounts which={"Seller"} tabs={discountTabs} />
                         </TabPanel>
-                        <TabPanel value={tabs.active} index={4} className='text-center'>
+                        <TabPanel value={tabs.active} index={5} className='text-center'>
                             <ChangeProfile />
                         </TabPanel>
                     </Box>
