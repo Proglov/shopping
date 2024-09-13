@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { addCategoryToServer, addProductToServer, addSubcategoryToServer, getCategoriesFromServer, getSubcategoriesFromServer, updateProductFromServer, getUsersFromServer, deleteUserFromServer, getInvalidatedSellersFromServer, deleteSellerFromServer, validateSellerToServer, getInvalidatedCommentsFromServer, deleteCommentFromServer, validateCommentToServer, getFutureTXsFromServer, updateTXStatusToServer, toggleAvailabilityProduct, GetFestivalProductsFromServer, getProductsFromServer, addFestivalToServer, deleteFestivalFromServer, GetMajorShoppingProductsFromServer, addMajorShoppingToServer, deleteMajorShoppingFromServer, GetCompanyCouponForSomeProductsProductsFromServer, addCompanyCouponForSomeProductsToServer, deleteCompanyCouponForSomeProductsFromServer, getUserInPersonsFromServer, addUserInPersonToServer } from "../globalAsyncThunks";
-import { getCategoryFulfilled, addCategoryFulfilled, addSubcategoriesFulfilled, getSubcategoriesFulfilled, getProductsFulfilled, addProductsFulfilled, pending, reject, updateProductFulfilled, getUsersFulfilled, deleteUserFulfilled, getInvalidatedSellersFulfilled, deleteSellerFulfilled, validateSellerFulfilled, getInvalidatedCommentsFulfilled, validateCommentFulfilled, deleteCommentFulfilled, getFutureTXsFulfilled, updateTXStatusFulfilled, toggleAvailabilityProductFulfilled, GetFestivalProductsFulfilled, addFestivalFulfilled, deleteFestivalFulfilled, deleteMajorShoppingFulfilled, addMajorShoppingFulfilled, GetMajorShoppingProductsFulfilled, addDataPending, GetCompanyCouponForSomeProductsProductsFulfilled, addCompanyCouponForSomeProductsFulfilled, deleteCompanyCouponForSomeProductsFulfilled, getUserInPersonsFulfilled, addUserInPersonFulfilled } from "../globalExtraReducers";
+import { addCategoryToServer, addProductToServer, addSubcategoryToServer, getCategoriesFromServer, getSubcategoriesFromServer, updateProductFromServer, getUsersFromServer, deleteUserFromServer, getInvalidatedSellersFromServer, deleteSellerFromServer, validateSellerToServer, getInvalidatedCommentsFromServer, deleteCommentFromServer, validateCommentToServer, getFutureTXsFromServer, updateTXStatusToServer, toggleAvailabilityProduct, GetFestivalProductsFromServer, getProductsFromServer, addFestivalToServer, deleteFestivalFromServer, GetMajorShoppingProductsFromServer, addMajorShoppingToServer, deleteMajorShoppingFromServer, GetCompanyCouponForSomeProductsProductsFromServer, addCompanyCouponForSomeProductsToServer, deleteCompanyCouponForSomeProductsFromServer, getUserInPersonsFromServer, addUserInPersonToServer, getTransactionInPersonsFromServer, addTransactionInPersonToServer } from "../globalAsyncThunks";
+import { getCategoryFulfilled, addCategoryFulfilled, addSubcategoriesFulfilled, getSubcategoriesFulfilled, getProductsFulfilled, addProductsFulfilled, pending, reject, updateProductFulfilled, getUsersFulfilled, deleteUserFulfilled, getInvalidatedSellersFulfilled, deleteSellerFulfilled, validateSellerFulfilled, getInvalidatedCommentsFulfilled, validateCommentFulfilled, deleteCommentFulfilled, getFutureTXsFulfilled, updateTXStatusFulfilled, toggleAvailabilityProductFulfilled, GetFestivalProductsFulfilled, addFestivalFulfilled, deleteFestivalFulfilled, deleteMajorShoppingFulfilled, addMajorShoppingFulfilled, GetMajorShoppingProductsFulfilled, addDataPending, GetCompanyCouponForSomeProductsProductsFulfilled, addCompanyCouponForSomeProductsFulfilled, deleteCompanyCouponForSomeProductsFulfilled, getUserInPersonsFulfilled, addUserInPersonFulfilled, getTransactionInPersonsFulfilled, addTransactionInPersonFulfilled } from "../globalExtraReducers";
 
 
 const initialState = {
@@ -119,6 +119,13 @@ const globalSlice = createSlice({
         builder.addCase(getFutureTXsFromServer.fulfilled, getFutureTXsFulfilled);
         builder.addCase(getFutureTXsFromServer.rejected, reject);
         builder.addCase(updateTXStatusToServer.fulfilled, updateTXStatusFulfilled);
+
+        // TransactionInPersons
+        builder.addCase(getTransactionInPersonsFromServer.pending, pending);
+        builder.addCase(getTransactionInPersonsFromServer.fulfilled, getTransactionInPersonsFulfilled);
+        builder.addCase(getTransactionInPersonsFromServer.rejected, reject);
+        builder.addCase(addTransactionInPersonToServer.pending, addDataPending);
+        builder.addCase(addTransactionInPersonToServer.fulfilled, addTransactionInPersonFulfilled);
 
         //festivals
         builder.addCase(GetFestivalProductsFromServer.pending, pending);

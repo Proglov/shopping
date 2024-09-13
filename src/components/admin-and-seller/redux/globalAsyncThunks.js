@@ -16,6 +16,7 @@ import Api13 from "@/services/withAuthActivities/discounts/majorShopping";
 import Api14 from "@/services/withoutAuthActivities/discounts/majorShopping";
 import Api15 from "@/services/withAuthActivities/discounts/companyCouponForSomeProducts";
 import Api16 from "@/services/withAuthActivities/userInPerson";
+import Api17 from "@/services/withAuthActivities/txInPersons";
 
 //categories
 export const getCategoriesFromServer = createAsyncThunk(
@@ -183,6 +184,24 @@ export const updateTXStatusToServer = createAsyncThunk(
         const { TXStatus } = Api10
         await TXStatus({ id, newStatus })
         return { id, newStatus }
+    }
+)
+
+//transactionInPersons
+export const getTransactionInPersonsFromServer = createAsyncThunk(
+    "Global/getTransactionInPersonsFromServer",
+    async ({ currentPage, itemsPerPage, which }) => {
+        const { getAllTransActionInPersons, getAllMyTransActionInPersons } = Api17
+        if (which === "Seller")
+            return await getAllMyTransActionInPersons({ page: currentPage, perPage: itemsPerPage })
+        return await getAllTransActionInPersons({ page: currentPage, perPage: itemsPerPage })
+    }
+)
+export const addTransactionInPersonToServer = createAsyncThunk(
+    "Global/addTransactionInPersonToServer",
+    async (obj) => {
+        const { createTransActionInPerson } = Api17
+        return await createTransActionInPerson(obj)
     }
 )
 

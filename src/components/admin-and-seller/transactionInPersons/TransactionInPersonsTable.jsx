@@ -1,40 +1,19 @@
 "use client"
-import { Pagination, Stack } from '@mui/material';
+import { Button, Pagination, Stack } from '@mui/material';
 import { useEffect } from 'react';
-import { styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
-import TableCell, { tableCellClasses } from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import { getUserInPersonsFromServer } from '../redux/globalAsyncThunks';
+import { getTransactionInPersonsFromServer } from '../redux/globalAsyncThunks';
 import { setCurrentPage } from '../redux/reducers/global';
 import { useDispatch, useSelector } from 'react-redux';
-
-
-export const StyledTableCell = styled(TableCell)(() => ({
-    [`&.${tableCellClasses.head}`]: {
-        backgroundColor: 'black',
-        color: 'white',
-        fontSize: 16
-    },
-    [`&.${tableCellClasses.body}`]: {
-        fontSize: 14,
-    },
-}));
-export const StyledTableRow = styled(TableRow)(() => ({
-    '&:nth-of-type(odd)': {
-        backgroundColor: 'rgba(0, 0, 0,.12)',
-    },
-    '&:hover': {
-        backgroundColor: 'rgba(0, 255, 0,.1)',
-    },
-    '&:last-child td, &:last-child th': {
-        border: 0,
-    },
-}));
+import { StyledTableCell, StyledTableRow } from '../products/ProductsTable';
+import { formatPrice } from '@/utils/funcs';
+import { setIsModalShowMoreOpen, setSelectedItem } from '../redux/reducers/transactionInPersons';
+import ModalShowMore from './ModalShowMore';
 
 
 export default function TransactionInPersonsTable({ which }) {
@@ -51,7 +30,7 @@ export default function TransactionInPersonsTable({ which }) {
     } = useSelector((state) => state.global);
 
     useEffect(() => {
-        dispatch(getUserInPersonsFromServer({ which, currentPage, itemsPerPage }))
+        dispatch(getTransactionInPersonsFromServer({ which, currentPage, itemsPerPage }))
     }, [currentPage, itemsPerPage, which, dispatch]);
 
     const handlePageClick = (page) => {
@@ -63,7 +42,7 @@ export default function TransactionInPersonsTable({ which }) {
     return (
         <Stack spacing={2} className='mt-7'>
             <div className='w-full text-start'>
-                جدول مشتریان حضوری
+                جدول سفارشات حضوری
             </div>
             <div className='text-start'>
                 {
@@ -85,12 +64,15 @@ export default function TransactionInPersonsTable({ which }) {
                 items?.length !== 0 ?
                     <div>
                         <TableContainer component={Paper} className='max-w-5xl mx-auto'>
-                            <Table sx={{ minWidth: 400 }} aria-label="customized table">
+                            <Table sx={{ minWidth: 580 }} aria-label="customized table">
                                 <TableHead>
                                     <TableRow>
                                         <StyledTableCell align='center'>ردیف</StyledTableCell>
-                                        <StyledTableCell align='center'>نام</StyledTableCell>
-                                        <StyledTableCell align='center'>شماره همراه</StyledTableCell>
+                                        <StyledTableCell align='center'>نام مشتری</StyledTableCell>
+                                        <StyledTableCell align='center'>شماره همراه مشتری</StyledTableCell>
+                                        <StyledTableCell align='center'>قیمت نهایی</StyledTableCell>
+                                        <StyledTableCell align='center'>زمان خرید</StyledTableCell>
+                                        <StyledTableCell align='center'>عملیات</StyledTableCell>
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
@@ -98,8 +80,32 @@ export default function TransactionInPersonsTable({ which }) {
                                         <StyledTableRow key={item._id}
                                             className='align-middle'>
                                             <StyledTableCell align='center'>{index + 1 + itemsPerPage * (currentPage - 1)}</StyledTableCell>
-                                            <StyledTableCell align='center'>{item.name}</StyledTableCell>
-                                            <StyledTableCell align='center'>{item?.phone || 'فاقد شماره'}</StyledTableCell>
+                                            <StyledTableCell align='center'>{item?.userId?.name}</StyledTableCell>
+                                            <StyledTableCell align='center'>{item?.userId?.phone || 'فاقد شماره'}</StyledTableCell>
+                                            <StyledTableCell align='center'>{formatPrice(item?.totalPrice)}</StyledTableCell>
+                                            <StyledTableCell align='center'>
+                                                {
+                                                    item?.createdAt !== '' && item?.createdAt != null &&
+                                                    <>
+                                                        {new Intl.DateTimeFormat('fa-IR').format(new Date(item?.createdAt).getTime())}
+
+                                                    </>
+                                                }
+                                            </StyledTableCell>
+                                            <StyledTableCell align='center'>
+                                                <Button
+                                                    size='small'
+                                                    variant='outlined'
+                                                    color='info'
+                                                    className='p-0'
+                                                    onClick={() => {
+                                                        dispatch(setIsModalShowMoreOpen(true));
+                                                        dispatch(setSelectedItem(item))
+                                                    }}
+                                                >
+                                                    مشاهده بیشتر
+                                                </Button>
+                                            </StyledTableCell>
                                         </StyledTableRow>
                                     ))}
                                 </TableBody>
@@ -119,6 +125,7 @@ export default function TransactionInPersonsTable({ which }) {
                     </div>
             )}
 
+            <ModalShowMore which={which} />
         </Stack>
     );
 }

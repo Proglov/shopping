@@ -29,7 +29,7 @@ export const StyledTableCell = styled(TableCell)(() => ({
     },
 }));
 export const StyledTableRow = styled(TableRow)(() => ({
-    '&:nth-of-type(odd)': {
+    '&:nth-of-type(even)': {
         backgroundColor: 'rgba(0, 0, 0,.12)',
     },
     '&:hover': {

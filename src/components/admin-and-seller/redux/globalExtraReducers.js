@@ -140,6 +140,20 @@ export const updateTXStatusFulfilled = (state, action) => {
     });
 }
 
+
+//transactionInPersons
+export const getTransactionInPersonsFulfilled = (state, action) => {
+    state.items = action.payload.transactions
+    state.itemsCount = action.payload.transactionsCount
+    state.lastPage = Math.ceil(action.payload?.transactionsCount / state.itemsPerPage)
+    state.loading = false
+}
+export const addTransactionInPersonFulfilled = (state, action) => {
+    state.items.push(action.payload.transaction)
+    state.itemsCount++;
+    state.addDataLoading = false
+}
+
 //festivals
 export const GetFestivalProductsFulfilled = (state, action) => {
     state.items = action.payload.products

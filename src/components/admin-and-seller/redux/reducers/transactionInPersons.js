@@ -4,6 +4,8 @@ import Api2 from "@/services/withAuthActivities/product";
 import Api3 from "@/services/withoutAuthActivities/product";
 
 const initialState = {
+    selectedItem: {},
+    isModalShowMoreOpen: false,
     products: [],
     userInPersons: []
 };
@@ -36,6 +38,15 @@ const transactionsInPersonSlice = createSlice({
         setProducts(state, action) {
             state.products = action.payload
         },
+        setSelectedItem(state, action) {
+            if (typeof action.payload === "function")
+                state.selectedItem = action.payload(state.selectedItem)
+            else
+                state.selectedItem = action.payload
+        },
+        setIsModalShowMoreOpen(state, action) {
+            state.isModalShowMoreOpen = action.payload
+        },
     },
     extraReducers: builder => {
         builder.addCase(getProductsFromServer.fulfilled, (state, action) => {
@@ -43,9 +54,9 @@ const transactionsInPersonSlice = createSlice({
         });
         builder.addCase(getUserInPersonsFromServer.fulfilled, (state, action) => {
             state.userInPersons = action.payload.users
-            console.log(action.payload);
         });
     }
 });
 
+export const { setProducts, setSelectedItem, setIsModalShowMoreOpen } = transactionsInPersonSlice.actions;
 export default transactionsInPersonSlice.reducer;

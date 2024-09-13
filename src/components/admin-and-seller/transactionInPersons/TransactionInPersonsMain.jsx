@@ -12,7 +12,7 @@ export default function TransactionInPersonsMain({ which }) {
 
     return (
         <div className='max-w-5xl mx-auto'>
-            {/* <div className='text-start text-sm mb-1'>
+            <div className='text-start text-sm mb-1'>
                 {
                     isHidden ?
                         <Button variant='outlined' onClick={() => setIsHidden(prev => !prev)}>
@@ -30,12 +30,12 @@ export default function TransactionInPersonsMain({ which }) {
                 }
 
             </div>
+
             <div className={`${isHidden ? 'hidden' : ''}`}>
                 <AddTransactionInPerson which={which} />
             </div>
 
-            <TransactionInPersonsTable which={which} /> */}
-            به زودی ...
+            <TransactionInPersonsTable which={which} />
         </div>
     )
 }

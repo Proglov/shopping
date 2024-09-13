@@ -1,10 +1,8 @@
 "use client"
 import { Pagination, Stack } from '@mui/material';
 import { useEffect } from 'react';
-import { styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
-import TableCell, { tableCellClasses } from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
@@ -12,29 +10,9 @@ import Paper from '@mui/material/Paper';
 import { getUserInPersonsFromServer } from '../redux/globalAsyncThunks';
 import { setCurrentPage } from '../redux/reducers/global';
 import { useDispatch, useSelector } from 'react-redux';
+import { StyledTableCell, StyledTableRow } from '../products/ProductsTable';
 
 
-export const StyledTableCell = styled(TableCell)(() => ({
-    [`&.${tableCellClasses.head}`]: {
-        backgroundColor: 'black',
-        color: 'white',
-        fontSize: 16
-    },
-    [`&.${tableCellClasses.body}`]: {
-        fontSize: 14,
-    },
-}));
-export const StyledTableRow = styled(TableRow)(() => ({
-    '&:nth-of-type(odd)': {
-        backgroundColor: 'rgba(0, 0, 0,.12)',
-    },
-    '&:hover': {
-        backgroundColor: 'rgba(0, 255, 0,.1)',
-    },
-    '&:last-child td, &:last-child th': {
-        border: 0,
-    },
-}));
 
 
 export default function UserInPersonsTable({ which }) {
