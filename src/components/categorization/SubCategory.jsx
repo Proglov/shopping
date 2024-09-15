@@ -18,15 +18,15 @@ const Plate = ({ children, classNameProp, subcategoryName, subcategoryId, id }) 
 
     <Box
       component="div"
-      className="min-h-12  p-5 items-center"
+      className="min-h-12 p-5 items-center"
     >
-      <span className="flex-1 text-right text-orange-400 bg-white p-2 rounded-full text-bold text-xl">
+      <span className="flex-1 text-right text-orange-400 bg-white p-2 rounded-full text-bold text-xl shadow-lg shadow-orange-700">
         {subcategoryName}
       </span>
       <Link href={`/categories/${id}/${subcategoryId}`}>
         <Button
           variant="contained"
-          className="float-left"
+          className="float-left rounded-full shadow-md shadow-orange-700"
           color="info"
         >
           مشاهده بیشتر
