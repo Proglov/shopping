@@ -54,13 +54,13 @@ export default function AddButton({ productId, which, sellerId, quantity, profit
             </div>
             {
                 which === 'major' &&
-                <div className='sm:text-sm text-xs text-teal-600'>
+                <div className='sm:text-sm text-xs text-teal-600 mt-1'>
                     {
                         quantity > number ?
                             <>
                                 {convertToFarsiNumbers(quantity - number)}
                                 {" "}
-                                عدد تا تخفیف!
+                                عدد مونده تا تخفیف!
                             </>
                             :
                             <>
