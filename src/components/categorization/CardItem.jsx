@@ -12,7 +12,7 @@ export default function CardItem({ product, subID, id, margin = 1 }) {
     img = "/img/no-pic.png"
 
   return (
-    <Card className={`relative mx-${margin} max-w-[200px] min-h-[400px] p-1 mb-2 shadow-lg`} sx={{ border: '1px solid #dbd9d9' }}>
+    <Card className={`relative mx-${margin} sm:max-w-[200px] max-w-[180px] min-h-[400px] p-1 mb-2 shadow-lg`} sx={{ border: '1px solid #dbd9d9' }}>
       <CardMedia
         sx={{ height: 150, width: 200 }}
         component="img"

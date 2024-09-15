@@ -20,12 +20,12 @@ const Plate = ({ children, classNameProp, subcategoryName, subcategoryId, id }) 
       component="div"
       className="min-h-12  p-5 items-center"
     >
-      <span className="flex-1 text-right text-gray-950 text-bold text-xl">
+      <span className="flex-1 text-right text-orange-400 bg-white p-2 rounded-full text-bold text-xl">
         {subcategoryName}
       </span>
       <Link href={`/categories/${id}/${subcategoryId}`}>
         <Button
-          variant="outlined"
+          variant="contained"
           className="float-left"
           color="info"
         >
