@@ -16,7 +16,7 @@ const Plate = ({ children, classNameProp, isLoading }) =>
 
         <div className="relative p-2 text-slate-50">
             <div className="text-center p-2 text-slate-50" style={{ textShadow: '0px 0px 10px white' }}>پیشنهادهای شگفت انگیز</div>
-            <Link href={'/festivals'} className="absolute left-0 top-2 p-2 text-xs underline decoration-blue-400 hover:text-purple-500">مشاهده بیشتر</Link>
+            <Link href={'/festivals'} className="absolute right-0 top-2 p-2 text-xs underline decoration-blue-400 hover:text-purple-500">مشاهده بیشتر</Link>
         </div>
 
         {
