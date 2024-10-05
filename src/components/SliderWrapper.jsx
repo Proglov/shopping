@@ -29,6 +29,7 @@ export default function SliderWrapper({ breakPoints, array, Component, component
         return acc += curr + ':' + (breakPoints[curr] ? str1 : str2) + ' '
     }, '')
 
+    if (!isLoading && array.length === 0) return <></>
 
     return (
         <>
