@@ -2,6 +2,7 @@ import { configureStore } from '@reduxjs/toolkit'
 import globalReducer from "./reducers/global"
 import subcategoriesReducer from "./reducers/subcategories"
 import productsReducer from "./reducers/products"
+import warehouseReducer from "./reducers/warehouses"
 import usersReducer from "./reducers/users"
 import sellersReducer from "./reducers/sellers"
 import commentsReducer from "./reducers/comments"
@@ -14,6 +15,7 @@ import CompanyCouponForSomeProductsReducer from "./reducers/discounts/companyCou
 export const storeAdmin = configureStore({
     reducer: {
         products: productsReducer,
+        warehouses: warehouseReducer,
         users: usersReducer,
         sellers: sellersReducer,
         subcategories: subcategoriesReducer,

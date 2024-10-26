@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { addCategoryToServer, addProductToServer, addSubcategoryToServer, getCategoriesFromServer, getSubcategoriesFromServer, updateProductFromServer, getUsersFromServer, deleteUserFromServer, getInvalidatedSellersFromServer, deleteSellerFromServer, validateSellerToServer, getInvalidatedCommentsFromServer, deleteCommentFromServer, validateCommentToServer, getFutureTXsFromServer, updateTXStatusToServer, toggleAvailabilityProduct, GetFestivalProductsFromServer, getProductsFromServer, addFestivalToServer, deleteFestivalFromServer, GetMajorShoppingProductsFromServer, addMajorShoppingToServer, deleteMajorShoppingFromServer, GetCompanyCouponForSomeProductsProductsFromServer, addCompanyCouponForSomeProductsToServer, deleteCompanyCouponForSomeProductsFromServer, getUserInPersonsFromServer, addUserInPersonToServer, getTransactionInPersonsFromServer, addTransactionInPersonToServer } from "../globalAsyncThunks";
-import { getCategoryFulfilled, addCategoryFulfilled, addSubcategoriesFulfilled, getSubcategoriesFulfilled, getProductsFulfilled, addProductsFulfilled, pending, reject, updateProductFulfilled, getUsersFulfilled, deleteUserFulfilled, getInvalidatedSellersFulfilled, deleteSellerFulfilled, validateSellerFulfilled, getInvalidatedCommentsFulfilled, validateCommentFulfilled, deleteCommentFulfilled, getFutureTXsFulfilled, updateTXStatusFulfilled, toggleAvailabilityProductFulfilled, GetFestivalProductsFulfilled, addFestivalFulfilled, deleteFestivalFulfilled, deleteMajorShoppingFulfilled, addMajorShoppingFulfilled, GetMajorShoppingProductsFulfilled, addDataPending, GetCompanyCouponForSomeProductsProductsFulfilled, addCompanyCouponForSomeProductsFulfilled, deleteCompanyCouponForSomeProductsFulfilled, getUserInPersonsFulfilled, addUserInPersonFulfilled, getTransactionInPersonsFulfilled, addTransactionInPersonFulfilled } from "../globalExtraReducers";
+import { addCategoryToServer, addProductToServer, addSubcategoryToServer, getCategoriesFromServer, getSubcategoriesFromServer, updateProductFromServer, getUsersFromServer, deleteUserFromServer, getInvalidatedSellersFromServer, deleteSellerFromServer, validateSellerToServer, getInvalidatedCommentsFromServer, deleteCommentFromServer, validateCommentToServer, getFutureTXsFromServer, updateTXStatusToServer, GetFestivalProductsFromServer, getProductsFromServer, addFestivalToServer, deleteFestivalFromServer, GetMajorShoppingProductsFromServer, addMajorShoppingToServer, deleteMajorShoppingFromServer, GetCompanyCouponForSomeProductsProductsFromServer, addCompanyCouponForSomeProductsToServer, deleteCompanyCouponForSomeProductsFromServer, getUserInPersonsFromServer, addUserInPersonToServer, getTransactionInPersonsFromServer, addTransactionInPersonToServer, updateWarehouseFromServer, addWarehouseToServer, getWarehousesFromServer } from "../globalAsyncThunks";
+import { getCategoryFulfilled, addCategoryFulfilled, addSubcategoriesFulfilled, getSubcategoriesFulfilled, getProductsFulfilled, addProductsFulfilled, pending, reject, updateProductFulfilled, getUsersFulfilled, deleteUserFulfilled, getInvalidatedSellersFulfilled, deleteSellerFulfilled, validateSellerFulfilled, getInvalidatedCommentsFulfilled, validateCommentFulfilled, deleteCommentFulfilled, getFutureTXsFulfilled, updateTXStatusFulfilled, GetFestivalProductsFulfilled, addFestivalFulfilled, deleteFestivalFulfilled, deleteMajorShoppingFulfilled, addMajorShoppingFulfilled, GetMajorShoppingProductsFulfilled, addDataPending, GetCompanyCouponForSomeProductsProductsFulfilled, addCompanyCouponForSomeProductsFulfilled, deleteCompanyCouponForSomeProductsFulfilled, getUserInPersonsFulfilled, addUserInPersonFulfilled, getTransactionInPersonsFulfilled, addTransactionInPersonFulfilled, updateWarehouseFulfilled, addWarehousesFulfilled, getWarehousesFulfilled } from "../globalExtraReducers";
 
 
 const initialState = {
@@ -84,8 +84,15 @@ const globalSlice = createSlice({
         builder.addCase(getProductsFromServer.rejected, reject);
         builder.addCase(addProductToServer.pending, addDataPending);
         builder.addCase(addProductToServer.fulfilled, addProductsFulfilled);
-        builder.addCase(toggleAvailabilityProduct.fulfilled, toggleAvailabilityProductFulfilled);
         builder.addCase(updateProductFromServer.fulfilled, updateProductFulfilled);
+
+        // warehouses
+        builder.addCase(getWarehousesFromServer.pending, pending);
+        builder.addCase(getWarehousesFromServer.fulfilled, getWarehousesFulfilled);
+        builder.addCase(getWarehousesFromServer.rejected, reject);
+        builder.addCase(addWarehouseToServer.pending, addDataPending);
+        builder.addCase(addWarehouseToServer.fulfilled, addWarehousesFulfilled);
+        builder.addCase(updateWarehouseFromServer.fulfilled, updateWarehouseFulfilled);
 
         //users
         builder.addCase(getUsersFromServer.pending, pending);

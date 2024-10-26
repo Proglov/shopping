@@ -3,7 +3,7 @@ import { searchParamsHandler } from '@/utils/funcs'
 
 
 export default function Home({ searchParams }) {
-  const tabs = searchParamsHandler(['products', 'users', 'userInPersons', 'transactionInPerson', 'sellers', 'categories', 'subcategories', 'tx', 'comments', 'discounts'], searchParams?.tab)
+  const tabs = searchParamsHandler(['products', 'warehouses', 'users', 'userInPersons', 'transactionInPerson', 'sellers', 'categories', 'subcategories', 'tx', 'comments', 'discounts'], searchParams?.tab)
   const discountTabs = searchParamsHandler(['festivals', 'majorShopping', 'company'], searchParams?.discountTab)
 
   return (

@@ -49,16 +49,37 @@ export const addProductsFulfilled = (state, action) => {
     state.itemsCount++;
     state.addDataLoading = false
 }
-export const toggleAvailabilityProductFulfilled = (state, action) => {
+export const updateProductFulfilled = (state, action) => {
+    state.items = state.items.map(item => {
+        if (item._id === action.payload.product._id) {
+            return action.payload.product
+        }
+        return item
+    })
+}
+
+//warehouses
+export const getWarehousesFulfilled = (state, action) => {
+    state.items = action.payload.warehouses
+    state.itemsCount = action.payload.allWarehousesCount
+    state.lastPage = Math.ceil(action.payload?.allWarehousesCount / state.itemsPerPage)
+    state.loading = false
+}
+export const addWarehousesFulfilled = (state, action) => {
+    state.items.push(action.payload.warehouse)
+    state.itemsCount++;
+    state.addDataLoading = false
+}
+export const toggleAvailabilityWarehouseFulfilled = (state, action) => {
     state.items.forEach(item => {
         if (item._id === action.payload) item.available = !item.available
         return item
     });
 }
-export const updateProductFulfilled = (state, action) => {
+export const updateWarehouseFulfilled = (state, action) => {
     state.items = state.items.map(item => {
-        if (item._id === action.payload.product._id) {
-            return action.payload.product
+        if (item._id === action.payload.warehouse._id) {
+            return action.payload.warehouse
         }
         return item
     })

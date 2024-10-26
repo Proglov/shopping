@@ -17,6 +17,7 @@ import Api14 from "@/services/withoutAuthActivities/discounts/majorShopping";
 import Api15 from "@/services/withAuthActivities/discounts/companyCouponForSomeProducts";
 import Api16 from "@/services/withAuthActivities/userInPerson";
 import Api17 from "@/services/withAuthActivities/txInPersons";
+import Api18 from "@/services/withAuthActivities/warehouse";
 
 //categories
 export const getCategoriesFromServer = createAsyncThunk(
@@ -68,19 +69,37 @@ export const addProductToServer = createAsyncThunk(
         return await createProduct(obj)
     }
 )
-export const toggleAvailabilityProduct = createAsyncThunk(
-    "Global/toggleAvailabilityProduct",
-    async (id) => {
-        const { toggleAvailabilityProduct } = Api5
-        await toggleAvailabilityProduct({ id })
-        return id
-    }
-)
 export const updateProductFromServer = createAsyncThunk(
     "Global/updateProductFromServer",
     async (obj) => {
         const { updateProduct } = Api5
         return await updateProduct(obj)
+    }
+)
+
+//warehouses
+export const getWarehousesFromServer = createAsyncThunk(
+    "Global/getWarehousesFromServer",
+    async ({ which, currentPage, itemsPerPage }) => {
+        const { getAllWarehouses } = Api18
+        const { getAllMyWarehouses } = Api18
+        if (which === "Seller")
+            return await getAllMyWarehouses({ page: currentPage, perPage: itemsPerPage })
+        return await getAllWarehouses({ page: currentPage, perPage: itemsPerPage })
+    }
+)
+export const addWarehouseToServer = createAsyncThunk(
+    "Global/addWarehouseToServer",
+    async (obj) => {
+        const { createWarehouse } = Api18
+        return await createWarehouse(obj)
+    }
+)
+export const updateWarehouseFromServer = createAsyncThunk(
+    "Global/updateWarehouseFromServer",
+    async (obj) => {
+        const { updateWarehouse } = Api18
+        return await updateWarehouse(obj)
     }
 )
 
