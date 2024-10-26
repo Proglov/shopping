@@ -4,7 +4,7 @@ import { clientWithAuth } from "@/lib/axios"
 const Api = {
     getAllProvinces: async (payload) => {
         const response = await clientWithAuth.get(
-            `provinceGet/getAllProvinces?page=${payload?.page}&perPage=${payload?.perPage}&isFutureOrder=${payload?.isFutureOrder}`
+            `provinceGet/getAllProvinces?page=${payload?.page}&perPage=${payload?.perPage}`
         );
         return response?.data;
     },

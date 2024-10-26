@@ -1,11 +1,13 @@
 import Api from "@/services/withoutAuthActivities/subcategories";
+import Api2 from "@/services/withAuthActivities/warehouse";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
     selectedItem: {},
     isModalEditOpen: false,
     operatingError: '',
-    categories: []
+    categories: [],
+    warehouses: [],
 };
 
 export const getCategoriesFromServer = createAsyncThunk(
@@ -14,6 +16,16 @@ export const getCategoriesFromServer = createAsyncThunk(
         //we get all subcategories and then, extract the categories
         const { getAllSubcategories } = Api
         return await getAllSubcategories()
+    }
+)
+
+export const getWarehousesFromServer = createAsyncThunk(
+    "Products/getWarehousesFromServer",
+    async (which) => {
+        const { getAllMyWarehouses, getAllWarehouses } = Api2
+        if (which === "Seller")
+            return await getAllMyWarehouses()
+        return await getAllWarehouses()
     }
 )
 
@@ -62,6 +74,9 @@ const productsSlice = createSlice({
                 return acc;
             }, []);
             state.categories = allCategories
+        });
+        builder.addCase(getWarehousesFromServer.fulfilled, (state, action) => {
+            state.warehouses = action.payload.warehouses
         });
     }
 });

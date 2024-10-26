@@ -29,7 +29,7 @@ export default function ProductsMain({ which }) {
 
             </div>
             <div className={`${isHidden ? 'hidden' : ''}`}>
-                <AddProduct />
+                <AddProduct which={which} />
             </div>
 
             <ProductsTable which={which} />

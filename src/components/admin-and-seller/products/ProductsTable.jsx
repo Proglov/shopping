@@ -103,6 +103,7 @@ export default function ProductsTable({ which }) {
                                         <StyledTableCell align='center'>قیمت به عدد</StyledTableCell>
                                         <StyledTableCell align='center'>دسته بندی</StyledTableCell>
                                         <StyledTableCell align='center'>زیر دسته بندی</StyledTableCell>
+                                        <StyledTableCell align='center'>انبار</StyledTableCell>
                                         <StyledTableCell align='center'>تعداد</StyledTableCell>
                                         <StyledTableCell align='center'>عملیات</StyledTableCell>
                                     </TableRow>
@@ -117,6 +118,7 @@ export default function ProductsTable({ which }) {
                                             <StyledTableCell align='center'>{formatPrice(item.price)}</StyledTableCell>
                                             <StyledTableCell align='center'>{item.subcategoryId?.categoryId.name}</StyledTableCell>
                                             <StyledTableCell align='center'>{item.subcategoryId?.name}</StyledTableCell>
+                                            <StyledTableCell align='center'>{item.warehouseId?.name}</StyledTableCell>
                                             <StyledTableCell align='center'>{convertToFarsiNumbers(item?.count || 0)}</StyledTableCell>
                                             <StyledTableCell className='border-b-0'>
                                                 {selectedItem?._id === item._id ? (

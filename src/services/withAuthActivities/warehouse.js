@@ -4,13 +4,13 @@ import { clientWithAuth } from "@/lib/axios"
 const Api = {
     getAllWarehouses: async (payload) => {
         const response = await clientWithAuth.get(
-            `warehouseGet/getAllWarehouses?page=${payload?.page}&perPage=${payload?.perPage}&isFutureOrder=${payload?.isFutureOrder}`
+            `warehouseGet/getAllWarehouses?page=${payload?.page}&perPage=${payload?.perPage}}`
         );
         return response?.data;
     },
     getAllMyWarehouses: async (payload) => {
         const response = await clientWithAuth.get(
-            `warehouseGet/getAllMyWarehouses?page=${payload?.page}&perPage=${payload?.perPage}&isFutureOrder=${payload?.isFutureOrder}`
+            `warehouseGet/getAllMyWarehouses?page=${payload?.page}&perPage=${payload?.perPage}}`
         );
         return response?.data;
     },
