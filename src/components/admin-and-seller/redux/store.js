@@ -1,6 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit'
 import globalReducer from "./reducers/global"
 import subcategoriesReducer from "./reducers/subcategories"
+import citiesReducer from "./reducers/cities"
 import productsReducer from "./reducers/products"
 import warehouseReducer from "./reducers/warehouses"
 import usersReducer from "./reducers/users"
@@ -19,6 +20,7 @@ export const storeAdmin = configureStore({
         users: usersReducer,
         sellers: sellersReducer,
         subcategories: subcategoriesReducer,
+        cities: citiesReducer,
         global: globalReducer,
         transactions: transactionsReducer,
         transactionInPersons: transactionInPersonsReducer,

@@ -1,37 +1,37 @@
 'use client'
 import React, { useState } from 'react'
-import SubcategoriesTable from './SubcategoriesTable'
-import AddSubcategory from './AddSubcategory'
+import ProvincesTable from './ProvincesTable'
+import AddProvince from './AddProvince'
 import { Button } from '@mui/material'
 import { IoMdClose } from "react-icons/io";
 
 
-
-export default function SubcategoriesMain() {
+export default function ProvincesMain() {
     const [isHidden, setIsHidden] = useState(true)
+
 
     return (
         <div>
             <div className='text-start text-sm mb-1'>
                 {
                     isHidden ?
-                        <Button variant='outlined' onClick={() => setIsHidden(prev => !prev)}>اضافه کردن زیر دسته بندی</Button>
+                        <Button variant='outlined' onClick={() => setIsHidden(prev => !prev)}>اضافه کردن دسته بندی</Button>
                         : <>
                             <Button variant='outlined' color='error' onClick={() => setIsHidden(prev => !prev)}>
                                 <IoMdClose className='text-lg' />
                             </Button>
 
                             <span className='mx-3'>
-                                اضافه کردن زیر دسته بندی
+                                اضافه کردن دسته بندی
                             </span>
                         </>
                 }
 
             </div>
             <div className={`${isHidden ? 'hidden' : ''}`}>
-                <AddSubcategory />
+                <AddProvince />
             </div>
-            <SubcategoriesTable />
+            <ProvincesTable />
         </div>
     )
 }

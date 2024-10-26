@@ -18,6 +18,8 @@ import Api15 from "@/services/withAuthActivities/discounts/companyCouponForSomeP
 import Api16 from "@/services/withAuthActivities/userInPerson";
 import Api17 from "@/services/withAuthActivities/txInPersons";
 import Api18 from "@/services/withAuthActivities/warehouse";
+import Api19 from "@/services/withAuthActivities/province";
+import Api20 from "@/services/withAuthActivities/city";
 
 //categories
 export const getCategoriesFromServer = createAsyncThunk(
@@ -48,6 +50,38 @@ export const addSubcategoryToServer = createAsyncThunk(
     async (obj) => {
         const { createSubcategories } = Api1
         return await createSubcategories(obj)
+    }
+)
+
+//provinces
+export const getProvincesFromServer = createAsyncThunk(
+    "Global/getProvincesFromServer",
+    async ({ currentPage, itemsPerPage }) => {
+        const { getAllProvinces } = Api19
+        return await getAllProvinces({ page: currentPage, perPage: itemsPerPage })
+    }
+)
+export const addProvinceToServer = createAsyncThunk(
+    "Global/addProvinceToServer",
+    async (obj) => {
+        const { createProvince } = Api19
+        return await createProvince(obj)
+    }
+)
+
+//cities
+export const getCitiesFromServer = createAsyncThunk(
+    "Global/getCitiesFromServer",
+    async ({ currentPage, itemsPerPage }) => {
+        const { getAllCities } = Api20
+        return await getAllCities({ page: currentPage, perPage: itemsPerPage })
+    }
+)
+export const addCityToServer = createAsyncThunk(
+    "Global/addCityToServer",
+    async (obj) => {
+        const { createCity } = Api20
+        return await createCity(obj)
     }
 )
 

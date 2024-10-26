@@ -16,6 +16,8 @@ import Discounts from '../admin-and-seller/disconts/Discounts';
 import TransactionInPersonsMain from '../admin-and-seller/transactionInPersons/TransactionInPersonsMain';
 import UserInPersonsMain from '../admin-and-seller/userInPersons/UserInPersonsMain';
 import WarehousesMain from '../admin-and-seller/warehouses/WarehouseMain';
+import ProvincesMain from '../admin-and-seller/provinces/ProvincesMain';
+import CitiesMain from '../admin-and-seller/cities/CitiesMain';
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -86,9 +88,11 @@ export default function Main({ tabs, discountTabs }) {
                     <Tab label="فروشندگان" {...a11yProps(5)} />
                     <Tab label="دسته بندی ها" {...a11yProps(6)} />
                     <Tab label="زیر دسته بندی ها" {...a11yProps(7)} />
-                    <Tab label="تراکنش ها" {...a11yProps(8)} />
-                    <Tab label="کامنت ها" {...a11yProps(9)} />
-                    <Tab label="طرح های ویژه" {...a11yProps(10)} />
+                    <Tab label="استان ها" {...a11yProps(8)} />
+                    <Tab label="شهر ها" {...a11yProps(9)} />
+                    <Tab label="تراکنش ها" {...a11yProps(10)} />
+                    <Tab label="کامنت ها" {...a11yProps(11)} />
+                    <Tab label="طرح های ویژه" {...a11yProps(12)} />
                 </Tabs>
                 <div style={{ width: '100%' }}>
                     <TabPanel value={tabs.active} index={0} className='text-center'>
@@ -116,12 +120,18 @@ export default function Main({ tabs, discountTabs }) {
                         <SubcategoriesMain />
                     </TabPanel>
                     <TabPanel value={tabs.active} index={8} className='text-center'>
-                        <TXMain which={"ADMIN"} />
+                        <ProvincesMain />
                     </TabPanel>
                     <TabPanel value={tabs.active} index={9} className='text-center'>
-                        <CommentsMain />
+                        <CitiesMain />
                     </TabPanel>
                     <TabPanel value={tabs.active} index={10} className='text-center'>
+                        <TXMain which={"ADMIN"} />
+                    </TabPanel>
+                    <TabPanel value={tabs.active} index={11} className='text-center'>
+                        <CommentsMain />
+                    </TabPanel>
+                    <TabPanel value={tabs.active} index={12} className='text-center'>
                         <Discounts which={"ADMIN"} tabs={discountTabs} />
                     </TabPanel>
                 </div>

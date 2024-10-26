@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { addCategoryToServer, addProductToServer, addSubcategoryToServer, getCategoriesFromServer, getSubcategoriesFromServer, updateProductFromServer, getUsersFromServer, deleteUserFromServer, getInvalidatedSellersFromServer, deleteSellerFromServer, validateSellerToServer, getInvalidatedCommentsFromServer, deleteCommentFromServer, validateCommentToServer, getFutureTXsFromServer, updateTXStatusToServer, GetFestivalProductsFromServer, getProductsFromServer, addFestivalToServer, deleteFestivalFromServer, GetMajorShoppingProductsFromServer, addMajorShoppingToServer, deleteMajorShoppingFromServer, GetCompanyCouponForSomeProductsProductsFromServer, addCompanyCouponForSomeProductsToServer, deleteCompanyCouponForSomeProductsFromServer, getUserInPersonsFromServer, addUserInPersonToServer, getTransactionInPersonsFromServer, addTransactionInPersonToServer, updateWarehouseFromServer, addWarehouseToServer, getWarehousesFromServer } from "../globalAsyncThunks";
-import { getCategoryFulfilled, addCategoryFulfilled, addSubcategoriesFulfilled, getSubcategoriesFulfilled, getProductsFulfilled, addProductsFulfilled, pending, reject, updateProductFulfilled, getUsersFulfilled, deleteUserFulfilled, getInvalidatedSellersFulfilled, deleteSellerFulfilled, validateSellerFulfilled, getInvalidatedCommentsFulfilled, validateCommentFulfilled, deleteCommentFulfilled, getFutureTXsFulfilled, updateTXStatusFulfilled, GetFestivalProductsFulfilled, addFestivalFulfilled, deleteFestivalFulfilled, deleteMajorShoppingFulfilled, addMajorShoppingFulfilled, GetMajorShoppingProductsFulfilled, addDataPending, GetCompanyCouponForSomeProductsProductsFulfilled, addCompanyCouponForSomeProductsFulfilled, deleteCompanyCouponForSomeProductsFulfilled, getUserInPersonsFulfilled, addUserInPersonFulfilled, getTransactionInPersonsFulfilled, addTransactionInPersonFulfilled, updateWarehouseFulfilled, addWarehousesFulfilled, getWarehousesFulfilled } from "../globalExtraReducers";
+import { addCategoryToServer, addProductToServer, addSubcategoryToServer, getCategoriesFromServer, getSubcategoriesFromServer, updateProductFromServer, getUsersFromServer, deleteUserFromServer, getInvalidatedSellersFromServer, deleteSellerFromServer, validateSellerToServer, getInvalidatedCommentsFromServer, deleteCommentFromServer, validateCommentToServer, getFutureTXsFromServer, updateTXStatusToServer, GetFestivalProductsFromServer, getProductsFromServer, addFestivalToServer, deleteFestivalFromServer, GetMajorShoppingProductsFromServer, addMajorShoppingToServer, deleteMajorShoppingFromServer, GetCompanyCouponForSomeProductsProductsFromServer, addCompanyCouponForSomeProductsToServer, deleteCompanyCouponForSomeProductsFromServer, getUserInPersonsFromServer, addUserInPersonToServer, getTransactionInPersonsFromServer, addTransactionInPersonToServer, updateWarehouseFromServer, addWarehouseToServer, getWarehousesFromServer, getProvincesFromServer, addProvinceToServer, getCitiesFromServer, addCityToServer } from "../globalAsyncThunks";
+import { getCategoryFulfilled, addCategoryFulfilled, addSubcategoriesFulfilled, getSubcategoriesFulfilled, getProductsFulfilled, addProductsFulfilled, pending, reject, updateProductFulfilled, getUsersFulfilled, deleteUserFulfilled, getInvalidatedSellersFulfilled, deleteSellerFulfilled, validateSellerFulfilled, getInvalidatedCommentsFulfilled, validateCommentFulfilled, deleteCommentFulfilled, getFutureTXsFulfilled, updateTXStatusFulfilled, GetFestivalProductsFulfilled, addFestivalFulfilled, deleteFestivalFulfilled, deleteMajorShoppingFulfilled, addMajorShoppingFulfilled, GetMajorShoppingProductsFulfilled, addDataPending, GetCompanyCouponForSomeProductsProductsFulfilled, addCompanyCouponForSomeProductsFulfilled, deleteCompanyCouponForSomeProductsFulfilled, getUserInPersonsFulfilled, addUserInPersonFulfilled, getTransactionInPersonsFulfilled, addTransactionInPersonFulfilled, updateWarehouseFulfilled, addWarehousesFulfilled, getWarehousesFulfilled, getProvinceFulfilled, addProvinceFulfilled, getCitiesFulfilled, addCitiesFulfilled } from "../globalExtraReducers";
 
 
 const initialState = {
@@ -77,6 +77,18 @@ const globalSlice = createSlice({
         builder.addCase(getSubcategoriesFromServer.fulfilled, getSubcategoriesFulfilled);
         builder.addCase(getSubcategoriesFromServer.rejected, reject);
         builder.addCase(addSubcategoryToServer.fulfilled, addSubcategoriesFulfilled);
+
+        // provinces
+        builder.addCase(getProvincesFromServer.pending, pending);
+        builder.addCase(getProvincesFromServer.fulfilled, getProvinceFulfilled);
+        builder.addCase(getProvincesFromServer.rejected, reject);
+        builder.addCase(addProvinceToServer.fulfilled, addProvinceFulfilled);
+
+        // cities
+        builder.addCase(getCitiesFromServer.pending, pending);
+        builder.addCase(getCitiesFromServer.fulfilled, getCitiesFulfilled);
+        builder.addCase(getCitiesFromServer.rejected, reject);
+        builder.addCase(addCityToServer.fulfilled, addCitiesFulfilled);
 
         // products
         builder.addCase(getProductsFromServer.pending, pending);

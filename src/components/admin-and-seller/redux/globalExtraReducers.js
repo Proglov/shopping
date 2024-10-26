@@ -36,6 +36,29 @@ export const addSubcategoriesFulfilled = (state, action) => {
     state.itemsCount++;
 }
 
+// provinces
+export const getProvinceFulfilled = (state, action) => {
+    state.items = action.payload.provinces
+    state.itemsCount = action.payload.allProvincesCount
+    state.lastPage = Math.ceil(action.payload?.allProvincesCount / state.itemsPerPage)
+    state.loading = false
+};
+export const addProvinceFulfilled = (state, action) => {
+    state.items.push(action.payload.province);
+    state.itemsCount++;
+};
+
+//cities
+export const getCitiesFulfilled = (state, action) => {
+    state.items = action.payload.cities
+    state.itemsCount = action.payload.allCitiesCount
+    state.lastPage = Math.ceil(action.payload?.allCitiesCount / state.itemsPerPage)
+    state.loading = false
+}
+export const addCitiesFulfilled = (state, action) => {
+    state.items.push(action.payload.city)
+    state.itemsCount++;
+}
 
 //products
 export const getProductsFulfilled = (state, action) => {
@@ -69,12 +92,6 @@ export const addWarehousesFulfilled = (state, action) => {
     state.items.push(action.payload.warehouse)
     state.itemsCount++;
     state.addDataLoading = false
-}
-export const toggleAvailabilityWarehouseFulfilled = (state, action) => {
-    state.items.forEach(item => {
-        if (item._id === action.payload) item.available = !item.available
-        return item
-    });
 }
 export const updateWarehouseFulfilled = (state, action) => {
     state.items = state.items.map(item => {

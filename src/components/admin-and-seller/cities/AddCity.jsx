@@ -7,20 +7,20 @@ import DOMPurify from 'dompurify';
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useDispatch, useSelector } from 'react-redux';
-import { addSubcategoryToServer } from '../redux/globalAsyncThunks';
+import { addCityToServer } from '../redux/globalAsyncThunks';
 
 
-export default function AddSubcategory() {
+export default function AddCity() {
     const [AddNewData, setAddNewData] = useState({
         isSubmitting: false,
         formData: {
             name: '',
-            category: ''
+            province: ''
         }
     })
     const {
-        categories,
-    } = useSelector((state) => state.subcategories);
+        provinces,
+    } = useSelector((state) => state.cities);
     const dispatch = useDispatch();
 
     const handleChange = (event) => {
@@ -43,13 +43,13 @@ export default function AddSubcategory() {
             isSubmitting: true
         }));
         if (!AddNewData.formData.name) {
-            toast.error('عنوان زیر دسته بندی ضروری میباشد')
+            toast.error('نام شهر ضروری میباشد')
             setAddNewData(prevProps => ({
                 ...prevProps,
                 isSubmitting: false
             }))
-        } else if (!AddNewData.formData.category || AddNewData.formData.category === "دسته بندی را انتخاب کنید ⮟") {
-            toast.error('دسته بندی محصول ضروری میباشد')
+        } else if (!AddNewData.formData.province || AddNewData.formData.province === "استان را انتخاب کنید ⮟") {
+            toast.error('استان محصول ضروری میباشد')
             setAddNewData(prevProps => ({
                 ...prevProps,
                 isSubmitting: false
@@ -58,18 +58,18 @@ export default function AddSubcategory() {
             try {
                 const obj = {
                     name: '',
-                    categoryId: ''
+                    provinceId: ''
                 };
                 obj.name = AddNewData.formData.name
                 let catId = '';
-                for (const cat of categories) {
-                    if (cat.name === AddNewData.formData.category) {
+                for (const cat of provinces) {
+                    if (cat.name === AddNewData.formData.province) {
                         catId = cat._id;
                         break
                     }
                 }
-                obj.categoryId = catId
-                const res = dispatch(addSubcategoryToServer(obj))
+                obj.provinceId = catId
+                const res = dispatch(addCityToServer(obj))
                 if (res?.message === 'You are not authorized!')
                     throw ("توکن شما منقضی شده. لطفا خارج، و دوباره وارد شوید")
                 toast.success('با موفقیت ارسال شد!')
@@ -81,7 +81,7 @@ export default function AddSubcategory() {
                     isSubmitting: false,
                     formData: {
                         name: '',
-                        category: ''
+                        province: ''
                     }
                 }));
             }
@@ -96,7 +96,7 @@ export default function AddSubcategory() {
 
                     <Grid item xs={12} sm={12} md={12} lg={6}>
                         <div className='text-start text-sm mb-1'>
-                            عنوان
+                            نام
                         </div>
                         <input
                             className="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500"
@@ -104,19 +104,19 @@ export default function AddSubcategory() {
                             type="text"
                             name="name"
                             value={AddNewData.formData.name}
-                            placeholder={`عنوان زیر دسته بندی را وارد کنید`}
+                            placeholder={`نام شهر را وارد کنید`}
                             onChange={handleChange}
                         />
                     </Grid>
 
                     <Grid item xs={12} sm={12} md={12} lg={6} className="mt-2 relative">
                         <div className='w-full text-start text-sm'>
-                            <label htmlFor="underline_select">دسته بندی</label>
+                            <label htmlFor="underline_select">استان</label>
                         </div>
-                        <select id="underline_select" className="block py-2.5 px-3 w-full text-sm text-gray-500 bg-transparent my-2 rounded-md border-2 border-gray-200 appearance-none focus:outline-none focus:ring-0 focus:border-gray-200" onChange={handleChange} name='category' defaultValue={''}>
-                            <option defaultValue>دسته بندی را انتخاب کنید &#11167;</option>
+                        <select id="underline_select" className="block py-2.5 px-3 w-full text-sm text-gray-500 bg-transparent my-2 rounded-md border-2 border-gray-200 appearance-none focus:outline-none focus:ring-0 focus:border-gray-200" onChange={handleChange} name='province' defaultValue={''}>
+                            <option defaultValue>استان را انتخاب کنید &#11167;</option>
                             {
-                                categories.map((category, index) => <option key={index} value={category?.name} className='text-black'>{category?.name}</option>)
+                                provinces.map((province, index) => <option key={index} value={province?.name} className='text-black'>{province?.name}</option>)
                             }
                         </select>
                     </Grid>

@@ -42,7 +42,7 @@ export default function AddCategory() {
             isSubmitting: true
         }));
         if (!AddNewData.formData.name) {
-            toast.error('عنوان محصول ضروری میباشد')
+            toast.error('عنوان دسته بندی ضروری میباشد')
             setAddNewData(prevProps => ({
                 ...prevProps,
                 isSubmitting: false
