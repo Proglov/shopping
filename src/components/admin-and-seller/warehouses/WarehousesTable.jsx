@@ -1,5 +1,5 @@
 "use client"
-import { Button, Pagination, Stack } from '@mui/material';
+import { Pagination, Stack } from '@mui/material';
 import { useEffect } from 'react';
 import { styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
@@ -9,11 +9,9 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import ModalEdit from './ModalEdit';
 import { getWarehousesFromServer } from '../redux/globalAsyncThunks';
 import { setCurrentPage } from '../redux/reducers/global';
 import { useDispatch, useSelector } from 'react-redux';
-import { setIsModalEditOpen, setSelectedItem } from '../redux/reducers/warehouses';
 import Link from 'next/link';
 
 
@@ -53,11 +51,6 @@ export default function WarehousesTable({ which }) {
         itemsPerPage,
     } = useSelector((state) => state.global);
 
-    const {
-        operatingError,
-        selectedItem,
-    } = useSelector((state) => state.warehouses);
-
     useEffect(() => {
         dispatch(getWarehousesFromServer({ which, currentPage, itemsPerPage }))
     }, [currentPage, itemsPerPage, which, dispatch]);
@@ -93,7 +86,7 @@ export default function WarehousesTable({ which }) {
                 items?.length !== 0 ?
                     <div>
                         <TableContainer component={Paper} className='max-w-5xl mx-auto'>
-                            <Table sx={{ minWidth: 900 }} aria-label="customized table">
+                            <Table aria-label="customized table">
                                 <TableHead>
                                     <TableRow>
                                         <StyledTableCell align='center'>ردیف</StyledTableCell>
@@ -103,7 +96,6 @@ export default function WarehousesTable({ which }) {
                                         }
                                         <StyledTableCell align='center'>نام</StyledTableCell>
                                         <StyledTableCell align='center'>شهر</StyledTableCell>
-                                        <StyledTableCell align='center'>عملیات</StyledTableCell>
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
@@ -113,37 +105,13 @@ export default function WarehousesTable({ which }) {
                                             <StyledTableCell align='center'>{index + 1 + itemsPerPage * (currentPage - 1)}</StyledTableCell>{
                                                 which === 'ADMIN' &&
                                                 <StyledTableCell align='center'>
-                                                    <Link className='text-purple-500' href={'/ADMIN/sellers/' + item.sellerId._id}>
+                                                    <Link className='text-purple-500 underline' href={'/ADMIN/sellers/' + item.sellerId._id}>
                                                         {item.sellerId.name}
                                                     </Link>
                                                 </StyledTableCell>
                                             }
                                             <StyledTableCell align='center'>{item.name}</StyledTableCell>
                                             <StyledTableCell align='center'>{item.cityId.name}</StyledTableCell>
-                                            <StyledTableCell className='border-b-0'>
-                                                {selectedItem?._id === item._id ? (
-                                                    <div className='text-center mt-2 text-xs'>درحال انجام عملیات
-                                                    </div>
-                                                ) : (
-                                                    <Button
-                                                        variant='outlined'
-                                                        className='p-0 m-1'
-                                                        sx={{ color: 'primary', borderColor: 'primary' }}
-                                                        onClick={() => {
-                                                            dispatch(setIsModalEditOpen(true));
-                                                            dispatch(setSelectedItem({ ...item }));
-                                                        }}
-                                                    >
-                                                        ویرایش
-                                                    </Button>
-                                                )}
-                                                {selectedItem?._id === item._id && operatingError !== '' ? (
-                                                    <>
-                                                        <div>مشکلی پیش امده است. لطفا اتصال اینترنت را بررسی کنید</div>
-                                                        <div>{operatingError}</div>
-                                                    </>
-                                                ) : ''}
-                                            </StyledTableCell>
                                         </StyledTableRow>
                                     ))}
                                 </TableBody>
@@ -162,8 +130,6 @@ export default function WarehousesTable({ which }) {
                         اطلاعاتی جهت نمایش وجود ندارد
                     </div>
             )}
-
-            <ModalEdit />
 
         </Stack>
     );
