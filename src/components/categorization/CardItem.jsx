@@ -16,7 +16,7 @@ export default function CardItem({ product, subID, id, margin = 1 }) {
         component="img"
         image={img}
       />
-      <CardContent className="min-h-[300px]">
+      <CardContent className="min-h-[300px] flex flex-col justify-center items-center gap-3">
 
         <Box className='h-[140px]'>
 
@@ -70,15 +70,14 @@ export default function CardItem({ product, subID, id, margin = 1 }) {
 
         </Box>
 
-        <Box>
-          <Box className="my-3 text-center">
-            <AddButton productId={product._id} which={product.which} quantity={product?.quantity} profit={product.price * product?.majorOffPercentage / 100} sellerId={product.sellerId} />
-          </Box>
+        <Box className='flex flex-col justify-start items-center gap-2'>
+          <AddButton productId={product._id} which={product.which} quantity={product?.quantity} profit={product.price * product?.majorOffPercentage / 100} sellerId={product.sellerId} />
+
           <Link href={`/categories/${id}/${subID}/${product._id}`}>
             <Button
               variant="outlined"
               color="info"
-              className="sm:w-full text-sm"
+              className="w-fit sm:text-sm text-xs"
             >
               مشاهده محصول
             </Button>
