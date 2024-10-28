@@ -8,7 +8,6 @@ import SellerApi from "@/services/withoutAuthActivities/seller";
 import DOMPurify from "dompurify";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { useRouter } from "next/navigation";
 import { isEmailValid, isPhoneValid } from "@/utils/funcs";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { useDispatch } from "react-redux";
@@ -17,7 +16,6 @@ import { SetLogin } from "@/store/login";
 export default function LoginComponent({ isUsernameParam, type }) { // isUsernameParam === true -> user wants to login with username or email
   const { signInWithPhone, signInWithEmailOrUsername } = UserApi;
   const { sellerSignInWithPhone, sellerSignInWithEmailOrUsername } = SellerApi;
-  const router = useRouter();
   const secondInputRef = useRef();
   const dispatch = useDispatch()
 
@@ -110,6 +108,10 @@ export default function LoginComponent({ isUsernameParam, type }) { // isUsernam
           });
         } else if (mes === "no seller found") {
           toast.error("شما قبلا ثبت نام نکرده اید", {
+            position: toast.POSITION.TOP_RIGHT,
+          });
+        } else {
+          toast.error(`${!isUsernameParam ? 'شماره' : 'نام کاربری یا ایمیل'} یا رمز عبور صحیح نیست!`, {
             position: toast.POSITION.TOP_RIGHT,
           });
         }

@@ -15,14 +15,14 @@ export default function ProvincesMain() {
             <div className='text-start text-sm mb-1'>
                 {
                     isHidden ?
-                        <Button variant='outlined' onClick={() => setIsHidden(prev => !prev)}>اضافه کردن دسته بندی</Button>
+                        <Button variant='outlined' onClick={() => setIsHidden(prev => !prev)}>اضافه کردن استان</Button>
                         : <>
                             <Button variant='outlined' color='error' onClick={() => setIsHidden(prev => !prev)}>
                                 <IoMdClose className='text-lg' />
                             </Button>
 
                             <span className='mx-3'>
-                                اضافه کردن دسته بندی
+                                اضافه کردن استان
                             </span>
                         </>
                 }

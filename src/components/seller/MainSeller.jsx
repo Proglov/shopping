@@ -72,6 +72,8 @@ export default function Main({ tabs, discountTabs }) {
                         orientation='horizontal'
                         value={tabs.active}
                         onChange={handleChange}
+                        variant="scrollable"
+                        visibleScrollbar
                         aria-label="horizontal tabs example"
                         textColor='inherit'
                         TabIndicatorProps={{
@@ -79,6 +81,7 @@ export default function Main({ tabs, discountTabs }) {
                                 backgroundColor: "#D97D54"
                             }
                         }}
+                        sx={{ direction: 'ltr' }}
                     >
                         <Tab label="محصولات" {...a11yProps(0)} />
                         <Tab label="انبارها" {...a11yProps(1)} />
