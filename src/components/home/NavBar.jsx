@@ -5,22 +5,18 @@ import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
-import Typography from "@mui/material/Typography";
 import InputBase from "@mui/material/InputBase";
-import Badge from "@mui/material/Badge";
 import SearchIcon from "@mui/icons-material/Search";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import { LiaSignInAltSolid, LiaSignOutAltSolid } from "react-icons/lia";
-import { GiShoppingCart } from "react-icons/gi";
 import Link from "next/link";
-import Cart from "../Shopping card/Cart";
-import { convertToFarsiNumbers } from "@/utils/funcs";
 import { Button, Dialog, DialogActions, DialogContent } from "@mui/material";
 import { useRouter } from "next/navigation";
 import { SetCart } from "@/store/CartProductsSlice";
-import { getCounterProductsWithoutLS, loadCartState } from "@/store/Storage/Storage";
+import { loadCartState } from "@/store/Storage/Storage";
 import { useDispatch, useSelector } from "react-redux";
 import { checkAndSetLoginStatus, checkIfCheckLoginIsRequired, CheckLogin, SetLogin } from "@/store/login";
+import CitiesFilter from "./CitiesFilter";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -65,17 +61,11 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 export default function NavBar() {
   const router = useRouter();
   const dispatch = useDispatch();
-  const products = useSelector((state) => state.CartProducts);
   const login = useSelector((state) => state.Login);
 
-  const [open, setOpen] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
   const [bga, setBga] = useState(false);
-  const [counter, setCounter] = useState(0)
 
-  useEffect(() => {
-    setCounter(getCounterProductsWithoutLS(products))
-  }, [products])
 
   useEffect(() => {
     const bool = checkIfCheckLoginIsRequired()
@@ -92,44 +82,12 @@ export default function NavBar() {
   const Close = () => {
     setOpenDialog(false);
   };
-
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
   const logOut = () => {
     setOpenDialog(false);
     dispatch(SetLogin({ status: '', token: null }))
     router.refresh();
   };
 
-
-  const shoppingCardComponent = (
-    <Typography
-      className="mr-4 z-50 w-16 pt-[10px] pr-[22px]"
-      variant="h6"
-      noWrap
-      component="div"
-    >
-      <IconButton onClick={handleClickOpen}>
-        <Badge
-          badgeContent={convertToFarsiNumbers(counter)}
-          color="error"
-          sx={{ zIndex: "300", "& .MuiBadge-badge": { fontSize: { xs: '9px', sm: '15px' }, height: { xs: '15px', sm: '22px' }, width: { xs: '15px', sm: '22px' } } }}
-        >
-          <GiShoppingCart
-            className="sm:text-2xl text-[18px]"
-            style={{ zIndex: "300" }}
-          />
-        </Badge>
-      </IconButton>
-      <Cart Close={handleClose} Open={open} />
-    </Typography>
-  )
 
   const signInAndSignOutComponent = (
     <IconButton
@@ -206,10 +164,10 @@ export default function NavBar() {
           {
             login === 'user' &&
             <>
-              {shoppingCardComponent}
               {signInAndSignOutComponent}
               {spaceComponent}
               {searchComponent}
+              <CitiesFilter />
               {profileComponent}
             </>
           }
@@ -224,10 +182,10 @@ export default function NavBar() {
           {
             login === '' &&
             <>
-              {shoppingCardComponent}
               {signInAndSignOutComponent}
               {spaceComponent}
               {searchComponent}
+              <CitiesFilter />
             </>
           }
         </Toolbar>

@@ -93,7 +93,3 @@ export const getOffCodeBody = () => {
 
   return obj
 }
-
-export const setProvince = province => localStorage.setItem("province", province)
-
-export const getProvince = () => localStorage.getItem("province") || ''
