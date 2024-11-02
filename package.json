@@ -19,6 +19,7 @@
     "@reduxjs/toolkit": "^1.9.5",
     "axios": "^1.6.8",
     "bcrypt": "^5.1.1",
+    "cookies-next": "^4.3.0",
     "dompurify": "^3.0.6",
     "formidable": "^3.5.1",
     "jalali-moment": "^3.3.11",
