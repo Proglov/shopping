@@ -1,5 +1,5 @@
 'use client'
-import { Box, Tab, Tabs, Typography } from '@mui/material'
+import { Box, styled, Tab, Tabs, Typography } from '@mui/material'
 import ProductsMain from '../admin-and-seller/products/ProductsMain';
 import TXMain from '../admin-and-seller/txs/TXMain';
 import Info from './Info';
@@ -38,6 +38,11 @@ function a11yProps(index) {
         'aria-controls': `vertical-tabpanel-${index}`,
     };
 }
+const StyledTabs = styled(Tabs)(() => ({
+    '.MuiTabs-scrollButtons': {
+        display: 'none'
+    }
+}));
 
 export default function Main({ tabs, discountTabs }) {
     const router = useRouter()
@@ -68,7 +73,7 @@ export default function Main({ tabs, discountTabs }) {
                 </Box>
 
                 <Box className='max-w-6xl mx-auto shadow-lg lg:p-2 p-1'>
-                    <Tabs
+                    <StyledTabs
                         orientation='horizontal'
                         value={tabs.active}
                         onChange={handleChange}
@@ -81,7 +86,6 @@ export default function Main({ tabs, discountTabs }) {
                                 backgroundColor: "#D97D54"
                             }
                         }}
-                        sx={{ direction: 'ltr' }}
                     >
                         <Tab label="محصولات" {...a11yProps(0)} />
                         <Tab label="انبارها" {...a11yProps(1)} />
@@ -90,7 +94,7 @@ export default function Main({ tabs, discountTabs }) {
                         <Tab label="تراکنش ها" {...a11yProps(4)} />
                         <Tab label="طرح های ویژه" {...a11yProps(5)} />
                         <Tab label="تنظیمات" {...a11yProps(6)} />
-                    </Tabs>
+                    </StyledTabs>
                     <Box style={{ width: '100%' }}>
                         <TabPanel value={tabs.active} index={0} className='text-center'>
                             <ProductsMain which={"Seller"} />
