@@ -252,7 +252,7 @@ export default function AddWarehouse() {
                     <Grid item xs={12} sm={12} md={12} lg={6} className='text-start'>
                         <br />
                         <span className='text-indigo-500'>
-                            شهرهایی که از این انبار میتوانید انبار ارسال کنید را انتخاب کنید:
+                            شهرهایی که از این انبار میتوانید محصول ارسال کنید را انتخاب کنید:
                         </span>
 
                         {

@@ -107,14 +107,8 @@ export default function SellerMain({ id, tabs }) {
                             <StyledTableCell align='center'>{seller?.bio}</StyledTableCell>
                         </TableRow>
                         <TableRow>
-                            <StyledTableCell className="border-l border-gray-300" align='center'>آدرس ها</StyledTableCell>
-                            <StyledTableCell align='center'>
-                                {seller?.address.map((address, i) => (
-                                    <div key={i} className="border-b border-gray-300 py-2">
-                                        {address}
-                                    </div>
-                                ))}
-                            </StyledTableCell>
+                            <StyledTableCell className="border-l border-gray-300" align='center'>آدرس محل کار</StyledTableCell>
+                            <StyledTableCell align='center'>  {seller?.officeAddress?.completeAddress}  </StyledTableCell>
                         </TableRow>
                         <TableRow>
                             <StyledTableCell className="border-l border-gray-300" align='center'>وضعیت</StyledTableCell>

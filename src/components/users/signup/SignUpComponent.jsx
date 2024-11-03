@@ -583,7 +583,7 @@ export default function SignUpComponent({ type }) {
 
                 <Grid item xs={12} sm={!!address?.province.id ? 6 : 12} className="mt-2 relative">
                   <div className='w-full text-start text-sm'>
-                    <label htmlFor="underline_select_province">استان</label>
+                    <label htmlFor="underline_select_province">استان دفتر کار</label>
                   </div>
                   <select id="underline_select_province" className="block py-2.5 px-3 w-full text-sm text-gray-500 bg-transparent my-2 rounded-md border-2 border-gray-200 appearance-none focus:outline-none focus:ring-0 focus:border-gray-200" value={address.province.name} onChange={() => { }} name='province'>
                     <option value='' disabled>استان را انتخاب کنید &#11167;</option>
@@ -597,7 +597,7 @@ export default function SignUpComponent({ type }) {
                   !!address?.province.id &&
                   <Grid item xs={12} sm={5.9} className="mt-2 relative">
                     <div className='w-full text-start text-sm'>
-                      <label htmlFor="underline_select_city">شهر</label>
+                      <label htmlFor="underline_select_city">شهر دفتر کار</label>
                     </div>
                     <select id="underline_select_city" className="block py-2.5 px-3 w-full text-sm text-gray-500 bg-transparent my-2 rounded-md border-2 border-gray-200 appearance-none focus:outline-none focus:ring-0 focus:border-gray-200" onChange={() => { }} value={address.city.name} name='city'>
                       <option value='' disabled>شهر را انتخاب کنید &#11167;</option>
@@ -618,7 +618,7 @@ export default function SignUpComponent({ type }) {
                 focusNum={8}
                 inputName='address'
                 inputRef={refs[8]}
-                label="آدرس کامل"
+                label="آدرس کامل دفتر کار"
               />
 
               <CustomTextField
