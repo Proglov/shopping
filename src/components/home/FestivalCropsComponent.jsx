@@ -12,7 +12,7 @@ export default function FestivalCropsComponent({ src, name, price: realPrice, of
     return (
         <Box className={`rounded-md p-1 m-${margin} min-h-[200px] flex flex-col justify-center items-center gap-3 bg-white`}>
 
-            <Box className='h-[230px]'>
+            <Box className='min-h-[255px]'>
                 <div className='text-red-600 mx-3 py-2 sm:text-base text-xs flex justify-between items-center'>
                     <span>
                         پیشنهاد شگفت انگیز

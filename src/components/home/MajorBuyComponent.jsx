@@ -13,9 +13,9 @@ export default function MajorBuyComponent({ src, name, realPrice, off, number, p
     const profit = realPrice * off / 100
 
     return (
-        <Box className={`rounded-md p-1 m-${margin} min-h-[200px] flex flex-col justify-center items-center gap-3 bg-white`} dir='rtl'>
+        <Box className={`rounded-md p-1 m-${margin} flex flex-col justify-center items-center gap-3 bg-white`} dir='rtl'>
 
-            <Box className='h-[230px]'>
+            <Box className='min-h-[220px] sm:min-h-[310px]'>
                 <div className='sm:w-56 w-44 mx-auto'>
                     <Image src={src} alt={name} width={200} height={150} loading='lazy' className='mx-auto rounded-lg' />
                 </div>
