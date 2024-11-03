@@ -19,7 +19,7 @@ import Api16 from "@/services/withAuthActivities/userInPerson";
 import Api17 from "@/services/withAuthActivities/txInPersons";
 import Api18 from "@/services/withAuthActivities/warehouse";
 import Api19 from "@/services/withAuthActivities/province";
-import Api20 from "@/services/withAuthActivities/city";
+import Api20 from "@/services/withoutAuthActivities/city";
 
 //categories
 export const getCategoriesFromServer = createAsyncThunk(

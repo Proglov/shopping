@@ -1,10 +1,10 @@
 "use client";
-import { Box, Button, IconButton, InputAdornment, TextField } from "@mui/material";
+import { Box, Button, Grid, IconButton, InputAdornment, TextField } from "@mui/material";
 import Link from "next/link";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import UserApi from "@/services/withoutAuthActivities/user";
 import SellerApi from "@/services/withoutAuthActivities/seller";
-import { useRouter } from "next/navigation";
+import CityApi from "@/services/withoutAuthActivities/city";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import DOMPurify from "dompurify";
@@ -109,13 +109,11 @@ const CustomTextField = ({ localVars, inputName, label, inputRef, focusNum, isLa
 export default function SignUpComponent({ type }) {
   const { signUp } = UserApi;
   const { sellerSignUp } = SellerApi;
-  const router = useRouter();
+  const { getAllCities } = CityApi
   const dispatch = useDispatch()
 
   const refs = [useRef(), useRef(), useRef(), useRef(), useRef(), useRef(), useRef(), useRef(), useRef(), useRef()]
-  // const inputCount = type === 'seller' ? 10 : 4;
 
-  // for (let i = 0; i < inputCount; i++) refs.push(useRef())
 
   let initialState = {
     phone: "",
@@ -149,16 +147,76 @@ export default function SignUpComponent({ type }) {
   const [whichFocused, setWhichFocused] = useState(0)
   const [showPassword, setShowPassword] = useState(false)
   const [showRepeatPassword, setShowRepeatPassword] = useState(false)
+  const [provinces, setProvinces] = useState([])
+  const [address, setAddress] = useState({
+    province: {
+      id: '',
+      name: ''
+    },
+    city: {
+      id: '',
+      name: ''
+    }
+  })
 
-  const setFocus = num => {
-    refs.map((ref, index) => {
-      if (index === num) ref.current.focus();
-      else ref.current.blur();
+  useEffect(() => {
+    const fetchCities = async () => {
+      const response = await getAllCities()
+      const allProvinces = response.cities.reduce((acc, curr) => {
+        const existingProvince = acc.find(item => item.provinceId === curr.provinceId._id);
+
+        if (existingProvince) {
+          existingProvince.cities.push({
+            cityId: curr._id,
+            cityName: curr.name
+          });
+        } else {
+          acc.push({
+            provinceId: curr.provinceId._id,
+            provinceName: curr.provinceId.name,
+            cities: [{
+              cityId: curr._id,
+              cityName: curr.name
+            }]
+          });
+        }
+
+        return acc;
+      }, []);
+      setProvinces(allProvinces)
+    }
+    const func = () => {
+      if (type === 'seller')
+        fetchCities()
+    }
+    func()
+  }, [type])
+
+  const provinceAndCityHandler = (field, provinceOrCity) => {
+    if (field === 'city')
+      setAddress(prevProps => {
+        return {
+          ...prevProps,
+          city: { id: provinceOrCity[field + 'Id'], name: provinceOrCity[field + 'Name'] }
+        }
+      })
+    else setAddress(prevProps => {
+      return {
+        ...prevProps,
+        province: { id: provinceOrCity[field + 'Id'], name: provinceOrCity[field + 'Name'] },
+        city: { id: provinceOrCity.cities[0].cityId, name: provinceOrCity.cities[0].cityName }
+      }
     })
-
-    setWhichFocused(num)
-
   }
+
+  // Keep track of inputs
+  const setFocus = (num) => {
+    if (num >= 0 && num < refs.length) {
+      refs.forEach(ref => ref.current?.blur());
+      refs[num].current?.focus();
+    }
+    setWhichFocused(num);
+  };
 
   const handleChange = (event) => {
     const { value, name } = event.target
@@ -224,6 +282,11 @@ export default function SignUpComponent({ type }) {
           addressError: 'آدرس خود را کامل وارد کنید'
         }))
         return;
+      } else if (!address.city.id) {
+        toast.error("شهر و استان ضروریست", {
+          position: toast.POSITION.TOP_RIGHT,
+        });
+        return;
       } else if (formData.bio.length < 10) {
         setFocus(9)
         setFormData(prev => ({
@@ -269,7 +332,15 @@ export default function SignUpComponent({ type }) {
         let response;
 
         if (type === 'seller') {
-          response = await sellerSignUp(obj);
+          const augmentedObj = {
+            ...obj,
+            officeAddress: {
+              cityId: address.city.id,
+              completeAddress: obj.address
+            }
+          }
+          delete augmentedObj.address
+          response = await sellerSignUp(augmentedObj);
           dispatch(SetLogin({ status: 'seller', token: response.token }))
         } else {
           response = await signUp(obj);
@@ -392,6 +463,9 @@ export default function SignUpComponent({ type }) {
             });
             break;
           default:
+            toast.error(message, {
+              position: toast.POSITION.TOP_RIGHT,
+            });
             console.log(error);
             break;
         }
@@ -505,12 +579,46 @@ export default function SignUpComponent({ type }) {
                 label="تلفن فروشگاه"
               />
 
+              <Grid container gap={.5}>
+
+                <Grid item xs={12} sm={!!address?.province.id ? 6 : 12} className="mt-2 relative">
+                  <div className='w-full text-start text-sm'>
+                    <label htmlFor="underline_select_province">استان</label>
+                  </div>
+                  <select id="underline_select_province" className="block py-2.5 px-3 w-full text-sm text-gray-500 bg-transparent my-2 rounded-md border-2 border-gray-200 appearance-none focus:outline-none focus:ring-0 focus:border-gray-200" value={address.province.name} onChange={() => { }} name='province'>
+                    <option value='' disabled>استان را انتخاب کنید &#11167;</option>
+                    {
+                      provinces.map(provinceObj => <option key={provinceObj.provinceId} value={provinceObj?.provinceName} onClick={() => provinceAndCityHandler('province', provinceObj)} className='text-black'>{provinceObj?.provinceName}</option>)
+                    }
+                  </select>
+                </Grid>
+
+                {
+                  !!address?.province.id &&
+                  <Grid item xs={12} sm={5.9} className="mt-2 relative">
+                    <div className='w-full text-start text-sm'>
+                      <label htmlFor="underline_select_city">شهر</label>
+                    </div>
+                    <select id="underline_select_city" className="block py-2.5 px-3 w-full text-sm text-gray-500 bg-transparent my-2 rounded-md border-2 border-gray-200 appearance-none focus:outline-none focus:ring-0 focus:border-gray-200" onChange={() => { }} value={address.city.name} name='city'>
+                      <option value='' disabled>شهر را انتخاب کنید &#11167;</option>
+                      {
+                        provinces.map(provinceObj => {
+                          if (provinceObj?.provinceName === address?.province.name) {
+                            return provinceObj?.cities.map(cityObj => <option key={cityObj.cityId} value={cityObj?.cityName} onClick={() => provinceAndCityHandler('city', cityObj)} className='text-black'>{cityObj?.cityName}</option>)
+                          } else return <></>
+                        })
+                      }
+                    </select>
+                  </Grid>
+                }
+              </Grid>
+
               <CustomTextField
                 localVars={passLocalVarsToGlobal}
                 focusNum={8}
                 inputName='address'
                 inputRef={refs[8]}
-                label="آدرس"
+                label="آدرس کامل"
               />
 
               <CustomTextField

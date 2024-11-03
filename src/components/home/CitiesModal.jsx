@@ -7,7 +7,7 @@ import Fade from '@mui/material/Fade';
 import { Accordion, AccordionDetails, AccordionSummary, Button, Checkbox, FormControlLabel, Typography } from '@mui/material';
 import { ModalContext } from './CitiesFilter';
 import { MdExpandMore } from 'react-icons/md';
-import Api from '@/services/withAuthActivities/city';
+import Api from '@/services/withoutAuthActivities/city';
 import { GradientCircularProgress } from '@/app/loading';
 import { getCookie, setCookie } from 'cookies-next';
 

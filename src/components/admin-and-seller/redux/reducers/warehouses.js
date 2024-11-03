@@ -1,4 +1,4 @@
-import Api from "@/services/withAuthActivities/city";
+import Api from "@/services/withoutAuthActivities/city";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 const initialState = {

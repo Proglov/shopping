@@ -87,19 +87,28 @@ export default function AddWarehouse() {
         });
     };
 
-
-    const provinceAndCityHandler = (field, id, name) => {
-        setAddNewData(prevProps => {
+    const provinceAndCityHandler = (field, provinceOrCity) => {
+        if (field === 'city')
+            setAddNewData(prevProps => {
+                return {
+                    ...prevProps,
+                    formData: {
+                        ...prevProps.formData,
+                        city: { id: provinceOrCity[field + 'Id'], name: provinceOrCity[field + 'Name'] }
+                    }
+                }
+            })
+        else setAddNewData(prevProps => {
             return {
                 ...prevProps,
                 formData: {
                     ...prevProps.formData,
-                    [field]: { id, name }
+                    province: { id: provinceOrCity[field + 'Id'], name: provinceOrCity[field + 'Name'] },
+                    city: { id: provinceOrCity.cities[0].cityId, name: provinceOrCity.cities[0].cityName }
                 }
             }
         })
     }
-
     const onSubmitForm = async () => {
         setAddNewData(prevProps => ({
             ...prevProps,
@@ -201,7 +210,7 @@ export default function AddWarehouse() {
                         <select id="underline_select_province" className="block py-2.5 px-3 w-full text-sm text-gray-500 bg-transparent my-2 rounded-md border-2 border-gray-200 appearance-none focus:outline-none focus:ring-0 focus:border-gray-200" value={AddNewData.formData.province.name} onChange={handleChange} name='province'>
                             <option value='' disabled>استان را انتخاب کنید &#11167;</option>
                             {
-                                provinces.map((provinceObj, index) => <option key={index} value={provinceObj?.provinceName} onClick={() => provinceAndCityHandler('province', provinceObj.provinceId, provinceObj.provinceName)} className='text-black'>{provinceObj?.provinceName}</option>)
+                                provinces.map(provinceObj => <option key={provinceObj.provinceId} value={provinceObj?.provinceName} onClick={() => provinceAndCityHandler('province', provinceObj)} className='text-black'>{provinceObj?.provinceName}</option>)
                             }
                         </select>
                     </Grid>
@@ -217,7 +226,7 @@ export default function AddWarehouse() {
                                 {
                                     provinces.map(provinceObj => {
                                         if (provinceObj?.provinceName === AddNewData?.formData?.province.name) {
-                                            return provinceObj?.cities.map((cityObj, i) => <option key={7 * 366 + i} value={cityObj?.cityName} onClick={() => provinceAndCityHandler('city', cityObj.cityId, cityObj.cityName)} className='text-black'>{cityObj?.cityName}</option>)
+                                            return provinceObj?.cities.map(cityObj => <option key={cityObj.cityId} value={cityObj?.cityName} onClick={() => provinceAndCityHandler('city', cityObj)} className='text-black'>{cityObj?.cityName}</option>)
                                         } else return <></>
                                     })
                                 }
