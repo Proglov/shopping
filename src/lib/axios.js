@@ -23,3 +23,4 @@ export const clientWithAuth = axios.create({
         "Authorization": typeof window !== "undefined" ? localStorage.getItem('token') ?? null : null
     }
 });
+console.log(apiURL);
