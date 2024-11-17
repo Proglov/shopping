@@ -20,6 +20,7 @@ import Api17 from "@/services/withAuthActivities/txInPersons";
 import Api18 from "@/services/withAuthActivities/warehouse";
 import Api19 from "@/services/withAuthActivities/province";
 import Api20 from "@/services/withoutAuthActivities/city";
+import Api21 from "@/services/withAuthActivities/city";
 
 //categories
 export const getCategoriesFromServer = createAsyncThunk(
@@ -80,7 +81,7 @@ export const getCitiesFromServer = createAsyncThunk(
 export const addCityToServer = createAsyncThunk(
     "Global/addCityToServer",
     async (obj) => {
-        const { createCity } = Api20
+        const { createCity } = Api21
         return await createCity(obj)
     }
 )
