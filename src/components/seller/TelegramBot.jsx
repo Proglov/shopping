@@ -63,7 +63,7 @@ const GetCode = () => {
 
         try {
             const response = await GetCodeForTelegram()
-            setCode(response?.code || '')
+            setCode('C' + response?.code || '')
             setTimeLeft(180)
         } catch (error) {
             toast.error("کد برای شما ارسال شده است", {
