@@ -13,6 +13,7 @@ import { resetToInitialState } from '../admin-and-seller/redux/reducers/global';
 import UserInPersonsMain from '../admin-and-seller/userInPersons/UserInPersonsMain';
 import TransactionInPersonsMain from '../admin-and-seller/transactionInPersons/TransactionInPersonsMain';
 import WarehousesMain from '../admin-and-seller/warehouses/WarehouseMain';
+import TelegramBot from './TelegramBot';
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -92,7 +93,7 @@ export default function Main({ tabs, discountTabs }) {
 
     const array = [
         { name: 'محصولات', Component: ProductsMain },
-        { name: 'ربات تلگرام', Component: ProductsMain },
+        { name: 'ربات تلگرام', Component: TelegramBot },
         { name: 'انبارها', Component: WarehousesMain },
         { name: 'مشتریان حضوری', Component: UserInPersonsMain },
         { name: 'سفارشات حضوری', Component: TransactionInPersonsMain },
