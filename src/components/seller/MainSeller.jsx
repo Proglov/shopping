@@ -43,6 +43,41 @@ const StyledTabs = styled(Tabs)(() => ({
         display: 'none'
     }
 }));
+const CustomTabs = ({ array, handleChange, tabs, discountTabs }) => (
+    <Box className='max-w-6xl mx-auto shadow-lg lg:p-2 p-1'>
+        <StyledTabs
+            orientation='horizontal'
+            value={tabs.active}
+            onChange={handleChange}
+            variant="scrollable"
+            visibleScrollbar
+            aria-label="horizontal tabs example"
+            textColor='inherit'
+            TabIndicatorProps={{
+                style: {
+                    backgroundColor: "#D97D54"
+                }
+            }}
+        >
+            {array.map((obj, index) => (<Tab key={index + 100} label={obj.name} {...a11yProps(index)} />))}
+        </StyledTabs>
+        <Box style={{ width: '100%' }}>
+            {
+                array.map(({ Component }, index) => {
+                    const props = {
+                        which: "Seller"
+                    }
+                    if (Component.name === 'Discounts') props.tabs = discountTabs
+                    return (
+                        <TabPanel key={index + 200} value={tabs.active} index={index} className='text-center'>
+                            {<Component {...props} />}
+                        </TabPanel>
+                    )
+                })
+            }
+        </Box>
+    </Box>
+)
 
 export default function Main({ tabs, discountTabs }) {
     const router = useRouter()
@@ -55,6 +90,16 @@ export default function Main({ tabs, discountTabs }) {
         router.push(`/Seller?tab=${tabs[newPageIndex]}`)
     };
 
+    const array = [
+        { name: 'محصولات', Component: ProductsMain },
+        { name: 'ربات تلگرام', Component: ProductsMain },
+        { name: 'انبارها', Component: WarehousesMain },
+        { name: 'مشتریان حضوری', Component: UserInPersonsMain },
+        { name: 'سفارشات حضوری', Component: TransactionInPersonsMain },
+        { name: 'تراکنش ها', Component: TXMain },
+        { name: 'طرح های ویژه', Component: Discounts },
+        { name: 'تنظیمات', Component: ChangeProfile }
+    ]
 
     return (
         <>
@@ -72,53 +117,7 @@ export default function Main({ tabs, discountTabs }) {
                     <Info />
                 </Box>
 
-                <Box className='max-w-6xl mx-auto shadow-lg lg:p-2 p-1'>
-                    <StyledTabs
-                        orientation='horizontal'
-                        value={tabs.active}
-                        onChange={handleChange}
-                        variant="scrollable"
-                        visibleScrollbar
-                        aria-label="horizontal tabs example"
-                        textColor='inherit'
-                        TabIndicatorProps={{
-                            style: {
-                                backgroundColor: "#D97D54"
-                            }
-                        }}
-                    >
-                        <Tab label="محصولات" {...a11yProps(0)} />
-                        <Tab label="انبارها" {...a11yProps(1)} />
-                        <Tab label="مشتریان حضوری" {...a11yProps(2)} />
-                        <Tab label="سفارشات حضوری" {...a11yProps(3)} />
-                        <Tab label="تراکنش ها" {...a11yProps(4)} />
-                        <Tab label="طرح های ویژه" {...a11yProps(5)} />
-                        <Tab label="تنظیمات" {...a11yProps(6)} />
-                    </StyledTabs>
-                    <Box style={{ width: '100%' }}>
-                        <TabPanel value={tabs.active} index={0} className='text-center'>
-                            <ProductsMain which={"Seller"} />
-                        </TabPanel>
-                        <TabPanel value={tabs.active} index={1} className='text-center'>
-                            <WarehousesMain which={"Seller"} />
-                        </TabPanel>
-                        <TabPanel value={tabs.active} index={2} className='text-center'>
-                            <UserInPersonsMain which={"Seller"} />
-                        </TabPanel>
-                        <TabPanel value={tabs.active} index={3} className='text-center'>
-                            <TransactionInPersonsMain which={"Seller"} />
-                        </TabPanel>
-                        <TabPanel value={tabs.active} index={4} className='text-center'>
-                            <TXMain which={"Seller"} />
-                        </TabPanel>
-                        <TabPanel value={tabs.active} index={5} className='text-center'>
-                            <Discounts which={"Seller"} tabs={discountTabs} />
-                        </TabPanel>
-                        <TabPanel value={tabs.active} index={6} className='text-center'>
-                            <ChangeProfile />
-                        </TabPanel>
-                    </Box>
-                </Box>
+                <CustomTabs array={array} handleChange={handleChange} tabs={tabs} discountTabs={discountTabs} />
             </Box>
         </>
     )

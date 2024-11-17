@@ -48,6 +48,41 @@ const StyledTabs = styled(Tabs)(() => ({
         display: 'none'
     }
 }));
+const CustomTabs = ({ array, handleChange, tabs, discountTabs }) => (
+    <Box>
+        <StyledTabs
+            orientation='horizontal'
+            value={tabs.active}
+            onChange={handleChange}
+            variant="scrollable"
+            visibleScrollbar
+            aria-label="horizontal tabs example"
+            textColor='inherit'
+            TabIndicatorProps={{
+                style: {
+                    backgroundColor: "#D97D54"
+                }
+            }}
+        >
+            {array.map((obj, index) => (<Tab key={index + 100} label={obj.name} {...a11yProps(index)} />))}
+        </StyledTabs>
+        <Box style={{ width: '100%' }}>
+            {
+                array.map(({ Component }, index) => {
+                    const props = {
+                        which: "ADMIN"
+                    }
+                    if (Component.name === 'Discounts') props.tabs = discountTabs
+                    return (
+                        <TabPanel key={index + 200} value={tabs.active} index={index} className='text-center'>
+                            {<Component {...props} />}
+                        </TabPanel>
+                    )
+                })
+            }
+        </Box>
+    </Box>
+)
 
 export default function Main({ tabs, discountTabs }) {
     const dispatch = useDispatch()
@@ -61,6 +96,22 @@ export default function Main({ tabs, discountTabs }) {
     };
 
 
+    const array = [
+        { name: 'محصولات', Component: ProductsMain },
+        { name: 'انبارها', Component: WarehousesMain },
+        { name: 'کاربران', Component: UsersMain },
+        { name: 'مشتریان حضوری', Component: UserInPersonsMain },
+        { name: 'سفارشات حضوری', Component: TransactionInPersonsMain },
+        { name: 'فروشندگان', Component: SellersMain },
+        { name: 'دسته بندی ها', Component: CategoriesMain },
+        { name: 'زیر دسته بندی ها', Component: SubcategoriesMain },
+        { name: 'استان ها', Component: ProvincesMain },
+        { name: 'شهر ها', Component: CitiesMain },
+        { name: 'تراکنش ها', Component: TXMain },
+        { name: 'کامنت ها', Component: CommentsMain },
+        { name: 'طرح های ویژه', Component: Discounts }
+    ]
+
     return (
         <>
             <Box
@@ -71,75 +122,10 @@ export default function Main({ tabs, discountTabs }) {
                     بازگشت
                     <TiArrowBackOutline className='mr-1 mt-1' />
                 </Link>
-                <StyledTabs
-                    orientation='horizontal'
-                    value={tabs.active}
-                    onChange={handleChange}
-                    variant="scrollable"
-                    visibleScrollbar
-                    aria-label="horizontal tabs example"
-                    textColor='inherit'
-                    TabIndicatorProps={{
-                        style: {
-                            backgroundColor: "#D97D54"
-                        }
-                    }}
-                >
-                    <Tab label="محصولات" {...a11yProps(0)} />
-                    <Tab label="انبارها" {...a11yProps(1)} />
-                    <Tab label="کاربران" {...a11yProps(2)} />
-                    <Tab label="مشتریان حضوری" {...a11yProps(3)} />
-                    <Tab label="سفارشات حضوری" {...a11yProps(4)} />
-                    <Tab label="فروشندگان" {...a11yProps(5)} />
-                    <Tab label="دسته بندی ها" {...a11yProps(6)} />
-                    <Tab label="زیر دسته بندی ها" {...a11yProps(7)} />
-                    <Tab label="استان ها" {...a11yProps(8)} />
-                    <Tab label="شهر ها" {...a11yProps(9)} />
-                    <Tab label="تراکنش ها" {...a11yProps(10)} />
-                    <Tab label="کامنت ها" {...a11yProps(11)} />
-                    <Tab label="طرح های ویژه" {...a11yProps(12)} />
-                </StyledTabs>
-                <div style={{ width: '100%' }}>
-                    <TabPanel value={tabs.active} index={0} className='text-center'>
-                        <ProductsMain which={"ADMIN"} />
-                    </TabPanel>
-                    <TabPanel value={tabs.active} index={1} className='text-center'>
-                        <WarehousesMain which={"ADMIN"} />
-                    </TabPanel>
-                    <TabPanel value={tabs.active} index={2} className='text-center'>
-                        <UsersMain />
-                    </TabPanel>
-                    <TabPanel value={tabs.active} index={3} className='text-center'>
-                        <UserInPersonsMain which={"ADMIN"} />
-                    </TabPanel>
-                    <TabPanel value={tabs.active} index={4} className='text-center'>
-                        <TransactionInPersonsMain which={"ADMIN"} />
-                    </TabPanel>
-                    <TabPanel value={tabs.active} index={5} className='text-center'>
-                        <SellersMain />
-                    </TabPanel>
-                    <TabPanel value={tabs.active} index={6} className='text-center'>
-                        <CategoriesMain />
-                    </TabPanel>
-                    <TabPanel value={tabs.active} index={7} className='text-center'>
-                        <SubcategoriesMain />
-                    </TabPanel>
-                    <TabPanel value={tabs.active} index={8} className='text-center'>
-                        <ProvincesMain />
-                    </TabPanel>
-                    <TabPanel value={tabs.active} index={9} className='text-center'>
-                        <CitiesMain />
-                    </TabPanel>
-                    <TabPanel value={tabs.active} index={10} className='text-center'>
-                        <TXMain which={"ADMIN"} />
-                    </TabPanel>
-                    <TabPanel value={tabs.active} index={11} className='text-center'>
-                        <CommentsMain />
-                    </TabPanel>
-                    <TabPanel value={tabs.active} index={12} className='text-center'>
-                        <Discounts which={"ADMIN"} tabs={discountTabs} />
-                    </TabPanel>
-                </div>
+
+
+                <CustomTabs array={array} handleChange={handleChange} tabs={tabs} discountTabs={discountTabs} />
+
             </Box>
         </>
     )
