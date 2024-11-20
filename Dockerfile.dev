@@ -1,5 +1,5 @@
 # Dockerfile for Next.js
-FROM node
+FROM node:20.16.0
 
 # Set the working directory
 WORKDIR /app
