@@ -21,6 +21,8 @@ const ModalStyle = {
     border: '2px solid red',
     boxShadow: '0px 0px 10px 1px red',
     p: 4,
+    maxHeight: '80vh',
+    overflowY: 'auto'
 };
 
 export default function CitiesModal() {
