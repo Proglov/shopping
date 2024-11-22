@@ -6,64 +6,64 @@ import { ImFire } from "react-icons/im";
 
 const arr = [
     {
-        href: '/#',
-        name: 'شامپو پرژک مدل سیر حجم 450 میلی لیتر',
-        src: '/img/home/category-labaniat.jpg'
+        href: '/categories/undefined/673f010005ea6dc2c463c020/6740a359a728dfb50f2f4d4e',
+        name: 'هات چاکلت',
+        src: '/img/home/photo15080605710.jpg'
     },
     {
-        href: '/#',
-        name: 'شامپو پرژک مدل سیر حجم 450 میلی لیتر',
-        src: '/img/home/tanagholat.jpg'
+        href: '/categories/undefined/673f010005ea6dc2c463c020/6740a359a728dfb50f2f4d4e',
+        name: 'اسپرسو 20تایی',
+        src: '/img/home/photo15080606161.jpg'
     },
     {
-        href: '/#',
-        name: 'شامپو پرژک مدل سیر حجم 450 میلی لیتر',
-        src: '/img/home/category-labaniat.jpg'
+        href: '/categories/undefined/673f010005ea6dc2c463c020/6740a359a728dfb50f2f4d4e',
+        name: 'گلد',
+        src: '/img/home/photo15080606161.jpg'
     },
     {
-        href: '/#',
-        name: 'شامپو پرژک مدل سیر حجم 450 میلی لیتر',
-        src: '/img/home/tanagholat.jpg'
+        href: '/categories/undefined/673f010005ea6dc2c463c020/6740a359a728dfb50f2f4d4e',
+        name: 'قهوه فوری 2*1 (20تایی)',
+        src: '/img/home/photo15080606161.jpg'
     },
     {
-        href: '/#',
-        name: 'شامپو پرژک مدل سیر حجم 450 میلی لیتر',
-        src: '/img/home/category-labaniat.jpg'
+        href: '/categories/undefined/673f010005ea6dc2c463c020/6740a359a728dfb50f2f4d4e',
+        name: 'کافی میکس 3*1',
+        src: '/img/home/photo15080605328.jpg'
     },
     {
-        href: '/#',
-        name: 'شامپو پرژک مدل سیر حجم 450 میلی لیتر',
-        src: '/img/home/tanagholat.jpg'
+        href: '/categories/undefined/673f010005ea6dc2c463c020/6740a359a728dfb50f2f4d4e',
+        name: 'کاپوچینو 24 عددی',
+        src: '/img/home/photo15080605163.jpg'
     },
     {
-        href: '/#',
-        name: 'شامپو پرژک مدل سیر حجم 450 میلی لیتر',
-        src: '/img/home/category-labaniat.jpg'
+        href: '/categories/undefined/673f010005ea6dc2c463c020/6740a359a728dfb50f2f4d4e',
+        name: 'گلد',
+        src: '/img/home/photo15080606161.jpg'
     },
     {
-        href: '/#',
-        name: 'شامپو پرژک مدل سیر حجم 450 میلی لیتر',
-        src: '/img/home/tanagholat.jpg'
+        href: '/categories/undefined/673f010005ea6dc2c463c020/6740a359a728dfb50f2f4d4e',
+        name: 'گلد',
+        src: '/img/home/photo15080606161.jpg'
     },
     {
-        href: '/#',
-        name: 'شامپو پرژک مدل سیر حجم 450 میلی لیتر',
-        src: '/img/home/category-labaniat.jpg'
+        href: '/categories/undefined/673f010005ea6dc2c463c020/6740a359a728dfb50f2f4d4e',
+        name: 'گلد',
+        src: '/img/home/photo15080606161.jpg'
     },
     {
-        href: '/#',
-        name: 'شامپو پرژک مدل سیر حجم 450 میلی لیتر',
-        src: '/img/home/tanagholat.jpg'
+        href: '/categories/undefined/673f010005ea6dc2c463c020/6740a359a728dfb50f2f4d4e',
+        name: 'گلد',
+        src: '/img/home/photo15080606161.jpg'
     },
     {
-        href: '/#',
-        name: 'شامپو پرژک مدل سیر حجم 450 میلی لیتر',
-        src: '/img/home/category-labaniat.jpg'
+        href: '/categories/undefined/673f010005ea6dc2c463c020/6740a359a728dfb50f2f4d4e',
+        name: 'گلد',
+        src: '/img/home/photo15080606161.jpg'
     },
     {
-        href: '/#',
-        name: 'شامپو پرژک مدل سیر حجم 450 میلی لیتر',
-        src: '/img/home/tanagholat.jpg'
+        href: '/categories/undefined/673f010005ea6dc2c463c020/6740a359a728dfb50f2f4d4e',
+        name: 'گلد',
+        src: '/img/home/photo15080606161.jpg'
     },
 ]
 
