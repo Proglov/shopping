@@ -194,16 +194,24 @@ export default function AddTransactionInPerson({ which }) {
                         products?.length > 0 ?
                             <Grid item xs={12} lg={6} className="mt-2 relative">
                                 <label htmlFor="product_select">افزودن کالا</label>
-                                <select id="product_select"
+                                <select
+                                    id="product_select"
                                     className="block py-2.5 px-3 w-full text-sm text-gray-500 bg-transparent my-2 rounded-md border-2 border-gray-200 appearance-none focus:outline-none focus:ring-0 focus:border-gray-200"
-                                    defaultValue={''} value={'کالا را انتخاب کنید'}>
-                                    <option defaultValue>کالا را انتخاب کنید &#11167;</option>
+                                    value={''} // Make sure this is controlled
+                                    onChange={(e) => {
+                                        const selectedProduct = products.find(product => product.name === e.target.value);
+                                        if (selectedProduct) {
+                                            addProductHandler(selectedProduct);
+                                        }
+                                    }}
+                                >
+                                    <option value='' disabled>کالا را انتخاب کنید &#11167;</option>
                                     {
-                                        products.map((product, index) =>
-                                            <option key={index}
-                                                value={product?.name}
-                                                onClick={() => addProductHandler(product)}
-                                                className='text-black'>{product?.name}</option>)
+                                        products.map((product, index) => (
+                                            <option key={index} value={product?.name} className='text-black'>
+                                                {product?.name}
+                                            </option>
+                                        ))
                                     }
                                 </select>
                             </Grid>
