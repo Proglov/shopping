@@ -325,12 +325,27 @@ export default function AddProduct({ which }) {
 
                                 <Grid item xs={12} sm={12} md={12} lg={6} className="mt-2 relative">
                                     <div className='w-full text-start text-sm'>
-                                        <label htmlFor="underline_select_category">انبار</label>
+                                        <label htmlFor="underline_select_warehouse">انبار</label>
                                     </div>
-                                    <select id="underline_select_warehouse" className="block py-2.5 px-3 w-full text-sm text-gray-500 bg-transparent my-2 rounded-md border-2 border-gray-200 appearance-none focus:outline-none focus:ring-0 focus:border-gray-200" value={AddNewData.formData.warehouse.name} name='warehouse'>
+                                    <select
+                                        id="underline_select_warehouse"
+                                        className="block py-2.5 px-3 w-full text-sm text-gray-500 bg-transparent my-2 rounded-md border-2 border-gray-200 appearance-none focus:outline-none focus:ring-0 focus:border-gray-200"
+                                        value={AddNewData.formData.warehouse.name}
+                                        name='warehouse'
+                                        onChange={(e) => {
+                                            const selectedWarehouse = warehouses.find(warehouse => warehouse.name === e.target.value);
+                                            if (selectedWarehouse) {
+                                                setWarehouse(selectedWarehouse._id, selectedWarehouse.name);
+                                            }
+                                        }}
+                                    >
                                         <option value='' disabled>انبار را انتخاب کنید &#11167;</option>
                                         {
-                                            warehouses.map((warehouseObj, index) => <option key={index} value={warehouseObj?.name} className='text-black' onClick={() => setWarehouse(warehouseObj._id, warehouseObj.name)}>{warehouseObj?.name}</option>)
+                                            warehouses.map((warehouseObj, index) => (
+                                                <option key={index} value={warehouseObj.name} className='text-black'>
+                                                    {warehouseObj.name}
+                                                </option>
+                                            ))
                                         }
                                     </select>
                                 </Grid>
