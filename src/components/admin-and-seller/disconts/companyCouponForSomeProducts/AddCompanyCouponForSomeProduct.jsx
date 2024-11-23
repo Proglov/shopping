@@ -29,53 +29,42 @@ const addOrRemoveFromArray = (arr, val) => {
     return newArray
 }
 
-function getStyles(tagOptions, tags, theme) {
-    return {
-        fontWeight: tags.indexOf(tagOptions) === -1
-            ? theme.typography.fontWeightRegular
-            : theme.typography.fontWeightMedium,
-    };
-}
 export default function AddCompanyCouponForSomeProducts({ which }) {
-    const theme = useTheme();
     const dispatch = useDispatch();
-    const initialData = {
-        names: [],
-        productsIds: [],
-        offPercentage: '',
-        min: '',
-        max: '',
-        count: '',
-    }
-    const [AddNewData, setAddNewData] = useState(initialData)
+    const [AddNewData, setAddNewData] = useState(initialData);
     const { products } = useSelector((state) => state.companyCouponForSomeProducts);
     const { error, addDataLoading } = useSelector((state) => state.global);
 
-    useEffect(() => { dispatch(getProductsFromServer(which)) }, [dispatch])
+    useEffect(() => { dispatch(getProductsFromServer(which)) }, [dispatch]);
 
     const handleChange = (event) => {
         const { name, value } = event.target;
-        if (name === 'offPercentage' || name === 'min' || name === 'max' || name === 'count') {
-            const newValue = parseInt(value) || 0
-            setAddNewData(prevProps => {
-                if (newValue == value)
-                    return {
-                        ...prevProps,
-                        [name]: newValue,
-                    }
-                return {
-                    ...prevProps
-                }
-            })
+
+        if (name === 'names') {
+            setAddNewData(prevProps => ({
+                ...prevProps,
+                names: typeof value === 'string' ? value.split(',') : value, // Manage array
+            }));
         } else {
-            setAddNewData(prevProps => {
-                return {
-                    ...prevProps,
-                    names: addOrRemoveFromArray(prevProps.names, value),
-                }
-            })
+            const newValue = parseInt(value) || 0;
+            setAddNewData(prevProps => ({
+                ...prevProps,
+                [name]: newValue,
+            }));
         }
     };
+
+    const errorObj = {
+        'You are not authorized!': 'توکن شما منقضی شده. لطفا خارج، و دوباره وارد شوید',
+        "this product already exists in the companyCouponForSomeProducts!": 'این محصول در جشنواره حضور دارد'
+    };
+
+    useEffect(() => {
+        if (error?.length > 0) {
+            toast.error(errorObj[error] || 'مشکلی رخ داده است');
+            dispatch(setError(''));
+        }
+    }, [error]);
 
     const handleProductId = id => setAddNewData(prevProps => {
         return {
@@ -84,43 +73,31 @@ export default function AddCompanyCouponForSomeProducts({ which }) {
         }
     })
 
-    const errorObj = {
-        'You are not authorized!': 'توکن شما منقضی شده. لطفا خارج، و دوباره وارد شوید',
-        "this product already exists in the companyCouponForSomeProducts!": 'این محصول در جشنواره حضور دارد'
-    }
-
-    useEffect(() => {
-        if (error?.length > 0) {
-            toast.error(errorObj[error] || 'مشکلی رخ داده است')
-            dispatch(setError(''))
-        }
-    }, [error])
-
     const onSubmitForm = async () => {
+        const { names, offPercentage, count, max } = AddNewData;
 
-        if (AddNewData.names.length === 0)
-            toast.error('انتخاب حداقل یک محصول ضروری میباشد')
-        else if (AddNewData.offPercentage === '' || AddNewData.offPercentage === 0 || AddNewData.offPercentage > 100)
-            toast.error('درصد تخفیف را وارد کنید')
-        else if (AddNewData.count === '' || AddNewData.count === 0)
-            toast.error('تعداد نفرات را وارد کنید')
-        else if (AddNewData.max === '' || AddNewData.max === 0)
-            toast.error('سقف تخفیف را وارد کنید')
-        else {
+        if (names.length === 0) {
+            toast.error('انتخاب حداقل یک محصول ضروری میباشد');
+        } else if (offPercentage === '' || offPercentage === 0 || offPercentage > 100) {
+            toast.error('درصد تخفیف را وارد کنید');
+        } else if (count === '' || count === 0) {
+            toast.error('تعداد نفرات را وارد کنید');
+        } else if (max === '' || max === 0) {
+            toast.error('سقف تخفیف را وارد کنید');
+        } else {
             try {
                 const obj = {
                     productsIds: AddNewData.productsIds,
-                    offPercentage: AddNewData.offPercentage,
-                    remainingCount: AddNewData.count,
-                    maxOffPrice: AddNewData.max,
+                    offPercentage: offPercentage,
+                    remainingCount: count,
+                    maxOffPrice: max,
                     minBuy: AddNewData.min || 0
                 };
-
-                //make a request
-                dispatch(addCompanyCouponForSomeProductsToServer(obj))
-
+                dispatch(addCompanyCouponForSomeProductsToServer(obj));
                 setAddNewData(initialData);
-            } catch (err) { toast.error(err) }
+            } catch (err) {
+                toast.error(err);
+            }
         }
     };
 
@@ -128,17 +105,17 @@ export default function AddCompanyCouponForSomeProducts({ which }) {
         <div className="mt-5">
             {
                 products.length === 0 ?
-                    <GradientCircularProgress />
+                    (<GradientCircularProgress />)
                     :
                     <FormControl className="w-full">
                         <Grid container spacing={2}>
-
                             <Grid item xs={12} lg={6}>
                                 <div className='text-start text-sm mb-1'>
                                     محصولات خود را انتخاب کنید
                                 </div>
                                 <Select
                                     fullWidth
+                                    multiple
                                     value={AddNewData.names}
                                     onChange={handleChange}
                                     name='names'
@@ -164,7 +141,6 @@ export default function AddCompanyCouponForSomeProducts({ which }) {
                                 </div>
                                 <input
                                     className="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500"
-                                    id="inline-full-name"
                                     type="text"
                                     name="offPercentage"
                                     value={AddNewData.offPercentage}
@@ -173,46 +149,42 @@ export default function AddCompanyCouponForSomeProducts({ which }) {
                                 />
                             </Grid>
 
-                            <Grid item xs={12} sm={12} md={12} lg={6}>
+                            <Grid item xs={12} lg={6}>
                                 <div className='text-start text-sm mb-1'>
                                     حداقل خرید (تومان)
                                 </div>
                                 <input
                                     className="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500"
-                                    id="inline-full-name"
                                     type="text"
                                     name="min"
                                     value={AddNewData.min}
                                     placeholder={`حداقل خرید میتواند صفر باشد`}
                                     onChange={handleChange}
                                 />
-                                {
-                                    AddNewData.min !== '' &&
+                                {AddNewData.min && (
                                     <div className='text-sm text-start text-gray-600'>
                                         {price2Farsi(AddNewData.min)} تومان
                                     </div>
-                                }
+                                )}
                             </Grid>
 
-                            <Grid item xs={12} sm={12} md={12} lg={6}>
+                            <Grid item xs={12} lg={6}>
                                 <div className='text-start text-sm mb-1'>
                                     سقف تخفیف (تومان)
                                 </div>
                                 <input
                                     className="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500"
-                                    id="inline-full-name"
                                     type="text"
                                     name="max"
                                     value={AddNewData.max}
                                     placeholder={`سقف تخفیف را وارد کنید`}
                                     onChange={handleChange}
                                 />
-                                {
-                                    AddNewData.max !== '' &&
+                                {AddNewData.max && (
                                     <div className='text-sm text-start text-gray-600'>
                                         {price2Farsi(AddNewData.max)} تومان
                                     </div>
-                                }
+                                )}
                             </Grid>
 
                             <Grid item xs={12} lg={6}>
@@ -221,7 +193,6 @@ export default function AddCompanyCouponForSomeProducts({ which }) {
                                 </div>
                                 <input
                                     className="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500"
-                                    id="inline-full-name"
                                     type="text"
                                     name="count"
                                     value={AddNewData.count}
@@ -230,12 +201,8 @@ export default function AddCompanyCouponForSomeProducts({ which }) {
                                 />
                             </Grid>
 
-
                             <Grid item xs={12} lg={6} className='place-content-center text-red-500'>
-                                {
-                                    addDataLoading &&
-                                    <GradientCircularProgress />
-                                }
+                                {addDataLoading && <GradientCircularProgress />}
                             </Grid>
 
                             <Grid item xs={12}>
@@ -250,7 +217,6 @@ export default function AddCompanyCouponForSomeProducts({ which }) {
                                 </Button>
                             </Grid>
                         </Grid>
-
                     </FormControl>
             }
 
