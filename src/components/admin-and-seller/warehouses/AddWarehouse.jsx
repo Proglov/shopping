@@ -1,7 +1,7 @@
 'use client'
 import { useEffect, useState } from 'react';
 import FormControl from '@mui/material/FormControl';
-import { Accordion, AccordionDetails, AccordionSummary, Button, Checkbox, Grid, Typography } from '@mui/material';
+import { Accordion, AccordionDetails, AccordionSummary, Button, Checkbox, FormControlLabel, Grid, Typography } from '@mui/material';
 import 'react-quill/dist/quill.snow.css';
 import DOMPurify from 'dompurify';
 import { ToastContainer, toast } from "react-toastify";
@@ -87,6 +87,25 @@ export default function AddWarehouse() {
         });
     };
 
+    const handleAllCitiesCheckboxChange = (provinceObj) => {
+        const allCitiesCovered = provinceObj.cities.every(city =>
+            AddNewData.formData.citiesCovered.some(coveredCity => coveredCity.id === city.cityId)
+        );
+        const updatedCitiesCovered = allCitiesCovered
+            ? AddNewData.formData.citiesCovered.filter(city =>
+                !provinceObj.cities.some(provCity => provCity.cityId === city.id)
+            )
+            : [...AddNewData.formData.citiesCovered, ...provinceObj.cities.map(city => ({ id: city.cityId, name: city.cityName }))];
+
+        setAddNewData(prevProps => ({
+            ...prevProps,
+            formData: {
+                ...prevProps.formData,
+                citiesCovered: updatedCitiesCovered
+            }
+        }));
+    };
+
     const provinceAndCityHandler = (field, provinceOrCity) => {
         if (field === 'city')
             setAddNewData(prevProps => {
@@ -109,6 +128,7 @@ export default function AddWarehouse() {
             }
         })
     }
+
     const onSubmitForm = async () => {
         setAddNewData(prevProps => ({
             ...prevProps,
@@ -266,20 +286,33 @@ export default function AddWarehouse() {
                                         <Typography>{provinceObj.provinceName}</Typography>
                                     </AccordionSummary>
                                     <AccordionDetails>
-                                        <Typography>
-                                            {
-                                                provinceObj.cities.map(cityObj => (
-                                                    <div key={cityObj.cityId} className='w-1/2 mx-auto flex justify-around items-center'>
-                                                        <span>{cityObj.cityName}</span>
+                                        <Typography className='flex justify-center'>
+                                            <FormControlLabel
+                                                dir='ltr'
+                                                control={
+                                                    <Checkbox
+                                                        color='info'
+                                                        checked={provinceObj.cities.every(city =>
+                                                            AddNewData.formData.citiesCovered.some(coveredCity => coveredCity.id === city.cityId)
+                                                        )}
+                                                        onChange={() => handleAllCitiesCheckboxChange(provinceObj)}
+                                                    />
+                                                }
+                                                label={`همه‌ی ${provinceObj.provinceName}`}
+                                            />
+                                        </Typography>
 
-                                                        <Checkbox
-                                                            checked={AddNewData.formData.citiesCovered.some(city => city.id === cityObj.cityId)}
-                                                            onChange={() => handleCheckboxChange(cityObj.cityId, cityObj.cityName)}
-                                                        />
+                                        <Typography className='flex flex-col items-center'>
+                                            {provinceObj.cities.map(cityObj => (
+                                                <div key={cityObj.cityId} className='flex justify-between items-center'>
+                                                    <span>{cityObj.cityName}</span>
+                                                    <Checkbox
+                                                        checked={AddNewData.formData.citiesCovered.some(city => city.id === cityObj.cityId)}
+                                                        onChange={() => handleCheckboxChange(cityObj.cityId, cityObj.cityName)}
+                                                    />
+                                                </div>
+                                            ))}
 
-                                                    </div>
-                                                ))
-                                            }
                                         </Typography>
                                     </AccordionDetails>
                                 </Accordion>
