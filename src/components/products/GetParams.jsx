@@ -11,7 +11,7 @@ export default function GetParams({ id }) {
         const getParams = async () => {
             try {
                 const res = await getOneProductParams({ id })
-                router.push('/categories/' + res?.params)
+                router.replace('/categories/' + res?.params)
             } catch (error) {
                 router.push('/not-found')
             }
