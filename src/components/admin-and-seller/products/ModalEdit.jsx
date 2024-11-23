@@ -59,11 +59,10 @@ export default function ModalEdit() {
         const { name, value } = event.target;
         if (name === 'price') {
             const newValue = parseInt(value) || 0
-            if (newValue == value && name === 'price')
-                dispatch(setSelectedItem({
-                    ...selectedItem,
-                    price: newValue,
-                }))
+            dispatch(setSelectedItem({
+                ...selectedItem,
+                price: newValue,
+            }))
         } if (name === 'addedCount') {
             const newValue = parseInt(value) || 0
             setAddedCount(newValue)
@@ -157,11 +156,15 @@ export default function ModalEdit() {
                 id: selectedItem._id,
                 subcategoryId,
                 imagesUrl: newImagesName,
-                addedCount
+                addedCount: parseInt(addedCount) || 0,
+                price: parseInt(selectedItem?.price) || 0,
+                warehouseId: selectedItem.warehouseId._id
             }
             delete augmentedObj.__v;
             delete augmentedObj._id;
             delete augmentedObj.imagesName;
+
+            if (!addedCount) delete augmentedObj.addedCount
 
             const res = dispatch(updateProductFromServer(augmentedObj))
 

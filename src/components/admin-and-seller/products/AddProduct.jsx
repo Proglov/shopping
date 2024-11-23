@@ -123,6 +123,18 @@ export default function AddProduct({ which }) {
                 ...prevProps,
                 isSubmitting: false
             }))
+        } else if (AddNewData.formData.name.length < 3 || AddNewData.formData.name.length > 40) {
+            toast.error('نام محصول باید بین 3 تا 40 کاراکتر باشد')
+            setAddNewData(prevProps => ({
+                ...prevProps,
+                isSubmitting: false
+            }))
+        } else if (AddNewData.formData.name.length < 5 || AddNewData.formData.name.length > 100) {
+            toast.error('توضیحات محصول باید بین 5 تا 100 کاراکتر باشد')
+            setAddNewData(prevProps => ({
+                ...prevProps,
+                isSubmitting: false
+            }))
         } else if (AddNewData.formData.count == 0 || AddNewData.formData.count == '') {
             toast.error('تعداد محصولات ضروری میباشد')
             setAddNewData(prevProps => ({
