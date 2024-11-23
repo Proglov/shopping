@@ -11,8 +11,15 @@ import { addCompanyCouponForSomeProductsToServer } from '../../redux/globalAsync
 import { setError } from '../../redux/reducers/global';
 import { GradientCircularProgress } from '@/app/loading';
 import { price2Farsi } from '@/utils/funcs';
-import { useTheme } from '@emotion/react';
 
+const initialData = {
+    names: [],
+    productsIds: [],
+    offPercentage: '',
+    min: '',
+    max: '',
+    count: '',
+};
 
 const addOrRemoveFromArray = (arr, val) => {
     const newArray = [...arr]
