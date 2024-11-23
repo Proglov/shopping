@@ -55,7 +55,7 @@ export default function SliderWrapper({ breakPoints, array, Component, component
                         <div ref={sliderRef} className="keen-slider">
                             {array.map(item => (
                                 <div className="keen-slider__slide sm:min-w-64 min-w-52" key={item?._id}>
-                                    <Component {...componentProps(item)} />
+                                    <Component {...{ ...componentProps(item), ...extraProps }} />
                                 </div>
                             ))}
                         </div>
