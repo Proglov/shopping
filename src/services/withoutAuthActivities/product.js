@@ -26,6 +26,10 @@ const Api = {
         );
         return response?.data;
     },
+    getPopularProducts: async () => {
+        const response = await clientWithoutAuth.get(`productGet/getPopularProducts`);
+        return response?.data;
+    },
     getAllProductsOfACategory: async (payload) => {
         const response = await clientWithoutAuth.get(
             `productGet/getAllProductsOfACategory?categoryId=${payload?.id}&page=${payload?.page}&perPage=${payload?.perPage}`

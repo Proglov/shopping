@@ -1,74 +1,99 @@
 'use client'
-import { Button, Grid, Typography } from '@mui/material'
-import React, { useState } from 'react'
+import { Button, Grid, Skeleton, Typography } from '@mui/material'
+import { useEffect, useState } from 'react'
 import PopularCropsComponent from './PopularCropsComponent'
+import Api from '@/services/withoutAuthActivities/product'
 import { ImFire } from "react-icons/im";
 
 const arr = [
     {
         href: '/categories/undefined/673f010005ea6dc2c463c020/6740a359a728dfb50f2f4d4e',
         name: 'هات چاکلت',
-        src: '/img/home/photo15080605710.jpg'
+        src: '/img/popular/photo15080605710.jpg'
     },
     {
         href: '/categories/undefined/673f010005ea6dc2c463c020/6740a359a728dfb50f2f4d4e',
         name: 'اسپرسو 20تایی',
-        src: '/img/home/photo15080606161.jpg'
+        src: '/img/popular/photo15080606161.jpg'
     },
     {
         href: '/categories/undefined/673f010005ea6dc2c463c020/6740a359a728dfb50f2f4d4e',
         name: 'گلد',
-        src: '/img/home/photo15080606161.jpg'
+        src: '/img/popular/photo15080606161.jpg'
     },
     {
         href: '/categories/undefined/673f010005ea6dc2c463c020/6740a359a728dfb50f2f4d4e',
         name: 'قهوه فوری 2*1 (20تایی)',
-        src: '/img/home/photo15080606161.jpg'
+        src: '/img/popular/photo15080606161.jpg'
     },
     {
         href: '/categories/undefined/673f010005ea6dc2c463c020/6740a359a728dfb50f2f4d4e',
         name: 'کافی میکس 3*1',
-        src: '/img/home/photo15080605328.jpg'
+        src: '/img/popular/photo15080605328.jpg'
     },
     {
         href: '/categories/undefined/673f010005ea6dc2c463c020/6740a359a728dfb50f2f4d4e',
         name: 'کاپوچینو 24 عددی',
-        src: '/img/home/photo15080605163.jpg'
+        src: '/img/popular/photo15080605163.jpg'
     },
     {
         href: '/categories/undefined/673f010005ea6dc2c463c020/6740a359a728dfb50f2f4d4e',
         name: 'گلد',
-        src: '/img/home/photo15080606161.jpg'
+        src: '/img/popular/photo15080606161.jpg'
     },
     {
         href: '/categories/undefined/673f010005ea6dc2c463c020/6740a359a728dfb50f2f4d4e',
         name: 'گلد',
-        src: '/img/home/photo15080606161.jpg'
+        src: '/img/popular/photo15080606161.jpg'
     },
     {
         href: '/categories/undefined/673f010005ea6dc2c463c020/6740a359a728dfb50f2f4d4e',
         name: 'گلد',
-        src: '/img/home/photo15080606161.jpg'
+        src: '/img/popular/photo15080606161.jpg'
     },
     {
         href: '/categories/undefined/673f010005ea6dc2c463c020/6740a359a728dfb50f2f4d4e',
         name: 'گلد',
-        src: '/img/home/photo15080606161.jpg'
+        src: '/img/popular/photo15080606161.jpg'
     },
     {
         href: '/categories/undefined/673f010005ea6dc2c463c020/6740a359a728dfb50f2f4d4e',
         name: 'گلد',
-        src: '/img/home/photo15080606161.jpg'
+        src: '/img/popular/photo15080606161.jpg'
     },
     {
         href: '/categories/undefined/673f010005ea6dc2c463c020/6740a359a728dfb50f2f4d4e',
         name: 'گلد',
-        src: '/img/home/photo15080606161.jpg'
+        src: '/img/popular/photo15080606161.jpg'
     },
 ]
 
 export default function PopularCrops() {
+    const { getPopularProducts } = Api
     const [showMore, setShowMore] = useState(false);
+    const [loading, setLoading] = useState(true);
+    const [products, setProducts] = useState([]);
+
+
+    useEffect(() => {
+        const fetchPopularProducts = async () => {
+            try {
+                setLoading(true)
+                const response = await getPopularProducts()
+                const resProducts = response?.products || []
+
+                //set the length to 12 if it isn't
+                while (resProducts.length < 12 && resProducts.length > 0) {
+                    resProducts.push(resProducts.at(-1))
+                }
+
+                setProducts(resProducts);
+            } catch (error) { } finally { setLoading(false) }
+        }
+
+        fetchPopularProducts();
+    }, [])
+
 
     return (
         <div className='m-4 mt-12'>
@@ -101,32 +126,49 @@ export default function PopularCrops() {
                 </Typography>
             </div>
 
-            <Grid container className='flex'>
-                {
-                    arr.map((v, i) => {
-                        if (showMore)
-                            return (
-                                <Grid key={i} item xs={12} sm={6} md={4}>
-                                    <PopularCropsComponent href={v.href} name={v.name} src={v.src} number={i + 1} />
-                                </Grid>
-                            )
-                        if (i < 6)
-                            return (
-                                <Grid key={i} item xs={12} sm={6} md={4}>
-                                    <PopularCropsComponent href={v.href} name={v.name} src={v.src} number={i + 1} />
-                                </Grid>
-                            )
-                    })
-                }
+            {
+                loading ?
+                    <div className="flex gap-2 justify-center overflow-x-hidden w-max mb-3">
+                        {
+                            Array.from({ length: 12 }).map((_, index) => (
+                                <Skeleton
+                                    key={index}
+                                    sx={{ bgcolor: 'grey.300' }}
+                                    variant="rectangular"
+                                    width={250}
+                                    height={350}
+                                />
+                            ))
+                        }
+                    </div>
+                    :
+                    <Grid container className='flex'>
+                        {
+                            showMore ?
+                                products.map((product, i) =>
+                                    <Grid key={product._id + i} item xs={12} sm={6} md={4}>
+                                        <PopularCropsComponent href={'/products/' + product._id} name={product.name} src={product?.imagesUrl[0] || '/img/no-pic.png'} number={i + 1} />
+                                    </Grid>
+                                )
+                                :
+                                products.slice(0, 6).map((product, i) =>
+                                    <Grid key={product._id + i} item xs={12} sm={6} md={4}>
+                                        <PopularCropsComponent href={'/products/' + product._id} name={product.name} src={product?.imagesUrl[0] || '/img/no-pic.png'} number={i + 1} />
+                                    </Grid>
+                                )
 
-                {
-                    !showMore &&
-                    <Button onClick={() => setShowMore(true)}>
-                        نمایش موارد بیشتر ...
-                    </Button>
-                }
+                        }
 
-            </Grid>
+                        {
+                            !showMore &&
+                            <Button onClick={() => setShowMore(true)}>
+                                نمایش موارد بیشتر ...
+                            </Button>
+                        }
+
+                    </Grid>
+            }
+
         </div>
     )
 }
