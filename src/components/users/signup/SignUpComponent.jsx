@@ -585,11 +585,23 @@ export default function SignUpComponent({ type }) {
                   <div className='w-full text-start text-sm'>
                     <label htmlFor="underline_select_province">استان دفتر کار</label>
                   </div>
-                  <select id="underline_select_province" className="block py-2.5 px-3 w-full text-sm text-gray-500 bg-transparent my-2 rounded-md border-2 border-gray-200 appearance-none focus:outline-none focus:ring-0 focus:border-gray-200" value={address.province.name} onChange={() => { }} name='province'>
+
+                  <select
+                    id="underline_select_province"
+                    className="block py-2.5 px-3 w-full text-sm text-gray-500 bg-transparent my-2 rounded-md border-2 border-gray-200 appearance-none focus:outline-none focus:ring-0 focus:border-gray-200"
+                    value={address.province.name}
+                    onChange={(e) => {
+                      const selectedProvince = provinces.find(province => province.provinceName === e.target.value);
+                      provinceAndCityHandler('province', selectedProvince);
+                    }}
+                    name='province'
+                  >
                     <option value='' disabled>استان را انتخاب کنید &#11167;</option>
-                    {
-                      provinces.map(provinceObj => <option key={provinceObj.provinceId} value={provinceObj?.provinceName} onClick={() => provinceAndCityHandler('province', provinceObj)} className='text-black'>{provinceObj?.provinceName}</option>)
-                    }
+                    {provinces.map(provinceObj => (
+                      <option key={provinceObj.provinceId} value={provinceObj.provinceName}>
+                        {provinceObj.provinceName}
+                      </option>
+                    ))}
                   </select>
                 </Grid>
 
@@ -599,15 +611,27 @@ export default function SignUpComponent({ type }) {
                     <div className='w-full text-start text-sm'>
                       <label htmlFor="underline_select_city">شهر دفتر کار</label>
                     </div>
-                    <select id="underline_select_city" className="block py-2.5 px-3 w-full text-sm text-gray-500 bg-transparent my-2 rounded-md border-2 border-gray-200 appearance-none focus:outline-none focus:ring-0 focus:border-gray-200" onChange={() => { }} value={address.city.name} name='city'>
+                    <select
+                      id="underline_select_city"
+                      className="block py-2.5 px-3 w-full text-sm text-gray-500 bg-transparent my-2 rounded-md border-2 border-gray-200 appearance-none focus:outline-none focus:ring-0 focus:border-gray-200"
+                      value={address.city.name}
+                      onChange={(e) => {
+                        const selectedCity = provinces.find(province => province.provinceName === address.province.name)
+                          ?.cities.find(city => city.cityName === e.target.value);
+                        provinceAndCityHandler('city', selectedCity);
+                      }}
+                      name='city'
+                    >
                       <option value='' disabled>شهر را انتخاب کنید &#11167;</option>
-                      {
-                        provinces.map(provinceObj => {
-                          if (provinceObj?.provinceName === address?.province.name) {
-                            return provinceObj?.cities.map(cityObj => <option key={cityObj.cityId} value={cityObj?.cityName} onClick={() => provinceAndCityHandler('city', cityObj)} className='text-black'>{cityObj?.cityName}</option>)
-                          } else return <></>
-                        })
-                      }
+                      {provinces
+                        .filter(provinceObj => provinceObj.provinceName === address.province.name)
+                        .flatMap(provinceObj =>
+                          provinceObj.cities.map(cityObj => (
+                            <option key={cityObj.cityId} value={cityObj.cityName}>
+                              {cityObj.cityName}
+                            </option>
+                          ))
+                        )}
                     </select>
                   </Grid>
                 }
