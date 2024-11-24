@@ -170,7 +170,7 @@ export default function AddTransactionInPerson({ which }) {
                         userInPersons?.length > 0 ?
                             <Grid item xs={12} lg={6} className="mt-2 relative">
                                 <label htmlFor="underline_select">
-                                    مشتری (از بخش &lsquo;مشتریان حضوری&lsquo; اقدام به ثبت مشتریان خود کنید)
+                                    مشتری
                                 </label>
                                 <select id="underline_select"
                                     className="block py-2.5 px-3 w-full text-sm text-gray-500 bg-transparent my-2 rounded-md border-2 border-gray-200 appearance-none focus:outline-none focus:ring-0 focus:border-gray-200"
@@ -185,8 +185,8 @@ export default function AddTransactionInPerson({ which }) {
                                 </select>
                             </Grid>
                             :
-                            <div className='text-center w-full'>
-                                کمی منتظر بمانید ...
+                            <div className='w-full text-center mt-2'>
+                                برای ثبت سفارش حضوری از بخش &lsquo;مشتریان حضوری&lsquo; اقدام به ثبت مشتریان خود کنید
                             </div>
                     }
 
@@ -197,7 +197,7 @@ export default function AddTransactionInPerson({ which }) {
                                 <select
                                     id="product_select"
                                     className="block py-2.5 px-3 w-full text-sm text-gray-500 bg-transparent my-2 rounded-md border-2 border-gray-200 appearance-none focus:outline-none focus:ring-0 focus:border-gray-200"
-                                    value={''} // Make sure this is controlled
+                                    value={''}
                                     onChange={(e) => {
                                         const selectedProduct = products.find(product => product.name === e.target.value);
                                         if (selectedProduct) {
@@ -217,7 +217,7 @@ export default function AddTransactionInPerson({ which }) {
                             </Grid>
                             :
                             <div className='text-center w-full'>
-                                کمی منتظر بمانید ...
+                                برای ثبت سفارش حضوری از بخش &lsquo;محصولات&lsquo; اقدام به ثبت محصولات خود کنید
                             </div>
                     }
 
