@@ -247,7 +247,7 @@ export default function AddWarehouse() {
                                     provinces.map(provinceObj => {
                                         if (provinceObj?.provinceName === AddNewData?.formData?.province.name) {
                                             return provinceObj?.cities.map(cityObj => <option key={cityObj.cityId} value={cityObj?.cityName} onClick={() => provinceAndCityHandler('city', cityObj)} className='text-black'>{cityObj?.cityName}</option>)
-                                        } else return <></>
+                                        } else return null
                                     })
                                 }
                             </select>
@@ -303,8 +303,8 @@ export default function AddWarehouse() {
                                         </Typography>
 
                                         <Typography className='flex flex-col items-center'>
-                                            {provinceObj.cities.map(cityObj => (
-                                                <div key={cityObj.cityId} className='flex justify-between items-center'>
+                                            {provinceObj.cities.map((cityObj, i) => (
+                                                <div key={cityObj.cityId + i} className='flex justify-between items-center'>
                                                     <span>{cityObj.cityName}</span>
                                                     <Checkbox
                                                         checked={AddNewData.formData.citiesCovered.some(city => city.id === cityObj.cityId)}
