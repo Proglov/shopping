@@ -7,7 +7,6 @@ import DOMPurify from 'dompurify';
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Api from '@/services/withAuthActivities/seller';
-import { GiCancel } from 'react-icons/gi';
 import { BiSolidEditAlt } from 'react-icons/bi';
 import { isPhoneValid, isWorkingPhoneValid, isEmailValid } from '@/utils/funcs';
 
@@ -64,8 +63,6 @@ export default function ChangeProfile() {
             storeName: '',
             email: '',
             username: '',
-            address: [''],
-            newAddresses: [],
             workingPhone: '',
             phone: '',
             bio: '',
@@ -105,93 +102,12 @@ export default function ChangeProfile() {
         })
     };
 
-    const deleteAddress = (i) => {
-        if (AddNewData.disabled) return
-        setAddNewData(prevProps => {
-            const newAddresses = prevProps.formData.address.filter((_v, index) => i !== index)
-            return {
-                ...prevProps,
-                formData: {
-                    ...prevProps.formData,
-                    address: newAddresses
-                }
-            }
-        });
+    const editDisabler = truthy => {
+        setAddNewData(prevProps => ({
+            ...prevProps,
+            disabled: truthy
+        }));
     }
-
-    const editDisabler = (truthy) => {
-        if (truthy) {
-            setAddNewData(prevProps => ({
-                ...prevProps,
-                disabled: truthy,
-                formData: { ...prevProps.prevFormData, newAddresses: [] }
-            }));
-        } else {
-            setAddNewData(prevProps => ({
-                ...prevProps,
-                disabled: truthy
-            }));
-        }
-
-    }
-
-    const addNewAddressEnabler = () => {
-        setAddNewData(prevProps => {
-            let adds = prevProps.formData.newAddresses || []
-            adds.push('')
-            return {
-                ...prevProps,
-                formData: {
-                    ...prevProps.formData,
-                    newAddresses: [...adds]
-                }
-            }
-        });
-    }
-
-    const handleChangeNewAddress = (event, i) => {
-        const { value } = event.target;
-        setAddNewData(prevProps => {
-            let newAddresses = prevProps.formData.newAddresses || []
-            newAddresses[i] = DOMPurify.sanitize(value)
-            return {
-                ...prevProps,
-                formData: {
-                    ...prevProps.formData,
-                    newAddresses
-                }
-            }
-        })
-    };
-
-    const handleChangeAddresses = (event, i) => {
-        if (AddNewData.disabled) return
-        const { value } = event.target;
-        setAddNewData(prevProps => {
-            let address = [...prevProps.formData.address] || []
-            address[i] = DOMPurify.sanitize(value)
-            return {
-                ...prevProps,
-                formData: {
-                    ...prevProps.formData,
-                    address
-                }
-            }
-        })
-    };
-
-    const deleteNewAddress = (i) => {
-        setAddNewData(prevProps => {
-            const newAdd = prevProps.formData.newAddresses.filter((_v, index) => i !== index)
-            return {
-                ...prevProps,
-                formData: {
-                    ...prevProps.formData,
-                    newAddresses: newAdd
-                }
-            }
-        });
-    };
 
     const onSubmitForm = async () => {
         setAddNewData(prevProps => ({
@@ -213,12 +129,6 @@ export default function ChangeProfile() {
             }))
         } else if (AddNewData.formData.username?.length < 8) {
             toast.error('نام کاربری باید بیش از 8 کاراکتر باشد')
-            setAddNewData(prevProps => ({
-                ...prevProps,
-                isSubmitting: false
-            }))
-        } else if (AddNewData.formData.address?.length + AddNewData.formData.newAddresses?.length === 0) {
-            toast.error('آدرس ضروریست')
             setAddNewData(prevProps => ({
                 ...prevProps,
                 isSubmitting: false
@@ -250,7 +160,6 @@ export default function ChangeProfile() {
         } else {
             try {
                 const obj1 = {
-                    address: [...AddNewData.formData.address, ...AddNewData.formData.newAddresses],
                     bio: AddNewData.formData.bio,
                     email: AddNewData.formData.email,
                     name: AddNewData.formData.name,
@@ -260,7 +169,6 @@ export default function ChangeProfile() {
                     workingPhone: AddNewData.formData.workingPhone
                 }
                 const obj2 = {
-                    address: [...AddNewData.prevFormData.address],
                     bio: AddNewData.prevFormData.bio,
                     email: AddNewData.prevFormData.email,
                     name: AddNewData.prevFormData.name,
@@ -324,7 +232,7 @@ export default function ChangeProfile() {
         <div>
             {
                 AddNewData.disabled ?
-                    <Button className='float-left m-2' onClick={() => editDisabler(false)}>
+                    <Button className='float-left m-2' variant='outlined' color='error' onClick={() => editDisabler(false)}>
                         <span className='text-red-500'>ویرایش پروفایل</span>
                         <BiSolidEditAlt className='float-left mt-1 mr-1 text-red-400' />
                     </Button> :
@@ -430,82 +338,6 @@ export default function ChangeProfile() {
                             placeholder={`تلفن همراه را وارد کنید`}
                             onChange={handleChange}
                         />
-                    </Grid>
-
-                    <Grid item xs={12} className='mt-2'>
-                        <div className='text-start text-sm'>
-                            آدرس (های) فروشگاه
-                        </div>
-
-                        <ul>
-                            {
-                                AddNewData?.formData?.address.map((ad, i) => {
-                                    return (
-                                        <li key={i} className='flex'>
-                                            <input
-                                                className="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none m-2 focus:bg-white focus:border-purple-500"
-                                                id={`inline-address${i}`}
-                                                type="text"
-                                                name={`address`}
-                                                value={ad}
-                                                disabled={AddNewData.disabled}
-                                                placeholder={`آدرس جدید را وارد کنید`}
-                                                onChange={e => handleChangeAddresses(e, i)}
-                                            />
-                                            <GiCancel className={`${!AddNewData.disabled ? 'text-red-500' : 'text-gray-500'} mt-5 hover:cursor-pointer`} onClick={() => deleteAddress(i)} />
-                                        </li>
-                                    )
-                                })
-                            }
-                        </ul>
-
-                        <div>
-                            {
-                                AddNewData?.formData?.address.length + AddNewData?.formData?.newAddresses.length === 0 &&
-                                <>
-                                    آدرسی وارد نشده
-                                </>
-                            }
-                        </div>
-
-                        {
-                            !!AddNewData.formData.newAddresses &&
-                            <div>
-                                {
-                                    AddNewData.formData.newAddresses.map((_v, i) => {
-                                        return (
-                                            <div key={i} className='flex'>
-                                                <input
-                                                    className="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none m-2 focus:bg-white focus:border-purple-500"
-                                                    id={`inline-address${i}`}
-                                                    type="text"
-                                                    name={`address${i}`}
-                                                    value={AddNewData.formData.newAddresses[i]}
-                                                    placeholder={`آدرس جدید را وارد کنید`}
-                                                    onChange={e => handleChangeNewAddress(e, i)}
-                                                    disabled={AddNewData.disabled}
-                                                />
-                                                <GiCancel className={`${!AddNewData.disabled ? 'text-red-500' : 'text-gray-500'} mt-5 hover:cursor-pointer`} onClick={() => deleteNewAddress(i)} />
-                                            </div>
-                                        )
-                                    })
-                                }
-                            </div>
-
-                        }
-                        {
-                            !AddNewData.disabled &&
-                            <Button
-                                variant='contained'
-                                className='mt-2 mr-2 bg-green-500 hover:bg-green-500 text-white py-2 px-4 rounded'
-                                type="button"
-                                onClick={addNewAddressEnabler}
-                            >
-                                افزودن آدرس جدید
-                            </Button>
-                        }
-
-
                     </Grid>
 
                     <Grid item xs={12} sm={12} md={12} lg={6}>
