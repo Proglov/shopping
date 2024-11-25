@@ -134,16 +134,14 @@ const TransactionComponent = ({ transaction, txStatuses }) => (
 export default function MyTX() {
     const { getAllMyTXsUser } = Api
     const { ref, inView } = useInView();
-    const [initialLoading, setInitialLoading] = useState(true)
     const [transactions, setTransactions] = useState([])
     const perPage = 10;
 
     const [currentPage, setCurrentPage] = useState(2);
     const [isFinished, setIsFinished] = useState(false);
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
 
     const fetchTransactions = async (page) => {
-        if (loading) return;
         setLoading(true);
 
         try {
@@ -163,7 +161,6 @@ export default function MyTX() {
 
         if (isMounted) {
             fetchTransactions(1);
-            setInitialLoading(false)
         }
 
         return () => {
@@ -199,25 +196,29 @@ export default function MyTX() {
 
     return (
         <Box className="shadow-lg shadow-slate-400 w-full max-w-lg mx-auto md:mt-2 p-5" sx={{ border: 'unset' }}>
-            {initialLoading ? <>لطفا منتظر بمانید ...</>
-                :
-                <Box className='flex flex-col gap-3'>
-                    <Box className='text-center text-blue-700'>
-                        سفارشات من
-                    </Box>
-                    {
-                        transactions.length === 0 ?
-                            <span className="text-center">تاکنون سفارشی نداده اید!</span>
-                            :
-                            transactions.map((transaction, index) => (
-                                <TransactionComponent key={index} transaction={transaction} txStatuses={txStatuses} />
-                            ))
-                    }
+            {
+                loading ?
+                    <div className="w-full text-center">
+                        <GradientCircularProgress />
+                    </div>
+                    :
+                    <Box className='flex flex-col gap-3'>
+                        <Box className='text-center text-blue-700'>
+                            سفارشات من
+                        </Box>
+                        {
+                            transactions.length === 0 ?
+                                <span className="text-center">تاکنون سفارشی نداده اید!</span>
+                                :
+                                transactions.map((transaction, index) => (
+                                    <TransactionComponent key={index} transaction={transaction} txStatuses={txStatuses} />
+                                ))
+                        }
 
-                    <Box className='w-full text-center mt-3' ref={ref}>
-                        {!isFinished && <GradientCircularProgress />}
+                        <Box className='w-full text-center mt-3' ref={ref}>
+                            {!isFinished && <GradientCircularProgress />}
+                        </Box>
                     </Box>
-                </Box>
             }
         </Box>
     );
