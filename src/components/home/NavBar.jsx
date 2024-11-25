@@ -65,6 +65,7 @@ export default function NavBar() {
 
   const [openDialog, setOpenDialog] = useState(false);
   const [bga, setBga] = useState(false);
+  const [searchText, setSearchText] = useState('');
 
 
   useEffect(() => {
@@ -120,7 +121,6 @@ export default function NavBar() {
     <Search
       dir="rtl"
       onClick={() => setBga(true)}
-      onDoubleClick={() => router.push('/ADMIN')}
     >
       <SearchIconWrapper>
         <SearchIcon className="sm:text-lg text-xs" />
@@ -129,6 +129,13 @@ export default function NavBar() {
         className="sm:text-lg text-[10px]"
         placeholder="جستجو ..."
         inputProps={{ "aria-label": "search" }}
+        value={searchText}
+        onChange={(e) => setSearchText(e.target.value)}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' && searchText.length > 0) {
+            router.push('/search?str=' + searchText);
+          }
+        }}
       />
     </Search>
   )
