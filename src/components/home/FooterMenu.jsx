@@ -35,15 +35,15 @@ export default function FooterMenu({ active }) {
 
       <Typography
         variant="div"
-        className="fixed bottom-0 bg-white lg:w-1/2 sm:w-[90%] w-full h-20 pt-[-2px] z-[100] rounded-ss-full rounded-se-full border-t-2 border-purple-700 opacity-95"
+        className="fixed bottom-0 bg-white lg:w-3/4 sm:w-[90%] w-full h-20 z-[100] rounded-ss-full rounded-se-full border-t-2 border-purple-700 opacity-95"
         sx={{
           transform: {
             sm: "translateX(-5%)",
-            lg: "translateX(-50%)",
+            lg: "translateX(-20%)",
           },
         }}
       >
-        <div className="m-5 flex justify-around gap-3 items-center">
+        <div className="m-5 flex justify-evenly gap-3 items-center">
           <Link href="/">
             <Button
               className={`sm:mx-10 mx-5 flex flex-col ${active === 0 ? "text-blue-700" : "text-black"
@@ -52,7 +52,7 @@ export default function FooterMenu({ active }) {
               <div className="mx-auto">
                 <AiOutlineHome className="text-2xl" />
               </div>
-              <div className="text-center">خانه</div>
+              <div className="text-center sm:text-sm text-xs md:text-base">خانه</div>
             </Button>
           </Link>
 
@@ -61,7 +61,7 @@ export default function FooterMenu({ active }) {
             login !== 'seller' ?
               <>
                 <Link href="/#categorization">
-                  <Button
+                  <div
                     className={`sm:mx-10 mx-5 flex flex-col ${active === 1 ? "text-blue-700" : "text-black"
                       }`}
                   >
@@ -71,8 +71,9 @@ export default function FooterMenu({ active }) {
                     <div className="text-center sm:text-sm text-xs md:text-base">
                       دسته بندی ها
                     </div>
-                  </Button>
+                  </div>
                 </Link>
+
                 <Button
                   className={`sm:mx-10 mx-5 flex flex-col ${active === 2 ? "text-blue-700" : "text-black"
                     }`}
