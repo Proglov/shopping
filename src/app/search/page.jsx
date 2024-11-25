@@ -1,8 +1,19 @@
-import React from 'react'
+import Products from "@/components/categorization/Products"
 
-function page() {
+
+function page({ searchParams }) {
+    const str = searchParams?.str || ''
+
     return (
-        <div>page</div>
+        <>
+            <div className="max-w-3xl mx-auto">
+                جست و جو برای
+                {' "'}
+                {str}
+                {'"'}
+            </div>
+            <Products str={str} which={'search'} />
+        </>
     )
 }
 

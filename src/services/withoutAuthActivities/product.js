@@ -42,6 +42,12 @@ const Api = {
         );
         return response?.data;
     },
+    searchForProducts: async (payload) => {
+        const response = await clientWithoutAuth.get(
+            `productGet/searchForProducts?str=${payload?.str}&page=${payload?.page}&perPage=${payload?.perPage}`
+        );
+        return response?.data;
+    },
 };
 
 export default Api;
