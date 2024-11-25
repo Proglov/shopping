@@ -9,11 +9,11 @@ export const metadata = {
 
 export default function CategoriesLayout({ children }) {
   return (
-    <>
+    <div className="bg-slate-100">
       <NavBar />
       <Breadcrumbs />
       <div className="m-5">{children}</div>
       <FooterMenu active={-1} />
-    </>
+    </div>
   );
 }

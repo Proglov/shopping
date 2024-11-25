@@ -120,7 +120,7 @@ export default function PopularCrops() {
                         marginLeft: 'auto',
                         marginRight: 'auto'
                     }}
-                    className='bg-white m-2 flex justify-center mx-auto'>
+                    className='bg-slate-100 m-2 flex justify-center mx-auto'>
                     <ImFire className='mt-1 text-orange-600' />
                     <span className='mx-2'>پرفروش ترین کالاها</span>
                 </Typography>

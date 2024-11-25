@@ -11,7 +11,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="fa-IR" dir="rtl">
-      <body>
+      <body className="bg-slate-100">
         <CustomTheme>
           <Providers>{children}</Providers>
         </CustomTheme>

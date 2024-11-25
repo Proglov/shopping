@@ -58,7 +58,7 @@ export default function Categories() {
             marginLeft: 'auto',
             marginRight: 'auto'
           }}
-          className="bg-white m-2 flex justify-center mx-auto"
+          className="bg-slate-100 m-2 flex justify-center mx-auto"
         >
           <TbCategory className="mt-1 text-cyan-500" />
           <span className="mx-2">دسته بندی</span>
