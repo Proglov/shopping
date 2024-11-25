@@ -5,68 +5,6 @@ import PopularCropsComponent from './PopularCropsComponent'
 import Api from '@/services/withoutAuthActivities/product'
 import { ImFire } from "react-icons/im";
 
-const arr = [
-    {
-        href: '/categories/undefined/673f010005ea6dc2c463c020/6740a359a728dfb50f2f4d4e',
-        name: 'هات چاکلت',
-        src: '/img/popular/photo15080605710.jpg'
-    },
-    {
-        href: '/categories/undefined/673f010005ea6dc2c463c020/6740a359a728dfb50f2f4d4e',
-        name: 'اسپرسو 20تایی',
-        src: '/img/popular/photo15080606161.jpg'
-    },
-    {
-        href: '/categories/undefined/673f010005ea6dc2c463c020/6740a359a728dfb50f2f4d4e',
-        name: 'گلد',
-        src: '/img/popular/photo15080606161.jpg'
-    },
-    {
-        href: '/categories/undefined/673f010005ea6dc2c463c020/6740a359a728dfb50f2f4d4e',
-        name: 'قهوه فوری 2*1 (20تایی)',
-        src: '/img/popular/photo15080606161.jpg'
-    },
-    {
-        href: '/categories/undefined/673f010005ea6dc2c463c020/6740a359a728dfb50f2f4d4e',
-        name: 'کافی میکس 3*1',
-        src: '/img/popular/photo15080605328.jpg'
-    },
-    {
-        href: '/categories/undefined/673f010005ea6dc2c463c020/6740a359a728dfb50f2f4d4e',
-        name: 'کاپوچینو 24 عددی',
-        src: '/img/popular/photo15080605163.jpg'
-    },
-    {
-        href: '/categories/undefined/673f010005ea6dc2c463c020/6740a359a728dfb50f2f4d4e',
-        name: 'گلد',
-        src: '/img/popular/photo15080606161.jpg'
-    },
-    {
-        href: '/categories/undefined/673f010005ea6dc2c463c020/6740a359a728dfb50f2f4d4e',
-        name: 'گلد',
-        src: '/img/popular/photo15080606161.jpg'
-    },
-    {
-        href: '/categories/undefined/673f010005ea6dc2c463c020/6740a359a728dfb50f2f4d4e',
-        name: 'گلد',
-        src: '/img/popular/photo15080606161.jpg'
-    },
-    {
-        href: '/categories/undefined/673f010005ea6dc2c463c020/6740a359a728dfb50f2f4d4e',
-        name: 'گلد',
-        src: '/img/popular/photo15080606161.jpg'
-    },
-    {
-        href: '/categories/undefined/673f010005ea6dc2c463c020/6740a359a728dfb50f2f4d4e',
-        name: 'گلد',
-        src: '/img/popular/photo15080606161.jpg'
-    },
-    {
-        href: '/categories/undefined/673f010005ea6dc2c463c020/6740a359a728dfb50f2f4d4e',
-        name: 'گلد',
-        src: '/img/popular/photo15080606161.jpg'
-    },
-]
 
 export default function PopularCrops() {
     const { getPopularProducts } = Api
