@@ -48,6 +48,26 @@ const Api = {
         );
         return response?.data;
     },
+    TXCancelByUser: async (payload) => {
+        const response = await clientWithAuth.post(
+            `transactionUpdate/CancelTXByUser`,
+            {
+                id: payload?.id,
+                reason: payload?.reason,
+            }
+        );
+        return response?.data;
+    },
+    TXCancelBySeller: async (payload) => {
+        const response = await clientWithAuth.post(
+            `transactionUpdate/CancelTXBySeller`,
+            {
+                id: payload?.id,
+                reason: payload?.reason,
+            }
+        );
+        return response?.data;
+    },
     createTX: async (payload) => {
         const response = await clientWithAuth.post(
             `transactionPost/TransActionCreate`,
@@ -66,4 +86,3 @@ const Api = {
 };
 
 export default Api;
-

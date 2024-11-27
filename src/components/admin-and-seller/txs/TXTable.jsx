@@ -12,8 +12,9 @@ import ModalShowMore from './ModalShowMore';
 import { useDispatch, useSelector } from 'react-redux';
 import { setCurrentPage } from '../redux/reducers/global';
 import { getFutureTXsFromServer, updateTXStatusToServer } from '../redux/globalAsyncThunks';
-import { getRecentTXFromServer, setSelectedItem, setIsModalShowMoreOpen, setCurrentPageRecentTX, updateRecentTXStatusToServer } from '../redux/reducers/transactions';
+import { getRecentTXFromServer, setSelectedItem, setIsModalShowMoreOpen, setCurrentPageRecentTX, updateRecentTXStatusToServer, setIsModalCancelOpen } from '../redux/reducers/transactions';
 import { StyledTableCell, StyledTableRow } from '../products/ProductsTable';
+import ModalCancel from './ModalCancel';
 
 
 const Component = ({ txStatuses, itemsCount, error, loading, items, currentPage, itemsPerPage, selectedItem, handlePageClick, setPage, lastPage, dispatch, operatingError, isFutureOrder }) => (
@@ -117,6 +118,20 @@ const Component = ({ txStatuses, itemsCount, error, loading, items, currentPage,
                                                     {
                                                         txStatuses[item?.status].nextStepFarsi
                                                     }
+                                                </Button>
+                                            }
+                                            {
+                                                (item?.status === 'Requested' && !!item?.status) &&
+                                                <Button
+                                                    variant='outlined'
+                                                    className='p-0 m-1'
+                                                    color='error'
+                                                    onClick={() => {
+                                                        dispatch(setIsModalCancelOpen(true));
+                                                        dispatch(setSelectedItem({ ...item, isFutureOrder }));
+                                                    }}
+                                                >
+                                                    کنسل کردن
                                                 </Button>
                                             }
 
@@ -223,5 +238,6 @@ export default function TXTable({ which, isFutureOrder }) {
             <Component txStatuses={txStatuses} currentPage={currentPageRecentTX} dispatch={dispatch} error={errorRecentTX} items={recentTX} itemsCount={itemsCountRecentTX} itemsPerPage={itemsPerPageRecentTX} lastPage={lastPageRecentTX} loading={loadingRecentTX} selectedItem={selectedItem} handlePageClick={handlePageClick} setPage={setCurrentPageRecentTX} operatingError={operatingError} isFutureOrder={isFutureOrder} />
         }
         <ModalShowMore which={which} />
+        <ModalCancel which={which} />
     </>);
 }

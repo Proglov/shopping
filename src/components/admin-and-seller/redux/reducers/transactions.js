@@ -8,9 +8,8 @@ const initialState = {
     //common between recent and future transactions properties
     selectedItem: {},
     isModalShowMoreOpen: false,
+    isModalCancelOpen: false,
     operatingError: '',
-
-    isModalDoneOpen: false,
 
     //recent transactions properties
     recentTX: [],
@@ -39,6 +38,14 @@ export const updateRecentTXStatusToServer = createAsyncThunk(
         return { newStatus, id }
     }
 )
+export const cancelRecentTXToServer = createAsyncThunk(
+    "Transactions/cancelRecentTXToServer",
+    async ({ reason, id }) => {
+        const { TXCancelBySeller } = Api
+        await TXCancelBySeller({ id, reason })
+        return { reason, id }
+    }
+)
 
 const transactionSlice = createSlice({
     name: "Transactions",
@@ -50,8 +57,8 @@ const transactionSlice = createSlice({
         setIsModalShowMoreOpen(state, action) {
             state.isModalShowMoreOpen = action.payload
         },
-        setIsModalDoneOpen(state, action) {
-            state.isModalDoneOpen = action.payload
+        setIsModalCancelOpen(state, action) {
+            state.isModalCancelOpen = action.payload
         },
         setOperatingError(state, action) {
             state.operatingError = action.payload
@@ -96,13 +103,18 @@ const transactionSlice = createSlice({
         builder.addCase(updateRecentTXStatusToServer.fulfilled, (state, action) => {
             state.recentTX.forEach(item => {
                 if (item._id === action.payload.id) item.status = action.payload.newStatus
-                console.log(item);
+                return item
+            })
+        });
+        builder.addCase(cancelRecentTXToServer.fulfilled, (state, action) => {
+            state.recentTX.forEach(item => {
+                if (item._id === action.payload.id) item.status = 'Canceled'
                 return item
             })
         });
     }
 });
 
-export const { setIsModalShowMoreOpen, setIsModalDoneOpen, setOperatingError, setSelectedItem, setCurrentPageRecentTX, setError, setItemsCountRecentTX, setLastPageRecentTX, setLoading } = transactionSlice.actions;
+export const { setIsModalShowMoreOpen, setIsModalCancelOpen, setOperatingError, setSelectedItem, setCurrentPageRecentTX, setError, setItemsCountRecentTX, setLastPageRecentTX, setLoading } = transactionSlice.actions;
 
 export default transactionSlice.reducer;

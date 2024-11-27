@@ -177,6 +177,12 @@ export const updateTXStatusFulfilled = (state, action) => {
         return item
     });
 }
+export const cancelTXFulfilled = (state, action) => {
+    state.items.forEach(item => {
+        if (item._id === action.payload.id) item.status = 'Canceled'
+        return item
+    });
+}
 
 
 //transactionInPersons

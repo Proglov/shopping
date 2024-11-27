@@ -238,6 +238,14 @@ export const updateTXStatusToServer = createAsyncThunk(
         return { id, newStatus }
     }
 )
+export const cancelTXToServer = createAsyncThunk(
+    "Global/cancelTXToServer",
+    async ({ id, reason }) => {
+        const { TXCancelBySeller } = Api10
+        await TXCancelBySeller({ id, reason })
+        return { id, reason }
+    }
+)
 
 //transactionInPersons
 export const getTransactionInPersonsFromServer = createAsyncThunk(
