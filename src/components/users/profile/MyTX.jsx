@@ -1,13 +1,14 @@
 "use client";
-import { Box, Typography } from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import Api from "@/services/withAuthActivities/tx";
 import { convertToFarsiNumbers, dayOfWeek, formatPrice, iranianCalendar, price2Farsi } from "@/utils/funcs";
 import Link from "next/link";
 import { useInView } from "react-intersection-observer";
 import { GradientCircularProgress } from "@/app/loading";
+import ModalCancel from "./ModalCancel";
 
-const TransactionComponent = ({ transaction, txStatuses }) => (
+const TransactionComponent = ({ transaction, txStatuses, setSelectedItem, setIsModalCancelOpen }) => (
     <Box className='flex flex-col gap-2 shadow-lg shadow-slate-400 p-3 rounded-lg'>
 
         <Box>
@@ -128,6 +129,36 @@ const TransactionComponent = ({ transaction, txStatuses }) => (
                 {txStatuses[transaction.status]?.name}
             </span>
         </Box>
+
+        {
+            transaction.status === 'Canceled' &&
+            <Box className='w-full mx-auto text-start text-red-500'>
+                این سفارش توسط
+                {
+                    transaction?.canceled?.canceledBy === 'user' ? ' شما ' : ' فروشنده '
+                }
+                کنسل شده است و علت آن
+                {' "'}
+                {transaction?.canceled?.reason}
+                {'" '}
+                بیان شده است
+                <br />
+                در صورت بروز هرگونه اشتباه، با پشتیبانی تماس بگیرید
+            </Box>
+        }
+
+        {
+            transaction.status === 'Requested' &&
+            <Box className='w-full mx-auto text-center'>
+                <Button variant="outlined" color="error" size="small" onClick={() => {
+                    setSelectedItem(transaction);
+                    setIsModalCancelOpen(true)
+                }}>
+                    کنسل کردن
+                </Button>
+            </Box>
+        }
+
     </Box>
 )
 
@@ -140,6 +171,8 @@ export default function MyTX() {
     const [currentPage, setCurrentPage] = useState(2);
     const [isFinished, setIsFinished] = useState(false);
     const [loading, setLoading] = useState(true);
+    const [isModalCancelOpen, setIsModalCancelOpen] = useState(false);
+    const [selectedItem, setSelectedItem] = useState(false);
 
     const fetchTransactions = async (page) => {
         setLoading(true);
@@ -154,6 +187,16 @@ export default function MyTX() {
         } finally {
             setLoading(false);
         }
+    };
+
+    const handleCancelSuccess = (id, reason) => {
+        setTransactions((prev) =>
+            prev.map((transaction) =>
+                transaction._id === id
+                    ? { ...transaction, status: 'Canceled', canceled: { canceledBy: 'user', reason } }
+                    : transaction
+            )
+        );
     };
 
     useEffect(() => {
@@ -211,7 +254,7 @@ export default function MyTX() {
                                 <span className="text-center">تاکنون سفارشی نداده اید!</span>
                                 :
                                 transactions.map((transaction, index) => (
-                                    <TransactionComponent key={index} transaction={transaction} txStatuses={txStatuses} />
+                                    <TransactionComponent key={index} transaction={transaction} txStatuses={txStatuses} setSelectedItem={setSelectedItem} setIsModalCancelOpen={setIsModalCancelOpen} />
                                 ))
                         }
 
@@ -220,6 +263,9 @@ export default function MyTX() {
                         </Box>
                     </Box>
             }
+
+            <ModalCancel isModalCancelOpen={isModalCancelOpen} setIsModalCancelOpen={setIsModalCancelOpen} selectedItem={selectedItem} onCancelSuccess={handleCancelSuccess} />
+
         </Box>
     );
 }
