@@ -7,8 +7,10 @@ import Link from "next/link";
 import { useInView } from "react-intersection-observer";
 import { GradientCircularProgress } from "@/app/loading";
 import ModalCancel from "./ModalCancel";
+import ModalOpinion from "./ModalOpinion";
+import { FaStar } from "react-icons/fa";
 
-const TransactionComponent = ({ transaction, txStatuses, setSelectedItem, setIsModalCancelOpen }) => (
+const TransactionComponent = ({ transaction, txStatuses, setSelectedItem, setIsModalCancelOpen, setIsModalOpinionOpen }) => (
     <Box className='flex flex-col gap-2 shadow-lg shadow-slate-400 p-3 rounded-lg'>
 
         <Box>
@@ -159,6 +161,29 @@ const TransactionComponent = ({ transaction, txStatuses, setSelectedItem, setIsM
             </Box>
         }
 
+        {
+            transaction?.opinion?.rate > 0 &&
+            <Box className='w-full flex justify-center'>
+                {
+                    Array.from({ length: transaction?.opinion?.rate }).map((_v, index) => (
+                        <FaStar key={index} className='text-yellow-500' style={{ width: '30px', height: '30px' }} />
+                    ))
+                }
+            </Box>
+        }
+
+        {
+            ((transaction.status === 'Received' || (transaction.status === 'Canceled' && transaction?.canceled?.canceledBy === 'seller')) && !(transaction?.opinion?.rate > 0)) &&
+            <Box className='w-full mx-auto text-center'>
+                <Button variant="outlined" color="success" size="small" onClick={() => {
+                    setSelectedItem(transaction);
+                    setIsModalOpinionOpen(true)
+                }}>
+                    به سفارش خود امتیاز دهید
+                </Button>
+            </Box>
+        }
+
     </Box>
 )
 
@@ -172,6 +197,7 @@ export default function MyTX() {
     const [isFinished, setIsFinished] = useState(false);
     const [loading, setLoading] = useState(true);
     const [isModalCancelOpen, setIsModalCancelOpen] = useState(false);
+    const [isModalOpinionOpen, setIsModalOpinionOpen] = useState(false);
     const [selectedItem, setSelectedItem] = useState(false);
 
     const fetchTransactions = async (page) => {
@@ -194,6 +220,16 @@ export default function MyTX() {
             prev.map((transaction) =>
                 transaction._id === id
                     ? { ...transaction, status: 'Canceled', canceled: { canceledBy: 'user', reason } }
+                    : transaction
+            )
+        );
+    };
+
+    const handleOpinionSuccess = (id, rate) => {
+        setTransactions((prev) =>
+            prev.map((transaction) =>
+                transaction._id === id
+                    ? { ...transaction, opinion: { rate } }
                     : transaction
             )
         );
@@ -254,7 +290,7 @@ export default function MyTX() {
                                 <span className="text-center">تاکنون سفارشی نداده اید!</span>
                                 :
                                 transactions.map((transaction, index) => (
-                                    <TransactionComponent key={index} transaction={transaction} txStatuses={txStatuses} setSelectedItem={setSelectedItem} setIsModalCancelOpen={setIsModalCancelOpen} />
+                                    <TransactionComponent key={index} transaction={transaction} txStatuses={txStatuses} setSelectedItem={setSelectedItem} setIsModalCancelOpen={setIsModalCancelOpen} setIsModalOpinionOpen={setIsModalOpinionOpen} />
                                 ))
                         }
 
@@ -265,6 +301,8 @@ export default function MyTX() {
             }
 
             <ModalCancel isModalCancelOpen={isModalCancelOpen} setIsModalCancelOpen={setIsModalCancelOpen} selectedItem={selectedItem} onCancelSuccess={handleCancelSuccess} />
+
+            <ModalOpinion isModalOpinionOpen={isModalOpinionOpen} setIsModalOpinionOpen={setIsModalOpinionOpen} selectedItem={selectedItem} onOpinionSuccess={handleOpinionSuccess} />
 
         </Box>
     );

@@ -68,6 +68,17 @@ const Api = {
         );
         return response?.data;
     },
+    OpinionTX: async (payload) => {
+        const response = await clientWithAuth.post(
+            `transactionUpdate/OpinionTX`,
+            {
+                comment: payload?.comment,
+                rate: payload?.rate,
+                id: payload?.id
+            }
+        );
+        return response?.data;
+    },
     createTX: async (payload) => {
         const response = await clientWithAuth.post(
             `transactionPost/TransActionCreate`,
