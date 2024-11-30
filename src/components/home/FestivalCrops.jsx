@@ -45,7 +45,7 @@ const Plate = ({ children, classNameProp, isLoading }) =>
     </div >
 
 export default function FestivalCrops() {
-    const { GetAllFestivalProducts } = Api
+    const { GetAllFestivalProductsHomePage } = Api
     const [products, setProducts] = useState([])
     const [isLoading, setIsLoading] = useState(true)
     const [currentSlide, setCurrentSlide] = useState(0)
@@ -97,7 +97,7 @@ export default function FestivalCrops() {
 
     useEffect(() => {
         const getProducts = async () => {
-            const res = await GetAllFestivalProducts({ page: 1, perPage: 10 })
+            const res = await GetAllFestivalProductsHomePage({ page: 1, perPage: 10 })
             setProducts(res?.products)
             setIsLoading(false)
         }

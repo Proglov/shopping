@@ -45,7 +45,7 @@ const Plate = ({ children, classNameProp, isLoading }) =>
     </div >
 
 export default function MajorBuy() {
-    const { GetAllMajorShoppingProducts } = Api
+    const { GetAllMajorShoppingProductsHomePage } = Api
     const [products, setProducts] = useState([])
     const [isLoading, setIsLoading] = useState(true)
     const [currentSlide, setCurrentSlide] = useState(0)
@@ -97,7 +97,7 @@ export default function MajorBuy() {
 
     useEffect(() => {
         const getProducts = async () => {
-            const res = await GetAllMajorShoppingProducts({ page: 1, perPage: 10 })
+            const res = await GetAllMajorShoppingProductsHomePage({ page: 1, perPage: 10 })
             setProducts(res?.products)
             setIsLoading(false)
         }
