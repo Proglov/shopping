@@ -133,8 +133,8 @@ export default function NavBar() {
         onChange={(e) => setSearchText(e.target.value)}
         onKeyDown={(e) => {
           if (e.key === 'Enter' && searchText.length > 0) {
-            router.push('/search?str=' + searchText);
             location.reload()
+            router.push('/search?str=' + searchText);
           }
         }}
       />
