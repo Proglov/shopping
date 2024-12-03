@@ -72,7 +72,7 @@ const CustomTabs = ({ array, handleChange, tabs, discountTabs }) => (
                     const props = {
                         which: "ADMIN"
                     }
-                    if (Component.name === 'Discounts') props.tabs = discountTabs
+                    props.tabs = discountTabs
                     return (
                         <TabPanel key={index + 200} value={tabs.active} index={index} className='text-center'>
                             {<Component {...props} />}
