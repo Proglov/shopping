@@ -32,6 +32,7 @@ export default function CitiesModal() {
 
     const [provinces, setProvinces] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
+    const [isModified, setIsModified] = useState(false);
 
 
     useEffect(() => {
@@ -72,24 +73,28 @@ export default function CitiesModal() {
     const handleClose = () => setIsModalOpen(false);
 
     const handleConfirm = () => {
-        setIsLoading(true);
-        const cityIds = [];
+        if (isModified) {
+            setIsLoading(true);
+            const cityIds = [];
 
-        provinces.forEach(province => {
-            province.cities.forEach(city => {
-                if (city.isSelected) {
-                    cityIds.push(city.cityId);
-                }
+            provinces.forEach(province => {
+                province.cities.forEach(city => {
+                    if (city.isSelected) {
+                        cityIds.push(city.cityId);
+                    }
+                });
             });
-        });
 
-        setCookie('cityIds', cityIds, { maxAge: 3600, path: '/', sameSite: 'strict', secure: true });
+            setCookie('cityIds', cityIds, { maxAge: 3600, path: '/', sameSite: 'strict', secure: true });
+            setIsLoading(false);
+            location.reload();
+        }
+
         setIsModalOpen(false);
-        setIsLoading(false);
-        location.reload();
     };
 
     const handleCheckboxChange = (provinceId, cityId) => {
+        setIsModified(true)
         setProvinces(prev => {
             const newState = JSON.parse(JSON.stringify(prev));
             const provinceIndex = newState.findIndex(province => province.provinceId === provinceId);
@@ -102,6 +107,7 @@ export default function CitiesModal() {
     const isAllCitiesSelected = cities => cities.every(city => city.isSelected);
 
     const handleAllCitiesCheckboxChange = provinceId => {
+        setIsModified(true)
         setProvinces(prev => {
             const newState = JSON.parse(JSON.stringify(prev));
             const provinceIndex = newState.findIndex(province => province.provinceId === provinceId);
