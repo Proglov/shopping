@@ -85,7 +85,7 @@ export default function CitiesModal() {
                 });
             });
 
-            setCookie('cityIds', cityIds, { maxAge: 3600, path: '/', sameSite: 'strict', secure: true });
+            setCookie('cityIds', cityIds, { maxAge: 3600, path: '/', sameSite: 'none', secure: true });
             setIsLoading(false);
             location.reload();
         }
