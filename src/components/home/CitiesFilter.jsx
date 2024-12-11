@@ -11,8 +11,16 @@ export default function CitiesFilter() {
     const [isModalOpen, setIsModalOpen] = useState(true) // Assume modal should open if no city selected
 
     useEffect(() => {
-        const cookie = JSON.parse(getCookie('cityIds')) || [];
-        const hasCities = cookie?.length > 0;
+        const cookieValue = getCookie('cityIds');
+        let cityIds = [];
+
+        try {
+            cityIds = cookieValue ? JSON.parse(cookieValue) : [];
+        } catch {
+            cityIds = [];
+        }
+
+        const hasCities = cityIds.length > 0;
         setIsSelected(hasCities);
         setIsModalOpen(!hasCities);
     }, []);
