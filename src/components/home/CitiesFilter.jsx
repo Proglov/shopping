@@ -8,7 +8,7 @@ export const ModalContext = createContext(null)
 
 export default function CitiesFilter() {
     const [isSelected, setIsSelected] = useState(false)
-    const [isModalOpen, setIsModalOpen] = useState(true) // Assume modal should open if no city selected
+    const [isModalOpen, setIsModalOpen] = useState(false)
 
     useEffect(() => {
         const cookieValue = getCookie('cityIds');
