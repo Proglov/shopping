@@ -32,7 +32,7 @@ export default function CitiesModal() {
     const preSelectedCities = !!cookie ? JSON.parse(cookie) : [];
     const ctx = useContext(GlobalContext)
     const host = (new URL(ctx?.backend)).host || ""
-    const domain = host.includes("localhost") ? null : host
+    const domain = host.endsWith(".liara.run") ? ".liara.run" : null
 
     const [provinces, setProvinces] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
