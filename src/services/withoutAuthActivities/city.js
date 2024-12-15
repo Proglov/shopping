@@ -13,6 +13,15 @@ const Api = {
             `cityGet/getOneCity?id=${payload?.id}`
         );
         return response?.data;
+    },
+    setCityIds: async (payload) => {
+        const response = await clientWithoutAuth.post(
+            `cityPost/set-cityIds`,
+            {
+                ids: payload?.cityIds
+            }
+        );
+        return response?.data;
     }
 };
 

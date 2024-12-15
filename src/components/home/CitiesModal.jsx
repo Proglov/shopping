@@ -9,7 +9,8 @@ import { ModalContext } from './CitiesFilter';
 import { MdExpandMore } from 'react-icons/md';
 import Api from '@/services/withoutAuthActivities/city';
 import { GradientCircularProgress } from '@/app/loading';
-import { getCookie, setCookie } from 'cookies-next';
+import { getCookie } from 'cookies-next';
+import { toast } from 'react-toastify';
 
 const ModalStyle = {
     position: 'absolute',
@@ -26,6 +27,7 @@ const ModalStyle = {
 };
 
 export default function CitiesModal() {
+    const { getAllCities, setCityIds } = Api;
     const { isModalOpen, setIsModalOpen } = useContext(ModalContext);
     const cookie = getCookie('cityIds');
     const preSelectedCities = !!cookie ? JSON.parse(cookie) : [];
@@ -42,7 +44,6 @@ export default function CitiesModal() {
     }, [isModalOpen]);
 
     const fetchProvinces = async () => {
-        const { getAllCities } = Api;
         const response = await getAllCities();
         const allProvinces = response.cities.reduce((acc, curr) => {
             const existingProvince = acc.find(item => item.provinceId === curr.provinceId._id);
@@ -72,7 +73,7 @@ export default function CitiesModal() {
 
     const handleClose = () => setIsModalOpen(false);
 
-    const handleConfirm = () => {
+    const handleConfirm = async () => {
         if (isModified) {
             setIsLoading(true);
             const cityIds = [];
@@ -85,7 +86,14 @@ export default function CitiesModal() {
                 });
             });
 
-            setCookie('cityIds', cityIds, { maxAge: 3600, path: '/', sameSite: 'none', secure: true });
+            // setCookie('cityIds', cityIds, { maxAge: 3600, path: '/', sameSite: 'none', secure: true });
+
+            try {
+                await setCityIds({ cityIds })
+            } catch (error) {
+                toast.error('کوکی ست نشد!')
+            }
+
             setIsLoading(false);
             location.reload();
         }
