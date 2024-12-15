@@ -10,6 +10,7 @@ export const clientWithoutAuth = axios.create({
     headers: {
         "X-Client-Name": "browser",
         "Accept": "application/json",
+        "credentials": "include",
     }
 });
 
@@ -20,6 +21,7 @@ export const clientWithAuth = axios.create({
     headers: {
         "X-Client-Name": "browser",
         "Accept": "application/json",
+        "credentials": "include",
         "Authorization": typeof window !== "undefined" ? localStorage.getItem('token') ?? null : null
     }
 });
