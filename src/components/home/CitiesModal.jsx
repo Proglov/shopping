@@ -10,6 +10,7 @@ import { MdExpandMore } from 'react-icons/md';
 import Api from '@/services/withoutAuthActivities/city';
 import { GradientCircularProgress } from '@/app/loading';
 import { getCookie, setCookie } from 'cookies-next';
+import { GlobalContext } from '@/app/GlobalContext';
 
 const ModalStyle = {
     position: 'absolute',
@@ -29,6 +30,9 @@ export default function CitiesModal() {
     const { isModalOpen, setIsModalOpen } = useContext(ModalContext);
     const cookie = getCookie('cityIds');
     const preSelectedCities = !!cookie ? JSON.parse(cookie) : [];
+    const ctx = useContext(GlobalContext)
+    const host = (new URL(ctx?.backend)).host || ""
+    const domain = host.includes("localhost") ? null : host
 
     const [provinces, setProvinces] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
@@ -85,7 +89,7 @@ export default function CitiesModal() {
                 });
             });
 
-            setCookie('cityIds', cityIds, { maxAge: 3600, path: '/', sameSite: 'none', secure: true });
+            setCookie('cityIds', cityIds, { maxAge: 3600, path: '/', sameSite: 'none', secure: true, domain });
             setIsLoading(false);
             location.reload();
         }
