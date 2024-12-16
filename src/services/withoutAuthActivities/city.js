@@ -8,6 +8,10 @@ const Api = {
         );
         return response?.data;
     },
+    getAllCitiesForNavbar: async () => {
+        const response = await clientWithoutAuth.get(`cityGet/getAllCitiesForNavbar`);
+        return response?.data;
+    },
     getOneCity: async (payload) => {
         const response = await clientWithoutAuth.get(
             `cityGet/getOneCity?id=${payload?.id}`

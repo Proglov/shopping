@@ -1,5 +1,5 @@
 "use client";
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useState } from 'react';
 import Backdrop from '@mui/material/Backdrop';
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
@@ -7,10 +7,7 @@ import Fade from '@mui/material/Fade';
 import { Accordion, AccordionDetails, AccordionSummary, Button, Checkbox, FormControlLabel, Typography } from '@mui/material';
 import { ModalContext } from './CitiesFilter';
 import { MdExpandMore } from 'react-icons/md';
-import Api from '@/services/withoutAuthActivities/city';
 import { GradientCircularProgress } from '@/app/loading';
-import { getCookie } from 'cookies-next';
-import { toast } from 'react-toastify';
 
 const ModalStyle = {
     position: 'absolute',
@@ -27,79 +24,14 @@ const ModalStyle = {
 };
 
 export default function CitiesModal() {
-    const { getAllCities, setCityIds } = Api;
-    const { isModalOpen, setIsModalOpen } = useContext(ModalContext);
-    const cookie = getCookie('cityIds');
-    const preSelectedCities = !!cookie ? JSON.parse(cookie) : [];
+    const { isModalOpen, setIsModalOpen, provinces, setProvinces, handleConfirm, isLoading } = useContext(ModalContext);
 
-    const [provinces, setProvinces] = useState([]);
-    const [isLoading, setIsLoading] = useState(false);
     const [isModified, setIsModified] = useState(false);
 
 
-    useEffect(() => {
-        if (isModalOpen) {
-            fetchProvinces();
-        }
-    }, [isModalOpen]);
-
-    const fetchProvinces = async () => {
-        const response = await getAllCities();
-        const allProvinces = response.cities.reduce((acc, curr) => {
-            const existingProvince = acc.find(item => item.provinceId === curr.provinceId._id);
-
-            if (existingProvince) {
-                existingProvince.cities.push({
-                    cityId: curr._id,
-                    cityName: curr.name,
-                    isSelected: preSelectedCities.includes(curr._id),
-                });
-            } else {
-                acc.push({
-                    provinceId: curr.provinceId._id,
-                    provinceName: curr.provinceId.name,
-                    cities: [{
-                        cityId: curr._id,
-                        cityName: curr.name,
-                        isSelected: preSelectedCities.includes(curr._id),
-                    }],
-                });
-            }
-
-            return acc;
-        }, []);
-        setProvinces(allProvinces);
-    };
 
     const handleClose = () => setIsModalOpen(false);
 
-    const handleConfirm = async () => {
-        if (isModified) {
-            setIsLoading(true);
-            const cityIds = [];
-
-            provinces.forEach(province => {
-                province.cities.forEach(city => {
-                    if (city.isSelected) {
-                        cityIds.push(city.cityId);
-                    }
-                });
-            });
-
-            // setCookie('cityIds', cityIds, { maxAge: 3600, path: '/', sameSite: 'none', secure: true });
-
-            try {
-                await setCityIds({ cityIds })
-            } catch (error) {
-                toast.error('کوکی ست نشد!')
-            }
-
-            setIsLoading(false);
-            location.reload();
-        }
-
-        setIsModalOpen(false);
-    };
 
     const handleCheckboxChange = (provinceId, cityId) => {
         setIsModified(true)
@@ -188,7 +120,7 @@ export default function CitiesModal() {
                             </div>
                             :
                             <>
-                                <Button onClick={handleConfirm} variant='outlined'
+                                <Button onClick={() => handleConfirm(isModified)} variant='outlined'
                                     className='p-0 m-1'
                                     sx={{ color: 'green', borderColor: 'green' }}>
                                     تایید
