@@ -20,8 +20,8 @@ export default function PopularCrops() {
                 const response = await getPopularProducts()
                 const resProducts = response?.products || []
 
-                //set the length to 12 if it isn't
-                while (resProducts.length < 12 && resProducts.length > 0) {
+                //set the length to 8 if it isn't
+                while (resProducts.length < 8 && resProducts.length > 0) {
                     resProducts.push(resProducts.at(-1))
                 }
 
